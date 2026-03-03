@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.13.0] - 2026-03-03
+
+### Added
+- Admin workflow hooks for BookingRequests collection
+- beforeChange hook: auto-generates requestRef on create
+- afterChange hook: sends status-driven emails (confirmed, declined, paid)
+- Searchable fields in admin: requestRef, customerName, customerEmail
+
 ## [0.12.0] - 2026-03-03
 
 ### Added

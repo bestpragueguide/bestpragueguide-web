@@ -1,4 +1,8 @@
 import type { CollectionConfig } from 'payload'
+import {
+  beforeChangeHook,
+  afterChangeHook,
+} from './hooks/bookingRequestHooks'
 
 export const BookingRequests: CollectionConfig = {
   slug: 'booking-requests',
@@ -6,8 +10,13 @@ export const BookingRequests: CollectionConfig = {
     useAsTitle: 'requestRef',
     defaultColumns: ['requestRef', 'customerName', 'tour', 'preferredDate', 'status', 'createdAt'],
     group: 'Bookings',
+    listSearchableFields: ['requestRef', 'customerName', 'customerEmail'],
   },
   timestamps: true,
+  hooks: {
+    beforeChange: [beforeChangeHook],
+    afterChange: [afterChangeHook],
+  },
   fields: [
     {
       name: 'requestRef',
