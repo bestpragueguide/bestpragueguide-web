@@ -49,7 +49,7 @@ export default async function ToursPage({
       collection: 'tours',
       where: {
         status: { equals: 'published' },
-        publishedLocales: { contains: locale },
+        publishedLocales: { in: [locale] },
       },
       sort: 'sortOrder',
       limit: 50,

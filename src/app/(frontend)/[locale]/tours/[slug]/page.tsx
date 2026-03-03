@@ -48,7 +48,7 @@ async function getRelatedTours(
         id: { not_equals: tourId },
         category: { equals: category },
         status: { equals: 'published' },
-        publishedLocales: { contains: locale },
+        publishedLocales: { in: [locale] },
       },
       limit: 3,
       locale: locale as 'en' | 'ru',

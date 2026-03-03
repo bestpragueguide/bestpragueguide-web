@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.3] - 2026-03-03
+
+### Fixed
+- Tour queries: change `publishedLocales: { contains }` to `{ in: [] }` for PostgreSQL compatibility
+- Payload's `contains` operator uses ILIKE on hasMany select fields in PostgreSQL, causing query failures
+- Affected: tours catalog page, tour detail related tours, homepage featured tours
+
 ## [1.0.2] - 2026-03-03
 
 ### Added
