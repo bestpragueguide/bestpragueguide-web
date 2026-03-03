@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.17.0] - 2026-03-03
+
+### Added
+- Production Dockerfile with multi-stage build (deps → builder → runner)
+- .dockerignore for efficient builds
+- Runs as non-root user (nextjs:nodejs)
+
 ## [0.16.0] - 2026-03-03
 
 ### Added
