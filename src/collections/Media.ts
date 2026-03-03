@@ -4,6 +4,9 @@ const mediaDir = process.env.MEDIA_DIR || undefined
 
 export const Media: CollectionConfig = {
   slug: 'media',
+  access: {
+    read: () => true,
+  },
   admin: {
     group: 'Content',
   },
