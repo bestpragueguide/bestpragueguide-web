@@ -3,7 +3,6 @@ import { fileURLToPath } from 'url'
 import { buildConfig } from 'payload'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
-import { s3Storage } from '@payloadcms/storage-s3'
 import sharp from 'sharp'
 import { Tours } from './collections/Tours'
 import { BookingRequests } from './collections/BookingRequests'
@@ -14,10 +13,6 @@ import { SiteSettings } from './globals/SiteSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
-
-const s3Configured = Boolean(
-  process.env.R2_ACCESS_KEY_ID && process.env.R2_SECRET_ACCESS_KEY && process.env.R2_ENDPOINT,
-)
 
 export default buildConfig({
   admin: {
@@ -64,29 +59,7 @@ export default buildConfig({
 
   globals: [SiteSettings],
 
-  plugins: [
-    ...(s3Configured
-      ? [
-          s3Storage({
-            collections: {
-              media: {
-                prefix: 'media',
-              },
-            },
-            bucket: process.env.R2_BUCKET_NAME || 'bestpragueguide-media',
-            config: {
-              credentials: {
-                accessKeyId: process.env.R2_ACCESS_KEY_ID || '',
-                secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
-              },
-              endpoint: process.env.R2_ENDPOINT || '',
-              region: 'auto',
-              forcePathStyle: true,
-            },
-          }),
-        ]
-      : []),
-  ],
+  plugins: [],
 
   sharp,
 

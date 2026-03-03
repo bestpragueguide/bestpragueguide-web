@@ -11,11 +11,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '*.r2.cloudflarestorage.com',
+        hostname: 'bestpragueguide.com',
       },
       {
-        protocol: 'https',
-        hostname: '*.bestpragueguide.com',
+        protocol: 'http',
+        hostname: 'localhost',
       },
     ],
   },

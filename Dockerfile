@@ -38,6 +38,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder /app/node_modules/drizzle-kit ./node_modules/drizzle-kit
 COPY --from=builder /app/node_modules/drizzle-orm ./node_modules/drizzle-orm
 
+# Create writable media directory for local file storage
+RUN mkdir -p /app/media && chown nextjs:nodejs /app/media
+
 USER nextjs
 
 EXPOSE 3000

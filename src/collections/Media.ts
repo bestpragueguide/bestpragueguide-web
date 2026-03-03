@@ -1,11 +1,14 @@
 import type { CollectionConfig } from 'payload'
 
+const mediaDir = process.env.MEDIA_DIR || undefined
+
 export const Media: CollectionConfig = {
   slug: 'media',
   admin: {
     group: 'Content',
   },
   upload: {
+    ...(mediaDir ? { staticDir: mediaDir } : {}),
     imageSizes: [
       {
         name: 'thumbnail',

@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.4] - 2026-03-03
+
+### Changed
+- Switch from Cloudflare R2 to self-hosted local filesystem for media storage
+- Remove `@payloadcms/storage-s3` dependency
+- Media collection uses `MEDIA_DIR` env var for configurable storage path
+- Dockerfile creates writable `/app/media` directory for container uploads
+- Docker volume `bestpragueguide-media` persists uploads across deployments
+
+### Added
+- `/api/upload-photos` endpoint for bulk photo upload via multipart form
+- `/api/assign-photos` endpoint to assign media to tours as hero images
+
 ## [1.0.3] - 2026-03-03
 
 ### Fixed
