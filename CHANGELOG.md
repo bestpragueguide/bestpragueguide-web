@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.14.0] - 2026-03-03
+
+### Added
+- Schema.org JSON-LD: TouristTrip on tour pages, TravelAgency on all pages, FAQPage on FAQ
+- Dynamic sitemap with all static pages + tours, hreflang alternates for EN/RU
+- robots.txt with Yandex crawl-delay and admin/API exclusion
+- Canonical URLs and hreflang link tags on tour detail pages
+- Open Graph metadata on tour detail pages
+
 ## [0.13.0] - 2026-03-03
 
 ### Added

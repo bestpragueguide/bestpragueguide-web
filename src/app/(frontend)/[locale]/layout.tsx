@@ -8,6 +8,7 @@ import { routing } from '@/i18n/routing'
 import { Nav } from '@/components/layout/Nav'
 import { Footer } from '@/components/layout/Footer'
 import { WhatsAppButton } from '@/components/shared/WhatsAppButton'
+import { OrganizationSchema } from '@/components/seo/OrganizationSchema'
 import '@/app/globals.css'
 
 const cormorant = Cormorant_Garamond({
@@ -53,6 +54,7 @@ export default async function FrontendLayout({
           <main className="pt-16">{children}</main>
           <Footer />
           <WhatsAppButton locale={locale} />
+          <OrganizationSchema />
         </NextIntlClientProvider>
       </body>
     </html>

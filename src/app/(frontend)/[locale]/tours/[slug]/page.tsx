@@ -13,6 +13,7 @@ import { TourRelated } from '@/components/tours/TourRelated'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { StickyBookButton } from '@/components/booking/StickyBookButton'
 import { BookingRequestForm } from '@/components/booking/BookingRequestForm'
+import { TourSchema } from '@/components/seo/TourSchema'
 
 async function getTour(slug: string, locale: string) {
   try {
@@ -91,9 +92,18 @@ export async function generateMetadata({
   const description =
     (tour as any).seo?.metaDescription || tour.excerpt
 
+  const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'
+
   return {
     title,
     description,
+    alternates: {
+      canonical: `${baseUrl}/${locale}/tours/${slug}`,
+      languages: {
+        en: `${baseUrl}/en/tours/${slug}`,
+        ru: `${baseUrl}/ru/ekskursii/${slug}`,
+      },
+    },
     openGraph: {
       title,
       description,
@@ -329,6 +339,18 @@ export default async function TourDetailPage({
           </div>
         </div>
       </div>
+
+      {/* Schema.org JSON-LD */}
+      <TourSchema
+        title={tour.title}
+        description={tour.excerpt}
+        price={tour.groupPrice}
+        duration={tour.duration}
+        rating={tour.rating ?? undefined}
+        reviewCount={tour.reviewCount ?? undefined}
+        locale={locale}
+        slug={slug}
+      />
 
       {/* Mobile sticky book button */}
       <StickyBookButton
