@@ -1,0 +1,181 @@
+{
+  "nav": {
+    "tours": "Tours",
+    "about": "About Us",
+    "reviews": "Reviews",
+    "blog": "Blog",
+    "contact": "Contact",
+    "cta": "Choose a Tour"
+  },
+  "hero": {
+    "tagline": "Discover the Prague Tourists Never See",
+    "subtitle": "Private tours from a guide with 17 years of experience. Just your group — no strangers.",
+    "cta": "Explore Tours"
+  },
+  "trustBar": {
+    "experience": "17 Years Experience",
+    "guests": "10,000+ Happy Guests",
+    "licensed": "Team of Licensed Guides",
+    "curated": "Every Tour Curated by Founder"
+  },
+  "guideProfile": {
+    "heading": "Meet Your Guide",
+    "bio": "Uliana Formina has been sharing her passion for Prague for over 17 years. As a highest-category licensed guide and founder of Best Prague Guide, she personally curates every tour route and hand-picks each guide on her team.",
+    "learnMore": "Learn More About Us"
+  },
+  "categories": {
+    "pragueTours": "Prague Tours",
+    "fromPrague": "From Prague",
+    "sightseeing": "Sightseeing",
+    "beerAndFood": "Beer and Food",
+    "all": "All Tours"
+  },
+  "booking": {
+    "date": "Preferred Date",
+    "time": "Preferred Time",
+    "guests": "Number of Guests",
+    "name": "Your Name",
+    "email": "Email",
+    "phone": "Phone / WhatsApp",
+    "requests": "Questions / Requests",
+    "submit": "Submit Request",
+    "surchargeNote": "Groups of 5–8: +{percent}% surcharge",
+    "noPayment": "No payment until we confirm",
+    "freeCancellation": "Free cancellation 24h before",
+    "private": "100% private — just your group",
+    "success": "Thank you! We received your request and will confirm within 2 hours.",
+    "errorGeneric": "Something went wrong. Please try again or contact us directly."
+  },
+  "process": {
+    "heading": "How It Works",
+    "step1Title": "Submit a Request",
+    "step1Desc": "Choose a tour and tell us your preferred date and group size.",
+    "step2Title": "We Confirm",
+    "step2Desc": "We check availability and confirm within 2 hours.",
+    "step3Title": "Pay Securely",
+    "step3Desc": "After confirmation, pay online via a secure payment link.",
+    "step4Title": "Enjoy Your Tour",
+    "step4Desc": "Meet your guide and discover Prague like a local."
+  },
+  "testimonials": {
+    "heading": "What Our Guests Say"
+  },
+  "faqSection": {
+    "heading": "Frequently Asked Questions"
+  },
+  "cta": {
+    "heading": "Ready to Explore Prague?",
+    "subtitle": "Book your private tour today",
+    "chooseTour": "Choose a Tour",
+    "whatsapp": "WhatsApp Us",
+    "telegram": "Telegram"
+  },
+  "footer": {
+    "tagline": "Private tours in Prague from a team of licensed guides",
+    "tours": "Tours",
+    "company": "Company",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "cancellation": "Cancellation Policy",
+    "hours": "Business Hours",
+    "license": "Licensed Guide, Czech Guide Association",
+    "copyright": "© {year} Best Prague Guide. All rights reserved."
+  },
+  "about": {
+    "founderHeading": "Founder and Lead Guide",
+    "founderBio": "For over 17 years, Uliana Formina has been sharing her deep love for Prague with travelers from around the world. As a highest-category licensed guide and member of the Czech Guide Association, she has welcomed more than 10,000 guests to the city's hidden corners and iconic landmarks.",
+    "founderQuote": "I built this company to deliver tour quality as if I personally led every single one.",
+    "teamHeading": "Our Team of Licensed Guides",
+    "teamDesc": "Every guide on our team is personally selected and trained by Uliana. All hold official licenses from the Czech Guide Association and undergo regular quality reviews.",
+    "teamBadge1": "All Licensed",
+    "teamBadge2": "Personally Selected by Founder",
+    "teamBadge3": "Regular Training and QC",
+    "valuesHeading": "Our Values",
+    "value1": "Private Tours Only",
+    "value1Desc": "No group buses. Every tour is exclusive to you.",
+    "value2": "Every Tour Curated",
+    "value2Desc": "Each route personally designed by our founder.",
+    "value3": "Licensed Guides",
+    "value3Desc": "Official Czech Guide Association certification.",
+    "value4": "Routes Tailored to You",
+    "value4Desc": "We adapt every tour to your interests and pace."
+  },
+  "reviews": {
+    "heading": "Guest Reviews",
+    "photoGalleryHeading": "Our Guests in Prague",
+    "filterAll": "All Languages",
+    "filterEn": "English",
+    "filterRu": "Russian"
+  },
+  "contact": {
+    "heading": "Get in Touch",
+    "formName": "Your Name",
+    "formEmail": "Email Address",
+    "formMessage": "Your Message",
+    "formSubmit": "Send Message",
+    "directContact": "Or reach us directly",
+    "success": "Message sent! We'll get back to you soon."
+  },
+  "faq": {
+    "heading": "Frequently Asked Questions",
+    "bookingCategory": "Booking",
+    "toursCategory": "Tours",
+    "logisticsCategory": "Logistics",
+    "paymentCategory": "Payment",
+    "q1": "How do I book a tour?",
+    "a1": "Choose a tour from our catalog, fill out the booking request form with your preferred date and group size, and we'll confirm availability within 2 hours.",
+    "q2": "What is the cancellation policy?",
+    "a2": "Free cancellation up to 24 hours before the tour start time. After that, the full amount is charged.",
+    "q3": "How many people can join a tour?",
+    "a3": "Our tours are designed for groups of 1–4 people at the base price. Groups of 5–8 are welcome with a 30% surcharge.",
+    "q4": "What languages are tours available in?",
+    "a4": "Our guides speak English and Russian fluently. All tours are available in both languages.",
+    "q5": "What happens if it rains?",
+    "a5": "Tours run rain or shine! We recommend comfortable shoes and weather-appropriate clothing. In case of extreme weather, we'll contact you to reschedule.",
+    "q6": "Do you offer hotel pickup?",
+    "a6": "We meet at a designated meeting point for each tour. The exact location with a map is sent after booking confirmation.",
+    "q7": "How do I pay?",
+    "a7": "After we confirm your booking, you'll receive a secure payment link via email. We accept all major credit cards.",
+    "q8": "Are tours suitable for children?",
+    "a8": "Yes! Most of our tours are family-friendly. Let us know the ages of your children in the booking form and we'll adapt the tour.",
+    "q9": "Can I customize a tour?",
+    "a9": "Absolutely! Mention your interests in the booking form and we'll tailor the route to your preferences.",
+    "q10": "What should I wear/bring?",
+    "a10": "Comfortable walking shoes are essential. We recommend bringing water, sunscreen in summer, and warm layers in winter."
+  },
+  "notFound": {
+    "heading": "Page Not Found",
+    "message": "Sorry, we couldn't find the page you're looking for.",
+    "homeLink": "Go to Homepage",
+    "toursLink": "Browse Tours"
+  },
+  "common": {
+    "perGroup": "per group up to 4",
+    "from": "from",
+    "hours": "hours",
+    "hour": "hour",
+    "readMore": "Read More",
+    "allTours": "All Tours",
+    "allReviews": "All Reviews",
+    "bookNow": "Book Now",
+    "learnMore": "Learn More",
+    "viewAll": "View All",
+    "loading": "Loading...",
+    "close": "Close"
+  },
+  "meta": {
+    "homeTitle": "Best Prague Guide — Private Tours in Prague",
+    "homeDesc": "Discover Prague with private tours from a guide with 17 years of experience. Sightseeing, food tours, and day trips. Just your group, no strangers.",
+    "toursTitle": "Private Tours in Prague — Best Prague Guide",
+    "toursDesc": "Browse our collection of private tours in Prague. Walking tours, food experiences, and day trips from Prague. Book your private tour today.",
+    "aboutTitle": "About Us — Best Prague Guide",
+    "aboutDesc": "Meet Uliana Formina, founder and highest-category licensed guide with 17 years of experience. Learn about our team of licensed guides.",
+    "reviewsTitle": "Guest Reviews — Best Prague Guide",
+    "reviewsDesc": "Read what our guests say about their private tours in Prague. Over 10,000 happy travelers.",
+    "contactTitle": "Contact Us — Best Prague Guide",
+    "contactDesc": "Get in touch with Best Prague Guide. Book a private tour, ask a question, or reach us via WhatsApp, Telegram, or email.",
+    "faqTitle": "FAQ — Best Prague Guide",
+    "faqDesc": "Frequently asked questions about our private tours in Prague. Booking, cancellation, group sizes, languages, and more."
+  }
+}
