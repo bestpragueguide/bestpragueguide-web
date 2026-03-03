@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.2] - 2026-03-03
+
+### Added
+- `/api/init-db` endpoint for production database schema initialization (bypasses Next.js NODE_ENV compilation)
+
+### Fixed
+- Dockerfile: set NODE_ENV=development at runtime so Payload schema push works
+
 ## [1.0.1] - 2026-03-03
 
 ### Fixed
