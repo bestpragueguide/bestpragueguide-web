@@ -217,7 +217,6 @@ export const Tours: CollectionConfig = {
       name: 'heroImage',
       type: 'upload',
       relationTo: 'media',
-      required: true,
     },
     {
       name: 'gallery',
