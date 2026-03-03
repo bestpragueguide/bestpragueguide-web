@@ -13,6 +13,8 @@ services:
       - "3000:3000"
     volumes:
       - bestpragueguide-media:/app/media
+    networks:
+      - coolify
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - PAYLOAD_SECRET=${PAYLOAD_SECRET}
@@ -27,3 +29,7 @@ services:
 volumes:
   bestpragueguide-media:
     name: bestpragueguide-media
+
+networks:
+  coolify:
+    external: true

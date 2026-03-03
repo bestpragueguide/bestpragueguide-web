@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.5] - 2026-03-03
+
+### Fixed
+- Docker Compose: add `coolify` external network so container can reach PostgreSQL database
+- Fixes Payload CMS initialization error (500) after switching to dockercompose buildpack
+
 ## [1.0.4] - 2026-03-03
 
 ### Changed
