@@ -5,6 +5,8 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing'
+import { Nav } from '@/components/layout/Nav'
+import { Footer } from '@/components/layout/Footer'
 import '@/app/globals.css'
 
 const cormorant = Cormorant_Garamond({
@@ -46,7 +48,9 @@ export default async function FrontendLayout({
     <html lang={locale} dir="ltr">
       <body className={`${cormorant.variable} ${dmSans.variable}`}>
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <Nav />
+          <main className="pt-16">{children}</main>
+          <Footer />
         </NextIntlClientProvider>
       </body>
     </html>
