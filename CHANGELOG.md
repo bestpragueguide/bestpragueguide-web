@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.1] - 2026-03-03
+
+### Fixed
+- Dockerfile: add ARG declarations for build-time env vars (DATABASE_URL, PAYLOAD_SECRET, NEXT_PUBLIC_SERVER_URL)
+
 ## [1.0.0] - 2026-03-03
 
 ### Added
