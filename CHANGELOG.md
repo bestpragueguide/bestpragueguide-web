@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.12.0] - 2026-03-03
+
+### Added
+- WhatsApp floating button on all pages with pre-filled message
+- Telegram notification helper with HTML formatting
+- WhatsApp Business API notification helper
+- Telegram + WhatsApp admin notifications on new booking requests
+- All notifications fire in parallel via Promise.allSettled
+
 ## [0.11.0] - 2026-03-03
 
 ### Added

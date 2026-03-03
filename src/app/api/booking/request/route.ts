@@ -5,6 +5,14 @@ import { bookingRequestSchema, generateRequestRef } from '@/lib/booking'
 import { sendEmail, sendAdminEmail } from '@/lib/email'
 import { RequestReceivedEmail } from '@/emails/request-received'
 import { NewRequestAdminEmail } from '@/emails/new-request-admin'
+import {
+  sendTelegramMessage,
+  formatBookingTelegramMessage,
+} from '@/lib/telegram'
+import {
+  sendWhatsAppMessage,
+  formatBookingWhatsAppMessage,
+} from '@/lib/whatsapp'
 import { z } from 'zod'
 
 const rateLimitMap = new Map<string, number[]>()
@@ -63,6 +71,18 @@ export async function POST(request: NextRequest) {
     })
 
     // Send notifications (fire in parallel, don't block response)
+    const notificationData = {
+      requestRef,
+      tourName: data.tourName,
+      preferredDate: data.preferredDate,
+      preferredTime: data.preferredTime,
+      guests: data.guests,
+      customerName: data.customerName,
+      customerEmail: data.customerEmail,
+      customerPhone: data.customerPhone || '',
+      specialRequests: data.specialRequests || '',
+    }
+
     const notificationPromises = [
       sendEmail({
         to: data.customerEmail,
@@ -81,18 +101,16 @@ export async function POST(request: NextRequest) {
       sendAdminEmail({
         subject: `New booking: ${requestRef} — ${data.tourName}`,
         react: NewRequestAdminEmail({
-          requestRef,
-          tourName: data.tourName,
-          preferredDate: data.preferredDate,
-          preferredTime: data.preferredTime,
-          guests: data.guests,
-          customerName: data.customerName,
-          customerEmail: data.customerEmail,
-          customerPhone: data.customerPhone || '',
-          specialRequests: data.specialRequests || '',
+          ...notificationData,
           locale: data.locale,
         }),
       }),
+      sendTelegramMessage(
+        formatBookingTelegramMessage(notificationData),
+      ),
+      sendWhatsAppMessage(
+        formatBookingWhatsAppMessage(notificationData),
+      ),
     ]
 
     // Fire and forget — don't block the response
