@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { bookingRequestSchema, generateRequestRef } from '@/lib/booking'
+import { sendEmail, sendAdminEmail } from '@/lib/email'
+import { RequestReceivedEmail } from '@/emails/request-received'
+import { NewRequestAdminEmail } from '@/emails/new-request-admin'
 import { z } from 'zod'
 
 const rateLimitMap = new Map<string, number[]>()
@@ -59,7 +62,48 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Notifications will be added in Tasks 11-12
+    // Send notifications (fire in parallel, don't block response)
+    const notificationPromises = [
+      sendEmail({
+        to: data.customerEmail,
+        subject:
+          data.locale === 'ru'
+            ? `Запрос получен — ${requestRef}`
+            : `Request received — ${requestRef}`,
+        react: RequestReceivedEmail({
+          customerName: data.customerName,
+          tourName: data.tourName,
+          preferredDate: data.preferredDate,
+          requestRef,
+          locale: data.locale,
+        }),
+      }),
+      sendAdminEmail({
+        subject: `New booking: ${requestRef} — ${data.tourName}`,
+        react: NewRequestAdminEmail({
+          requestRef,
+          tourName: data.tourName,
+          preferredDate: data.preferredDate,
+          preferredTime: data.preferredTime,
+          guests: data.guests,
+          customerName: data.customerName,
+          customerEmail: data.customerEmail,
+          customerPhone: data.customerPhone || '',
+          specialRequests: data.specialRequests || '',
+          locale: data.locale,
+        }),
+      }),
+    ]
+
+    // Fire and forget — don't block the response
+    Promise.allSettled(notificationPromises).then((results) => {
+      for (const result of results) {
+        if (result.status === 'rejected') {
+          console.error('[Booking] Notification failed:', result.reason)
+        }
+      }
+    })
+
     console.log('[Booking] New request created:', {
       requestRef,
       tour: data.tourName,

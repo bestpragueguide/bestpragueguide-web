@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.0] - 2026-03-03
+
+### Added
+- Email notification system with Resend + React Email
+- 6 email templates: request-received, new-request-admin, request-confirmed, payment-received, pre-tour-reminder, request-declined
+- Email helper library (`src/lib/email.ts`) with graceful fallback when no API key
+- Wired email sending into booking request API (customer + admin notifications)
+
 ## [0.10.0] - 2026-03-03
 
 ### Added
