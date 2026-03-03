@@ -1,5 +1,8 @@
+import Image from 'next/image'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { Button } from '@/components/shared/Button'
+
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
 
 export async function Hero() {
   const locale = await getLocale()
@@ -7,7 +10,15 @@ export async function Hero() {
 
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center bg-navy overflow-hidden">
-      {/* Background placeholder — will be replaced with hero image */}
+      {/* Background image */}
+      <Image
+        src={`${SERVER_URL}/api/media/file/photo_2_2026-03-03_18-30-45.jpg`}
+        alt="Prague panoramic view"
+        fill
+        className="object-cover"
+        priority
+        sizes="100vw"
+      />
       <div className="absolute inset-0 bg-gradient-to-b from-navy/80 via-navy/60 to-navy/90" />
 
       {/* Content */}

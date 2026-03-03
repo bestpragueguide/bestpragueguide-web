@@ -1,5 +1,8 @@
+import Image from 'next/image'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { Button } from '@/components/shared/Button'
+
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
 
 export async function GuideProfile() {
   const locale = await getLocale()
@@ -9,9 +12,15 @@ export async function GuideProfile() {
     <section className="py-16 lg:py-24 bg-cream">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Photo placeholder */}
-          <div className="aspect-[4/5] bg-gray-light rounded-2xl flex items-center justify-center text-gray order-2 lg:order-1">
-            <span className="text-sm">Guide Photo</span>
+          {/* Photo */}
+          <div className="relative aspect-[4/5] rounded-2xl overflow-hidden order-2 lg:order-1">
+            <Image
+              src={`${SERVER_URL}/api/media/file/photo_4_2026-03-03_18-30-45.jpg`}
+              alt={locale === 'ru' ? 'Ульяна Формина — ваш гид по Праге' : 'Uliana Formina — Your Prague Guide'}
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+            />
           </div>
 
           {/* Text */}

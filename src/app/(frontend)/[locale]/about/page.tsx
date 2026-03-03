@@ -1,8 +1,25 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { Button } from '@/components/shared/Button'
 import { Badge } from '@/components/shared/Badge'
+
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
+
+// Photo mapping using Payload media API URLs
+const founderPhoto = `${SERVER_URL}/api/media/file/photo_4_2026-03-03_18-30-45.jpg`
+const teamPhotos = [
+  { src: `${SERVER_URL}/api/media/file/photo_1_2026-03-03_18-30-46.jpg`, alt: 'Guide at the Astronomical Clock' },
+  { src: `${SERVER_URL}/api/media/file/photo_5_2026-03-03_18-30-45.jpg`, alt: 'Private tour group at Tyn Church' },
+  { src: `${SERVER_URL}/api/media/file/photo_6_2026-03-03_18-30-45.jpg`, alt: 'Tour at the Vltava riverbank' },
+  { src: `${SERVER_URL}/api/media/file/photo_7_2026-03-03_18-30-45.jpg`, alt: 'Family tour at Kampa Island' },
+]
+const galleryPhotos = [
+  `${SERVER_URL}/api/media/file/photo_2_2026-03-03_18-30-45.jpg`,
+  `${SERVER_URL}/api/media/file/photo_3_2026-03-03_18-30-45.jpg`,
+  `${SERVER_URL}/api/media/file/photo_6_2026-03-03_18-30-45.jpg`,
+]
 
 export async function generateMetadata({
   params,
@@ -31,8 +48,15 @@ export default async function AboutPage({
 
       {/* Block 1: Founder */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center py-8">
-        <div className="aspect-[4/5] bg-gray-light rounded-2xl flex items-center justify-center text-gray">
-          <span className="text-sm">Founder Photo</span>
+        <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
+          <Image
+            src={founderPhoto}
+            alt={locale === 'ru' ? 'Ульяна Формина — основатель Best Prague Guide' : 'Uliana Formina — Founder of Best Prague Guide'}
+            fill
+            className="object-cover"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            priority
+          />
         </div>
         <div>
           <h1 className="text-3xl sm:text-4xl font-heading font-bold text-navy">
@@ -76,12 +100,15 @@ export default async function AboutPage({
           {t('teamDesc')}
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-          {[1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className="aspect-square bg-gray-light rounded-xl flex items-center justify-center text-gray text-xs"
-            >
-              Guide {i}
+          {teamPhotos.map((photo, i) => (
+            <div key={i} className="relative aspect-square rounded-xl overflow-hidden">
+              <Image
+                src={photo.src}
+                alt={photo.alt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 640px) 50vw, 25vw"
+              />
             </div>
           ))}
         </div>
@@ -120,15 +147,30 @@ export default async function AboutPage({
         </div>
       </section>
 
-      {/* Block 4: CTA */}
-      <section className="py-16 border-t border-gray-light/50 text-center">
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button href={`/${locale}/tours`} size="lg">
-            {locale === 'ru' ? 'Выбрать экскурсию' : 'Choose a Tour'}
-          </Button>
-          <Button href={`/${locale}/contact`} variant="secondary" size="lg">
-            {locale === 'ru' ? 'Связаться с нами' : 'Contact Us'}
-          </Button>
+      {/* Block 4: Gallery + CTA */}
+      <section className="py-16 border-t border-gray-light/50">
+        <div className="grid grid-cols-3 gap-3 mb-12">
+          {galleryPhotos.map((src, i) => (
+            <div key={i} className="relative aspect-[4/3] rounded-xl overflow-hidden">
+              <Image
+                src={src}
+                alt={locale === 'ru' ? `Экскурсии по Праге ${i + 1}` : `Prague tours ${i + 1}`}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 33vw, 33vw"
+              />
+            </div>
+          ))}
+        </div>
+        <div className="text-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button href={`/${locale}/tours`} size="lg">
+              {locale === 'ru' ? 'Выбрать экскурсию' : 'Choose a Tour'}
+            </Button>
+            <Button href={`/${locale}/contact`} variant="secondary" size="lg">
+              {locale === 'ru' ? 'Связаться с нами' : 'Contact Us'}
+            </Button>
+          </div>
         </div>
       </section>
     </div>

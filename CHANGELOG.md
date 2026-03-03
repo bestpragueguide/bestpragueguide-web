@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2026-03-03
+
+### Added
+- BlogPosts collection in Payload CMS (title, slug, excerpt, content, category, heroImage, publishedLocales, SEO)
+- Blog listing page at `/[locale]/blog/` with category badges, dates, and card layout
+- Blog detail page at `/[locale]/blog/[slug]/` with rich text rendering, related posts, and tour CTA
+- Blog seed API endpoint with 3 bilingual articles (Prague hidden gems, food guide, Český Krumlov day trip)
+- Blog route added to next-intl routing configuration
+
+### Changed
+- About page: replaced placeholder gray boxes with real photos (founder portrait, team gallery, bottom photo gallery)
+- Homepage Hero: added real background image (Prague panoramic view)
+- Homepage GuideProfile: replaced placeholder with real Uliana portrait photo
+- Reviews page: replaced 12 placeholder squares with 7 real tour photos in responsive grid
+- Removed unused PhotoGallery import from Reviews page
+
 ## [1.0.5] - 2026-03-03
 
 ### Fixed

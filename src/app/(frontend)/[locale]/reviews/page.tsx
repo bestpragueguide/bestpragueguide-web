@@ -1,14 +1,26 @@
 export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import { Suspense } from 'react'
 import { getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
-import { PhotoGallery } from '@/components/reviews/PhotoGallery'
 import { ReviewFilter } from '@/components/reviews/ReviewFilter'
 import { ReviewCard } from '@/components/reviews/ReviewCard'
+
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
+
+const galleryPhotos = [
+  { src: `${SERVER_URL}/api/media/file/photo_1_2026-03-03_18-30-46.jpg`, alt: 'Guide at the Astronomical Clock' },
+  { src: `${SERVER_URL}/api/media/file/photo_2_2026-03-03_18-30-45.jpg`, alt: 'Prague panoramic view with red umbrella' },
+  { src: `${SERVER_URL}/api/media/file/photo_5_2026-03-03_18-30-45.jpg`, alt: 'Family tour at Tyn Church' },
+  { src: `${SERVER_URL}/api/media/file/photo_3_2026-03-03_18-30-45.jpg`, alt: 'Guide by the Vltava River' },
+  { src: `${SERVER_URL}/api/media/file/photo_7_2026-03-03_18-30-45.jpg`, alt: 'Family at Kampa Island' },
+  { src: `${SERVER_URL}/api/media/file/photo_6_2026-03-03_18-30-45.jpg`, alt: 'Tourists at Vltava riverbank' },
+  { src: `${SERVER_URL}/api/media/file/photo_4_2026-03-03_18-30-45.jpg`, alt: 'Guide portrait in Old Town' },
+]
 
 export async function generateMetadata({
   params,
@@ -50,12 +62,6 @@ export default async function ReviewsPage({
     // No reviews yet
   }
 
-  // Placeholder photos (will be replaced with real tourist photos)
-  const placeholderPhotos = Array.from({ length: 12 }, (_, i) => ({
-    url: '',
-    alt: `Tourist in Prague ${i + 1}`,
-  }))
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Breadcrumbs
@@ -70,20 +76,19 @@ export default async function ReviewsPage({
         </h1>
         <h2 className="text-lg text-gray mb-8">{t('photoGalleryHeading')}</h2>
 
-        {placeholderPhotos[0].url ? (
-          <PhotoGallery photos={placeholderPhotos} />
-        ) : (
-          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <div
-                key={i}
-                className="aspect-square bg-gray-light rounded-lg flex items-center justify-center text-gray text-xs"
-              >
-                Photo {i + 1}
-              </div>
-            ))}
-          </div>
-        )}
+        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+          {galleryPhotos.map((photo, i) => (
+            <div key={i} className="relative aspect-square rounded-lg overflow-hidden">
+              <Image
+                src={photo.src}
+                alt={photo.alt}
+                fill
+                className="object-cover hover:scale-105 transition-transform duration-300"
+                sizes="(max-width: 640px) 33vw, (max-width: 1024px) 25vw, 14vw"
+              />
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* Text reviews section */}

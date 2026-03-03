@@ -12,6 +12,7 @@ export const routing = defineRouting({
     '/contact': { en: '/contact', ru: '/kontakty' },
     '/faq': { en: '/faq', ru: '/voprosy' },
     '/blog': { en: '/blog', ru: '/blog' },
+    '/blog/[slug]': { en: '/blog/[slug]', ru: '/blog/[slug]' },
     '/privacy': { en: '/privacy', ru: '/privacy' },
     '/terms': { en: '/terms', ru: '/terms' },
     '/cancellation-policy': {
