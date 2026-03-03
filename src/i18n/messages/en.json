@@ -43,7 +43,9 @@
     "noPayment": "No payment until we confirm",
     "freeCancellation": "Free cancellation 24h before",
     "private": "100% private — just your group",
-    "success": "Thank you! We received your request and will confirm within 2 hours.",
+    "successTitle": "Request Received!",
+    "successMessage": "Thank you! We received your request and will confirm within 2 hours.",
+    "referenceNumber": "Reference number",
     "errorGeneric": "Something went wrong. Please try again or contact us directly."
   },
   "process": {

@@ -12,6 +12,7 @@ import { TourReviews } from '@/components/tours/TourReviews'
 import { TourRelated } from '@/components/tours/TourRelated'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { StickyBookButton } from '@/components/booking/StickyBookButton'
+import { BookingRequestForm } from '@/components/booking/BookingRequestForm'
 
 async function getTour(slug: string, locale: string) {
   try {
@@ -285,14 +286,14 @@ export default async function TourDetailPage({
               )}
             </div>
 
-            {/* Booking form placeholder — will be replaced in Task 10 */}
-            <div className="space-y-4">
-              <div className="text-center py-8 text-sm text-gray border-2 border-dashed border-gray-light rounded-lg">
-                {locale === 'ru'
-                  ? 'Форма бронирования'
-                  : 'Booking form placeholder'}
-              </div>
-            </div>
+            {/* Booking form */}
+            <BookingRequestForm
+              tourId={tour.id as number}
+              tourName={tour.title}
+              price={tour.groupPrice}
+              surchargePercent={tour.groupSurchargePercent ?? undefined}
+              locale={locale}
+            />
 
             {/* Trust badges */}
             <div className="mt-6 space-y-3">

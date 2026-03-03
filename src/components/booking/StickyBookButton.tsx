@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { BookingModal } from './BookingModal'
+import { BookingRequestForm } from './BookingRequestForm'
 
 interface StickyBookButtonProps {
   tourId: number
@@ -12,6 +13,7 @@ interface StickyBookButtonProps {
 }
 
 export function StickyBookButton({
+  tourId,
   tourName,
   price,
   surchargePercent,
@@ -36,7 +38,7 @@ export function StickyBookButton({
           </div>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="px-6 py-3 bg-gold text-white font-medium rounded-lg hover:bg-gold-dark transition-colors text-sm"
+            className="px-6 py-3 bg-gold text-white font-medium rounded-lg hover:bg-gold-dark transition-colors text-sm min-h-[44px]"
           >
             {locale === 'ru' ? 'Забронировать' : 'Book Now'}
           </button>
@@ -50,7 +52,15 @@ export function StickyBookButton({
         price={price}
         surchargePercent={surchargePercent}
         locale={locale}
-      />
+      >
+        <BookingRequestForm
+          tourId={tourId}
+          tourName={tourName}
+          price={price}
+          surchargePercent={surchargePercent}
+          locale={locale}
+        />
+      </BookingModal>
     </>
   )
 }

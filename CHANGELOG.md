@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.0] - 2026-03-03
+
+### Added
+- BookingRequestForm with Zod validation, date/time/guests selectors
+- Booking API endpoint (`/api/booking/request`) with rate limiting
+- Booking validation schema and request ref generator (`src/lib/booking.ts`)
+- Form wired into tour detail page sidebar and mobile BookingModal
+- Booking success/error states with reference number display
+
 ## [0.9.0] - 2026-03-03
 
 ### Added
