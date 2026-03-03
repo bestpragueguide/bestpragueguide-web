@@ -11,6 +11,7 @@ import { TourFAQ } from '@/components/tours/TourFAQ'
 import { TourReviews } from '@/components/tours/TourReviews'
 import { TourRelated } from '@/components/tours/TourRelated'
 import { RichText } from '@payloadcms/richtext-lexical/react'
+import { StickyBookButton } from '@/components/booking/StickyBookButton'
 
 async function getTour(slug: string, locale: string) {
   try {
@@ -164,7 +165,7 @@ export default async function TourDetailPage({
   }))
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 lg:pb-8">
       <Breadcrumbs
         items={[
           {
@@ -327,6 +328,15 @@ export default async function TourDetailPage({
           </div>
         </div>
       </div>
+
+      {/* Mobile sticky book button */}
+      <StickyBookButton
+        tourId={tour.id as number}
+        tourName={tour.title}
+        price={tour.groupPrice}
+        surchargePercent={tour.groupSurchargePercent ?? undefined}
+        locale={locale}
+      />
     </div>
   )
 }

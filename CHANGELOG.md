@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - 2026-03-03
+
+### Added
+- StickyBookButton for mobile tour detail pages (fixed bottom CTA)
+- BookingModal with slide-up animation for mobile booking flow
+- Bottom padding on tour detail pages to prevent sticky button overlap
+- Slide-up CSS animation for modal
+
 ## [0.8.0] - 2026-03-03
 
 ### Added
