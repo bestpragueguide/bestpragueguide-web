@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0] - 2026-03-03
+
+### Added
+- Favicon (SVG with navy bg, gold "B" letter)
+- metadataBase for proper Open Graph URL resolution
+
+### Fixed
+- ESLint configuration for Next.js 15 + eslint 9 flat config
+- TypeScript errors: ZodError.issues (not .errors), sitemap date casting
+- Unused variable warnings in Button and BookingRequestForm
+- Production build now passes cleanly (TypeScript + ESLint)
+
 ## [0.17.0] - 2026-03-03
 
 ### Added

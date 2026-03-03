@@ -51,7 +51,7 @@ export function Button({
   const classes = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`
 
   if ('href' in props && props.href) {
-    const { href, target, rel, ...rest } = props
+    const { href, target, rel } = props
     return (
       <Link href={href} className={classes} target={target} rel={rel}>
         {children}
@@ -59,9 +59,9 @@ export function Button({
     )
   }
 
-  const { href: _, ...buttonProps } = props as ButtonAsButton
+  const buttonProps = props as ButtonAsButton
   return (
-    <button className={classes} {...buttonProps}>
+    <button className={classes} type={buttonProps.type} onClick={buttonProps.onClick} disabled={buttonProps.disabled}>
       {children}
     </button>
   )

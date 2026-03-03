@@ -34,6 +34,12 @@ export const metadata: Metadata = {
   title: 'Best Prague Guide — Private Tours in Prague',
   description:
     'Private tours in Prague from a guide with 17 years of experience.',
+  icons: {
+    icon: '/favicon.svg',
+  },
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com',
+  ),
 }
 
 export default async function FrontendLayout({

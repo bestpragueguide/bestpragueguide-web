@@ -75,7 +75,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }
         entries.push({
           url: `${BASE_URL}/en/tours/${enSlug}`,
-          lastModified: new Date(tour.updatedAt),
+          lastModified: new Date(tour.updatedAt as string),
           alternates: { languages: alternates },
         })
       }
@@ -89,7 +89,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }
         entries.push({
           url: `${BASE_URL}/ru/ekskursii/${ruSlug}`,
-          lastModified: new Date(tour.updatedAt),
+          lastModified: new Date(tour.updatedAt as string),
           alternates: { languages: alternates },
         })
       }

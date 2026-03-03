@@ -15,7 +15,6 @@ interface BookingRequestFormProps {
 export function BookingRequestForm({
   tourId,
   tourName,
-  price,
   surchargePercent,
   locale,
 }: BookingRequestFormProps) {

@@ -9,7 +9,6 @@ export function JsonLd({ data }: { data: Record<string, unknown> }) {
     <script
       type="application/ld+json"
       suppressHydrationWarning
-      // eslint-disable-next-line react/no-danger -- Safe: JSON.stringify of server-side schema data
       dangerouslySetInnerHTML={{ __html: json }}
     />
   )
