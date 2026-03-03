@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.16.0] - 2026-03-03
+
+### Added
+- Standalone output mode for production Docker builds
+- Remote image patterns for R2 and bestpragueguide.com domains
+- WebP/AVIF image format support via Sharp
+- ISR with 1-hour revalidation on tour detail pages
+
 ## [0.15.0] - 2026-03-03
 
 ### Added
