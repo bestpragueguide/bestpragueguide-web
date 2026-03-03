@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.15.0] - 2026-03-03
+
+### Added
+- Google Tag Manager integration (conditional on NEXT_PUBLIC_GTM_ID)
+- Yandex Metrika with Webvisor (conditional on NEXT_PUBLIC_YANDEX_METRIKA_ID)
+- Both render nothing if env vars are not set (safe for dev)
+
 ## [0.14.0] - 2026-03-03
 
 ### Added

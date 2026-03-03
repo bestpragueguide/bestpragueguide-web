@@ -9,6 +9,11 @@ import { Nav } from '@/components/layout/Nav'
 import { Footer } from '@/components/layout/Footer'
 import { WhatsAppButton } from '@/components/shared/WhatsAppButton'
 import { OrganizationSchema } from '@/components/seo/OrganizationSchema'
+import {
+  GoogleTagManagerHead,
+  GoogleTagManagerBody,
+} from '@/components/analytics/GoogleTagManager'
+import { YandexMetrika } from '@/components/analytics/YandexMetrika'
 import '@/app/globals.css'
 
 const cormorant = Cormorant_Garamond({
@@ -49,6 +54,7 @@ export default async function FrontendLayout({
   return (
     <html lang={locale} dir="ltr">
       <body className={`${cormorant.variable} ${dmSans.variable}`}>
+        <GoogleTagManagerBody />
         <NextIntlClientProvider messages={messages}>
           <Nav />
           <main className="pt-16">{children}</main>
@@ -56,6 +62,8 @@ export default async function FrontendLayout({
           <WhatsAppButton locale={locale} />
           <OrganizationSchema />
         </NextIntlClientProvider>
+        <GoogleTagManagerHead />
+        <YandexMetrika />
       </body>
     </html>
   )
