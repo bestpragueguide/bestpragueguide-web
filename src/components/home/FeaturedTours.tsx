@@ -58,7 +58,7 @@ export async function FeaturedTours() {
             className="relative group rounded-xl overflow-hidden bg-navy-light aspect-[2/1] flex items-end p-6"
           >
             <Image
-              src={`${SERVER_URL}/api/media/file/photo_2_2026-03-03_18-30-43.jpg`}
+              src={`${SERVER_URL}/api/media/file/photo_2_2026-03-03_18-30-45.jpg`}
               alt={t('pragueTours')}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -74,7 +74,7 @@ export async function FeaturedTours() {
             className="relative group rounded-xl overflow-hidden bg-navy-light aspect-[2/1] flex items-end p-6"
           >
             <Image
-              src={`${SERVER_URL}/api/media/file/photo_3_2026-03-03_18-30-43.jpg`}
+              src={`${SERVER_URL}/api/media/file/photo_3_2026-03-03_18-30-45.jpg`}
               alt={t('fromPrague')}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-500"

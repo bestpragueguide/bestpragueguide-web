@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.3] - 2026-03-04
+
+### Fixed
+- Homepage category card images (Prague Tours, From Prague) returning 500 — corrected media filenames
+
 ## [1.1.2] - 2026-03-04
 
 ### Fixed
