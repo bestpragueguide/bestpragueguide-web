@@ -16,6 +16,7 @@ import { RichText } from '@payloadcms/richtext-lexical/react'
 import { StickyBookButton } from '@/components/booking/StickyBookButton'
 import { BookingRequestForm } from '@/components/booking/BookingRequestForm'
 import { TourSchema } from '@/components/seo/TourSchema'
+import { TourViewTracker } from '@/components/analytics/TourViewTracker'
 
 async function getTour(slug: string, locale: string) {
   try {
@@ -117,6 +118,10 @@ export async function generateMetadata({
   const enSlug = locale === 'en' ? slug : otherSlug
   const ruSlug = locale === 'ru' ? slug : otherSlug
 
+  const heroImage = typeof (tour as any).heroImage === 'object' ? (tour as any).heroImage : null
+  const ogImageUrl = heroImage?.sizes?.og?.url || heroImage?.sizes?.hero?.url || heroImage?.url || ''
+  const ogImage = ogImageUrl ? (ogImageUrl.startsWith('http') ? ogImageUrl : `${baseUrl}${ogImageUrl}`) : `${baseUrl}/og-default.jpg`
+
   return {
     title,
     description,
@@ -132,6 +137,16 @@ export async function generateMetadata({
       description,
       type: 'article',
       locale: locale === 'ru' ? 'ru_RU' : 'en_US',
+      alternateLocale: locale === 'ru' ? ['en_US'] : ['ru_RU'],
+      siteName: 'Best Prague Guide',
+      url: `${baseUrl}/${locale}/${locale === 'ru' ? 'ekskursii' : 'tours'}/${slug}`,
+      images: [{ url: ogImage, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImage],
     },
   }
 }
@@ -379,6 +394,9 @@ export default async function TourDetailPage({
         locale={locale}
         slug={slug}
       />
+
+      {/* Analytics: track tour view */}
+      <TourViewTracker tourName={tour.title} tourId={tour.id as number} />
 
       {/* Mobile sticky book button */}
       <StickyBookButton

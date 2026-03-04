@@ -1,5 +1,7 @@
 'use client'
 
+import { trackWhatsAppClick } from '@/lib/analytics'
+
 interface WhatsAppButtonProps {
   tourName?: string
   locale: string
@@ -22,6 +24,7 @@ export function WhatsAppButton({ tourName, locale }: WhatsAppButtonProps) {
       href={url}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={() => trackWhatsAppClick(tourName)}
       className="fixed bottom-20 lg:bottom-6 right-4 z-[70] w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
       aria-label="WhatsApp"
     >

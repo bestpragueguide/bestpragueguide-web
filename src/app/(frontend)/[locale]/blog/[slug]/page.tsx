@@ -73,6 +73,10 @@ export async function generateMetadata({
     const enSlug = locale === 'en' ? slug : otherSlug
     const ruSlug = locale === 'ru' ? slug : otherSlug
 
+    const fullOgImage = ogImageUrl
+      ? (ogImageUrl.startsWith('http') ? ogImageUrl : `${baseUrl}${ogImageUrl}`)
+      : `${baseUrl}/og-default.jpg`
+
     return {
       title: seo?.metaTitle || `${post.title} — Best Prague Guide`,
       description: seo?.metaDescription || post.excerpt,
@@ -86,9 +90,18 @@ export async function generateMetadata({
       openGraph: {
         title: seo?.metaTitle || post.title,
         description: seo?.metaDescription || post.excerpt,
-        images: ogImageUrl ? [`${SERVER_URL}${ogImageUrl}`] : undefined,
+        images: [{ url: fullOgImage, width: 1200, height: 630 }],
         type: 'article',
         publishedTime: post.publishedAt as string,
+        siteName: 'Best Prague Guide',
+        locale: locale === 'ru' ? 'ru_RU' : 'en_US',
+        alternateLocale: locale === 'ru' ? ['en_US'] : ['ru_RU'],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: seo?.metaTitle || (post.title as string),
+        description: seo?.metaDescription || (post.excerpt as string),
+        images: [fullOgImage],
       },
     }
   } catch {

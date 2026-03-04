@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
+import { buildPageMetadata } from '@/lib/metadata'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { FAQAccordion } from '@/components/shared/FAQAccordion'
 import { JsonLd } from '@/components/seo/JsonLd'
@@ -11,7 +12,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'meta' })
-  return { title: t('faqTitle'), description: t('faqDesc') }
+  const title = t('faqTitle')
+  const description = t('faqDesc')
+
+  return {
+    title,
+    description,
+    ...buildPageMetadata(locale, 'faq', { title, description }),
+  }
 }
 
 export default async function FAQPage({

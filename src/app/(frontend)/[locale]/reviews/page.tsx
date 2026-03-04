@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import { Suspense } from 'react'
 import { getTranslations } from 'next-intl/server'
+import { buildPageMetadata } from '@/lib/metadata'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
@@ -30,7 +31,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'meta' })
-  return { title: t('reviewsTitle'), description: t('reviewsDesc') }
+  const title = t('reviewsTitle')
+  const description = t('reviewsDesc')
+
+  return {
+    title,
+    description,
+    ...buildPageMetadata(locale, 'reviews', { title, description }),
+  }
 }
 
 export default async function ReviewsPage({

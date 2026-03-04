@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
+import { buildPageMetadata } from '@/lib/metadata'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
@@ -16,12 +17,15 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const t = await getTranslations({ locale, namespace: 'meta' })
+  const title = locale === 'ru' ? 'Блог — Best Prague Guide' : 'Blog — Best Prague Guide'
+  const description = locale === 'ru'
+    ? 'Статьи о Праге, советы путешественникам, гастрономические маршруты и истории от гида с 17-летним опытом.'
+    : 'Articles about Prague, travel tips, food guides, and stories from a guide with 17 years of experience.'
+
   return {
-    title: locale === 'ru' ? 'Блог — Best Prague Guide' : 'Blog — Best Prague Guide',
-    description: locale === 'ru'
-      ? 'Статьи о Праге, советы путешественникам, гастрономические маршруты и истории от гида с 17-летним опытом.'
-      : 'Articles about Prague, travel tips, food guides, and stories from a guide with 17 years of experience.',
+    title,
+    description,
+    ...buildPageMetadata(locale, 'blog', { title, description }),
   }
 }
 

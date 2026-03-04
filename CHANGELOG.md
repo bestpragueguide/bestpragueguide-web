@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.5] - 2026-03-04
+
+### Added
+- `buildPageMetadata` helper (`src/lib/metadata.ts`) for canonical URLs, hreflang alternates, OG, and Twitter card metadata
+- Analytics event tracking utility (`src/lib/analytics.ts`) with GTM dataLayer + Yandex Metrika reachGoal integration
+- `TourViewTracker` client component fires `tour_view` event on tour detail page mount
+- Default branded OG image (`public/og-default.jpg`, 1200x630) as fallback for all pages
+- Canonical URLs and hreflang alternates on all 10 static pages (homepage, tours, blog, about, reviews, contact, FAQ, privacy, terms, cancellation policy)
+- OG image + Twitter card metadata on tour detail pages (hero image with fallback)
+- Twitter card metadata on blog detail pages (with OG image fallback)
+- Default OG + Twitter card metadata in layout.tsx (inherited by all pages)
+- `booking_submit` analytics event on successful booking form submission
+- `cta_click` analytics event on mobile "Book Now" sticky button
+- `whatsapp_click` analytics event on floating WhatsApp button
+- `siteName` and `alternateLocale` to tour and blog detail OG metadata
+
 ## [1.1.4] - 2026-03-04
 
 ### Added

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { TIME_SLOTS } from '@/lib/booking'
+import { trackBookingSubmit } from '@/lib/analytics'
 
 interface BookingRequestFormProps {
   tourId: number
@@ -61,6 +62,7 @@ export function BookingRequestForm({
       if (res.ok && result.success) {
         setStatus('success')
         setRequestRef(result.requestRef || '')
+        trackBookingSubmit(tourName, tourId)
       } else if (result.details) {
         const fieldErrors: Record<string, string> = {}
         for (const err of result.details) {

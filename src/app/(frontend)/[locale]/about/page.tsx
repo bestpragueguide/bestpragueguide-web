@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
+import { buildPageMetadata } from '@/lib/metadata'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { Button } from '@/components/shared/Button'
 import { Badge } from '@/components/shared/Badge'
@@ -28,7 +29,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'meta' })
-  return { title: t('aboutTitle'), description: t('aboutDesc') }
+  const title = t('aboutTitle')
+  const description = t('aboutDesc')
+
+  return {
+    title,
+    description,
+    ...buildPageMetadata(locale, 'about', { title, description }),
+  }
 }
 
 export default async function AboutPage({

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
+import { buildPageMetadata } from '@/lib/metadata'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 
 export async function generateMetadata({
@@ -9,7 +10,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'meta' })
-  return { title: t('termsTitle'), description: t('termsDesc') }
+  const title = t('termsTitle')
+  const description = t('termsDesc')
+
+  return {
+    title,
+    description,
+    ...buildPageMetadata(locale, 'terms', { title, description }),
+  }
 }
 
 export default async function TermsPage({

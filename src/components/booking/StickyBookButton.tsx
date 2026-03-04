@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { BookingModal } from './BookingModal'
 import { BookingRequestForm } from './BookingRequestForm'
+import { trackCtaClick } from '@/lib/analytics'
 
 interface StickyBookButtonProps {
   tourId: number
@@ -37,7 +38,10 @@ export function StickyBookButton({
             </p>
           </div>
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => {
+              trackCtaClick(tourName, 'sticky_button')
+              setIsModalOpen(true)
+            }}
             className="px-6 py-3 bg-gold text-white font-medium rounded-lg hover:bg-gold-dark transition-colors text-sm min-h-[44px]"
           >
             {locale === 'ru' ? 'Забронировать' : 'Book Now'}

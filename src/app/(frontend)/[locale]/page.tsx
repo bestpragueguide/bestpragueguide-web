@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
+import { buildPageMetadata } from '@/lib/metadata'
 import { Hero } from '@/components/home/Hero'
 import { TrustBar } from '@/components/home/TrustBar'
 import { GuideProfile } from '@/components/home/GuideProfile'
@@ -20,15 +21,13 @@ export async function generateMetadata({
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'meta' })
 
+  const title = t('homeTitle')
+  const description = t('homeDesc')
+
   return {
-    title: t('homeTitle'),
-    description: t('homeDesc'),
-    openGraph: {
-      title: t('homeTitle'),
-      description: t('homeDesc'),
-      type: 'website',
-      locale: locale === 'ru' ? 'ru_RU' : 'en_US',
-    },
+    title,
+    description,
+    ...buildPageMetadata(locale, '', { title, description }),
   }
 }
 
