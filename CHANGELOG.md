@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.4] - 2026-03-04
+
+### Changed
+- Currency selector (EUR/CZK/USD pills) moved to top of booking form as single price display with dynamic total
+- Booking form shows total price at top (updates live when guests > 4 triggers surcharge)
+- Removed duplicate static price block from tour detail sidebar — form handles price display with currency switching
+- Surcharge note in guest selector simplified to text-only "+30% surcharge for group of 5–8"
+
 ## [1.3.3] - 2026-03-04
 
 ### Added
