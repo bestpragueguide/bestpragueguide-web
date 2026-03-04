@@ -240,7 +240,7 @@ export default async function TourDetailPage({
           </h1>
 
           {/* Description */}
-          <div className="mt-6 prose prose-navy max-w-none">
+          <div className="mt-6 prose max-w-none prose-headings:font-heading prose-headings:text-navy prose-p:text-navy/80">
             {tour.description && (
               <RichText data={tour.description} />
             )}

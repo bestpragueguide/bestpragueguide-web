@@ -1,5 +1,4 @@
 import { getLocale, getTranslations } from 'next-intl/server'
-import { Button } from '@/components/shared/Button'
 
 export async function CTASection() {
   const locale = await getLocale()
@@ -14,25 +13,21 @@ export async function CTASection() {
         <p className="mt-4 text-lg text-white/80">{t('subtitle')}</p>
 
         <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-          <Button
+          <a
             href={`/${locale}/tours`}
-            variant="ghost"
-            className="no-underline bg-white !text-navy hover:bg-cream"
-            size="lg"
+            className="inline-flex items-center justify-center font-medium rounded-lg px-8 py-4 text-lg bg-white text-navy hover:bg-cream transition-colors visited:text-navy"
           >
             {t('chooseTour')}
-          </Button>
+          </a>
 
-          <Button
+          <a
             href="https://wa.me/420776306858"
-            variant="ghost"
-            className="no-underline border-2 border-white !text-white hover:bg-white/10"
-            size="lg"
+            className="inline-flex items-center justify-center font-medium rounded-lg px-8 py-4 text-lg border-2 border-white text-white hover:bg-white/10 transition-colors visited:text-white"
             target="_blank"
             rel="noopener noreferrer"
           >
             {t('whatsapp')}
-          </Button>
+          </a>
         </div>
       </div>
     </section>

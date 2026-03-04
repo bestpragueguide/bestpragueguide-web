@@ -7,7 +7,11 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Language switcher on tour and blog detail pages now redirects to the correct localized slug
 - LanguageSwitcher reads hreflang metadata links for dynamic pages, with manual path mapping fallback
-- CTA "Choose a Tour" button text now visible (was white-on-white due to Tailwind v4 class ordering)
+- CTA "Choose a Tour" button text stays visible after visiting the link (added `visited:` styles)
+- Blog post and tour description rich text now properly formatted (headings, spacing, paragraphs)
+
+### Added
+- `@tailwindcss/typography` plugin for proper prose/rich text styling
 
 ### Changed
 - Homepage category cards (Prague Tours, From Prague) now show real photos with hover zoom effect

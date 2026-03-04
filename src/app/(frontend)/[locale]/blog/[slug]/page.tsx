@@ -190,7 +190,7 @@ export default async function BlogPostPage({
         )}
 
         {/* Content */}
-        <div className="prose prose-lg prose-navy max-w-none">
+        <div className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-navy prose-p:text-navy/80">
           {post.content && (
             <RichText data={post.content} />
           )}
