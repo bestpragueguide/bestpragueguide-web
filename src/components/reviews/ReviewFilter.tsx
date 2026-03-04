@@ -1,15 +1,16 @@
 'use client'
 
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 
 export function ReviewFilter() {
   const t = useTranslations('reviews')
+  const locale = useLocale()
   const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
 
-  const activeLang = searchParams.get('lang') || 'all'
+  const activeLang = searchParams.get('lang') || locale
 
   function setFilter(value: string) {
     const params = new URLSearchParams(searchParams.toString())

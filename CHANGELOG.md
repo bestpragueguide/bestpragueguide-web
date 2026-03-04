@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.8] - 2026-03-04
+
+### Added
+- ContactMessages Payload CMS collection — all contact form submissions are now stored in the database and visible in admin panel under Bookings group
+- Contact messages saved with name, email, phone, message, locale, IP geolocation, and status (new/read/replied)
+
+### Fixed
+- Reviews page now shows only reviews matching the current language by default (EN page shows EN reviews, RU page shows RU reviews)
+- ReviewFilter component defaults to current locale instead of "All"
+
 ## [1.1.7] - 2026-03-04
 
 ### Fixed

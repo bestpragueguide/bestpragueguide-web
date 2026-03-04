@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import { getPayload } from 'payload'
+import config from '@payload-config'
 import { sendEmail, sendAdminEmail } from '@/lib/email'
 import { sendTelegramMessage } from '@/lib/telegram'
 import React from 'react'
@@ -206,6 +208,30 @@ export async function POST(request: NextRequest) {
     // Fetch IP geolocation (non-blocking — won't fail the request)
     const ipInfo = await getIpInfo(ip)
     const location = [ipInfo.city, ipInfo.region, ipInfo.country].filter(Boolean).join(', ')
+
+    // Save to Payload CMS
+    try {
+      const payload = await getPayload({ config })
+      await payload.create({
+        collection: 'contact-messages',
+        data: {
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          message: data.message,
+          locale: data.locale,
+          ipInfo: {
+            ip: ipInfo.ip,
+            city: ipInfo.city || '',
+            region: ipInfo.region || '',
+            country: ipInfo.country || '',
+            isp: ipInfo.org || '',
+          },
+        },
+      })
+    } catch (err) {
+      console.error('[Contact] Failed to save to CMS:', err)
+    }
 
     // Send notifications in parallel
     await Promise.allSettled([

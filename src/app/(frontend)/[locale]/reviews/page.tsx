@@ -56,8 +56,9 @@ export default async function ReviewsPage({
   try {
     const payload = await getPayload({ config })
     const where: any = { status: { equals: 'approved' } }
-    if (lang && lang !== 'all') {
-      where.language = { equals: lang }
+    const filterLang = lang || locale
+    if (filterLang !== 'all') {
+      where.language = { equals: filterLang }
     }
     const result = await payload.find({
       collection: 'reviews',

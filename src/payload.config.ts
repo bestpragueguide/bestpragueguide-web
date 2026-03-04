@@ -10,6 +10,7 @@ import { Reviews } from './collections/Reviews'
 import { Pages } from './collections/Pages'
 import { Media } from './collections/Media'
 import { BlogPosts } from './collections/BlogPosts'
+import { ContactMessages } from './collections/ContactMessages'
 import { SiteSettings } from './globals/SiteSettings'
 
 const filename = fileURLToPath(import.meta.url)
@@ -57,6 +58,7 @@ export default buildConfig({
     Pages,
     Media,
     BlogPosts,
+    ContactMessages,
   ],
 
   globals: [SiteSettings],
