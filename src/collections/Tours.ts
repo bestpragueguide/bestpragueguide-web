@@ -60,6 +60,9 @@ export const Tours: CollectionConfig = {
         {
           name: 'time',
           type: 'text',
+          admin: {
+            description: 'Relative time from start (e.g. "Start", "+30 min", "+1h 30min")',
+          },
         },
         {
           name: 'title',

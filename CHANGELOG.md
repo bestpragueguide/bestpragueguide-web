@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.6] - 2026-03-04
+
+### Changed
+- Tour itinerary times changed from exact clock times (10:00, 10:45) to relative durations (Start, +45 min) — customers choose their own starting time
+- Contact form emails now sent from info@bestpragueguide.com (fixed RESEND_FROM_EMAIL env var)
+
 ## [1.2.5] - 2026-03-04
 
 ### Added
