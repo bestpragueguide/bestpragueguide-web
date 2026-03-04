@@ -92,6 +92,19 @@ export const BookingRequests: CollectionConfig = {
       },
     },
     {
+      name: 'currency',
+      type: 'select',
+      defaultValue: 'EUR',
+      options: [
+        { label: 'EUR (€)', value: 'EUR' },
+        { label: 'CZK (Kč)', value: 'CZK' },
+        { label: 'USD ($)', value: 'USD' },
+      ],
+      admin: {
+        description: 'Currency selected by customer at booking time',
+      },
+    },
+    {
       name: 'status',
       type: 'select',
       required: true,

@@ -34,6 +34,8 @@ export async function sendTelegramMessage(text: string) {
   }
 }
 
+import { formatPrice, type Currency } from '@/lib/currency'
+
 export function formatBookingTelegramMessage({
   requestRef,
   tourName,
@@ -45,6 +47,7 @@ export function formatBookingTelegramMessage({
   customerPhone,
   specialRequests,
   totalPrice,
+  currency,
   ip,
   location,
   isp,
@@ -59,6 +62,7 @@ export function formatBookingTelegramMessage({
   customerPhone: string
   specialRequests: string
   totalPrice?: number
+  currency?: string
   ip?: string
   location?: string
   isp?: string
@@ -69,7 +73,7 @@ export function formatBookingTelegramMessage({
   msg += `📅 <b>Date:</b> ${preferredDate}\n`
   msg += `🕐 <b>Time:</b> ${preferredTime}\n`
   msg += `👥 <b>Guests:</b> ${guests}\n`
-  if (totalPrice) msg += `💰 <b>Price:</b> €${totalPrice}\n`
+  if (totalPrice) msg += `💰 <b>Price:</b> ${formatPrice(totalPrice, (currency as Currency) || 'EUR')}\n`
   msg += '\n'
   msg += `👤 <b>Customer:</b> ${customerName}\n`
   msg += `📧 <b>Email:</b> ${customerEmail}\n`

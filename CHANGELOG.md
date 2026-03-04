@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.3] - 2026-03-04
+
+### Added
+- Multicurrency price display on tour detail pages — EUR (primary) with secondary USD/CZK prices below
+- Currency selector (EUR/CZK/USD pills) on booking form surcharge display
+- `currency` field on BookingRequests collection and Zod schema (optional, default EUR)
+- Shared `src/lib/currency.ts` module with `formatPrice`, `secondaryPrices`, rates, and symbols
+- Fixed conversion rates: CZK = EUR x 25, USD = EUR x 1.25
+
+### Changed
+- All booking notifications (email, Telegram, WhatsApp, Slack) now show price in customer-selected currency
+- Tour detail sidebar, StickyBookButton, and BookingModal show secondary prices (e.g. "≈ $624 / 12 475 Kč")
+- Schema.org structured data unchanged — stays EUR only for SEO
+
 ## [1.3.2] - 2026-03-04
 
 ### Added

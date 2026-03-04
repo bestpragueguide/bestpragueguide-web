@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useCallback } from 'react'
+import { secondaryPrices } from '@/lib/currency'
 
 interface BookingModalProps {
   isOpen: boolean
@@ -66,6 +67,9 @@ export function BookingModal({
                     ? 'за группу до 4'
                     : 'per group up to 4'}
                 </span>
+              </p>
+              <p className="text-[10px] text-gray/70">
+                {secondaryPrices(price)}
               </p>
             </div>
             <button

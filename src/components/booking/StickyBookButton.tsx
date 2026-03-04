@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { BookingModal } from './BookingModal'
 import { BookingRequestForm } from './BookingRequestForm'
 import { trackCtaClick } from '@/lib/analytics'
+import { secondaryPrices } from '@/lib/currency'
 
 interface StickyBookButtonProps {
   tourId: number
@@ -31,6 +32,9 @@ export function StickyBookButton({
             <span className="text-xl font-bold text-gold">
               €{price}
             </span>
+            <p className="text-[10px] text-gray/70 leading-tight">
+              {secondaryPrices(price)}
+            </p>
             <p className="text-xs text-gray">
               {locale === 'ru'
                 ? 'за группу до 4'

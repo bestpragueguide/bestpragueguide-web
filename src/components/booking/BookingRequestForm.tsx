@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { TIME_SLOTS } from '@/lib/booking'
 import { trackBookingSubmit } from '@/lib/analytics'
+import { currencies, formatPrice, type Currency } from '@/lib/currency'
 
 interface BookingRequestFormProps {
   tourId: number
@@ -27,6 +28,7 @@ export function BookingRequestForm({
   const [requestRef, setRequestRef] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [guests, setGuests] = useState(2)
+  const [currency, setCurrency] = useState<Currency>('EUR')
 
   const tomorrow = new Date()
   tomorrow.setDate(tomorrow.getDate() + 1)
@@ -53,6 +55,7 @@ export function BookingRequestForm({
       customerPhone: (form.elements.namedItem('customerPhone') as HTMLInputElement).value || '',
       specialRequests: (form.elements.namedItem('specialRequests') as HTMLTextAreaElement).value || '',
       totalPrice,
+      currency,
       locale,
     }
 
@@ -179,11 +182,28 @@ export function BookingRequestForm({
         </select>
         {guests > 4 && surchargePercent && surchargePercent > 0 && (
           <div className="mt-2 bg-cream/50 rounded-lg p-3 text-center">
+            {/* Currency pills */}
+            <div className="flex justify-center gap-1 mb-2">
+              {currencies.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setCurrency(c)}
+                  className={`px-2.5 py-0.5 text-xs rounded-full border transition-colors ${
+                    currency === c
+                      ? 'bg-gold text-white border-gold'
+                      : 'bg-white text-gray border-gray-light hover:border-gold/50'
+                  }`}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
             <span className="text-2xl font-bold text-gold">
-              €{Math.round(price * (1 + surchargePercent / 100))}
+              {formatPrice(Math.round(price * (1 + surchargePercent / 100)), currency)}
             </span>
             <p className="text-xs text-gray mt-1">
-              €{price} + {surchargePercent}%{' '}
+              {formatPrice(price, currency)} + {surchargePercent}%{' '}
               {locale === 'ru' ? 'за группу 5–8' : 'for group of 5–8'}
             </p>
           </div>

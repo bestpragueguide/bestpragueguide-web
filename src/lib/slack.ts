@@ -1,3 +1,5 @@
+import { formatPrice, type Currency } from '@/lib/currency'
+
 const WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL
 
 export async function sendSlackMessage(payload: Record<string, unknown>) {
@@ -37,6 +39,7 @@ export function formatBookingSlackMessage({
   customerPhone,
   specialRequests,
   totalPrice,
+  currency,
   ip,
   location,
   isp,
@@ -51,6 +54,7 @@ export function formatBookingSlackMessage({
   customerPhone: string
   specialRequests: string
   totalPrice?: number
+  currency?: string
   ip?: string
   location?: string
   isp?: string
@@ -61,7 +65,7 @@ export function formatBookingSlackMessage({
     { type: 'mrkdwn', text: `*Date:*\n${preferredDate}` },
     { type: 'mrkdwn', text: `*Time:*\n${preferredTime}` },
     { type: 'mrkdwn', text: `*Guests:*\n${guests}` },
-    ...(totalPrice ? [{ type: 'mrkdwn', text: `*Price:*\n€${totalPrice}` }] : []),
+    ...(totalPrice ? [{ type: 'mrkdwn', text: `*Price:*\n${formatPrice(totalPrice, (currency as Currency) || 'EUR')}` }] : []),
     { type: 'mrkdwn', text: `*Customer:*\n${customerName}` },
     { type: 'mrkdwn', text: `*Email:*\n${customerEmail}` },
   ]

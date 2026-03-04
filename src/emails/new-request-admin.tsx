@@ -8,6 +8,7 @@ import {
   Hr,
   Preview,
 } from '@react-email/components'
+import { formatPrice, type Currency } from '@/lib/currency'
 
 interface NewRequestAdminEmailProps {
   requestRef: string
@@ -20,6 +21,7 @@ interface NewRequestAdminEmailProps {
   customerPhone: string
   specialRequests: string
   totalPrice?: number
+  currency?: string
   locale: string
   ip?: string
   location?: string
@@ -37,6 +39,7 @@ export function NewRequestAdminEmail({
   customerPhone,
   specialRequests,
   totalPrice,
+  currency,
   locale,
   ip,
   location,
@@ -74,7 +77,7 @@ export function NewRequestAdminEmail({
             </Text>
             {totalPrice != null && totalPrice > 0 && (
               <Text style={infoRow}>
-                <strong>Price:</strong> €{totalPrice}
+                <strong>Price:</strong> {formatPrice(totalPrice, (currency as Currency) || 'EUR')}
               </Text>
             )}
           </Section>

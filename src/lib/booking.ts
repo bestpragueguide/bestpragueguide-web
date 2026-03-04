@@ -20,6 +20,7 @@ export const bookingRequestSchema = z.object({
   customerPhone: z.string().max(20).optional().default(''),
   specialRequests: z.string().max(1000).optional().default(''),
   totalPrice: z.number().min(0).optional(),
+  currency: z.enum(['EUR', 'CZK', 'USD']).optional().default('EUR'),
   locale: z.enum(['en', 'ru']),
 })
 

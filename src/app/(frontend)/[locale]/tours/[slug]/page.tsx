@@ -17,6 +17,7 @@ import { StickyBookButton } from '@/components/booking/StickyBookButton'
 import { BookingRequestForm } from '@/components/booking/BookingRequestForm'
 import { TourSchema } from '@/components/seo/TourSchema'
 import { TourViewTracker } from '@/components/analytics/TourViewTracker'
+import { secondaryPrices } from '@/lib/currency'
 
 async function getTour(slug: string, locale: string) {
   try {
@@ -322,6 +323,9 @@ export default async function TourDetailPage({
               <span className="text-4xl font-bold text-gold">
                 €{tour.groupPrice}
               </span>
+              <p className="text-xs text-gray/70 mt-0.5">
+                {secondaryPrices(tour.groupPrice)}
+              </p>
               <p className="text-sm text-gray mt-1">
                 {locale === 'ru' ? 'за группу до 4 человек' : 'per group up to 4'}
               </p>

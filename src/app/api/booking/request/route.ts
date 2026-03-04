@@ -73,6 +73,7 @@ export async function POST(request: NextRequest) {
         customerLanguage: data.locale,
         specialRequests: data.specialRequests || '',
         totalPrice: data.totalPrice || 0,
+        currency: data.currency || 'EUR',
         status: 'new',
         ipInfo: {
           ip: ipInfo.ip,
@@ -96,6 +97,7 @@ export async function POST(request: NextRequest) {
       customerPhone: data.customerPhone || '',
       specialRequests: data.specialRequests || '',
       totalPrice: data.totalPrice || 0,
+      currency: data.currency || 'EUR',
       ip: ipInfo.ip,
       location,
       isp: ipInfo.org || '',
