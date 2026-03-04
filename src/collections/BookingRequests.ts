@@ -85,6 +85,13 @@ export const BookingRequests: CollectionConfig = {
       type: 'textarea',
     },
     {
+      name: 'totalPrice',
+      type: 'number',
+      admin: {
+        description: 'Calculated total price in EUR (including surcharge)',
+      },
+    },
+    {
       name: 'status',
       type: 'select',
       required: true,

@@ -45,6 +45,7 @@ export function formatBookingWhatsAppMessage({
   customerName,
   customerEmail,
   customerPhone,
+  totalPrice,
   ip,
   location,
 }: {
@@ -56,6 +57,7 @@ export function formatBookingWhatsAppMessage({
   customerName: string
   customerEmail: string
   customerPhone: string
+  totalPrice?: number
   ip?: string
   location?: string
 }): string {
@@ -63,7 +65,9 @@ export function formatBookingWhatsAppMessage({
   msg += `Ref: ${requestRef}\n`
   msg += `Tour: ${tourName}\n`
   msg += `Date: ${preferredDate} at ${preferredTime}\n`
-  msg += `Guests: ${guests}\n\n`
+  msg += `Guests: ${guests}\n`
+  if (totalPrice) msg += `Price: €${totalPrice}\n`
+  msg += '\n'
   msg += `Customer: ${customerName}\n`
   msg += `Email: ${customerEmail}\n`
   if (customerPhone) msg += `Phone: ${customerPhone}\n`

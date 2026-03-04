@@ -19,6 +19,7 @@ interface NewRequestAdminEmailProps {
   customerEmail: string
   customerPhone: string
   specialRequests: string
+  totalPrice?: number
   locale: string
   ip?: string
   location?: string
@@ -35,6 +36,7 @@ export function NewRequestAdminEmail({
   customerEmail,
   customerPhone,
   specialRequests,
+  totalPrice,
   locale,
   ip,
   location,
@@ -70,6 +72,11 @@ export function NewRequestAdminEmail({
             <Text style={infoRow}>
               <strong>Language:</strong> {locale.toUpperCase()}
             </Text>
+            {totalPrice != null && totalPrice > 0 && (
+              <Text style={infoRow}>
+                <strong>Price:</strong> €{totalPrice}
+              </Text>
+            )}
           </Section>
 
           <Section style={infoBox}>

@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.2] - 2026-03-04
+
+### Added
+- Calculated total price (€) included in booking requests — stored in CMS, shown in admin email, Telegram, WhatsApp, and Slack notifications
+- `totalPrice` field on BookingRequests collection (base price + surcharge for groups 5–8)
+
 ## [1.3.1] - 2026-03-04
 
 ### Changed

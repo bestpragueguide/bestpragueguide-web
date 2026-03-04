@@ -19,6 +19,7 @@ export const bookingRequestSchema = z.object({
   customerEmail: z.string().email(),
   customerPhone: z.string().max(20).optional().default(''),
   specialRequests: z.string().max(1000).optional().default(''),
+  totalPrice: z.number().min(0).optional(),
   locale: z.enum(['en', 'ru']),
 })
 

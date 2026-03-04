@@ -38,6 +38,10 @@ export function BookingRequestForm({
     setErrors({})
 
     const form = e.currentTarget
+    const hasSurcharge = guests > 4 && surchargePercent && surchargePercent > 0
+    const totalPrice = hasSurcharge
+      ? Math.round(price * (1 + surchargePercent / 100))
+      : price
     const data = {
       tourId,
       tourName,
@@ -48,6 +52,7 @@ export function BookingRequestForm({
       customerEmail: (form.elements.namedItem('customerEmail') as HTMLInputElement).value,
       customerPhone: (form.elements.namedItem('customerPhone') as HTMLInputElement).value || '',
       specialRequests: (form.elements.namedItem('specialRequests') as HTMLTextAreaElement).value || '',
+      totalPrice,
       locale,
     }
 
