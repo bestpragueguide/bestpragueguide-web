@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.7] - 2026-03-04
+
+### Fixed
+- Contact form showing generic error on rate limit — now shows "Too many requests" message for 429 responses
+
+### Changed
+- Contact form rate limit increased from 5 to 20 requests/hour per IP
+
 ## [1.1.6] - 2026-03-04
 
 ### Added

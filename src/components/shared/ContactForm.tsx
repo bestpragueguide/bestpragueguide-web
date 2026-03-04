@@ -9,7 +9,7 @@ interface ContactFormProps {
 
 export function ContactForm({ locale }: ContactFormProps) {
   const t = useTranslations('contact')
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error' | 'rate_limited'>('idle')
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -34,6 +34,8 @@ export function ContactForm({ locale }: ContactFormProps) {
       if (res.ok) {
         setStatus('success')
         form.reset()
+      } else if (res.status === 429) {
+        setStatus('rate_limited')
       } else {
         setStatus('error')
       }
@@ -120,6 +122,14 @@ export function ContactForm({ locale }: ContactFormProps) {
             : 'Sending...'
           : t('formSubmit')}
       </button>
+
+      {status === 'rate_limited' && (
+        <p className="text-sm text-error text-center">
+          {locale === 'ru'
+            ? 'Слишком много запросов. Пожалуйста, попробуйте позже.'
+            : 'Too many requests. Please try again later.'}
+        </p>
+      )}
 
       {status === 'error' && (
         <p className="text-sm text-error text-center">
