@@ -98,6 +98,7 @@ export async function POST(request: NextRequest) {
       specialRequests: data.specialRequests || '',
       totalPrice: data.totalPrice || 0,
       currency: data.currency || 'EUR',
+      locale: data.locale,
       ip: ipInfo.ip,
       location,
       isp: ipInfo.org || '',

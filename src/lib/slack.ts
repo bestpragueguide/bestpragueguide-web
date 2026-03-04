@@ -40,6 +40,7 @@ export function formatBookingSlackMessage({
   specialRequests,
   totalPrice,
   currency,
+  locale,
   ip,
   location,
   isp,
@@ -55,6 +56,7 @@ export function formatBookingSlackMessage({
   specialRequests: string
   totalPrice?: number
   currency?: string
+  locale?: string
   ip?: string
   location?: string
   isp?: string
@@ -65,6 +67,7 @@ export function formatBookingSlackMessage({
     { type: 'mrkdwn', text: `*Date:*\n${preferredDate}` },
     { type: 'mrkdwn', text: `*Time:*\n${preferredTime}` },
     { type: 'mrkdwn', text: `*Guests:*\n${guests}` },
+    ...(locale ? [{ type: 'mrkdwn', text: `*Language:*\n${locale.toUpperCase()}` }] : []),
     ...(totalPrice ? [{ type: 'mrkdwn', text: `*Price:*\n${formatPrice(totalPrice, (currency as Currency) || 'EUR')}` }] : []),
     { type: 'mrkdwn', text: `*Customer:*\n${customerName}` },
     { type: 'mrkdwn', text: `*Email:*\n${customerEmail}` },
