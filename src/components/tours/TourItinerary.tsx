@@ -7,16 +7,24 @@ interface ItineraryStop {
 
 interface TourItineraryProps {
   stops: ItineraryStop[]
+  duration?: number | null
   locale: string
 }
 
-export function TourItinerary({ stops, locale }: TourItineraryProps) {
+export function TourItinerary({ stops, duration, locale }: TourItineraryProps) {
   if (stops.length === 0) return null
 
   return (
     <div className="mt-10">
       <h2 className="text-2xl font-heading font-bold text-navy mb-6">
         {locale === 'ru' ? 'Маршрут' : 'Itinerary'}
+        {duration != null && duration > 0 && (
+          <span className="text-base font-normal text-gray ml-2">
+            ({duration} {locale === 'ru'
+              ? duration === 1 ? 'час' : duration < 5 ? 'часа' : 'часов'
+              : duration === 1 ? 'hour' : 'hours'})
+          </span>
+        )}
       </h2>
 
       <div className="relative pl-8 border-l-2 border-gold/30 space-y-6">

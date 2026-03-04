@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.6] - 2026-03-04
+
+### Added
+- Tour duration shown in itinerary heading — e.g. "Itinerary (4 hours)" / "Маршрут (4 часа)"
+
 ## [1.3.5] - 2026-03-04
 
 ### Added

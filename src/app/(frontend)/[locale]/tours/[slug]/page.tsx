@@ -264,6 +264,7 @@ export default async function TourDetailPage({
           {/* Itinerary */}
           <TourItinerary
             stops={((tour as any).itinerary || []) as any[]}
+            duration={tour.duration}
             locale={locale}
           />
 
