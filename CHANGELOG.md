@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.4] - 2026-03-04
+
+### Added
+- `Product` schema alongside `TouristTrip` on tour detail pages for price rich snippets in Google
+- `priceSpecification` with `unitText: "per group"` on tour schema offers
+- Hero image now passed to TourSchema for image-rich search results
+- `BlogPostSchema` component with `BlogPosting` structured data (headline, author, publisher, dates, inLanguage)
+- Blog post detail pages now render BlogPosting JSON-LD
+- `WebSiteSchema` component with `WebSite` + `SearchAction` for sitelinks search box
+- Homepage now renders WebSite JSON-LD
+- `AggregateRating` + `LocalBusiness` JSON-LD on reviews page (calculated from approved reviews)
+- Blog posts included in sitemap.xml with hreflang alternates and lastModified dates
+- Blog listing page (`/blog`) added to sitemap static pages
+
+### Fixed
+- Sitemap: tours and blog posts not appearing — removed `select` option that fails with localized fields on PostgreSQL
+- Sitemap: fetch tours/blogs per-locale (EN + RU) to get correct localized slugs for hreflang alternates
+
 ## [1.1.3] - 2026-03-04
 
 ### Fixed

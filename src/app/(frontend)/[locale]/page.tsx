@@ -10,6 +10,7 @@ import { ProcessSteps } from '@/components/home/ProcessSteps'
 import { TestimonialSliderWrapper } from '@/components/home/TestimonialSliderWrapper'
 import { FAQSection } from '@/components/home/FAQSection'
 import { CTASection } from '@/components/home/CTASection'
+import { WebSiteSchema } from '@/components/seo/WebSiteSchema'
 
 export async function generateMetadata({
   params,
@@ -31,7 +32,13 @@ export async function generateMetadata({
   }
 }
 
-export default function HomePage() {
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+
   return (
     <>
       <Hero />
@@ -42,6 +49,7 @@ export default function HomePage() {
       <TestimonialSliderWrapper />
       <FAQSection />
       <CTASection />
+      <WebSiteSchema locale={locale} />
     </>
   )
 }

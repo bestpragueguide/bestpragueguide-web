@@ -9,6 +9,7 @@ import config from '@payload-config'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { ReviewFilter } from '@/components/reviews/ReviewFilter'
 import { ReviewCard } from '@/components/reviews/ReviewCard'
+import { JsonLd } from '@/components/seo/JsonLd'
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
 
@@ -62,8 +63,37 @@ export default async function ReviewsPage({
     // No reviews yet
   }
 
+  // Calculate aggregate rating
+  const ratedReviews = reviews.filter((r: any) => r.rating)
+  const totalReviews = ratedReviews.length
+  const avgRating = totalReviews > 0
+    ? ratedReviews.reduce((sum: number, r: any) => sum + r.rating, 0) / totalReviews
+    : 0
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {totalReviews > 0 && (
+        <JsonLd data={{
+          '@context': 'https://schema.org',
+          '@type': 'LocalBusiness',
+          name: 'Best Prague Guide',
+          url: 'https://bestpragueguide.com',
+          image: 'https://bestpragueguide.com/favicon.svg',
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: 'Prague',
+            addressCountry: 'CZ',
+          },
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: avgRating.toFixed(1),
+            reviewCount: totalReviews.toString(),
+            bestRating: '5',
+            worstRating: '1',
+          },
+        }} />
+      )}
+
       <Breadcrumbs
         items={[{ label: locale === 'ru' ? 'Отзывы' : 'Reviews' }]}
         locale={locale}

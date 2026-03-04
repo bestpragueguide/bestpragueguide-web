@@ -8,6 +8,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
+import { BlogPostSchema } from '@/components/seo/BlogPostSchema'
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
 
@@ -251,6 +252,18 @@ export default async function BlogPostPage({
           </div>
         </section>
       )}
+
+      {/* Schema.org JSON-LD */}
+      <BlogPostSchema
+        title={post.title as string}
+        description={post.excerpt as string}
+        image={heroUrl ? fullHeroUrl : undefined}
+        datePublished={post.publishedAt as string}
+        dateModified={post.updatedAt as string}
+        author={post.author as string || 'Uliana Formina'}
+        locale={locale}
+        slug={slug}
+      />
     </div>
   )
 }

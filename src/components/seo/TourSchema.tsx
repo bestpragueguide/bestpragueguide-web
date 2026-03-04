@@ -27,9 +27,9 @@ export function TourSchema({
 }: TourSchemaProps) {
   const url = `https://bestpragueguide.com/${locale}/tours/${slug}`
 
-  const data: Record<string, unknown> = {
-    '@context': 'https://schema.org',
+  const touristTrip: Record<string, unknown> = {
     '@type': 'TouristTrip',
+    '@id': `${url}#trip`,
     name: title,
     description,
     url,
@@ -45,22 +45,72 @@ export function TourSchema({
       priceCurrency: currency,
       availability: 'https://schema.org/InStock',
       validFrom: new Date().toISOString().split('T')[0],
+      priceSpecification: {
+        '@type': 'UnitPriceSpecification',
+        price: price.toString(),
+        priceCurrency: currency,
+        unitText: 'per group',
+      },
     },
     duration: `PT${duration}H`,
   }
 
   if (image) {
-    data.image = image
+    touristTrip.image = image
   }
 
   if (rating && reviewCount) {
-    data.aggregateRating = {
+    touristTrip.aggregateRating = {
       '@type': 'AggregateRating',
       ratingValue: rating.toString(),
       reviewCount: reviewCount.toString(),
       bestRating: '5',
       worstRating: '1',
     }
+  }
+
+  const product: Record<string, unknown> = {
+    '@type': 'Product',
+    '@id': `${url}#product`,
+    name: title,
+    description,
+    url,
+    category: 'Private Tours',
+    brand: {
+      '@type': 'Brand',
+      name: 'Best Prague Guide',
+    },
+    offers: {
+      '@type': 'Offer',
+      price: price.toString(),
+      priceCurrency: currency,
+      availability: 'https://schema.org/InStock',
+      priceSpecification: {
+        '@type': 'UnitPriceSpecification',
+        price: price.toString(),
+        priceCurrency: currency,
+        unitText: 'per group',
+      },
+    },
+  }
+
+  if (image) {
+    product.image = image
+  }
+
+  if (rating && reviewCount) {
+    product.aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: rating.toString(),
+      reviewCount: reviewCount.toString(),
+      bestRating: '5',
+      worstRating: '1',
+    }
+  }
+
+  const data = {
+    '@context': 'https://schema.org',
+    '@graph': [touristTrip, product],
   }
 
   return <JsonLd data={data} />

@@ -11,6 +11,7 @@ const staticPages = [
   { path: 'reviews', en: 'reviews', ru: 'otzyvy' },
   { path: 'contact', en: 'contact', ru: 'kontakty' },
   { path: 'faq', en: 'faq', ru: 'voprosy' },
+  { path: 'blog', en: 'blog', ru: 'blog' },
   { path: 'privacy', en: 'privacy', ru: 'privacy' },
   { path: 'terms', en: 'terms', ru: 'terms' },
   {
@@ -50,21 +51,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Dynamic tour pages
   try {
     const payload = await getPayload({ config })
-    const tours = await payload.find({
+
+    // Fetch tours in EN locale for English slugs
+    const enTours = await payload.find({
       collection: 'tours',
       where: { status: { equals: 'published' } },
-      limit: 100,
-      select: {
-        slug: true,
-        publishedLocales: true,
-        updatedAt: true,
-      },
+      limit: 200,
+      locale: 'en',
     })
 
-    for (const tour of tours.docs) {
+    // Fetch tours in RU locale for Russian slugs
+    const ruTours = await payload.find({
+      collection: 'tours',
+      where: { status: { equals: 'published' } },
+      limit: 200,
+      locale: 'ru',
+    })
+
+    // Build a map of id → ruSlug
+    const ruSlugMap = new Map<number, string>()
+    for (const t of ruTours.docs) {
+      ruSlugMap.set(t.id as number, t.slug)
+    }
+
+    for (const tour of enTours.docs) {
       const publishedLocales = (tour as any).publishedLocales || []
       const enSlug = tour.slug
-      const ruSlug = tour.slug // same slug for both locales
+      const ruSlug = ruSlugMap.get(tour.id as number) || enSlug
+      const lastMod = new Date(tour.updatedAt as string)
 
       if (publishedLocales.includes('en')) {
         const alternates: Record<string, string> = {
@@ -75,7 +89,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }
         entries.push({
           url: `${BASE_URL}/en/tours/${enSlug}`,
-          lastModified: new Date(tour.updatedAt as string),
+          lastModified: lastMod,
           alternates: { languages: alternates },
         })
       }
@@ -89,13 +103,74 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }
         entries.push({
           url: `${BASE_URL}/ru/ekskursii/${ruSlug}`,
-          lastModified: new Date(tour.updatedAt as string),
+          lastModified: lastMod,
           alternates: { languages: alternates },
         })
       }
     }
   } catch (error) {
     console.error('[Sitemap] Failed to fetch tours:', error)
+  }
+
+  // Dynamic blog post pages
+  try {
+    const payload = await getPayload({ config })
+
+    const enPosts = await payload.find({
+      collection: 'blog-posts',
+      where: { status: { equals: 'published' } },
+      limit: 200,
+      locale: 'en',
+    })
+
+    const ruPosts = await payload.find({
+      collection: 'blog-posts',
+      where: { status: { equals: 'published' } },
+      limit: 200,
+      locale: 'ru',
+    })
+
+    const ruPostSlugMap = new Map<number, string>()
+    for (const p of ruPosts.docs) {
+      ruPostSlugMap.set(p.id as number, p.slug as string)
+    }
+
+    for (const post of enPosts.docs) {
+      const publishedLocales = (post as any).publishedLocales || []
+      const enSlug = post.slug
+      const ruSlug = ruPostSlugMap.get(post.id as number) || enSlug
+      const lastMod = new Date((post.updatedAt as string) || (post as any).publishedAt)
+
+      if (publishedLocales.includes('en')) {
+        const alternates: Record<string, string> = {
+          en: `${BASE_URL}/en/blog/${enSlug}`,
+        }
+        if (publishedLocales.includes('ru')) {
+          alternates.ru = `${BASE_URL}/ru/blog/${ruSlug}`
+        }
+        entries.push({
+          url: `${BASE_URL}/en/blog/${enSlug}`,
+          lastModified: lastMod,
+          alternates: { languages: alternates },
+        })
+      }
+
+      if (publishedLocales.includes('ru')) {
+        const alternates: Record<string, string> = {
+          ru: `${BASE_URL}/ru/blog/${ruSlug}`,
+        }
+        if (publishedLocales.includes('en')) {
+          alternates.en = `${BASE_URL}/en/blog/${enSlug}`
+        }
+        entries.push({
+          url: `${BASE_URL}/ru/blog/${ruSlug}`,
+          lastModified: lastMod,
+          alternates: { languages: alternates },
+        })
+      }
+    }
+  } catch (error) {
+    console.error('[Sitemap] Failed to fetch blog posts:', error)
   }
 
   return entries

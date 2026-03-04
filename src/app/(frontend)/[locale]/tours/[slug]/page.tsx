@@ -367,6 +367,11 @@ export default async function TourDetailPage({
       <TourSchema
         title={tour.title}
         description={tour.excerpt}
+        image={
+          typeof (tour as any).heroImage === 'object'
+            ? (tour as any).heroImage?.sizes?.hero?.url || (tour as any).heroImage?.url || undefined
+            : undefined
+        }
         price={tour.groupPrice}
         duration={tour.duration}
         rating={tour.rating ?? undefined}
