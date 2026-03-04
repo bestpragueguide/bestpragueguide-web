@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - `@tailwindcss/typography` plugin for proper prose/rich text styling
+- Contact form now sends emails via Resend (admin notification + customer confirmation) and Telegram notification
 
 ### Changed
 - Homepage category cards (Prague Tours, From Prague) now show real photos with hover zoom effect
