@@ -97,6 +97,20 @@ export default async function ContactPage({
               </svg>
               <span className="text-sm text-navy">+420 776 306 858</span>
             </a>
+
+            <a
+              href="https://instagram.com/bestpragueguide"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 p-4 bg-white rounded-lg border border-gray-light/50 hover:border-pink-400/50 transition-colors"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-pink-500">
+                <rect x="2" y="2" width="20" height="20" rx="5" />
+                <circle cx="12" cy="12" r="5" />
+                <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+              </svg>
+              <span className="text-sm text-navy">Instagram</span>
+            </a>
           </div>
 
           <p className="mt-6 text-sm text-gray">

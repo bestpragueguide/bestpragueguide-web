@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.5] - 2026-03-04
+
+### Added
+- Instagram link on contact page and footer
+- Icons on all footer contact items (email, WhatsApp, Telegram, phone, Instagram)
+- Customer confirmation email now includes a copy of submitted data (name, email, phone, message)
+
+### Changed
+- Contact emails sent from info@bestpragueguide.com (was noreply@) so customers can reply directly
+
 ## [1.2.4] - 2026-03-04
 
 ### Changed

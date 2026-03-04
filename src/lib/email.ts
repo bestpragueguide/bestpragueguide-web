@@ -9,10 +9,12 @@ export async function sendEmail({
   to,
   subject,
   react,
+  replyTo,
 }: {
   to: string
   subject: string
   react: ReactElement
+  replyTo?: string
 }) {
   if (!resend) {
     console.log('[Email] Skipping send (no RESEND_API_KEY):', {
@@ -24,10 +26,11 @@ export async function sendEmail({
 
   try {
     const result = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'noreply@bestpragueguide.com',
+      from: process.env.RESEND_FROM_EMAIL || 'Best Prague Guide <info@bestpragueguide.com>',
       to,
       subject,
       react,
+      ...(replyTo ? { replyTo } : {}),
     })
     return { success: true, data: result }
   } catch (error) {

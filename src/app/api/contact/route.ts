@@ -151,12 +151,21 @@ function ContactNotificationEmail({
 
 function ContactConfirmationEmail({
   name,
+  email,
+  phone,
+  message,
   locale,
 }: {
   name: string
+  email: string
+  phone: string
+  message: string
   locale: string
 }) {
   const isRu = locale === 'ru'
+  const labelStyle = { padding: '6px 8px', fontWeight: 'bold' as const, color: '#777', verticalAlign: 'top' as const }
+  const valueStyle = { padding: '6px 8px' }
+
   return React.createElement(
     'div',
     { style: { fontFamily: 'sans-serif', padding: '20px' } },
@@ -171,6 +180,35 @@ function ContactConfirmationEmail({
       isRu
         ? `${name}, мы получили ваше сообщение и ответим в ближайшее время.`
         : `${name}, we received your message and will get back to you soon.`,
+    ),
+    React.createElement(
+      'p',
+      { style: { color: '#777', marginTop: '20px', marginBottom: '8px', fontSize: '14px' } },
+      isRu ? 'Копия вашего сообщения:' : 'A copy of your message:',
+    ),
+    React.createElement(
+      'table',
+      { style: { borderCollapse: 'collapse', width: '100%', fontSize: '14px', border: '1px solid #eee', borderRadius: '8px' } },
+      React.createElement(
+        'tbody',
+        null,
+        React.createElement('tr', null,
+          React.createElement('td', { style: labelStyle }, isRu ? 'Имя' : 'Name'),
+          React.createElement('td', { style: valueStyle }, name),
+        ),
+        React.createElement('tr', null,
+          React.createElement('td', { style: labelStyle }, 'Email'),
+          React.createElement('td', { style: valueStyle }, email),
+        ),
+        React.createElement('tr', null,
+          React.createElement('td', { style: labelStyle }, isRu ? 'Телефон' : 'Phone'),
+          React.createElement('td', { style: valueStyle }, phone),
+        ),
+        React.createElement('tr', null,
+          React.createElement('td', { style: { ...labelStyle, verticalAlign: 'top' } }, isRu ? 'Сообщение' : 'Message'),
+          React.createElement('td', { style: { ...valueStyle, whiteSpace: 'pre-wrap' } }, message),
+        ),
+      ),
     ),
     React.createElement(
       'p',
@@ -284,8 +322,12 @@ export async function POST(request: NextRequest) {
             : 'We received your message — Best Prague Guide',
         react: React.createElement(ContactConfirmationEmail, {
           name: data.name,
+          email: data.email,
+          phone: data.phone,
+          message: data.message,
           locale: data.locale,
         }),
+        replyTo: 'info@bestpragueguide.com',
       }),
       // Telegram notification
       sendTelegramMessage(
