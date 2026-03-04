@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.6] - 2026-03-04
+
+### Added
+- Phone number field (required) on contact form
+- IP address and geolocation (city, region, country, ISP) in admin contact notifications (email + Telegram)
+- IP geolocation via ipinfo.io with 3s timeout fallback
+
+### Changed
+- Contact form Zod schema now requires `phone` field (min 5 chars)
+
 ## [1.1.5] - 2026-03-04
 
 ### Added
