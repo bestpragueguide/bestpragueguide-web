@@ -22,7 +22,7 @@ export function BookingRequestForm({
 }: BookingRequestFormProps) {
   const t = useTranslations('booking')
   const [status, setStatus] = useState<
-    'idle' | 'loading' | 'success' | 'error'
+    'idle' | 'loading' | 'success' | 'error' | 'rate-limited'
   >('idle')
   const [requestRef, setRequestRef] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -64,6 +64,8 @@ export function BookingRequestForm({
         setStatus('success')
         setRequestRef(result.requestRef || '')
         trackBookingSubmit(tourName, tourId)
+      } else if (res.status === 429) {
+        setStatus('rate-limited')
       } else if (result.details) {
         const fieldErrors: Record<string, string> = {}
         for (const err of result.details) {
@@ -257,6 +259,19 @@ export function BookingRequestForm({
             : 'Sending...'
           : t('submit')}
       </button>
+
+      {status === 'rate-limited' && (
+        <div className="text-sm text-center p-3 bg-gold/5 border border-gold/20 rounded-lg">
+          <p className="text-navy">
+            {locale === 'ru'
+              ? 'Слишком много запросов. Пожалуйста, попробуйте позже или свяжитесь с нами:'
+              : 'Too many requests. Please try again later or contact us directly:'}
+          </p>
+          <a href="tel:+420776306858" className="text-gold font-medium">
+            +420 776 306 858
+          </a>
+        </div>
+      )}
 
       {status === 'error' && !Object.keys(errors).length && (
         <p className="text-sm text-error text-center">

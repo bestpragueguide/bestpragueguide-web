@@ -7,6 +7,9 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Booking request rate limit increased from 5 to 20 requests/hour per IP
 
+### Fixed
+- Booking form now shows "Too many requests" message with phone number on 429 instead of generic error
+
 ## [1.3.0] - 2026-03-04
 
 ### Added
