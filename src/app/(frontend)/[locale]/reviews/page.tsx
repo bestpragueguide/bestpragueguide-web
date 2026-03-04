@@ -2,13 +2,11 @@ export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import { Suspense } from 'react'
 import { getTranslations } from 'next-intl/server'
 import { buildPageMetadata } from '@/lib/metadata'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
-import { ReviewFilter } from '@/components/reviews/ReviewFilter'
 import { ReviewCard } from '@/components/reviews/ReviewCard'
 import { JsonLd } from '@/components/seo/JsonLd'
 
@@ -43,22 +41,18 @@ export async function generateMetadata({
 
 export default async function ReviewsPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ locale: string }>
-  searchParams: Promise<{ lang?: string }>
 }) {
   const { locale } = await params
-  const { lang } = await searchParams
   const t = await getTranslations({ locale, namespace: 'reviews' })
 
   let reviews: any[] = []
   try {
     const payload = await getPayload({ config })
-    const where: any = { status: { equals: 'approved' } }
-    const filterLang = lang || locale
-    if (filterLang !== 'all') {
-      where.language = { equals: filterLang }
+    const where: any = {
+      status: { equals: 'approved' },
+      language: { equals: locale },
     }
     const result = await payload.find({
       collection: 'reviews',
@@ -132,10 +126,6 @@ export default async function ReviewsPage({
 
       {/* Text reviews section */}
       <section>
-        <Suspense fallback={null}>
-          <ReviewFilter />
-        </Suspense>
-
         {reviews.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {reviews.map((review: any) => (

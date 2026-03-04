@@ -9,7 +9,7 @@ import React from 'react'
 const contactSchema = z.object({
   name: z.string().min(2).max(100),
   email: z.string().email(),
-  phone: z.string().min(5).max(30),
+  phone: z.string().min(3).max(30),
   message: z.string().min(10).max(5000),
   locale: z.enum(['en', 'ru']),
 })

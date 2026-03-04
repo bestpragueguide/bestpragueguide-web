@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.9] - 2026-03-04
+
+### Fixed
+- Contact form phone validation too strict (min 5 chars) — reduced to min 3 chars to accept short international formats
+
+### Changed
+- Reviews page shows only reviews in the current site language — removed language filter buttons (All/EN/RU)
+
 ## [1.1.8] - 2026-03-04
 
 ### Added
