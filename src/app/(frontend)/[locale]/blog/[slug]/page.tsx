@@ -8,6 +8,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
+import { AlternateLocaleProvider } from '@/components/shared/AlternateLocaleContext'
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
 
@@ -87,6 +88,24 @@ export default async function BlogPostPage({
   const post = result.docs[0]
   if (!post) notFound()
 
+  // Get slug in the other locale for language switcher
+  const otherLocale = locale === 'en' ? 'ru' : 'en'
+  let alternateHref = `/${otherLocale}/blog`
+  try {
+    const altResult = await payload.find({
+      collection: 'blog-posts',
+      where: { id: { equals: post.id } },
+      limit: 1,
+      locale: otherLocale as 'en' | 'ru',
+    })
+    const altPost = altResult.docs[0]
+    if (altPost?.slug) {
+      alternateHref = `/${otherLocale}/blog/${altPost.slug}`
+    }
+  } catch {
+    // Fall back to blog listing
+  }
+
   const heroImage = typeof post.heroImage === 'object' ? post.heroImage : null
   const heroUrl = heroImage?.sizes?.hero?.url || heroImage?.url || ''
   const fullHeroUrl = heroUrl.startsWith('http') ? heroUrl : `${SERVER_URL}${heroUrl}`
@@ -112,6 +131,7 @@ export default async function BlogPostPage({
   }
 
   return (
+    <AlternateLocaleProvider href={alternateHref}>
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Breadcrumbs
         items={[
@@ -223,5 +243,6 @@ export default async function BlogPostPage({
         </section>
       )}
     </div>
+    </AlternateLocaleProvider>
   )
 }

@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Language switcher now correctly redirects to localized URLs (e.g., `/en/tours` → `/ru/ekskursii`)
 - Use next-intl `createNavigation` for locale-aware routing instead of manual path segment replacement
+- Blog and tour detail pages pass alternate locale slug to language switcher for correct cross-locale navigation
 
 ## [1.1.0] - 2026-03-03
 

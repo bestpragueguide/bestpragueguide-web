@@ -2,18 +2,25 @@
 
 import { useLocale } from 'next-intl'
 import { usePathname, useRouter } from '@/i18n/routing'
+import { useAlternateLocaleHref } from './AlternateLocaleContext'
 
 export function LanguageSwitcher({ className = '' }: { className?: string }) {
   const locale = useLocale()
   const pathname = usePathname()
   const router = useRouter()
+  const alternateHref = useAlternateLocaleHref()
 
   const otherLocale = locale === 'en' ? 'ru' : 'en'
   const label = locale === 'en' ? 'RU' : 'EN'
 
   function switchLocale() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    router.replace(pathname as any, { locale: otherLocale })
+    if (alternateHref) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      router.push(alternateHref as any)
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      router.replace(pathname as any, { locale: otherLocale })
+    }
   }
 
   return (
