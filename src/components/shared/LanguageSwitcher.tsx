@@ -1,7 +1,7 @@
 'use client'
 
 import { useLocale } from 'next-intl'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter } from '@/i18n/routing'
 
 export function LanguageSwitcher({ className = '' }: { className?: string }) {
   const locale = useLocale()
@@ -12,10 +12,8 @@ export function LanguageSwitcher({ className = '' }: { className?: string }) {
   const label = locale === 'en' ? 'RU' : 'EN'
 
   function switchLocale() {
-    // Replace the locale prefix in the pathname
-    const segments = pathname.split('/')
-    segments[1] = otherLocale
-    router.push(segments.join('/'))
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    router.replace(pathname as any, { locale: otherLocale })
   }
 
   return (
