@@ -9,9 +9,9 @@ export default function middleware(request: NextRequest) {
   const host = request.headers.get('host') || ''
   if (host.startsWith('www.')) {
     const nonWwwHost = host.replace(/^www\./, '')
-    const url = new URL(request.url)
-    url.host = nonWwwHost
-    return NextResponse.redirect(url, 301)
+    const baseUrl = `https://${nonWwwHost}`
+    const path = request.nextUrl.pathname + request.nextUrl.search
+    return NextResponse.redirect(new URL(path, baseUrl), 301)
   }
 
   return intlMiddleware(request)
