@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.8] - 2026-03-04
+
+### Changed
+- Reviews photo gallery shows 6 photos on mobile (3x2 grid), 7th photo hidden below `sm` breakpoint
+
 ## [1.2.7] - 2026-03-04
 
 ### Added

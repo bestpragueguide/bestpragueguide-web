@@ -111,7 +111,7 @@ export default async function ReviewsPage({
 
         <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-2">
           {galleryPhotos.map((photo, i) => (
-            <div key={i} className="relative aspect-square rounded-lg overflow-hidden">
+            <div key={i} className={`relative aspect-square rounded-lg overflow-hidden${i >= 6 ? ' hidden sm:block' : ''}`}>
               <Image
                 src={photo.src}
                 alt={photo.alt}
