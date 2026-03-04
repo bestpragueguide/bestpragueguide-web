@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.4] - 2026-03-04
+
+### Changed
+- Contact form message minimum length reduced from 10 to 4 characters
+
 ## [1.2.3] - 2026-03-04
 
 ### Changed

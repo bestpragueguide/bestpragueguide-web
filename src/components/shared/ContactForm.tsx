@@ -118,7 +118,7 @@ export function ContactForm({ locale }: ContactFormProps) {
           name="message"
           rows={5}
           required
-          minLength={10}
+          minLength={4}
           maxLength={1000}
           className="w-full px-4 py-3 rounded-lg border border-gray-light focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors text-sm resize-none"
         />
