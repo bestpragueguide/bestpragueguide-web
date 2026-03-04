@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2026-03-04
+
+### Changed
+- Rate-limited contact form submissions are now saved to CMS with "Rate Limited" status — no message is lost
+- Rate limit error message now shows phone number (+420 776 306 858) so users can still reach us
+
 ## [1.1.9] - 2026-03-04
 
 ### Fixed

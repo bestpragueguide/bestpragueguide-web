@@ -126,8 +126,8 @@ export function ContactForm({ locale }: ContactFormProps) {
       {status === 'rate_limited' && (
         <p className="text-sm text-error text-center">
           {locale === 'ru'
-            ? 'Слишком много запросов. Пожалуйста, попробуйте позже.'
-            : 'Too many requests. Please try again later.'}
+            ? 'Слишком много сообщений. Пожалуйста, свяжитесь с нами по телефону: +420 776 306 858'
+            : 'Too many messages. Please contact us by phone: +420 776 306 858'}
         </p>
       )}
 

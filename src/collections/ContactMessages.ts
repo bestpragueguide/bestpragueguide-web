@@ -61,6 +61,7 @@ export const ContactMessages: CollectionConfig = {
         { label: 'New', value: 'new' },
         { label: 'Read', value: 'read' },
         { label: 'Replied', value: 'replied' },
+        { label: 'Rate Limited', value: 'error' },
       ],
     },
     {

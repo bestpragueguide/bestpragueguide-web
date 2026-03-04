@@ -186,6 +186,35 @@ export async function POST(request: NextRequest) {
     'unknown'
 
   if (isRateLimited(ip)) {
+    // Still save the message marked as rate_limited
+    try {
+      const body = await request.json()
+      const data = contactSchema.safeParse(body)
+      if (data.success) {
+        const ipInfo = await getIpInfo(ip)
+        const payload = await getPayload({ config })
+        await payload.create({
+          collection: 'contact-messages',
+          data: {
+            name: data.data.name,
+            email: data.data.email,
+            phone: data.data.phone,
+            message: data.data.message,
+            locale: data.data.locale,
+            status: 'error',
+            ipInfo: {
+              ip: ipInfo.ip,
+              city: ipInfo.city || '',
+              region: ipInfo.region || '',
+              country: ipInfo.country || '',
+              isp: ipInfo.org || '',
+            },
+          },
+        })
+      }
+    } catch {
+      // Best effort — don't fail the 429 response
+    }
     return NextResponse.json(
       { error: 'Too many requests. Please try again later.' },
       { status: 429 }
