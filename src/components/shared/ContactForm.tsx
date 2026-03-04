@@ -67,6 +67,8 @@ export function ContactForm({ locale }: ContactFormProps) {
           name="name"
           type="text"
           required
+          minLength={2}
+          maxLength={100}
           className="w-full px-4 py-3 rounded-lg border border-gray-light focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors text-sm"
         />
       </div>
@@ -93,6 +95,8 @@ export function ContactForm({ locale }: ContactFormProps) {
           name="phone"
           type="tel"
           required
+          minLength={3}
+          maxLength={30}
           placeholder="+1..."
           className="w-full px-4 py-3 rounded-lg border border-gray-light focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors text-sm"
         />
@@ -107,6 +111,8 @@ export function ContactForm({ locale }: ContactFormProps) {
           name="message"
           rows={5}
           required
+          minLength={10}
+          maxLength={5000}
           className="w-full px-4 py-3 rounded-lg border border-gray-light focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors text-sm resize-none"
         />
       </div>

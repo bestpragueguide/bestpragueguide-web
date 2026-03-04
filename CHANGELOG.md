@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2026-03-04
+
+### Fixed
+- Contact form 400 errors on short input — added client-side `minLength`/`maxLength` validation matching server-side Zod schema (name ≥2, phone ≥3, message ≥10)
+
 ## [1.2.1] - 2026-03-04
 
 ### Fixed
