@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Sitemap: tours and blog posts not appearing — removed `select` option that fails with localized fields on PostgreSQL
 - Sitemap: fetch tours/blogs per-locale (EN + RU) to get correct localized slugs for hreflang alternates
+- Sitemap: force dynamic rendering — was statically pre-rendered at build time when DB was unreachable
 
 ## [1.1.3] - 2026-03-04
 
