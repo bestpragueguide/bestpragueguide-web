@@ -16,6 +16,7 @@ interface BookingRequestFormProps {
 export function BookingRequestForm({
   tourId,
   tourName,
+  price,
   surchargePercent,
   locale,
 }: BookingRequestFormProps) {
@@ -170,9 +171,15 @@ export function BookingRequestForm({
           ))}
         </select>
         {guests > 4 && surchargePercent && surchargePercent > 0 && (
-          <p className="text-xs text-gold mt-1">
-            {t('surchargeNote', { percent: surchargePercent })}
-          </p>
+          <div className="mt-2 bg-cream/50 rounded-lg p-3 text-center">
+            <span className="text-2xl font-bold text-gold">
+              €{Math.round(price * (1 + surchargePercent / 100))}
+            </span>
+            <p className="text-xs text-gray mt-1">
+              €{price} + {surchargePercent}%{' '}
+              {locale === 'ru' ? 'за группу 5–8' : 'for group of 5–8'}
+            </p>
+          </div>
         )}
       </div>
 

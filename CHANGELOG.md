@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.7] - 2026-03-04
+
+### Added
+- Booking form auto-calculates and displays total price when group size is 5–8 (base + surcharge %)
+
 ## [1.2.6] - 2026-03-04
 
 ### Changed
