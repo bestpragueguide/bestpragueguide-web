@@ -27,7 +27,7 @@ async function getIpInfo(ip: string): Promise<IpInfo> {
     return { ip }
   }
   try {
-    const res = await fetch(`https://ipinfo.io/${ip}/json`, {
+    const res = await fetch(`http://ip-api.com/json/${ip}?fields=city,regionName,country,isp`, {
       signal: AbortSignal.timeout(3000),
     })
     if (res.ok) {
@@ -35,9 +35,9 @@ async function getIpInfo(ip: string): Promise<IpInfo> {
       return {
         ip,
         city: data.city,
-        region: data.region,
+        region: data.regionName,
         country: data.country,
-        org: data.org,
+        org: data.isp,
       }
     }
   } catch {

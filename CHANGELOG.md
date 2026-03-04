@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2026-03-04
+
+### Fixed
+- Admin dashboard 500 error — pushed missing `contact_messages_id` column to `payload_locked_documents_rels` table
+
+### Changed
+- IP geolocation switched from ipinfo.io to ip-api.com (free, no API key required)
+
 ## [1.2.0] - 2026-03-04
 
 ### Changed
