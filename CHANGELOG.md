@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.1] - 2026-03-04
+
+### Changed
+- Booking request rate limit increased from 5 to 20 requests/hour per IP
+
 ## [1.3.0] - 2026-03-04
 
 ### Added
