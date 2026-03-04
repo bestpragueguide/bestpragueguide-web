@@ -10,7 +10,7 @@ const contactSchema = z.object({
   name: z.string().min(2).max(100),
   email: z.string().email(),
   phone: z.string().min(3).max(30),
-  message: z.string().min(10).max(5000),
+  message: z.string().min(10).max(1000),
   locale: z.enum(['en', 'ru']),
 })
 

@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.3] - 2026-03-04
+
+### Changed
+- Contact form message limit reduced from 5000 to 1000 characters
+- Shows "Message is too long" error when limit exceeded (EN/RU)
+
 ## [1.2.2] - 2026-03-04
 
 ### Fixed

@@ -9,18 +9,25 @@ interface ContactFormProps {
 
 export function ContactForm({ locale }: ContactFormProps) {
   const t = useTranslations('contact')
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error' | 'rate_limited'>('idle')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error' | 'rate_limited' | 'too_long'>('idle')
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setStatus('loading')
 
     const form = e.currentTarget
+    const message = (form.elements.namedItem('message') as HTMLTextAreaElement).value
+    if (message.length > 1000) {
+      setStatus('too_long')
+      return
+    }
+
+    setStatus('loading')
+
     const data = {
       name: (form.elements.namedItem('name') as HTMLInputElement).value,
       email: (form.elements.namedItem('email') as HTMLInputElement).value,
       phone: (form.elements.namedItem('phone') as HTMLInputElement).value,
-      message: (form.elements.namedItem('message') as HTMLTextAreaElement).value,
+      message,
       locale,
     }
 
@@ -112,7 +119,7 @@ export function ContactForm({ locale }: ContactFormProps) {
           rows={5}
           required
           minLength={10}
-          maxLength={5000}
+          maxLength={1000}
           className="w-full px-4 py-3 rounded-lg border border-gray-light focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors text-sm resize-none"
         />
       </div>
@@ -128,6 +135,14 @@ export function ContactForm({ locale }: ContactFormProps) {
             : 'Sending...'
           : t('formSubmit')}
       </button>
+
+      {status === 'too_long' && (
+        <p className="text-sm text-error text-center">
+          {locale === 'ru'
+            ? 'Сообщение слишком длинное. Максимум 1000 символов.'
+            : 'Message is too long. Maximum 1000 characters.'}
+        </p>
+      )}
 
       {status === 'rate_limited' && (
         <p className="text-sm text-error text-center">
