@@ -3,11 +3,12 @@ export const dynamic = 'force-dynamic'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getTranslations } from 'next-intl/server'
 import { buildPageMetadata } from '@/lib/metadata'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
+import { BlogCategoryFilter } from '@/components/blog/BlogCategoryFilter'
+import { categoryLabels } from '@/lib/blog'
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
 
@@ -29,31 +30,17 @@ export async function generateMetadata({
   }
 }
 
-const categoryLabels: Record<string, Record<string, string>> = {
-  en: {
-    'prague-guide': 'Prague Guide',
-    'food-and-drink': 'Food & Drink',
-    'day-trips': 'Day Trips',
-    'tips': 'Tips',
-    'history': 'History',
-  },
-  ru: {
-    'prague-guide': 'Гид по Праге',
-    'food-and-drink': 'Еда и напитки',
-    'day-trips': 'Поездки из Праги',
-    'tips': 'Советы',
-    'history': 'История',
-  },
-}
-
 export default async function BlogPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>
+  searchParams: Promise<{ category?: string }>
 }) {
   const { locale } = await params
+  const { category: selectedCategory } = await searchParams
 
-  let posts: any[] = []
+  let allPosts: any[] = []
   try {
     const payload = await getPayload({ config })
     const result = await payload.find({
@@ -66,10 +53,18 @@ export default async function BlogPage({
       locale: locale as 'en' | 'ru',
       sort: '-publishedAt',
     })
-    posts = result.docs
+    allPosts = result.docs
   } catch {
     // No posts yet
   }
+
+  // Extract available categories from all posts
+  const availableCategories = [...new Set(allPosts.map((p: any) => p.category as string))].filter(Boolean)
+
+  // Filter posts by selected category (server-side)
+  const posts = selectedCategory
+    ? allPosts.filter((p: any) => p.category === selectedCategory)
+    : allPosts
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -81,6 +76,13 @@ export default async function BlogPage({
       <h1 className="text-3xl sm:text-4xl font-heading font-bold text-navy mb-8">
         {locale === 'ru' ? 'Блог' : 'Blog'}
       </h1>
+
+      {availableCategories.length > 1 && (
+        <BlogCategoryFilter
+          availableCategories={availableCategories}
+          locale={locale}
+        />
+      )}
 
       {posts.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -139,8 +141,8 @@ export default async function BlogPage({
         <div className="text-center py-16 text-gray">
           <p className="text-lg">
             {locale === 'ru'
-              ? 'Статьи скоро появятся!'
-              : 'Articles coming soon!'}
+              ? selectedCategory ? 'Нет статей в этой категории.' : 'Статьи скоро появятся!'
+              : selectedCategory ? 'No articles in this category.' : 'Articles coming soon!'}
           </p>
         </div>
       )}

@@ -45,6 +45,8 @@ export function formatBookingWhatsAppMessage({
   customerName,
   customerEmail,
   customerPhone,
+  ip,
+  location,
 }: {
   requestRef: string
   tourName: string
@@ -54,6 +56,8 @@ export function formatBookingWhatsAppMessage({
   customerName: string
   customerEmail: string
   customerPhone: string
+  ip?: string
+  location?: string
 }): string {
   let msg = `🆕 *New Booking Request*\n\n`
   msg += `Ref: ${requestRef}\n`
@@ -63,5 +67,10 @@ export function formatBookingWhatsAppMessage({
   msg += `Customer: ${customerName}\n`
   msg += `Email: ${customerEmail}\n`
   if (customerPhone) msg += `Phone: ${customerPhone}\n`
+  if (ip) {
+    msg += `\nIP: ${ip}`
+    if (location) msg += `\nLocation: ${location}`
+    msg += '\n'
+  }
   return msg
 }

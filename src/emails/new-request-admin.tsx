@@ -20,6 +20,9 @@ interface NewRequestAdminEmailProps {
   customerPhone: string
   specialRequests: string
   locale: string
+  ip?: string
+  location?: string
+  isp?: string
 }
 
 export function NewRequestAdminEmail({
@@ -33,6 +36,9 @@ export function NewRequestAdminEmail({
   customerPhone,
   specialRequests,
   locale,
+  ip,
+  location,
+  isp,
 }: NewRequestAdminEmailProps) {
   return (
     <Html lang="en">
@@ -85,6 +91,24 @@ export function NewRequestAdminEmail({
             )}
           </Section>
 
+          {ip && (
+            <Section style={ipBox}>
+              <Text style={ipRow}>
+                <strong>IP:</strong> {ip}
+              </Text>
+              {location && (
+                <Text style={ipRow}>
+                  <strong>Location:</strong> {location}
+                </Text>
+              )}
+              {isp && (
+                <Text style={ipRow}>
+                  <strong>ISP:</strong> {isp}
+                </Text>
+              )}
+            </Section>
+          )}
+
           <Hr style={hr} />
           <Text style={footer}>
             Manage in admin panel → Booking Requests
@@ -135,6 +159,20 @@ const infoRow = {
   fontSize: '14px',
   color: '#333333',
   margin: '0 0 8px',
+}
+
+const ipBox = {
+  backgroundColor: '#F9F9F9',
+  border: '1px solid #E5E5E5',
+  borderRadius: '8px',
+  padding: '12px 16px',
+  margin: '16px 0',
+}
+
+const ipRow = {
+  fontSize: '12px',
+  color: '#999999',
+  margin: '0 0 4px',
 }
 
 const footer = {

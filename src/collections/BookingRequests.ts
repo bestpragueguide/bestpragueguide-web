@@ -106,6 +106,20 @@ export const BookingRequests: CollectionConfig = {
       },
     },
     {
+      name: 'ipInfo',
+      type: 'group',
+      admin: {
+        description: 'IP geolocation data',
+      },
+      fields: [
+        { name: 'ip', type: 'text' },
+        { name: 'city', type: 'text' },
+        { name: 'region', type: 'text' },
+        { name: 'country', type: 'text' },
+        { name: 'isp', type: 'text' },
+      ],
+    },
+    {
       name: 'internalNotes',
       type: 'textarea',
       admin: {

@@ -4,6 +4,8 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { sendEmail, sendAdminEmail } from '@/lib/email'
 import { sendTelegramMessage } from '@/lib/telegram'
+import { getIpInfo, formatLocation, type IpInfo } from '@/lib/ip'
+import { sendSlackMessage, formatContactSlackMessage } from '@/lib/slack'
 import React from 'react'
 
 const contactSchema = z.object({
@@ -13,38 +15,6 @@ const contactSchema = z.object({
   message: z.string().min(4).max(1000),
   locale: z.enum(['en', 'ru']),
 })
-
-interface IpInfo {
-  ip: string
-  city?: string
-  region?: string
-  country?: string
-  org?: string
-}
-
-async function getIpInfo(ip: string): Promise<IpInfo> {
-  if (!ip || ip === 'unknown' || ip === '127.0.0.1') {
-    return { ip }
-  }
-  try {
-    const res = await fetch(`http://ip-api.com/json/${ip}?fields=city,regionName,country,isp`, {
-      signal: AbortSignal.timeout(3000),
-    })
-    if (res.ok) {
-      const data = await res.json()
-      return {
-        ip,
-        city: data.city,
-        region: data.regionName,
-        country: data.country,
-        org: data.isp,
-      }
-    }
-  } catch {
-    // Geolookup failed, continue with IP only
-  }
-  return { ip }
-}
 
 const rateLimitMap = new Map<string, number[]>()
 
@@ -274,7 +244,7 @@ export async function POST(request: NextRequest) {
 
     // Fetch IP geolocation (non-blocking — won't fail the request)
     const ipInfo = await getIpInfo(ip)
-    const location = [ipInfo.city, ipInfo.region, ipInfo.country].filter(Boolean).join(', ')
+    const location = formatLocation(ipInfo)
 
     // Save to Payload CMS
     try {
@@ -332,6 +302,19 @@ export async function POST(request: NextRequest) {
       // Telegram notification
       sendTelegramMessage(
         `📩 <b>Contact Form</b>\n\n<b>Name:</b> ${data.name}\n<b>Email:</b> ${data.email}\n<b>Phone:</b> ${data.phone}\n<b>Message:</b> ${data.message}\n\n<b>IP:</b> ${ip}${location ? `\n<b>Location:</b> ${location}` : ''}${ipInfo.org ? `\n<b>ISP:</b> ${ipInfo.org}` : ''}`,
+      ),
+      // Slack notification
+      sendSlackMessage(
+        formatContactSlackMessage({
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          message: data.message,
+          locale: data.locale,
+          ip: ipInfo.ip,
+          location,
+          isp: ipInfo.org,
+        }),
       ),
     ])
 

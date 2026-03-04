@@ -9,25 +9,9 @@ import config from '@payload-config'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { BlogPostSchema } from '@/components/seo/BlogPostSchema'
+import { categoryLabels, allCategories } from '@/lib/blog'
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
-
-const categoryLabels: Record<string, Record<string, string>> = {
-  en: {
-    'prague-guide': 'Prague Guide',
-    'food-and-drink': 'Food & Drink',
-    'day-trips': 'Day Trips',
-    'tips': 'Tips',
-    'history': 'History',
-  },
-  ru: {
-    'prague-guide': 'Гид по Праге',
-    'food-and-drink': 'Еда и напитки',
-    'day-trips': 'Поездки из Праги',
-    'tips': 'Советы',
-    'history': 'История',
-  },
-}
 
 export async function generateMetadata({
   params,
@@ -134,28 +118,43 @@ export default async function BlogPostPage({
   const heroUrl = heroImage?.sizes?.hero?.url || heroImage?.url || ''
   const fullHeroUrl = heroUrl.startsWith('http') ? heroUrl : `${SERVER_URL}${heroUrl}`
 
-  // Fetch related posts in same category
-  let relatedPosts: any[] = []
+  // Fetch all published posts for sidebar (categories + popular)
+  let allPosts: any[] = []
   try {
-    const related = await payload.find({
+    const allResult = await payload.find({
       collection: 'blog-posts',
       where: {
         status: { equals: 'published' },
         publishedLocales: { in: [locale] },
-        category: { equals: post.category },
-        id: { not_equals: post.id },
       },
-      limit: 3,
+      limit: 50,
       locale: locale as 'en' | 'ru',
       sort: '-publishedAt',
     })
-    relatedPosts = related.docs
+    allPosts = allResult.docs
   } catch {
-    // No related posts
+    // Sidebar data unavailable
   }
 
+  // Category counts
+  const categoryCounts: Record<string, number> = {}
+  for (const p of allPosts) {
+    const cat = p.category as string
+    if (cat) categoryCounts[cat] = (categoryCounts[cat] || 0) + 1
+  }
+
+  // Popular articles: 3 most recent excluding current
+  const popularPosts = allPosts.filter((p: any) => p.id !== post.id).slice(0, 3)
+
+  // Related posts in same category (for bottom section)
+  const relatedPosts = allPosts
+    .filter((p: any) => p.id !== post.id && p.category === post.category)
+    .slice(0, 3)
+
+  const labels = categoryLabels[locale] || categoryLabels.en
+
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Breadcrumbs
         items={[
           { label: locale === 'ru' ? 'Блог' : 'Blog', href: `/${locale}/blog` },
@@ -164,107 +163,194 @@ export default async function BlogPostPage({
         locale={locale}
       />
 
-      <article>
-        {/* Header */}
-        <header className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="px-2 py-1 bg-gold/10 text-gold text-xs font-medium rounded">
-              {categoryLabels[locale]?.[post.category as string] || post.category}
-            </span>
-            <time className="text-sm text-gray">
-              {new Date(post.publishedAt as string).toLocaleDateString(locale === 'ru' ? 'ru-RU' : 'en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
-            </time>
-          </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-navy leading-tight">
-            {post.title}
-          </h1>
-          {post.author && (
-            <p className="mt-3 text-navy/60">
-              {locale === 'ru' ? 'Автор:' : 'By'} {post.author}
-            </p>
-          )}
-        </header>
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-12">
+        {/* Main content */}
+        <div>
+          <article>
+            {/* Header */}
+            <header className="mb-8">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="px-2 py-1 bg-gold/10 text-gold text-xs font-medium rounded">
+                  {labels[post.category as string] || post.category}
+                </span>
+                <time className="text-sm text-gray">
+                  {new Date(post.publishedAt as string).toLocaleDateString(locale === 'ru' ? 'ru-RU' : 'en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </time>
+              </div>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-navy leading-tight">
+                {post.title}
+              </h1>
+              {post.author && (
+                <p className="mt-3 text-navy/60">
+                  {locale === 'ru' ? 'Автор:' : 'By'} {post.author}
+                </p>
+              )}
+            </header>
 
-        {/* Hero image */}
-        {heroUrl && (
-          <div className="relative aspect-[16/9] rounded-xl overflow-hidden mb-10">
-            <Image
-              src={fullHeroUrl}
-              alt={post.title as string}
-              fill
-              className="object-cover"
-              sizes="(max-width: 896px) 100vw, 896px"
-              priority
-            />
-          </div>
-        )}
+            {/* Hero image */}
+            {heroUrl && (
+              <div className="relative aspect-[16/9] rounded-xl overflow-hidden mb-10">
+                <Image
+                  src={fullHeroUrl}
+                  alt={post.title as string}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 700px"
+                  priority
+                />
+              </div>
+            )}
 
-        {/* Content */}
-        <div className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-navy prose-p:text-navy/80">
-          {post.content && (
-            <RichText data={post.content} />
+            {/* Content */}
+            <div className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-navy prose-p:text-navy/80">
+              {post.content && (
+                <RichText data={post.content} />
+              )}
+            </div>
+
+            {/* CTA (mobile — shown below content, hidden on lg where sidebar has CTA) */}
+            <div className="mt-12 p-6 bg-gold/5 border border-gold/20 rounded-xl text-center lg:hidden">
+              <p className="text-lg font-heading font-semibold text-navy mb-3">
+                {locale === 'ru'
+                  ? 'Хотите увидеть Прагу своими глазами?'
+                  : 'Want to see Prague for yourself?'}
+              </p>
+              <Link
+                href={`/${locale}/tours`}
+                className="inline-flex items-center px-6 py-3 bg-gold text-white font-medium rounded-lg hover:bg-gold-dark transition-colors"
+              >
+                {locale === 'ru' ? 'Смотреть экскурсии' : 'Explore Our Tours'}
+              </Link>
+            </div>
+          </article>
+
+          {/* Related posts */}
+          {relatedPosts.length > 0 && (
+            <section className="mt-16 pt-8 border-t border-gray-light/50">
+              <h2 className="text-2xl font-heading font-bold text-navy mb-6">
+                {locale === 'ru' ? 'Читайте также' : 'You May Also Like'}
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                {relatedPosts.map((related: any) => {
+                  const relImg = typeof related.heroImage === 'object' ? related.heroImage : null
+                  const relImgUrl = relImg?.sizes?.card?.url || relImg?.url || ''
+                  const fullRelImgUrl = relImgUrl.startsWith('http') ? relImgUrl : `${SERVER_URL}${relImgUrl}`
+                  return (
+                    <Link
+                      key={related.id}
+                      href={`/${locale}/blog/${related.slug}`}
+                      className="group block"
+                    >
+                      <div className="relative aspect-[16/10] rounded-lg overflow-hidden mb-3">
+                        {relImgUrl ? (
+                          <Image
+                            src={fullRelImgUrl}
+                            alt={related.title}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                            sizes="(max-width: 640px) 100vw, 33vw"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gray-light" />
+                        )}
+                      </div>
+                      <h3 className="font-heading font-semibold text-navy group-hover:text-gold transition-colors">
+                        {related.title}
+                      </h3>
+                    </Link>
+                  )
+                })}
+              </div>
+            </section>
           )}
         </div>
 
-        {/* CTA */}
-        <div className="mt-12 p-6 bg-gold/5 border border-gold/20 rounded-xl text-center">
-          <p className="text-lg font-heading font-semibold text-navy mb-3">
-            {locale === 'ru'
-              ? 'Хотите увидеть Прагу своими глазами?'
-              : 'Want to see Prague for yourself?'}
-          </p>
-          <Link
-            href={`/${locale}/tours`}
-            className="inline-flex items-center px-6 py-3 bg-gold text-white font-medium rounded-lg hover:bg-gold-dark transition-colors"
-          >
-            {locale === 'ru' ? 'Смотреть экскурсии' : 'Explore Our Tours'}
-          </Link>
-        </div>
-      </article>
+        {/* Sidebar — desktop only */}
+        <aside className="hidden lg:block">
+          <div className="sticky top-24 space-y-8">
+            {/* Categories */}
+            <div className="bg-white rounded-xl border border-gray-light/50 p-5">
+              <h3 className="font-heading font-bold text-navy mb-4">
+                {locale === 'ru' ? 'Категории' : 'Categories'}
+              </h3>
+              <ul className="space-y-2">
+                {allCategories
+                  .filter((cat) => categoryCounts[cat])
+                  .map((cat) => (
+                    <li key={cat}>
+                      <Link
+                        href={`/${locale}/blog?category=${cat}`}
+                        className="flex items-center justify-between text-sm text-navy/80 hover:text-gold transition-colors"
+                      >
+                        <span>{labels[cat] || cat}</span>
+                        <span className="text-xs text-navy/40">{categoryCounts[cat]}</span>
+                      </Link>
+                    </li>
+                  ))}
+              </ul>
+            </div>
 
-      {/* Related posts */}
-      {relatedPosts.length > 0 && (
-        <section className="mt-16 pt-8 border-t border-gray-light/50">
-          <h2 className="text-2xl font-heading font-bold text-navy mb-6">
-            {locale === 'ru' ? 'Читайте также' : 'You May Also Like'}
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {relatedPosts.map((related: any) => {
-              const relImg = typeof related.heroImage === 'object' ? related.heroImage : null
-              const relImgUrl = relImg?.sizes?.card?.url || relImg?.url || ''
-              const fullRelImgUrl = relImgUrl.startsWith('http') ? relImgUrl : `${SERVER_URL}${relImgUrl}`
-              return (
-                <Link
-                  key={related.id}
-                  href={`/${locale}/blog/${related.slug}`}
-                  className="group block"
-                >
-                  <div className="relative aspect-[16/10] rounded-lg overflow-hidden mb-3">
-                    {relImgUrl ? (
-                      <Image
-                        src={fullRelImgUrl}
-                        alt={related.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        sizes="(max-width: 640px) 100vw, 33vw"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gray-light" />
-                    )}
-                  </div>
-                  <h3 className="font-heading font-semibold text-navy group-hover:text-gold transition-colors">
-                    {related.title}
-                  </h3>
-                </Link>
-              )
-            })}
+            {/* Popular Articles */}
+            {popularPosts.length > 0 && (
+              <div className="bg-white rounded-xl border border-gray-light/50 p-5">
+                <h3 className="font-heading font-bold text-navy mb-4">
+                  {locale === 'ru' ? 'Популярные статьи' : 'Popular Articles'}
+                </h3>
+                <div className="space-y-4">
+                  {popularPosts.map((p: any) => {
+                    const img = typeof p.heroImage === 'object' ? p.heroImage : null
+                    const imgUrl = img?.sizes?.card?.url || img?.url || ''
+                    const fullImgUrl = imgUrl.startsWith('http') ? imgUrl : `${SERVER_URL}${imgUrl}`
+                    return (
+                      <Link
+                        key={p.id}
+                        href={`/${locale}/blog/${p.slug}`}
+                        className="group flex gap-3"
+                      >
+                        <div className="relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden">
+                          {imgUrl ? (
+                            <Image
+                              src={fullImgUrl}
+                              alt={p.title}
+                              fill
+                              className="object-cover"
+                              sizes="64px"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-gray-light" />
+                          )}
+                        </div>
+                        <span className="text-sm font-medium text-navy group-hover:text-gold transition-colors line-clamp-3">
+                          {p.title}
+                        </span>
+                      </Link>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Choose a Tour CTA */}
+            <div className="bg-gold/5 border border-gold/20 rounded-xl p-5 text-center">
+              <p className="font-heading font-semibold text-navy mb-3">
+                {locale === 'ru'
+                  ? 'Хотите увидеть Прагу своими глазами?'
+                  : 'Want to see Prague for yourself?'}
+              </p>
+              <Link
+                href={`/${locale}/tours`}
+                className="inline-flex items-center px-5 py-2.5 bg-gold text-white text-sm font-medium rounded-lg hover:bg-gold-dark transition-colors"
+              >
+                {locale === 'ru' ? 'Смотреть экскурсии' : 'Explore Our Tours'}
+              </Link>
+            </div>
           </div>
-        </section>
-      )}
+        </aside>
+      </div>
 
       {/* Schema.org JSON-LD */}
       <BlogPostSchema

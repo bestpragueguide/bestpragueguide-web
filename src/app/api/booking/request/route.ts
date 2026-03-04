@@ -13,6 +13,8 @@ import {
   sendWhatsAppMessage,
   formatBookingWhatsAppMessage,
 } from '@/lib/whatsapp'
+import { getIpInfo, formatLocation } from '@/lib/ip'
+import { sendSlackMessage, formatBookingSlackMessage } from '@/lib/slack'
 import { z } from 'zod'
 
 const rateLimitMap = new Map<string, number[]>()
@@ -51,6 +53,10 @@ export async function POST(request: NextRequest) {
     const data = bookingRequestSchema.parse(body)
     const requestRef = await generateRequestRef()
 
+    // Fetch IP geolocation
+    const ipInfo = await getIpInfo(ip)
+    const location = formatLocation(ipInfo)
+
     const payload = await getPayload({ config })
 
     await payload.create({
@@ -67,6 +73,13 @@ export async function POST(request: NextRequest) {
         customerLanguage: data.locale,
         specialRequests: data.specialRequests || '',
         status: 'new',
+        ipInfo: {
+          ip: ipInfo.ip,
+          city: ipInfo.city || '',
+          region: ipInfo.region || '',
+          country: ipInfo.country || '',
+          isp: ipInfo.org || '',
+        },
       },
     })
 
@@ -81,6 +94,9 @@ export async function POST(request: NextRequest) {
       customerEmail: data.customerEmail,
       customerPhone: data.customerPhone || '',
       specialRequests: data.specialRequests || '',
+      ip: ipInfo.ip,
+      location,
+      isp: ipInfo.org || '',
     }
 
     const notificationPromises = [
@@ -110,6 +126,9 @@ export async function POST(request: NextRequest) {
       ),
       sendWhatsAppMessage(
         formatBookingWhatsAppMessage(notificationData),
+      ),
+      sendSlackMessage(
+        formatBookingSlackMessage(notificationData),
       ),
     ]
 

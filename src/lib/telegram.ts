@@ -44,6 +44,9 @@ export function formatBookingTelegramMessage({
   customerEmail,
   customerPhone,
   specialRequests,
+  ip,
+  location,
+  isp,
 }: {
   requestRef: string
   tourName: string
@@ -54,6 +57,9 @@ export function formatBookingTelegramMessage({
   customerEmail: string
   customerPhone: string
   specialRequests: string
+  ip?: string
+  location?: string
+  isp?: string
 }): string {
   let msg = `🆕 <b>New Booking Request</b>\n\n`
   msg += `📋 <b>Ref:</b> ${requestRef}\n`
@@ -65,5 +71,11 @@ export function formatBookingTelegramMessage({
   msg += `📧 <b>Email:</b> ${customerEmail}\n`
   if (customerPhone) msg += `📱 <b>Phone:</b> ${customerPhone}\n`
   if (specialRequests) msg += `💬 <b>Notes:</b> ${specialRequests}\n`
+  if (ip) {
+    msg += `\n🌐 <b>IP:</b> ${ip}`
+    if (location) msg += `\n📍 <b>Location:</b> ${location}`
+    if (isp) msg += `\n🏢 <b>ISP:</b> ${isp}`
+    msg += '\n'
+  }
   return msg
 }

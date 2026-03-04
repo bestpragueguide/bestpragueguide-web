@@ -14,9 +14,9 @@ Bilingual (EN/RU) private tour portal for Prague.
 - `src/app/(frontend)/[locale]/` — Public-facing pages with i18n
 - `src/collections/` — Payload CMS collection configs
 - `src/globals/` — Payload CMS global configs
-- `src/components/` — React components (shared, layout, home, tours, booking, reviews, seo, analytics)
+- `src/components/` — React components (shared, layout, home, tours, blog, booking, reviews, seo, analytics)
 - `src/emails/` — React Email templates
-- `src/lib/` — Utilities (email, telegram, whatsapp, booking)
+- `src/lib/` — Utilities (email, telegram, whatsapp, slack, booking, blog, ip)
 - `src/i18n/` — next-intl routing, request config, message files
 
 ## Conventions

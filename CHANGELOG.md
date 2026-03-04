@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2026-03-04
+
+### Added
+- Slack Incoming Webhook notifications for booking requests and contact messages (`src/lib/slack.ts`)
+- Booking notifications use gold accent color, contact messages use blue
+- Messages formatted with Slack Block Kit (header, fields grid, context block for IP/location)
+- Env var: `SLACK_WEBHOOK_URL` — silently skips if not configured
+
+## [1.2.9] - 2026-03-04
+
+### Added
+- Blog category filter pills on listing page (`/blog`) — filters posts by category via URL params
+- Blog detail sidebar (desktop) with category list + post counts, popular articles, and "Choose a Tour" CTA
+- Shared `src/lib/blog.ts` module with `categoryLabels` and `allCategories` constants
+- IP address and geolocation (city, region, country, ISP) on booking requests — stored in CMS, shown in admin email, Telegram, and WhatsApp notifications
+- Shared `src/lib/ip.ts` module with `getIpInfo` and `formatLocation` helpers (extracted from contact route)
+
+### Changed
+- Blog detail page layout changed from single-column `max-w-4xl` to 2-column `max-w-7xl` with 300px sidebar on desktop
+- Blog listing page accepts `?category=` search param for server-side filtering
+- Inline CTA on blog detail hidden on desktop (moved to sidebar)
+- Contact route refactored to use shared `getIpInfo` from `src/lib/ip.ts`
+
 ## [1.2.8] - 2026-03-04
 
 ### Changed
