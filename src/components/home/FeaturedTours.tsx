@@ -1,8 +1,11 @@
 import { getLocale, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import Image from 'next/image'
 import { TourCard } from '@/components/tours/TourCard'
 import { Button } from '@/components/shared/Button'
+
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
 
 export async function FeaturedTours() {
   const locale = await getLocale()
@@ -54,7 +57,14 @@ export async function FeaturedTours() {
             href={`/${locale}/tours?category=prague-tours`}
             className="relative group rounded-xl overflow-hidden bg-navy-light aspect-[2/1] flex items-end p-6"
           >
-            <div className="absolute inset-0 bg-gradient-to-t from-navy/80 to-transparent" />
+            <Image
+              src={`${SERVER_URL}/api/media/file/photo_2_2026-03-03_18-30-43.jpg`}
+              alt={t('pragueTours')}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              sizes="(max-width: 640px) 100vw, 50vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/30 to-transparent" />
             <h3 className="relative text-2xl font-heading font-bold text-white group-hover:text-gold transition-colors">
               {t('pragueTours')}
             </h3>
@@ -63,7 +73,14 @@ export async function FeaturedTours() {
             href={`/${locale}/tours?category=from-prague`}
             className="relative group rounded-xl overflow-hidden bg-navy-light aspect-[2/1] flex items-end p-6"
           >
-            <div className="absolute inset-0 bg-gradient-to-t from-navy/80 to-transparent" />
+            <Image
+              src={`${SERVER_URL}/api/media/file/photo_3_2026-03-03_18-30-43.jpg`}
+              alt={t('fromPrague')}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              sizes="(max-width: 640px) 100vw, 50vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/30 to-transparent" />
             <h3 className="relative text-2xl font-heading font-bold text-white group-hover:text-gold transition-colors">
               {t('fromPrague')}
             </h3>

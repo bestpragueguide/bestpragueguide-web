@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.2] - 2026-03-04
+
+### Changed
+- Homepage category cards (Prague Tours, From Prague) now show real photos with hover zoom effect
+- All tour prices updated: minimum €399, scaled by duration (Prague tours €399–€599, day trips €599–€899)
+
 ## [1.1.1] - 2026-03-04
 
 ### Fixed
