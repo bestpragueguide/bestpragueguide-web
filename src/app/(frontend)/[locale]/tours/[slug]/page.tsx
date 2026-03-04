@@ -16,7 +16,6 @@ import { RichText } from '@payloadcms/richtext-lexical/react'
 import { StickyBookButton } from '@/components/booking/StickyBookButton'
 import { BookingRequestForm } from '@/components/booking/BookingRequestForm'
 import { TourSchema } from '@/components/seo/TourSchema'
-import { AlternateLocaleProvider } from '@/components/shared/AlternateLocaleContext'
 
 async function getTour(slug: string, locale: string) {
   try {
@@ -96,15 +95,36 @@ export async function generateMetadata({
     (tour as any).seo?.metaDescription || tour.excerpt
 
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'
+  const otherLocale = locale === 'en' ? 'ru' : 'en'
+
+  // Fetch slug in the other locale
+  let otherSlug = slug
+  try {
+    const payload = await getPayload({ config })
+    const altResult = await payload.find({
+      collection: 'tours',
+      where: { id: { equals: tour.id } },
+      limit: 1,
+      locale: otherLocale as 'en' | 'ru',
+    })
+    if (altResult.docs[0]?.slug) {
+      otherSlug = altResult.docs[0].slug
+    }
+  } catch {
+    // Use same slug as fallback
+  }
+
+  const enSlug = locale === 'en' ? slug : otherSlug
+  const ruSlug = locale === 'ru' ? slug : otherSlug
 
   return {
     title,
     description,
     alternates: {
-      canonical: `${baseUrl}/${locale}/tours/${slug}`,
+      canonical: `${baseUrl}/${locale}/${locale === 'ru' ? 'ekskursii' : 'tours'}/${slug}`,
       languages: {
-        en: `${baseUrl}/en/tours/${slug}`,
-        ru: `${baseUrl}/ru/ekskursii/${slug}`,
+        en: `${baseUrl}/en/tours/${enSlug}`,
+        ru: `${baseUrl}/ru/ekskursii/${ruSlug}`,
       },
     },
     openGraph: {
@@ -130,31 +150,10 @@ export default async function TourDetailPage({
     notFound()
   }
 
-  const otherLocale = locale === 'en' ? 'ru' : 'en'
-  const tourPath = otherLocale === 'ru' ? 'ekskursii' : 'tours'
-
-  const [reviews, relatedTours, altTourResult] = await Promise.all([
+  const [reviews, relatedTours] = await Promise.all([
     getTourReviews(tour.id as number, locale),
     getRelatedTours(tour.id as number, tour.category, locale),
-    (async () => {
-      try {
-        const payload = await getPayload({ config })
-        const result = await payload.find({
-          collection: 'tours',
-          where: { id: { equals: tour.id } },
-          limit: 1,
-          locale: otherLocale as 'en' | 'ru',
-        })
-        return result.docs[0]
-      } catch {
-        return null
-      }
-    })(),
   ])
-
-  const alternateHref = altTourResult?.slug
-    ? `/${otherLocale}/${tourPath}/${altTourResult.slug}`
-    : `/${otherLocale}/${tourPath}`
 
   const categoryLabel =
     tour.category === 'prague-tours'
@@ -200,7 +199,6 @@ export default async function TourDetailPage({
   }))
 
   return (
-    <AlternateLocaleProvider href={alternateHref}>
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 lg:pb-8">
       <Breadcrumbs
         items={[
@@ -386,6 +384,5 @@ export default async function TourDetailPage({
         locale={locale}
       />
     </div>
-    </AlternateLocaleProvider>
   )
 }

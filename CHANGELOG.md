@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.2] - 2026-03-04
 
+### Fixed
+- Language switcher on tour and blog detail pages now redirects to the correct localized slug
+- LanguageSwitcher reads hreflang metadata links for dynamic pages, with manual path mapping fallback
+- CTA "Choose a Tour" button text now visible (was white-on-white due to Tailwind v4 class ordering)
+
 ### Changed
 - Homepage category cards (Prague Tours, From Prague) now show real photos with hover zoom effect
 - All tour prices updated: minimum €399, scaled by duration (Prague tours €399–€599, day trips €599–€899)

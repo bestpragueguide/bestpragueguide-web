@@ -16,7 +16,8 @@ export async function CTASection() {
         <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
           <Button
             href={`/${locale}/tours`}
-            className="bg-white text-navy hover:bg-cream"
+            variant="ghost"
+            className="no-underline bg-white !text-navy hover:bg-cream"
             size="lg"
           >
             {t('chooseTour')}
@@ -24,8 +25,8 @@ export async function CTASection() {
 
           <Button
             href="https://wa.me/420776306858"
-            variant="secondary"
-            className="border-white text-white hover:bg-white/10"
+            variant="ghost"
+            className="no-underline border-2 border-white !text-white hover:bg-white/10"
             size="lg"
             target="_blank"
             rel="noopener noreferrer"
