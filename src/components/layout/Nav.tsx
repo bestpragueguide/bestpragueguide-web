@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useLocale, useTranslations } from 'next-intl'
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher'
+import { Logo } from '@/components/shared/Logo'
 import { MobileMenu } from './MobileMenu'
 
 export function Nav() {
@@ -24,11 +25,8 @@ export function Nav() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-light/50">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
           {/* Logo */}
-          <Link
-            href={`/${locale}`}
-            className="text-xl font-heading font-bold text-navy tracking-tight"
-          >
-            Best Prague Guide
+          <Link href={`/${locale}`}>
+            <Logo variant="sm" />
           </Link>
 
           {/* Desktop nav */}

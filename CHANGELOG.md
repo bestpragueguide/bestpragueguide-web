@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.7] - 2026-03-05
+
+### Added
+- Branded typographic logo component (`src/components/shared/Logo.tsx`) — "Best *Prague* Guide" with italic gold Cormorant Garamond, 3 variants (sm/default/footer)
+- Header nav uses compact logo (22px, no tagline)
+- Footer uses white logo (28px) with tagline "Private Tours in Prague & Czech Republic"
+
+### Changed
+- Nav and Footer replaced plain-text "Best Prague Guide" with Logo component
+
 ## [1.3.6] - 2026-03-04
 
 ### Added

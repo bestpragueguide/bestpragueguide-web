@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher'
+import { Logo } from '@/components/shared/Logo'
 
 export async function Footer() {
   const locale = await getLocale()
@@ -32,15 +33,9 @@ export async function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <Link
-              href={`/${locale}`}
-              className="text-xl font-heading font-bold text-white"
-            >
-              Best Prague Guide
+            <Link href={`/${locale}`}>
+              <Logo variant="footer" />
             </Link>
-            <p className="mt-3 text-sm text-white/60 leading-relaxed">
-              {t('tagline')}
-            </p>
           </div>
 
           {/* Tours + Company */}
