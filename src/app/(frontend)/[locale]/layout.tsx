@@ -20,6 +20,7 @@ import '@/app/globals.css'
 const cormorant = Cormorant_Garamond({
   subsets: ['latin', 'cyrillic'],
   weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
   variable: '--font-cormorant-garamond',
   display: 'swap',
 })

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.2] - 2026-03-05
+
+### Fixed
+- Load Cormorant Garamond italic font variant (true italic instead of synthesized)
+- Logo always center-aligned in header and footer (matching BPG_Logo_Final reference)
+- Footer redesigned to match reference: centered logo block with association text, contact links row (email · WhatsApp · phone), then navigation columns below
+
 ## [1.4.1] - 2026-03-05
 
 ### Changed

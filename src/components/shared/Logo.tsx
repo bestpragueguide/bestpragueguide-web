@@ -25,7 +25,7 @@ const taglines: Record<string, string> = {
 
 export function Logo({ variant = 'default', locale = 'en' }: { variant?: LogoVariant; locale?: string }) {
   return (
-    <div className={variant === 'default' ? 'text-center' : undefined}>
+    <div className="text-center">
       <div
         className={`font-heading font-semibold leading-none tracking-[1px] ${brandSizeClass[variant]} ${brandColorClass[variant]}`}
       >
