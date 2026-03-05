@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.5] - 2026-03-05
+
+### Changed
+- Footer "Tours" column now shows tour categories (All Tours, Prague Tours, From Prague) instead of a single "Tours" link
+
 ## [1.4.4] - 2026-03-05
 
 ### Added

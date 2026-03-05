@@ -62,7 +62,9 @@ function navigationFallback(locale: string): NavigationData {
       {
         title: locale === 'ru' ? 'Экскурсии' : 'Tours',
         links: [
-          { label: locale === 'ru' ? 'Экскурсии' : 'Tours', href: `${prefix}/tours` },
+          { label: locale === 'ru' ? 'Все экскурсии' : 'All Tours', href: `${prefix}/tours` },
+          { label: locale === 'ru' ? 'Экскурсии по Праге' : 'Prague Tours', href: `${prefix}/tours?category=prague-tours` },
+          { label: locale === 'ru' ? 'Из Праги' : 'From Prague', href: `${prefix}/tours?category=from-prague` },
         ],
       },
       {

@@ -58,7 +58,11 @@ export async function POST() {
         footerColumns: [
           {
             title: 'Tours',
-            links: [{ label: 'Tours', href: '/tours' }],
+            links: [
+              { label: 'All Tours', href: '/tours' },
+              { label: 'Prague Tours', href: '/tours?category=prague-tours' },
+              { label: 'From Prague', href: '/tours?category=from-prague' },
+            ],
           },
           {
             title: 'Company',
@@ -87,7 +91,7 @@ export async function POST() {
     const nav = await payload.findGlobal({ slug: 'navigation', locale: 'en' }) as any
     const ruHeaderLabels = ['Экскурсии', 'О нас', 'Отзывы', 'Блог', 'Контакты']
     const ruFooterData = [
-      { title: 'Экскурсии', links: ['Экскурсии'] },
+      { title: 'Экскурсии', links: ['Все экскурсии', 'Экскурсии по Праге', 'Из Праги'] },
       { title: 'Компания', links: ['О нас', 'Отзывы', 'Контакты', 'FAQ'] },
       { title: 'Юридическое', links: ['Политика конфиденциальности', 'Условия использования', 'Условия отмены'] },
     ]
