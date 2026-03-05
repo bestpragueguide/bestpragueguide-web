@@ -341,7 +341,169 @@ export async function POST() {
       })
     }
 
-    return NextResponse.json({ success: true, message: 'CMS data seeded successfully' })
+    // ─── Seed Legal Pages ───
+    const richParagraph = (text: string) => ({
+      type: 'paragraph',
+      children: [{ type: 'text', text, version: 1 }],
+      version: 1,
+    })
+    const richHeading = (text: string, tag: string = 'h2') => ({
+      type: 'heading',
+      tag,
+      children: [{ type: 'text', text, version: 1 }],
+      version: 1,
+    })
+    const richRoot = (children: any[]) => ({
+      root: {
+        type: 'root',
+        children,
+        direction: null,
+        format: '',
+        indent: 0,
+        version: 1,
+      },
+    })
+
+    const legalPages = [
+      {
+        slug: 'privacy',
+        title_en: 'Privacy Policy',
+        title_ru: 'Политика конфиденциальности',
+        lastUpdated_en: 'Last updated: March 2026',
+        lastUpdated_ru: 'Последнее обновление: март 2026',
+        seo_en: { metaTitle: 'Privacy Policy — Best Prague Guide', metaDescription: 'Privacy policy for Best Prague Guide. How we collect, use, and protect your personal data.' },
+        seo_ru: { metaTitle: 'Политика конфиденциальности — Best Prague Guide', metaDescription: 'Политика конфиденциальности Best Prague Guide. Как мы собираем, используем и защищаем ваши персональные данные.' },
+        content_en: richRoot([
+          richParagraph('Best Prague Guide ("we", "us", "our") operates the bestpragueguide.com website. This page informs you of our policies regarding the collection, use, and disclosure of personal data.'),
+          richHeading('Information We Collect'),
+          richParagraph('We collect information you provide when submitting a booking request or contact form: your name, email address, phone number, and any messages you send us. We also collect standard web analytics data (pages visited, browser type, IP address) through Google Analytics and Yandex Metrika.'),
+          richHeading('How We Use Your Information'),
+          richParagraph('We use your information to process booking requests, communicate with you about your tours, send confirmation and reminder emails, and improve our services. We do not sell or share your personal data with third parties for marketing purposes.'),
+          richHeading('Cookies'),
+          richParagraph('We use essential cookies for site functionality and analytics cookies (Google Analytics, Yandex Metrika) to understand how visitors use our site. You can disable cookies in your browser settings.'),
+          richHeading('Your Rights'),
+          richParagraph('You have the right to access, correct, or delete your personal data. Contact us at info@bestpragueguide.com for any privacy-related requests.'),
+          richHeading('Contact'),
+          richParagraph('If you have questions about this privacy policy, contact us at info@bestpragueguide.com.'),
+        ]),
+        content_ru: richRoot([
+          richParagraph('Best Prague Guide («мы», «нас», «наш») управляет сайтом bestpragueguide.com. На этой странице описана наша политика в отношении сбора, использования и раскрытия персональных данных.'),
+          richHeading('Какую информацию мы собираем'),
+          richParagraph('Мы собираем информацию, которую вы предоставляете при отправке запроса на бронирование или контактной формы: ваше имя, адрес электронной почты, номер телефона и любые сообщения. Мы также собираем стандартные данные веб-аналитики (посещённые страницы, тип браузера, IP-адрес) через Google Analytics и Яндекс Метрику.'),
+          richHeading('Как мы используем вашу информацию'),
+          richParagraph('Мы используем вашу информацию для обработки запросов на бронирование, связи с вами по поводу экскурсий, отправки подтверждений и напоминаний, а также для улучшения наших услуг. Мы не продаём и не передаём ваши персональные данные третьим лицам в маркетинговых целях.'),
+          richHeading('Cookies'),
+          richParagraph('Мы используем обязательные cookies для функциональности сайта и аналитические cookies (Google Analytics, Яндекс Метрика) для понимания того, как посетители используют наш сайт. Вы можете отключить cookies в настройках браузера.'),
+          richHeading('Ваши права'),
+          richParagraph('Вы имеете право на доступ, исправление или удаление ваших персональных данных. Свяжитесь с нами по адресу info@bestpragueguide.com для любых запросов, связанных с конфиденциальностью.'),
+          richHeading('Контакт'),
+          richParagraph('Если у вас есть вопросы об этой политике конфиденциальности, свяжитесь с нами по адресу info@bestpragueguide.com.'),
+        ]),
+      },
+      {
+        slug: 'terms',
+        title_en: 'Terms of Service',
+        title_ru: 'Условия использования',
+        lastUpdated_en: 'Last updated: March 2026',
+        lastUpdated_ru: 'Последнее обновление: март 2026',
+        seo_en: { metaTitle: 'Terms of Service — Best Prague Guide', metaDescription: 'Terms of service for Best Prague Guide private tours in Prague.' },
+        seo_ru: { metaTitle: 'Условия использования — Best Prague Guide', metaDescription: 'Условия использования услуг индивидуальных экскурсий Best Prague Guide в Праге.' },
+        content_en: richRoot([
+          richParagraph('These Terms of Service govern your use of bestpragueguide.com and the booking of private tour services provided by Best Prague Guide.'),
+          richHeading('Booking and Confirmation'),
+          richParagraph('Submitting a booking request does not constitute a confirmed reservation. Your booking is confirmed only after you receive an official confirmation email from us. We reserve the right to decline booking requests based on availability.'),
+          richHeading('Pricing and Payment'),
+          richParagraph('Tour prices are listed in EUR per group of up to 4 people. Groups of 5–8 guests are subject to a 30% surcharge. Payment is due after booking confirmation via the payment link provided. All prices include the services of a licensed guide.'),
+          richHeading('Liability'),
+          richParagraph('Best Prague Guide provides professional guide services with due care. We are not liable for circumstances beyond our control, including weather, public transport disruptions, or venue closures. We recommend travel insurance for all guests.'),
+          richHeading('Changes to Terms'),
+          richParagraph('We may update these terms from time to time. Continued use of our website and services constitutes acceptance of the current terms.'),
+        ]),
+        content_ru: richRoot([
+          richParagraph('Настоящие Условия использования регулируют использование вами сайта bestpragueguide.com и бронирование индивидуальных экскурсионных услуг, предоставляемых Best Prague Guide.'),
+          richHeading('Бронирование и подтверждение'),
+          richParagraph('Отправка запроса на бронирование не является подтверждённым бронированием. Ваше бронирование подтверждено только после получения официального письма-подтверждения от нас. Мы оставляем за собой право отклонить запросы на бронирование в зависимости от доступности.'),
+          richHeading('Цены и оплата'),
+          richParagraph('Цены на экскурсии указаны в EUR за группу до 4 человек. Для групп из 5–8 человек применяется надбавка 30%. Оплата производится после подтверждения бронирования по ссылке для оплаты. Все цены включают услуги лицензированного гида.'),
+          richHeading('Ответственность'),
+          richParagraph('Best Prague Guide предоставляет профессиональные экскурсионные услуги с должной заботой. Мы не несём ответственности за обстоятельства, не зависящие от нас, включая погоду, сбои в общественном транспорте или закрытие объектов. Мы рекомендуем всем гостям оформить туристическую страховку.'),
+          richHeading('Изменения условий'),
+          richParagraph('Мы можем время от времени обновлять эти условия. Продолжение использования нашего сайта и услуг означает принятие текущих условий.'),
+        ]),
+      },
+      {
+        slug: 'cancellation-policy',
+        title_en: 'Cancellation Policy',
+        title_ru: 'Условия отмены',
+        lastUpdated_en: 'Last updated: March 2026',
+        lastUpdated_ru: 'Последнее обновление: март 2026',
+        seo_en: { metaTitle: 'Cancellation Policy — Best Prague Guide', metaDescription: 'Cancellation and refund policy for Best Prague Guide private tours.' },
+        seo_ru: { metaTitle: 'Условия отмены — Best Prague Guide', metaDescription: 'Условия отмены и возврата средств за индивидуальные экскурсии Best Prague Guide.' },
+        content_en: richRoot([
+          richParagraph('We understand plans can change. Our cancellation policy is designed to be fair and transparent.'),
+          richHeading('Free Cancellation'),
+          richParagraph('You may cancel your confirmed booking free of charge up to 24 hours before the scheduled tour start time. Cancellations must be communicated via email, WhatsApp, or Telegram.'),
+          richHeading('Late Cancellation'),
+          richParagraph('Cancellations made less than 24 hours before the tour start time are subject to a 100% cancellation fee.'),
+          richHeading('No-Show'),
+          richParagraph('If you do not appear at the meeting point at the scheduled time without prior notice, the full tour price will be charged.'),
+          richHeading('Cancellation by Us'),
+          richParagraph('In the rare event that we need to cancel a tour (e.g., due to extreme weather or guide illness), we will offer a full refund or reschedule at no extra cost.'),
+          richHeading('Refunds'),
+          richParagraph('Approved refunds are processed within 5–10 business days via the original payment method.'),
+        ]),
+        content_ru: richRoot([
+          richParagraph('Мы понимаем, что планы могут измениться. Наша политика отмены разработана для обеспечения справедливости и прозрачности.'),
+          richHeading('Бесплатная отмена'),
+          richParagraph('Вы можете бесплатно отменить подтверждённое бронирование не позднее чем за 24 часа до запланированного начала экскурсии. Отмена должна быть сообщена по электронной почте, WhatsApp или Telegram.'),
+          richHeading('Поздняя отмена'),
+          richParagraph('При отмене менее чем за 24 часа до начала экскурсии взимается полная стоимость экскурсии.'),
+          richHeading('Неявка'),
+          richParagraph('Если вы не появитесь в месте встречи в назначенное время без предварительного уведомления, будет взиматься полная стоимость экскурсии.'),
+          richHeading('Отмена с нашей стороны'),
+          richParagraph('В редких случаях, когда нам необходимо отменить экскурсию (например, из-за экстремальных погодных условий или болезни гида), мы предложим полный возврат средств или перенос на другую дату без дополнительной оплаты.'),
+          richHeading('Возвраты'),
+          richParagraph('Одобренные возвраты обрабатываются в течение 5–10 рабочих дней через исходный способ оплаты.'),
+        ]),
+      },
+    ]
+
+    // Delete existing legal pages
+    const existingPages = await payload.find({ collection: 'pages', limit: 100 })
+    for (const doc of existingPages.docs) {
+      await payload.delete({ collection: 'pages', id: doc.id })
+    }
+
+    // Create legal pages
+    for (const page of legalPages) {
+      const doc = await payload.create({
+        collection: 'pages',
+        locale: 'en',
+        data: {
+          title: page.title_en,
+          slug: page.slug,
+          template: 'legal',
+          lastUpdated: page.lastUpdated_en,
+          content: page.content_en,
+          seo: page.seo_en,
+          _status: 'published',
+        },
+      })
+      await payload.update({
+        collection: 'pages',
+        id: doc.id,
+        locale: 'ru',
+        data: {
+          title: page.title_ru,
+          slug: page.slug,
+          lastUpdated: page.lastUpdated_ru,
+          content: page.content_ru,
+          seo: page.seo_ru,
+        },
+      })
+    }
+
+    return NextResponse.json({ success: true, message: 'CMS data seeded successfully (including legal pages)' })
   } catch (error) {
     console.error('Seed error:', error)
     return NextResponse.json(

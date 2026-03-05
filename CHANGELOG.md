@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.4] - 2026-03-05
+
+### Added
+- Seed legal pages (Privacy Policy, Terms of Service, Cancellation Policy) into Pages collection via `/api/seed-cms` endpoint
+- Full bilingual (EN/RU) richText content with headings, paragraphs, SEO metadata, and `lastUpdated` field
+- Legal pages now render from CMS content with i18n fallback
+
 ## [1.4.3] - 2026-03-05
 
 ### Fixed
