@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { buildPageMetadata } from '@/lib/metadata'
+import { getSiteSettings } from '@/lib/cms-data'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { ContactForm } from '@/components/shared/ContactForm'
 
@@ -28,6 +29,11 @@ export default async function ContactPage({
 }) {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'contact' })
+  const siteSettings = await getSiteSettings(locale)
+
+  const mapSrc = siteSettings.mapCoordinates
+    ? `https://maps.google.com/maps?q=${siteSettings.mapCoordinates.lat},${siteSettings.mapCoordinates.lng}&z=15&output=embed`
+    : 'https://maps.google.com/maps?q=50.0875,14.4213&z=15&output=embed'
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -43,7 +49,7 @@ export default async function ContactPage({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Contact form */}
         <div>
-          <ContactForm locale={locale} />
+          <ContactForm locale={locale} phoneDisplay={siteSettings.contactPhoneDisplay} />
         </div>
 
         {/* Direct contacts */}
@@ -54,18 +60,18 @@ export default async function ContactPage({
 
           <div className="space-y-4">
             <a
-              href="mailto:info@bestpragueguide.com"
+              href={`mailto:${siteSettings.contactEmail}`}
               className="flex items-center gap-3 p-4 bg-white rounded-lg border border-gray-light/50 hover:border-gold/50 transition-colors"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-gold">
                 <rect x="2" y="4" width="20" height="16" rx="2" />
                 <path d="M22 7l-10 6L2 7" />
               </svg>
-              <span className="text-sm text-navy">info@bestpragueguide.com</span>
+              <span className="text-sm text-navy">{siteSettings.contactEmail}</span>
             </a>
 
             <a
-              href="https://wa.me/420776306858"
+              href={`https://wa.me/${siteSettings.whatsappNumber}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 p-4 bg-white rounded-lg border border-gray-light/50 hover:border-trust/50 transition-colors"
@@ -77,7 +83,7 @@ export default async function ContactPage({
             </a>
 
             <a
-              href="https://t.me/bestpragueguide"
+              href={`https://t.me/${siteSettings.telegramHandle}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 p-4 bg-white rounded-lg border border-gray-light/50 hover:border-blue-400/50 transition-colors"
@@ -89,39 +95,41 @@ export default async function ContactPage({
             </a>
 
             <a
-              href="tel:+420776306858"
+              href={`tel:${siteSettings.contactPhone}`}
               className="flex items-center gap-3 p-4 bg-white rounded-lg border border-gray-light/50 hover:border-gold/50 transition-colors"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-gold">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
               </svg>
-              <span className="text-sm text-navy">+420 776 306 858</span>
+              <span className="text-sm text-navy">{siteSettings.contactPhoneDisplay}</span>
             </a>
 
-            <a
-              href="https://instagram.com/bestpragueguide"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white rounded-lg border border-gray-light/50 hover:border-pink-400/50 transition-colors"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-pink-500">
-                <rect x="2" y="2" width="20" height="20" rx="5" />
-                <circle cx="12" cy="12" r="5" />
-                <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
-              </svg>
-              <span className="text-sm text-navy">Instagram</span>
-            </a>
+            {siteSettings.socialLinks.instagramUrl && (
+              <a
+                href={siteSettings.socialLinks.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 p-4 bg-white rounded-lg border border-gray-light/50 hover:border-pink-400/50 transition-colors"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-pink-500">
+                  <rect x="2" y="2" width="20" height="20" rx="5" />
+                  <circle cx="12" cy="12" r="5" />
+                  <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+                </svg>
+                <span className="text-sm text-navy">Instagram</span>
+              </a>
+            )}
           </div>
 
           <p className="mt-6 text-sm text-gray">
-            {locale === 'ru' ? 'Режим работы' : 'Business Hours'}: 09:00–20:00 CET
+            {locale === 'ru' ? 'Режим работы' : 'Business Hours'}: {siteSettings.businessHours}
           </p>
 
           {/* Map */}
           <div className="mt-8">
             <iframe
               title="Office Location"
-              src="https://maps.google.com/maps?q=50.0875,14.4213&z=15&output=embed"
+              src={mapSrc}
               className="w-full h-64 rounded-lg border border-gray-light"
               loading="lazy"
               allowFullScreen

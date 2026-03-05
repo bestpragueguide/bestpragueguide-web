@@ -14,6 +14,7 @@ import {
   GoogleTagManagerBody,
 } from '@/components/analytics/GoogleTagManager'
 import { YandexMetrika } from '@/components/analytics/YandexMetrika'
+import { getSiteSettings, getNavigation } from '@/lib/cms-data'
 import '@/app/globals.css'
 
 const cormorant = Cormorant_Garamond({
@@ -64,17 +65,26 @@ export default async function FrontendLayout({
     notFound()
   }
 
-  const messages = await getMessages()
+  const [messages, siteSettings, navigation] = await Promise.all([
+    getMessages(),
+    getSiteSettings(locale),
+    getNavigation(locale),
+  ])
 
   return (
     <html lang={locale} dir="ltr">
       <body className={`${cormorant.variable} ${dmSans.variable}`}>
         <GoogleTagManagerBody />
         <NextIntlClientProvider messages={messages}>
-          <Nav />
+          <Nav navigation={navigation} locale={locale} />
           <main className="pt-16">{children}</main>
-          <Footer />
-          <WhatsAppButton locale={locale} />
+          <Footer navigation={navigation} siteSettings={siteSettings} locale={locale} />
+          <WhatsAppButton
+            phone={siteSettings.whatsappNumber}
+            messageTemplate={siteSettings.whatsappMessageTemplate}
+            tourMessageTemplate={siteSettings.whatsappTourMessageTemplate}
+            locale={locale}
+          />
           <OrganizationSchema />
         </NextIntlClientProvider>
         <GoogleTagManagerHead />

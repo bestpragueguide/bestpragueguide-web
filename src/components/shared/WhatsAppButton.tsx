@@ -3,19 +3,17 @@
 import { trackWhatsAppClick } from '@/lib/analytics'
 
 interface WhatsAppButtonProps {
+  phone: string
+  messageTemplate: string
+  tourMessageTemplate: string
   tourName?: string
-  locale: string
+  locale?: string
 }
 
-export function WhatsAppButton({ tourName, locale }: WhatsAppButtonProps) {
-  const phone = '420776306858'
+export function WhatsAppButton({ phone, messageTemplate, tourMessageTemplate, tourName }: WhatsAppButtonProps) {
   const message = tourName
-    ? locale === 'ru'
-      ? `Здравствуйте! Меня интересует экскурсия "${tourName}".`
-      : `Hi! I'm interested in the "${tourName}" tour.`
-    : locale === 'ru'
-      ? 'Здравствуйте! Я хотел(а) бы узнать об экскурсиях.'
-      : "Hi! I'd like to learn about your tours."
+    ? tourMessageTemplate.replace('{tourName}', tourName)
+    : messageTemplate
 
   const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
 

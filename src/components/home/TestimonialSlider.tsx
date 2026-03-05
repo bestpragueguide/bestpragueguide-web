@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { useTranslations } from 'next-intl'
 
 interface Review {
   id: number
@@ -14,6 +13,7 @@ interface Review {
 
 interface TestimonialSliderProps {
   reviews: Review[]
+  heading: string
 }
 
 function StarRating({ rating }: { rating: number }) {
@@ -37,8 +37,7 @@ function StarRating({ rating }: { rating: number }) {
   )
 }
 
-export function TestimonialSlider({ reviews }: TestimonialSliderProps) {
-  const t = useTranslations('testimonials')
+export function TestimonialSlider({ reviews, heading }: TestimonialSliderProps) {
   const [current, setCurrent] = useState(0)
   const [paused, setPaused] = useState(false)
 
@@ -63,7 +62,7 @@ export function TestimonialSlider({ reviews }: TestimonialSliderProps) {
     <section className="py-16 lg:py-24 bg-navy">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl sm:text-4xl font-heading font-bold text-white text-center mb-12">
-          {t('heading')}
+          {heading}
         </h2>
 
         <div

@@ -1,12 +1,22 @@
 import Image from 'next/image'
-import { getLocale, getTranslations } from 'next-intl/server'
 import { Button } from '@/components/shared/Button'
+import { resolveMediaUrl } from '@/lib/cms-data'
+import type { HomepageData } from '@/lib/cms-types'
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
 
-export async function GuideProfile() {
-  const locale = await getLocale()
-  const t = await getTranslations('guideProfile')
+interface GuideProfileProps {
+  data: HomepageData
+  locale: string
+}
+
+export function GuideProfile({ data, locale }: GuideProfileProps) {
+  const photoUrl = resolveMediaUrl(data.guidePhoto)
+    || `${SERVER_URL}/api/media/file/photo_4_2026-03-03_18-30-45.jpg`
+
+  const learnMoreHref = data.guideLearnMoreHref.startsWith('/')
+    ? `/${locale}${data.guideLearnMoreHref}`
+    : data.guideLearnMoreHref
 
   return (
     <section className="py-16 lg:py-24 bg-cream">
@@ -15,7 +25,7 @@ export async function GuideProfile() {
           {/* Photo */}
           <div className="relative aspect-[4/5] rounded-2xl overflow-hidden order-2 lg:order-1">
             <Image
-              src={`${SERVER_URL}/api/media/file/photo_4_2026-03-03_18-30-45.jpg`}
+              src={photoUrl}
               alt={locale === 'ru' ? 'Ульяна Формина — ваш гид по Праге' : 'Uliana Formina — Your Prague Guide'}
               fill
               className="object-cover"
@@ -26,14 +36,14 @@ export async function GuideProfile() {
           {/* Text */}
           <div className="order-1 lg:order-2">
             <h2 className="text-3xl sm:text-4xl font-heading font-bold text-navy">
-              {t('heading')}
+              {data.guideHeading}
             </h2>
             <p className="mt-6 text-lg text-navy/70 leading-relaxed">
-              {t('bio')}
+              {data.guideBio}
             </p>
             <div className="mt-8">
-              <Button href={`/${locale}/about`} variant="secondary">
-                {t('learnMore')}
+              <Button href={learnMoreHref} variant="secondary">
+                {data.guideLearnMore}
               </Button>
             </div>
           </div>

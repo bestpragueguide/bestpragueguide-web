@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.0] - 2026-03-05
+
+### Added
+- Full CMS editability — all site content now manageable from Payload admin panel
+- Navigation global (`src/globals/Navigation.ts`) — header links, CTA button, footer columns, license/copyright text
+- Homepage global (`src/globals/Homepage.ts`) — hero, trust bar, guide profile, categories, process steps, testimonials, FAQ section, CTA, SEO
+- AboutPage global (`src/globals/AboutPage.ts`) — founder, stats, team, values, gallery, CTA, SEO
+- ReviewsPage global (`src/globals/ReviewsPage.ts`) — heading, photo gallery, SEO
+- FAQs collection (`src/collections/FAQs.ts`) — question/answer (richText), category, sortOrder, showOnHomepage flag
+- Data-fetching layer (`src/lib/cms-data.ts`) with hardcoded fallbacks for all globals
+- TypeScript interfaces (`src/lib/cms-types.ts`) for all CMS data structures
+- SVG icon registry (`src/lib/icon-map.tsx`) for trust bar and process step icons
+- FAQSectionWrapper server component for homepage FAQ section
+- RichTextRenderer component for legal page CMS content
+- CMS seed endpoint (`/api/seed-cms`) — populates all globals and FAQ items in EN+RU
+- Legal pages (privacy, terms, cancellation) check Pages collection first, fall back to i18n
+
+### Changed
+- SiteSettings global enhanced with tabs (General, Contact, Social, Location, Announcement) and new fields
+- Pages collection supports `legal` template with `lastUpdated` field
+- Layout fetches SiteSettings + Navigation globals, passes as props to Nav, Footer, WhatsAppButton
+- Nav, MobileMenu, Footer migrated from i18n to CMS data props
+- All homepage components (Hero, TrustBar, GuideProfile, FeaturedTours, ProcessSteps, TestimonialSlider, FAQSection, CTASection) migrated to CMS props
+- About, FAQ, Reviews, Contact pages fetch data from CMS globals/collections
+- WhatsAppButton accepts phone + message template props from CMS
+- ContactForm accepts phoneDisplay prop from CMS
+- SEO metadata on all pages uses CMS fields with i18n fallback
+- Cleaned ~117 migrated keys from i18n JSON files (removed nav, hero, trustBar, guideProfile, process, testimonials, faqSection, cta, footer, about namespaces)
+
 ## [1.3.7] - 2026-03-05
 
 ### Added

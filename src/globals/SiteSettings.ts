@@ -7,75 +7,173 @@ export const SiteSettings: GlobalConfig = {
   },
   fields: [
     {
-      name: 'siteName',
-      type: 'text',
-      defaultValue: 'Best Prague Guide',
-    },
-    {
-      name: 'tagline',
-      type: 'text',
-      localized: true,
-    },
-    {
-      name: 'contactEmail',
-      type: 'email',
-    },
-    {
-      name: 'contactPhone',
-      type: 'text',
-    },
-    {
-      name: 'whatsappNumber',
-      type: 'text',
-    },
-    {
-      name: 'telegramHandle',
-      type: 'text',
-    },
-    {
-      name: 'businessHours',
-      type: 'text',
-      defaultValue: '09:00–20:00 CET',
-    },
-    {
-      name: 'socialLinks',
-      type: 'group',
-      fields: [
+      type: 'tabs',
+      tabs: [
         {
-          name: 'instagramUrl',
-          type: 'text',
+          label: 'General',
+          fields: [
+            {
+              name: 'siteName',
+              type: 'text',
+              defaultValue: 'Best Prague Guide',
+            },
+            {
+              name: 'tagline',
+              type: 'text',
+              localized: true,
+            },
+          ],
         },
         {
-          name: 'youtubeUrl',
-          type: 'text',
+          label: 'Contact',
+          fields: [
+            {
+              name: 'contactEmail',
+              type: 'email',
+            },
+            {
+              name: 'contactPhone',
+              type: 'text',
+              admin: {
+                description: 'International format without spaces (e.g. +420776306858)',
+              },
+            },
+            {
+              name: 'contactPhoneDisplay',
+              type: 'text',
+              admin: {
+                description: 'Display format (e.g. +420 776 306 858)',
+              },
+            },
+            {
+              name: 'whatsappNumber',
+              type: 'text',
+              admin: {
+                description: 'Number without + (e.g. 420776306858)',
+              },
+            },
+            {
+              name: 'whatsappMessageTemplate',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Default message when user clicks WhatsApp button (general)',
+              },
+            },
+            {
+              name: 'whatsappTourMessageTemplate',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Message when clicking WhatsApp from a tour page. Use {tourName} placeholder.',
+              },
+            },
+            {
+              name: 'telegramHandle',
+              type: 'text',
+            },
+            {
+              name: 'businessHours',
+              type: 'text',
+              defaultValue: '09:00–20:00 CET',
+            },
+          ],
         },
         {
-          name: 'tripAdvisorUrl',
-          type: 'text',
+          label: 'Social',
+          fields: [
+            {
+              name: 'instagramHandle',
+              type: 'text',
+              admin: {
+                description: 'Without @ (e.g. bestpragueguide)',
+              },
+            },
+            {
+              name: 'socialLinks',
+              type: 'group',
+              fields: [
+                {
+                  name: 'instagramUrl',
+                  type: 'text',
+                },
+                {
+                  name: 'youtubeUrl',
+                  type: 'text',
+                },
+                {
+                  name: 'tripAdvisorUrl',
+                  type: 'text',
+                },
+                {
+                  name: 'googleBusinessUrl',
+                  type: 'text',
+                },
+              ],
+            },
+          ],
         },
         {
-          name: 'googleBusinessUrl',
-          type: 'text',
+          label: 'Location',
+          fields: [
+            {
+              name: 'mapCoordinates',
+              type: 'group',
+              fields: [
+                {
+                  name: 'lat',
+                  type: 'number',
+                  admin: { description: 'Latitude (e.g. 50.0875)' },
+                },
+                {
+                  name: 'lng',
+                  type: 'number',
+                  admin: { description: 'Longitude (e.g. 14.4213)' },
+                },
+              ],
+            },
+            {
+              name: 'licenseText',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Guide association license text',
+              },
+            },
+            {
+              name: 'copyrightText',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Use {year} as placeholder for the current year',
+              },
+            },
+          ],
         },
-      ],
-    },
-    {
-      name: 'announcement',
-      type: 'group',
-      fields: [
         {
-          name: 'enabled',
-          type: 'checkbox',
-          defaultValue: false,
-        },
-        {
-          name: 'text',
-          type: 'text',
-          localized: true,
-        },
-        {
-          name: 'link',
-          type: 'text',
+          label: 'Announcement',
+          fields: [
+            {
+              name: 'announcement',
+              type: 'group',
+              fields: [
+                {
+                  name: 'enabled',
+                  type: 'checkbox',
+                  defaultValue: false,
+                },
+                {
+                  name: 'text',
+                  type: 'text',
+                  localized: true,
+                },
+                {
+                  name: 'link',
+                  type: 'text',
+                },
+              ],
+            },
+          ],
         },
       ],
     },

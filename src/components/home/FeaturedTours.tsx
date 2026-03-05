@@ -1,16 +1,26 @@
-import { getLocale, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import Image from 'next/image'
 import { TourCard } from '@/components/tours/TourCard'
 import { Button } from '@/components/shared/Button'
+import { resolveMediaUrl } from '@/lib/cms-data'
+import type { HomepageData } from '@/lib/cms-types'
+import { getTranslations } from 'next-intl/server'
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
 
-export async function FeaturedTours() {
-  const locale = await getLocale()
-  const t = await getTranslations('categories')
-  const commonT = await getTranslations('common')
+const fallbackCategoryImages = [
+  `${SERVER_URL}/api/media/file/photo_2_2026-03-03_18-30-45.jpg`,
+  `${SERVER_URL}/api/media/file/photo_3_2026-03-03_18-30-45.jpg`,
+]
+
+interface FeaturedToursProps {
+  data: HomepageData
+  locale: string
+}
+
+export async function FeaturedTours({ data, locale }: FeaturedToursProps) {
+  const commonT = await getTranslations({ locale, namespace: 'common' })
 
   let tours: Array<{
     id: number
@@ -47,44 +57,40 @@ export async function FeaturedTours() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl sm:text-4xl font-heading font-bold text-navy">
-            {t('all')}
+            {data.categoriesHeading}
           </h2>
         </div>
 
         {/* Category cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
-          <a
-            href={`/${locale}/tours?category=prague-tours`}
-            className="relative group rounded-xl overflow-hidden bg-navy-light aspect-[2/1] flex items-end p-6"
-          >
-            <Image
-              src={`${SERVER_URL}/api/media/file/photo_2_2026-03-03_18-30-45.jpg`}
-              alt={t('pragueTours')}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
-              sizes="(max-width: 640px) 100vw, 50vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/30 to-transparent" />
-            <h3 className="relative text-2xl font-heading font-bold text-white group-hover:text-gold transition-colors">
-              {t('pragueTours')}
-            </h3>
-          </a>
-          <a
-            href={`/${locale}/tours?category=from-prague`}
-            className="relative group rounded-xl overflow-hidden bg-navy-light aspect-[2/1] flex items-end p-6"
-          >
-            <Image
-              src={`${SERVER_URL}/api/media/file/photo_3_2026-03-03_18-30-45.jpg`}
-              alt={t('fromPrague')}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
-              sizes="(max-width: 640px) 100vw, 50vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/30 to-transparent" />
-            <h3 className="relative text-2xl font-heading font-bold text-white group-hover:text-gold transition-colors">
-              {t('fromPrague')}
-            </h3>
-          </a>
+          {data.categories.map((cat, i) => {
+            const imgUrl = resolveMediaUrl(cat.image)
+              || fallbackCategoryImages[i]
+              || fallbackCategoryImages[0]
+            const href = cat.href.startsWith('/')
+              ? `/${locale}${cat.href}`
+              : cat.href
+
+            return (
+              <a
+                key={i}
+                href={href}
+                className="relative group rounded-xl overflow-hidden bg-navy-light aspect-[2/1] flex items-end p-6"
+              >
+                <Image
+                  src={imgUrl}
+                  alt={cat.label}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 640px) 100vw, 50vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/30 to-transparent" />
+                <h3 className="relative text-2xl font-heading font-bold text-white group-hover:text-gold transition-colors">
+                  {cat.label}
+                </h3>
+              </a>
+            )
+          })}
         </div>
 
         {/* Tour grid */}

@@ -61,7 +61,17 @@ export const Pages: CollectionConfig = {
         { label: 'Contact', value: 'contact' },
         { label: 'FAQ', value: 'faq' },
         { label: 'Landing', value: 'landing' },
+        { label: 'Legal', value: 'legal' },
       ],
+    },
+    {
+      name: 'lastUpdated',
+      type: 'text',
+      localized: true,
+      admin: {
+        description: 'e.g. "Last updated: March 2026"',
+        condition: (data) => data?.template === 'legal',
+      },
     },
   ],
 }

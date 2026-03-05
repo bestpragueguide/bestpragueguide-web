@@ -2,19 +2,17 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
-import { useLocale, useTranslations } from 'next-intl'
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher'
 
 interface MobileMenuProps {
   open: boolean
   onClose: () => void
   navLinks: Array<{ href: string; label: string }>
+  ctaLabel: string
+  ctaHref: string
 }
 
-export function MobileMenu({ open, onClose, navLinks }: MobileMenuProps) {
-  const locale = useLocale()
-  const t = useTranslations('nav')
-
+export function MobileMenu({ open, onClose, navLinks, ctaLabel, ctaHref }: MobileMenuProps) {
   // Lock body scroll when open
   useEffect(() => {
     if (open) {
@@ -81,11 +79,11 @@ export function MobileMenu({ open, onClose, navLinks }: MobileMenuProps) {
 
           {/* CTA */}
           <Link
-            href={`/${locale}/tours`}
+            href={ctaHref}
             onClick={onClose}
             className="mt-6 py-3 text-center font-medium bg-gold text-white rounded-lg hover:bg-gold-dark transition-colors"
           >
-            {t('cta')}
+            {ctaLabel}
           </Link>
 
           {/* Language switcher */}

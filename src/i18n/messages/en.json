@@ -1,35 +1,4 @@
 {
-  "nav": {
-    "tours": "Tours",
-    "about": "About Us",
-    "reviews": "Reviews",
-    "blog": "Blog",
-    "contact": "Contact",
-    "cta": "Choose a Tour"
-  },
-  "hero": {
-    "tagline": "Discover the Prague Tourists Never See",
-    "subtitle": "Private tours from a guide with 17 years of experience. Just your group — no strangers.",
-    "cta": "Explore Tours"
-  },
-  "trustBar": {
-    "experience": "17 Years Experience",
-    "guests": "10,000+ Happy Guests",
-    "licensed": "Team of Licensed Guides",
-    "curated": "Every Tour Curated by Founder"
-  },
-  "guideProfile": {
-    "heading": "Meet Your Guide",
-    "bio": "Uliana Formina has been sharing her passion for Prague for over 17 years. As a highest-category licensed guide and founder of Best Prague Guide, she personally curates every tour route and hand-picks each guide on her team.",
-    "learnMore": "Learn More About Us"
-  },
-  "categories": {
-    "pragueTours": "Prague Tours",
-    "fromPrague": "From Prague",
-    "sightseeing": "Sightseeing",
-    "beerAndFood": "Beer and Food",
-    "all": "All Tours"
-  },
   "booking": {
     "date": "Preferred Date",
     "time": "Preferred Time",
@@ -48,64 +17,14 @@
     "referenceNumber": "Reference number",
     "errorGeneric": "Something went wrong. Please try again or contact us directly."
   },
-  "process": {
-    "heading": "How It Works",
-    "step1Title": "Submit a Request",
-    "step1Desc": "Choose a tour and tell us your preferred date and group size.",
-    "step2Title": "We Confirm",
-    "step2Desc": "We check availability and confirm within 2 hours.",
-    "step3Title": "Pay Securely",
-    "step3Desc": "After confirmation, pay online via a secure payment link.",
-    "step4Title": "Enjoy Your Tour",
-    "step4Desc": "Meet your guide and discover Prague like a local."
-  },
-  "testimonials": {
-    "heading": "What Our Guests Say"
-  },
-  "faqSection": {
-    "heading": "Frequently Asked Questions"
-  },
-  "cta": {
-    "heading": "Ready to Explore Prague?",
-    "subtitle": "Book your private tour today",
-    "chooseTour": "Choose a Tour",
-    "whatsapp": "WhatsApp Us",
-    "telegram": "Telegram"
-  },
-  "footer": {
-    "tagline": "Private tours in Prague from a team of licensed guides",
-    "tours": "Tours",
-    "company": "Company",
-    "legal": "Legal",
-    "privacy": "Privacy Policy",
-    "terms": "Terms of Service",
-    "cancellation": "Cancellation Policy",
-    "hours": "Business Hours",
-    "license": "Licensed Guide, Czech Guide Association",
-    "copyright": "© {year} Best Prague Guide. All rights reserved."
-  },
-  "about": {
-    "founderHeading": "Founder and Lead Guide",
-    "founderBio": "For over 17 years, Uliana Formina has been sharing her deep love for Prague with travelers from around the world. As a highest-category licensed guide and member of the Czech Guide Association, she has welcomed more than 10,000 guests to the city's hidden corners and iconic landmarks.",
-    "founderQuote": "I built this company to deliver tour quality as if I personally led every single one.",
-    "teamHeading": "Our Team of Licensed Guides",
-    "teamDesc": "Every guide on our team is personally selected and trained by Uliana. All hold official licenses from the Czech Guide Association and undergo regular quality reviews.",
-    "teamBadge1": "All Licensed",
-    "teamBadge2": "Personally Selected by Founder",
-    "teamBadge3": "Regular Training and QC",
-    "valuesHeading": "Our Values",
-    "value1": "Private Tours Only",
-    "value1Desc": "No group buses. Every tour is exclusive to you.",
-    "value2": "Every Tour Curated",
-    "value2Desc": "Each route personally designed by our founder.",
-    "value3": "Licensed Guides",
-    "value3Desc": "Official Czech Guide Association certification.",
-    "value4": "Routes Tailored to You",
-    "value4Desc": "We adapt every tour to your interests and pace."
+  "categories": {
+    "pragueTours": "Prague Tours",
+    "fromPrague": "From Prague",
+    "sightseeing": "Sightseeing",
+    "beerAndFood": "Beer and Food",
+    "all": "All Tours"
   },
   "reviews": {
-    "heading": "Guest Reviews",
-    "photoGalleryHeading": "Our Guests in Prague",
     "filterAll": "All Languages",
     "filterEn": "English",
     "filterRu": "Russian"

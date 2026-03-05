@@ -2,23 +2,27 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useLocale, useTranslations } from 'next-intl'
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher'
 import { Logo } from '@/components/shared/Logo'
 import { MobileMenu } from './MobileMenu'
+import type { NavigationData } from '@/lib/cms-types'
 
-export function Nav() {
+interface NavProps {
+  navigation: NavigationData
+  locale: string
+}
+
+export function Nav({ navigation, locale }: NavProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const locale = useLocale()
-  const t = useTranslations('nav')
 
-  const navLinks = [
-    { href: `/${locale}/tours`, label: t('tours') },
-    { href: `/${locale}/about`, label: t('about') },
-    { href: `/${locale}/reviews`, label: t('reviews') },
-    { href: `/${locale}/blog`, label: t('blog') },
-    { href: `/${locale}/contact`, label: t('contact') },
-  ]
+  const navLinks = navigation.headerLinks.map((link) => ({
+    href: link.href.startsWith('/') ? `/${locale}${link.href}` : link.href,
+    label: link.label,
+  }))
+
+  const ctaHref = navigation.headerCta.href.startsWith('/')
+    ? `/${locale}${navigation.headerCta.href}`
+    : navigation.headerCta.href
 
   return (
     <>
@@ -46,10 +50,10 @@ export function Nav() {
           <div className="hidden md:flex items-center gap-3">
             <LanguageSwitcher />
             <Link
-              href={`/${locale}/tours`}
+              href={ctaHref}
               className="px-5 py-2 text-sm font-medium bg-gold text-white rounded-lg hover:bg-gold-dark transition-colors"
             >
-              {t('cta')}
+              {navigation.headerCta.label}
             </Link>
           </div>
 
@@ -80,6 +84,8 @@ export function Nav() {
         open={mobileOpen}
         onClose={() => setMobileOpen(false)}
         navLinks={navLinks}
+        ctaLabel={navigation.headerCta.label}
+        ctaHref={ctaHref}
       />
     </>
   )

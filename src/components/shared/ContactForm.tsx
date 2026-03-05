@@ -5,9 +5,11 @@ import { useTranslations } from 'next-intl'
 
 interface ContactFormProps {
   locale: string
+  phoneDisplay?: string
 }
 
-export function ContactForm({ locale }: ContactFormProps) {
+export function ContactForm({ locale, phoneDisplay }: ContactFormProps) {
+  const phone = phoneDisplay || '+420 776 306 858'
   const t = useTranslations('contact')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error' | 'rate_limited' | 'too_long'>('idle')
 
@@ -147,8 +149,8 @@ export function ContactForm({ locale }: ContactFormProps) {
       {status === 'rate_limited' && (
         <p className="text-sm text-error text-center">
           {locale === 'ru'
-            ? 'Слишком много сообщений. Пожалуйста, свяжитесь с нами по телефону: +420 776 306 858'
-            : 'Too many messages. Please contact us by phone: +420 776 306 858'}
+            ? `Слишком много сообщений. Пожалуйста, свяжитесь с нами по телефону: ${phone}`
+            : `Too many messages. Please contact us by phone: ${phone}`}
         </p>
       )}
 

@@ -11,7 +11,12 @@ import { Pages } from './collections/Pages'
 import { Media } from './collections/Media'
 import { BlogPosts } from './collections/BlogPosts'
 import { ContactMessages } from './collections/ContactMessages'
+import { FAQs } from './collections/FAQs'
 import { SiteSettings } from './globals/SiteSettings'
+import { Navigation } from './globals/Navigation'
+import { Homepage } from './globals/Homepage'
+import { AboutPage } from './globals/AboutPage'
+import { ReviewsPage } from './globals/ReviewsPage'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -59,9 +64,10 @@ export default buildConfig({
     Media,
     BlogPosts,
     ContactMessages,
+    FAQs,
   ],
 
-  globals: [SiteSettings],
+  globals: [SiteSettings, Navigation, Homepage, AboutPage, ReviewsPage],
 
   plugins: [],
 

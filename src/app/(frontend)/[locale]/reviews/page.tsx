@@ -6,13 +6,14 @@ import { getTranslations } from 'next-intl/server'
 import { buildPageMetadata } from '@/lib/metadata'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { getReviewsPageData, resolveMediaUrl } from '@/lib/cms-data'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { ReviewCard } from '@/components/reviews/ReviewCard'
 import { JsonLd } from '@/components/seo/JsonLd'
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
 
-const galleryPhotos = [
+const fallbackGalleryPhotos = [
   { src: `${SERVER_URL}/api/media/file/photo_1_2026-03-03_18-30-46.jpg`, alt: 'Guide at the Astronomical Clock' },
   { src: `${SERVER_URL}/api/media/file/photo_2_2026-03-03_18-30-45.jpg`, alt: 'Prague panoramic view with red umbrella' },
   { src: `${SERVER_URL}/api/media/file/photo_5_2026-03-03_18-30-45.jpg`, alt: 'Family tour at Tyn Church' },
@@ -28,15 +29,18 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
+  const pageData = await getReviewsPageData(locale)
+
+  if (pageData.seo?.metaTitle) {
+    const title = pageData.seo.metaTitle
+    const description = pageData.seo.metaDescription || ''
+    return { title, description, ...buildPageMetadata(locale, 'reviews', { title, description }) }
+  }
+
   const t = await getTranslations({ locale, namespace: 'meta' })
   const title = t('reviewsTitle')
   const description = t('reviewsDesc')
-
-  return {
-    title,
-    description,
-    ...buildPageMetadata(locale, 'reviews', { title, description }),
-  }
+  return { title, description, ...buildPageMetadata(locale, 'reviews', { title, description }) }
 }
 
 export default async function ReviewsPage({
@@ -45,7 +49,14 @@ export default async function ReviewsPage({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
-  const t = await getTranslations({ locale, namespace: 'reviews' })
+  const pageData = await getReviewsPageData(locale)
+
+  const galleryPhotos = pageData.galleryPhotos.length > 0
+    ? pageData.galleryPhotos.map((p, i) => ({
+        src: resolveMediaUrl(p.image) || fallbackGalleryPhotos[i]?.src || '',
+        alt: (typeof p.image === 'object' && p.image?.alt) || `Guest photo ${i + 1}`,
+      }))
+    : fallbackGalleryPhotos
 
   let reviews: any[] = []
   try {
@@ -105,9 +116,9 @@ export default async function ReviewsPage({
       {/* Photo gallery section */}
       <section className="mb-16">
         <h1 className="text-3xl sm:text-4xl font-heading font-bold text-navy mb-2">
-          {t('heading')}
+          {pageData.heading}
         </h1>
-        <h2 className="text-lg text-gray mb-8">{t('photoGalleryHeading')}</h2>
+        <h2 className="text-lg text-gray mb-8">{pageData.photoGalleryHeading}</h2>
 
         <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-2">
           {galleryPhotos.map((photo, i) => (

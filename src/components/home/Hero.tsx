@@ -1,18 +1,28 @@
 import Image from 'next/image'
-import { getLocale, getTranslations } from 'next-intl/server'
 import { Button } from '@/components/shared/Button'
+import { resolveMediaUrl } from '@/lib/cms-data'
+import type { HomepageData } from '@/lib/cms-types'
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
 
-export async function Hero() {
-  const locale = await getLocale()
-  const t = await getTranslations('hero')
+interface HeroProps {
+  data: HomepageData
+  locale: string
+}
+
+export function Hero({ data, locale }: HeroProps) {
+  const bgUrl = resolveMediaUrl(data.heroBackgroundImage, 'hero')
+    || `${SERVER_URL}/api/media/file/photo_2_2026-03-03_18-30-45.jpg`
+
+  const ctaHref = data.heroCtaHref.startsWith('/')
+    ? `/${locale}${data.heroCtaHref}`
+    : data.heroCtaHref
 
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center bg-navy overflow-hidden">
       {/* Background image */}
       <Image
-        src={`${SERVER_URL}/api/media/file/photo_2_2026-03-03_18-30-45.jpg`}
+        src={bgUrl}
         alt="Prague panoramic view"
         fill
         className="object-cover"
@@ -24,14 +34,14 @@ export async function Hero() {
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-white leading-tight">
-          {t('tagline')}
+          {data.heroTagline}
         </h1>
         <p className="mt-6 text-lg sm:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed">
-          {t('subtitle')}
+          {data.heroSubtitle}
         </p>
         <div className="mt-10">
-          <Button href={`/${locale}/tours`} size="lg">
-            {t('cta')}
+          <Button href={ctaHref} size="lg">
+            {data.heroCta}
           </Button>
         </div>
       </div>

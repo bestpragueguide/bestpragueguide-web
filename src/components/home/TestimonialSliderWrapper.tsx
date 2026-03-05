@@ -1,11 +1,13 @@
-import { getLocale } from 'next-intl/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { TestimonialSlider } from './TestimonialSlider'
 
-export async function TestimonialSliderWrapper() {
-  const locale = await getLocale()
+interface TestimonialSliderWrapperProps {
+  heading: string
+  locale: string
+}
 
+export async function TestimonialSliderWrapper({ heading, locale }: TestimonialSliderWrapperProps) {
   let reviews: Array<{
     id: number
     customerName: string
@@ -76,5 +78,5 @@ export async function TestimonialSliderWrapper() {
           },
         ]
 
-  return <TestimonialSlider reviews={displayReviews} />
+  return <TestimonialSlider reviews={displayReviews} heading={heading} />
 }

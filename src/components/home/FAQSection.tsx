@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslations } from 'next-intl'
 
 interface FAQItemProps {
   question: string
@@ -45,34 +44,27 @@ function FAQItem({ question, answer, isOpen, onToggle }: FAQItemProps) {
   )
 }
 
-export function FAQSection() {
-  const t = useTranslations('faq')
-  const sectionT = useTranslations('faqSection')
-  const [openIndex, setOpenIndex] = useState<number | null>(0)
+interface FAQSectionProps {
+  heading: string
+  items: Array<{ question: string; answer: string }>
+}
 
-  const faqItems = [
-    { q: t('q1'), a: t('a1') },
-    { q: t('q2'), a: t('a2') },
-    { q: t('q3'), a: t('a3') },
-    { q: t('q4'), a: t('a4') },
-    { q: t('q5'), a: t('a5') },
-    { q: t('q8'), a: t('a8') },
-    { q: t('q9'), a: t('a9') },
-  ]
+export function FAQSection({ heading, items }: FAQSectionProps) {
+  const [openIndex, setOpenIndex] = useState<number | null>(0)
 
   return (
     <section className="py-16 lg:py-24 bg-cream">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl sm:text-4xl font-heading font-bold text-navy text-center mb-12">
-          {sectionT('heading')}
+          {heading}
         </h2>
 
         <div>
-          {faqItems.map((item, index) => (
+          {items.map((item, index) => (
             <FAQItem
               key={index}
-              question={item.q}
-              answer={item.a}
+              question={item.question}
+              answer={item.answer}
               isOpen={openIndex === index}
               onToggle={() =>
                 setOpenIndex(openIndex === index ? null : index)
