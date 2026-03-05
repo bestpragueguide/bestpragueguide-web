@@ -14,11 +14,13 @@
   --color-white: #FFFFFF;
   --color-error: #DC2626;
 
-  --font-heading: var(--font-cormorant-garamond), 'Cormorant Garamond', serif;
-  --font-body: var(--font-dm-sans), 'DM Sans', sans-serif;
+  --font-heading: 'Cormorant Garamond', serif;
+  --font-body: 'DM Sans', sans-serif;
 }
 
 body {
+  --font-heading: var(--font-cormorant-garamond, 'Cormorant Garamond'), serif;
+  --font-body: var(--font-dm-sans, 'DM Sans'), sans-serif;
   background-color: var(--color-cream);
   color: var(--color-navy);
   font-family: var(--font-body);

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.3] - 2026-03-05
+
+### Fixed
+- Fix Cormorant Garamond and DM Sans fonts not rendering — `@theme` CSS variables contained `var()` references to next/font variables that only exist on `<body>`, not at `:root` where `@theme` generates its values. Now `@theme` uses direct font names as fallback, and `body` overrides with next/font optimized versions.
+
 ## [1.4.2] - 2026-03-05
 
 ### Fixed
