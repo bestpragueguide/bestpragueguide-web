@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.1] - 2026-03-05
+
+### Changed
+- Logo now shows locale-aware tagline in header and footer (EN: "Private Tours in Prague & Czech Republic", RU: "Индивидуальные экскурсии по Праге и Чехии")
+- Header logo tagline visible on all screen sizes (8px compact)
+- Footer logo includes association membership text (EN/RU)
+
 ## [1.4.0] - 2026-03-05
 
 ### Added

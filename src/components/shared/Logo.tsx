@@ -12,15 +12,18 @@ const brandColorClass: Record<LogoVariant, string> = {
   footer: 'text-white',
 }
 
-const taglineColorClass: Record<LogoVariant, string> = {
-  sm: '',
-  default: 'text-gray',
-  footer: 'text-white/40',
+const taglineClass: Record<LogoVariant, string> = {
+  sm: 'text-[8px] tracking-[2.5px] text-[#999] mt-[3px]',
+  default: 'text-[10px] tracking-[3.5px] text-[#999] mt-1.5',
+  footer: 'text-[10px] tracking-[3.5px] text-[#666] mt-2',
 }
 
-export function Logo({ variant = 'default' }: { variant?: LogoVariant }) {
-  const showTagline = variant !== 'sm'
+const taglines: Record<string, string> = {
+  en: 'Private Tours in Prague & Czech Republic',
+  ru: 'Индивидуальные экскурсии по Праге и Чехии',
+}
 
+export function Logo({ variant = 'default', locale = 'en' }: { variant?: LogoVariant; locale?: string }) {
   return (
     <div className={variant === 'default' ? 'text-center' : undefined}>
       <div
@@ -28,13 +31,11 @@ export function Logo({ variant = 'default' }: { variant?: LogoVariant }) {
       >
         Best <em className="text-gold font-medium italic">Prague</em> Guide
       </div>
-      {showTagline && (
-        <div
-          className={`font-body font-normal text-[10px] tracking-[3.5px] uppercase mt-1.5 ${taglineColorClass[variant]}`}
-        >
-          Private Tours in Prague &amp; Czech Republic
-        </div>
-      )}
+      <div
+        className={`font-body font-normal uppercase ${taglineClass[variant]}`}
+      >
+        {taglines[locale] || taglines.en}
+      </div>
     </div>
   )
 }

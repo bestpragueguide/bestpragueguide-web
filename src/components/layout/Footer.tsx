@@ -19,8 +19,13 @@ export function Footer({ navigation, siteSettings, locale }: FooterProps) {
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
             <Link href={`/${locale}`}>
-              <Logo variant="footer" />
+              <Logo variant="footer" locale={locale} />
             </Link>
+            <p className="text-xs text-[#555] mt-4 leading-relaxed">
+              {locale === 'ru'
+                ? 'Член Ассоциации гидов Чехии — входящей в Союз туристического бизнеса и Всемирную федерацию ассоциаций туристических гидов'
+                : 'Member of the Czech Guides Association — affiliated with the Union of Tourist Business and the World Federation of Tourist Guide Associations'}
+            </p>
           </div>
 
           {/* Dynamic footer columns */}
