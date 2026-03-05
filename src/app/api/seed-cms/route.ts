@@ -82,41 +82,34 @@ export async function POST() {
         footerCopyright: '© {year} Best Prague Guide. All rights reserved.',
       },
     })
+    // Fetch to get array item IDs, then update RU with matching IDs
+    // (passing new arrays without IDs replaces them, erasing EN labels)
+    const nav = await payload.findGlobal({ slug: 'navigation', locale: 'en' }) as any
+    const ruHeaderLabels = ['Экскурсии', 'О нас', 'Отзывы', 'Блог', 'Контакты']
+    const ruFooterData = [
+      { title: 'Экскурсии', links: ['Экскурсии'] },
+      { title: 'Компания', links: ['О нас', 'Отзывы', 'Контакты', 'FAQ'] },
+      { title: 'Юридическое', links: ['Политика конфиденциальности', 'Условия использования', 'Условия отмены'] },
+    ]
     await payload.updateGlobal({
       slug: 'navigation',
       locale: 'ru',
       data: {
-        headerLinks: [
-          { label: 'Экскурсии', href: '/tours' },
-          { label: 'О нас', href: '/about' },
-          { label: 'Отзывы', href: '/reviews' },
-          { label: 'Блог', href: '/blog' },
-          { label: 'Контакты', href: '/contact' },
-        ],
+        headerLinks: nav.headerLinks.map((link: any, i: number) => ({
+          id: link.id,
+          label: ruHeaderLabels[i],
+          href: link.href,
+        })),
         headerCta: { label: 'Выбрать экскурсию', href: '/tours' },
-        footerColumns: [
-          {
-            title: 'Экскурсии',
-            links: [{ label: 'Экскурсии', href: '/tours' }],
-          },
-          {
-            title: 'Компания',
-            links: [
-              { label: 'О нас', href: '/about' },
-              { label: 'Отзывы', href: '/reviews' },
-              { label: 'Контакты', href: '/contact' },
-              { label: 'FAQ', href: '/faq' },
-            ],
-          },
-          {
-            title: 'Юридическое',
-            links: [
-              { label: 'Политика конфиденциальности', href: '/privacy' },
-              { label: 'Условия использования', href: '/terms' },
-              { label: 'Условия отмены', href: '/cancellation-policy' },
-            ],
-          },
-        ],
+        footerColumns: nav.footerColumns.map((col: any, i: number) => ({
+          id: col.id,
+          title: ruFooterData[i].title,
+          links: col.links.map((link: any, j: number) => ({
+            id: link.id,
+            label: ruFooterData[i].links[j],
+            href: link.href,
+          })),
+        })),
         footerLicense: 'Лицензированный гид, Ассоциация гидов Чехии',
         footerCopyright: '© {year} Best Prague Guide. Все права защищены.',
       },
@@ -162,6 +155,16 @@ export async function POST() {
         ctaWhatsappLabel: 'WhatsApp Us',
       },
     })
+    // Fetch to get array item IDs for Homepage
+    const hp = await payload.findGlobal({ slug: 'homepage', locale: 'en' }) as any
+    const ruTrustBarTexts = ['17 лет опыта', '10 000+ довольных гостей', 'Команда лицензированных гидов', 'Каждая экскурсия создана основателем']
+    const ruCategoryLabels = ['Экскурсии по Праге', 'Из Праги']
+    const ruProcessSteps = [
+      { title: 'Отправьте запрос', description: 'Выберите экскурсию и укажите дату и размер группы.' },
+      { title: 'Мы подтвердим', description: 'Проверим доступность и подтвердим в течение 2 часов.' },
+      { title: 'Оплатите онлайн', description: 'После подтверждения оплатите по безопасной ссылке.' },
+      { title: 'Наслаждайтесь экскурсией', description: 'Встретьтесь с гидом и откройте Прагу как местный житель.' },
+    ]
     await payload.updateGlobal({
       slug: 'homepage',
       locale: 'ru',
@@ -169,27 +172,27 @@ export async function POST() {
         heroTagline: 'Откройте Прагу, которую не видят туристы',
         heroSubtitle: 'Индивидуальные экскурсии от гида с 17-летним опытом. Только ваша группа — никаких посторонних.',
         heroCta: 'Смотреть экскурсии',
-        trustBarItems: [
-          { icon: 'experience', text: '17 лет опыта' },
-          { icon: 'guests', text: '10 000+ довольных гостей' },
-          { icon: 'licensed', text: 'Команда лицензированных гидов' },
-          { icon: 'curated', text: 'Каждая экскурсия создана основателем' },
-        ],
+        trustBarItems: hp.trustBarItems.map((item: any, i: number) => ({
+          id: item.id,
+          icon: item.icon,
+          text: ruTrustBarTexts[i],
+        })),
         guideHeading: 'Ваш гид',
         guideBio: 'Ульяна Формина делится своей любовью к Праге уже более 17 лет. Как лицензированный гид высшей категории и основатель Best Prague Guide, она лично разрабатывает каждый маршрут и подбирает каждого гида в команду.',
         guideLearnMore: 'Подробнее о нас',
         categoriesHeading: 'Все экскурсии',
-        categories: [
-          { label: 'Экскурсии по Праге', href: '/tours?category=prague-tours' },
-          { label: 'Из Праги', href: '/tours?category=from-prague' },
-        ],
+        categories: hp.categories.map((cat: any, i: number) => ({
+          id: cat.id,
+          label: ruCategoryLabels[i],
+          href: cat.href,
+        })),
         processHeading: 'Как это работает',
-        processSteps: [
-          { icon: 'form', title: 'Отправьте запрос', description: 'Выберите экскурсию и укажите дату и размер группы.' },
-          { icon: 'check', title: 'Мы подтвердим', description: 'Проверим доступность и подтвердим в течение 2 часов.' },
-          { icon: 'card', title: 'Оплатите онлайн', description: 'После подтверждения оплатите по безопасной ссылке.' },
-          { icon: 'pin', title: 'Наслаждайтесь экскурсией', description: 'Встретьтесь с гидом и откройте Прагу как местный житель.' },
-        ],
+        processSteps: hp.processSteps.map((step: any, i: number) => ({
+          id: step.id,
+          icon: step.icon,
+          title: ruProcessSteps[i].title,
+          description: ruProcessSteps[i].description,
+        })),
         testimonialsHeading: 'Отзывы наших гостей',
         faqSectionHeading: 'Часто задаваемые вопросы',
         ctaHeading: 'Готовы исследовать Прагу?',
@@ -232,6 +235,20 @@ export async function POST() {
         ctaSecondaryHref: '/contact',
       },
     })
+    // Fetch to get array item IDs for AboutPage
+    const about = await payload.findGlobal({ slug: 'about-page', locale: 'en' }) as any
+    const ruStats = [
+      { value: '17+', label: 'лет опыта' },
+      { value: '10,000+', label: 'довольных гостей' },
+      { value: 'EN + RU', label: 'языки экскурсий' },
+    ]
+    const ruBadges = ['Все лицензированы', 'Лично отобраны основателем', 'Регулярное обучение и контроль']
+    const ruValues = [
+      { title: 'Только индивидуальные экскурсии', description: 'Никаких автобусных групп. Каждая экскурсия — только для вас.' },
+      { title: 'Каждая экскурсия авторская', description: 'Каждый маршрут лично разработан нашим основателем.' },
+      { title: 'Лицензированные гиды', description: 'Официальная сертификация Ассоциации гидов Чехии.' },
+      { title: 'Маршруты под вас', description: 'Мы адаптируем каждую экскурсию под ваши интересы и темп.' },
+    ]
     await payload.updateGlobal({
       slug: 'about-page',
       locale: 'ru',
@@ -239,25 +256,23 @@ export async function POST() {
         founderHeading: 'Основатель и ведущий гид',
         founderBio: 'Более 17 лет Ульяна Формина делится своей глубокой любовью к Праге с путешественниками со всего мира. Как лицензированный гид высшей категории и член Ассоциации гидов Чехии, она приняла более 10 000 гостей, показав им скрытые уголки и знаковые достопримечательности города.',
         founderQuote: 'Я создала эту компанию, чтобы обеспечить качество экскурсий, как если бы я лично вела каждую из них.',
-        stats: [
-          { value: '17+', label: 'лет опыта' },
-          { value: '10,000+', label: 'довольных гостей' },
-          { value: 'EN + RU', label: 'языки экскурсий' },
-        ],
+        stats: about.stats.map((stat: any, i: number) => ({
+          id: stat.id,
+          value: ruStats[i].value,
+          label: ruStats[i].label,
+        })),
         teamHeading: 'Наша команда лицензированных гидов',
         teamDescription: 'Каждый гид в нашей команде лично отобран и обучен Ульяной. Все имеют официальные лицензии Ассоциации гидов Чехии и регулярно проходят проверку качества.',
-        teamBadges: [
-          { text: 'Все лицензированы' },
-          { text: 'Лично отобраны основателем' },
-          { text: 'Регулярное обучение и контроль' },
-        ],
+        teamBadges: about.teamBadges.map((badge: any, i: number) => ({
+          id: badge.id,
+          text: ruBadges[i],
+        })),
         valuesHeading: 'Наши ценности',
-        values: [
-          { title: 'Только индивидуальные экскурсии', description: 'Никаких автобусных групп. Каждая экскурсия — только для вас.' },
-          { title: 'Каждая экскурсия авторская', description: 'Каждый маршрут лично разработан нашим основателем.' },
-          { title: 'Лицензированные гиды', description: 'Официальная сертификация Ассоциации гидов Чехии.' },
-          { title: 'Маршруты под вас', description: 'Мы адаптируем каждую экскурсию под ваши интересы и темп.' },
-        ],
+        values: about.values.map((val: any, i: number) => ({
+          id: val.id,
+          title: ruValues[i].title,
+          description: ruValues[i].description,
+        })),
         ctaPrimaryLabel: 'Выбрать экскурсию',
         ctaSecondaryLabel: 'Связаться с нами',
       },
