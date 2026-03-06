@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.0] - 2026-03-06
+
+### Added
+- Enhanced image system with focal point positioning (all sizes use `focalpoint` instead of `centre`)
+- Mobile-optimized image sizes: `mobileHero` (800x600) and `mobileCard` (480x480)
+- Optional mobile hero image and mobile gallery images per tour
+- `objectFit` control (cover/contain/fill) per gallery image
+- `<picture>` element with mobile `<source>` in TourCard, ImageGallery, and Hero
+- Focal point CSS `object-position` applied to all image components
+- Localized alt text from Media collection rendered in all image components
+- Rich text (Lexical) editor on all content textarea fields across collections and globals
+- Simplified editor config (bold, italic, underline, link, list) for short content
+- Full editor config (+ headings, ordered list, blockquote, hr) for long content
+- `SafeRichText` component for backward-compatible rendering (handles plain text and Lexical JSON)
+- Payload Live Preview configuration with Mobile/Tablet/Desktop breakpoints
+- `LivePreviewListener` client component for real-time admin preview
+- `/api/migrate-richtext` endpoint for converting existing plain text to Lexical format
+
+### Changed
+- Media collection image sizes now use `position: 'focalpoint'` for admin-set focal point crops
+- Tours: `excerpt`, `included[].text`, `excluded[].text`, `faq[].answer`, `meetingPoint.instructions` converted to richText
+- Reviews: `body`, `guideResponse` converted to richText
+- BookingRequests: `specialRequests`, `internalNotes` converted to richText
+- ContactMessages: `message`, `internalNotes` converted to richText
+- BlogPosts: `excerpt` converted to richText
+- Homepage: `guideBio` converted to richText
+- AboutPage: `founderBio`, `teamDescription` converted to richText
+- All frontend components updated to render richText via SafeRichText helper
+
 ## [1.5.3] - 2026-03-06
 
 ### Removed

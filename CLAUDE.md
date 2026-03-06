@@ -38,6 +38,26 @@ All site content is editable from Payload admin panel:
 - Client Components receive CMS data as serialized props from parent Server Components
 - Never use `select` option in payload.find() — fails silently on localized fields in PostgreSQL
 
+## Image System
+- Media collection uses `focalPoint: true` with all sizes set to `position: 'focalpoint'`
+- 6 image sizes: thumbnail (400x300), card (640x430), mobileCard (480x480), hero (1920x1080), mobileHero (800x600), og (1200x630)
+- Tours support optional `mobileHeroImage` and per-gallery `mobileImage` + `objectFit` fields
+- Frontend uses `<picture>` with `<source media="(max-width: 768px)">` for mobile images
+- `getFocalPointStyle(media)` helper returns CSS `object-position` from focalX/focalY
+- All `<img>` tags use localized alt text from Media collection
+
+## Rich Text
+- Two editor configs in `src/lib/editors.ts`: `simplifiedEditor` and `fullEditor`
+- Most content fields use richText (Lexical) — see design doc for full field list
+- `SafeRichText` component handles both plain strings (legacy) and Lexical JSON
+- SEO metaDescription fields remain textarea (must be plain text for meta tags)
+- `/api/migrate-richtext` endpoint converts existing plain text to Lexical format
+
+## Live Preview
+- Payload Live Preview configured in `payload.config.ts` with Mobile/Tablet/Desktop breakpoints
+- `LivePreviewListener` client component for real-time admin editing preview
+- Collections: tours, pages, blog-posts; Globals: homepage, about-page, reviews-page, site-settings, navigation
+
 ## Conventions
 - Server Components by default; Client Components only for interactivity
 - Payload Local API for data fetching in Server Components
