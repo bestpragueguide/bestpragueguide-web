@@ -1,8 +1,10 @@
+import { SafeRichText } from '@/components/shared/SafeRichText'
+
 interface ReviewCardProps {
   customerName: string
   customerCountry?: string | null
   rating: number
-  body: string
+  body: any
   tourName?: string
   tourDate?: string | null
 }
@@ -49,7 +51,7 @@ export function ReviewCard({
         </div>
       </div>
 
-      <p className="text-sm text-navy/70 leading-relaxed">{body}</p>
+      <SafeRichText data={body} className="text-sm text-navy/70 leading-relaxed" />
 
       {(tourName || tourDate) && (
         <div className="mt-4 flex flex-wrap gap-2 text-xs text-gray">

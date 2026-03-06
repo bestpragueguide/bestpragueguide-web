@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { Button } from '@/components/shared/Button'
+import { SafeRichText } from '@/components/shared/SafeRichText'
 import { resolveMediaUrl } from '@/lib/cms-data'
 import type { HomepageData } from '@/lib/cms-types'
 
@@ -38,9 +39,7 @@ export function GuideProfile({ data, locale }: GuideProfileProps) {
             <h2 className="text-3xl sm:text-4xl font-heading font-bold text-navy">
               {data.guideHeading}
             </h2>
-            <p className="mt-6 text-lg text-navy/70 leading-relaxed">
-              {data.guideBio}
-            </p>
+            <SafeRichText data={data.guideBio} className="mt-6 text-lg text-navy/70 leading-relaxed prose prose-lg max-w-none" />
             <div className="mt-8">
               <Button href={learnMoreHref} variant="secondary">
                 {data.guideLearnMore}

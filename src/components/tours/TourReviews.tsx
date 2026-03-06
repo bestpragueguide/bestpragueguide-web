@@ -1,10 +1,11 @@
 import Link from 'next/link'
+import { SafeRichText } from '@/components/shared/SafeRichText'
 
 interface Review {
   customerName: string
   customerCountry?: string | null
   rating: number
-  body: string
+  body: any
 }
 
 interface TourReviewsProps {
@@ -55,7 +56,7 @@ export function TourReviews({ reviews, locale }: TourReviewsProps) {
                 ))}
               </div>
             </div>
-            <p className="text-sm text-navy/70 leading-relaxed">{review.body}</p>
+            <SafeRichText data={review.body} className="text-sm text-navy/70 leading-relaxed" />
           </div>
         ))}
       </div>

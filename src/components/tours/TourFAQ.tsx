@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { SafeRichText } from '@/components/shared/SafeRichText'
 
 interface FAQItem {
   question: string
-  answer: string
+  answer: any
 }
 
 interface TourFAQProps {
@@ -54,9 +55,7 @@ export function TourFAQ({ items, locale }: TourFAQProps) {
                 openIndex === index ? 'max-h-96 pb-4' : 'max-h-0'
               }`}
             >
-              <p className="text-sm text-gray leading-relaxed">
-                {item.answer}
-              </p>
+              <SafeRichText data={item.answer} className="text-sm text-gray leading-relaxed prose prose-sm max-w-none" />
             </div>
           </div>
         ))}

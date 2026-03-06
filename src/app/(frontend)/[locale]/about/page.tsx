@@ -5,6 +5,7 @@ import { buildPageMetadata } from '@/lib/metadata'
 import { getAboutPageData, resolveMediaUrl } from '@/lib/cms-data'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { Button } from '@/components/shared/Button'
+import { SafeRichText } from '@/components/shared/SafeRichText'
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
 
@@ -80,9 +81,7 @@ export default async function AboutPage({
           <h1 className="text-3xl sm:text-4xl font-heading font-bold text-navy">
             {data.founderHeading}
           </h1>
-          <p className="mt-6 text-lg text-navy/70 leading-relaxed">
-            {data.founderBio}
-          </p>
+          <SafeRichText data={data.founderBio} className="mt-6 text-lg text-navy/70 leading-relaxed prose prose-lg max-w-none" />
           {data.founderQuote && (
             <blockquote className="mt-6 border-l-4 border-gold pl-4 italic text-navy/60">
               &ldquo;{data.founderQuote}&rdquo;

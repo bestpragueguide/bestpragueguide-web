@@ -12,6 +12,7 @@ import { TourFAQ } from '@/components/tours/TourFAQ'
 import { TourReviews } from '@/components/tours/TourReviews'
 import { TourRelated } from '@/components/tours/TourRelated'
 import { RichText } from '@payloadcms/richtext-lexical/react'
+import { SafeRichText } from '@/components/shared/SafeRichText'
 import { StickyBookButton } from '@/components/booking/StickyBookButton'
 import { BookingRequestForm } from '@/components/booking/BookingRequestForm'
 import { TourSchema } from '@/components/seo/TourSchema'
@@ -291,9 +292,7 @@ export default async function TourDetailPage({
                 {(tour as any).meetingPoint.address}
               </p>
               {(tour as any).meetingPoint.instructions && (
-                <p className="text-sm text-gray mb-4">
-                  {(tour as any).meetingPoint.instructions}
-                </p>
+                <SafeRichText data={(tour as any).meetingPoint.instructions} className="text-sm text-gray mb-4" />
               )}
               {(tour as any).meetingPoint.lat &&
                 (tour as any).meetingPoint.lng && (
