@@ -5,18 +5,11 @@ import { buildPageMetadata } from '@/lib/metadata'
 import { getAboutPageData, resolveMediaUrl } from '@/lib/cms-data'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { Button } from '@/components/shared/Button'
-import { Badge } from '@/components/shared/Badge'
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
 
 // Fallback photo URLs used when CMS has no images
 const fallbackFounderPhoto = `${SERVER_URL}/api/media/file/photo_4_2026-03-03_18-30-45.jpg`
-const fallbackTeamPhotos = [
-  { src: `${SERVER_URL}/api/media/file/photo_1_2026-03-03_18-30-46.jpg`, alt: 'Guide at the Astronomical Clock' },
-  { src: `${SERVER_URL}/api/media/file/photo_5_2026-03-03_18-30-45.jpg`, alt: 'Private tour group at Tyn Church' },
-  { src: `${SERVER_URL}/api/media/file/photo_6_2026-03-03_18-30-45.jpg`, alt: 'Tour at the Vltava riverbank' },
-  { src: `${SERVER_URL}/api/media/file/photo_7_2026-03-03_18-30-45.jpg`, alt: 'Family tour at Kampa Island' },
-]
 const fallbackGalleryPhotos = [
   `${SERVER_URL}/api/media/file/photo_2_2026-03-03_18-30-45.jpg`,
   `${SERVER_URL}/api/media/file/photo_3_2026-03-03_18-30-45.jpg`,
@@ -52,13 +45,6 @@ export default async function AboutPage({
   const data = await getAboutPageData(locale)
 
   const founderPhotoUrl = resolveMediaUrl(data.founderPhoto) || fallbackFounderPhoto
-
-  const teamPhotos = data.teamPhotos.length > 0
-    ? data.teamPhotos.map((p, i) => ({
-        src: resolveMediaUrl(p.image) || fallbackTeamPhotos[i]?.src || '',
-        alt: (typeof p.image === 'object' && p.image?.alt) || `Team photo ${i + 1}`,
-      }))
-    : fallbackTeamPhotos
 
   const galleryPhotos = data.galleryPhotos.length > 0
     ? data.galleryPhotos.map((p) => resolveMediaUrl(p.image) || '')
@@ -115,39 +101,7 @@ export default async function AboutPage({
         </div>
       </section>
 
-      {/* Block 2: Team */}
-      <section className="py-16 border-t border-gray-light/50">
-        <h2 className="text-3xl font-heading font-bold text-navy text-center mb-4">
-          {data.teamHeading}
-        </h2>
-        {data.teamDescription && (
-          <p className="text-center text-navy/70 max-w-2xl mx-auto mb-8">
-            {data.teamDescription}
-          </p>
-        )}
-        {teamPhotos.length > 0 && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-            {teamPhotos.map((photo, i) => (
-              <div key={i} className="relative aspect-square rounded-xl overflow-hidden">
-                <Image
-                  src={photo.src}
-                  alt={photo.alt}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 640px) 50vw, 25vw"
-                />
-              </div>
-            ))}
-          </div>
-        )}
-        <div className="flex flex-wrap justify-center gap-3">
-          {data.teamBadges.map((badge, i) => (
-            <Badge key={i} variant="trust">{badge.text}</Badge>
-          ))}
-        </div>
-      </section>
-
-      {/* Block 3: Values */}
+      {/* Block 2: Values */}
       <section className="py-16 border-t border-gray-light/50">
         <h2 className="text-3xl font-heading font-bold text-navy text-center mb-12">
           {data.valuesHeading}
