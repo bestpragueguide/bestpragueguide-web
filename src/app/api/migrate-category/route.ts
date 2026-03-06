@@ -53,6 +53,65 @@ export async function POST(req: Request) {
       })
     }
 
+    if (action === 'fix-cms') {
+      const results: string[] = []
+
+      // Update Navigation global — replace from-prague in all link hrefs
+      const navUpdate = await db.execute(sql`
+        UPDATE navigation_footer_columns_links
+        SET href = REPLACE(href, 'from-prague', 'day-trips-from-prague')
+        WHERE href LIKE '%from-prague%'
+      `)
+      results.push(`nav links updated: ${(navUpdate as any).rowCount ?? 'done'}`)
+
+      const navHeaderUpdate = await db.execute(sql`
+        UPDATE navigation_header_links
+        SET href = REPLACE(href, 'from-prague', 'day-trips-from-prague')
+        WHERE href LIKE '%from-prague%'
+      `)
+      results.push(`header links updated: ${(navHeaderUpdate as any).rowCount ?? 'done'}`)
+
+      // Update Homepage global — categories array
+      const homepageUpdate = await db.execute(sql`
+        UPDATE homepage_categories
+        SET href = REPLACE(href, 'from-prague', 'day-trips-from-prague')
+        WHERE href LIKE '%from-prague%'
+      `)
+      results.push(`homepage categories updated: ${(homepageUpdate as any).rowCount ?? 'done'}`)
+
+      // Also update localized labels
+      const labelUpdates = await db.execute(sql`
+        UPDATE homepage_categories_locales
+        SET label = 'Day Trips from Prague'
+        WHERE label = 'From Prague'
+      `)
+      results.push(`EN labels updated: ${(labelUpdates as any).rowCount ?? 'done'}`)
+
+      const ruLabelUpdates = await db.execute(sql`
+        UPDATE homepage_categories_locales
+        SET label = 'Однодневные поездки из Праги'
+        WHERE label = 'Из Праги'
+      `)
+      results.push(`RU labels updated: ${(ruLabelUpdates as any).rowCount ?? 'done'}`)
+
+      // Update nav footer column link labels
+      const footerLabelEn = await db.execute(sql`
+        UPDATE navigation_footer_columns_links_locales
+        SET label = 'Day Trips from Prague'
+        WHERE label = 'From Prague'
+      `)
+      results.push(`footer EN labels: ${(footerLabelEn as any).rowCount ?? 'done'}`)
+
+      const footerLabelRu = await db.execute(sql`
+        UPDATE navigation_footer_columns_links_locales
+        SET label = 'Однодневные поездки из Праги'
+        WHERE label = 'Из Праги'
+      `)
+      results.push(`footer RU labels: ${(footerLabelRu as any).rowCount ?? 'done'}`)
+
+      return NextResponse.json({ success: true, results })
+    }
+
     if (action === 'fix') {
       const results: string[] = []
 
