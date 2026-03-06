@@ -13,7 +13,9 @@ import {
   GoogleTagManagerHead,
   GoogleTagManagerBody,
 } from '@/components/analytics/GoogleTagManager'
+import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics'
 import { YandexMetrika } from '@/components/analytics/YandexMetrika'
+import { UmamiAnalytics } from '@/components/analytics/UmamiAnalytics'
 import { getSiteSettings, getNavigation } from '@/lib/cms-data'
 import '@/app/globals.css'
 
@@ -89,6 +91,8 @@ export default async function FrontendLayout({
           <OrganizationSchema />
         </NextIntlClientProvider>
         <GoogleTagManagerHead />
+        <GoogleAnalytics />
+        <UmamiAnalytics />
         <YandexMetrika />
       </body>
     </html>

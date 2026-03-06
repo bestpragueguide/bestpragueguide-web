@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.0] - 2026-03-06
+
+### Added
+- Google Analytics 4 (GA4) component with `NEXT_PUBLIC_GA_ID` env var (G-DFLT0NBRFK)
+- Self-hosted Umami analytics integration with `NEXT_PUBLIC_UMAMI_WEBSITE_ID` and `NEXT_PUBLIC_UMAMI_SRC` env vars
+- Umami deployed as Docker Compose service on Coolify (prod01) at analytics.bestpragueguide.com
+- Both analytics components use `afterInteractive` strategy and no-op when env vars are unset
+
 ## [1.4.8] - 2026-03-06
 
 ### Fixed
