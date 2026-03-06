@@ -91,7 +91,7 @@ export const Tours: CollectionConfig = {
       required: true,
       options: [
         { label: 'Prague Tours', value: 'prague-tours' },
-        { label: 'From Prague', value: 'from-prague' },
+        { label: 'Day Trips from Prague', value: 'day-trips-from-prague' },
       ],
     },
     {

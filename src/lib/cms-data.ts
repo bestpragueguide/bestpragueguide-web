@@ -64,7 +64,7 @@ function navigationFallback(locale: string): NavigationData {
         links: [
           { label: locale === 'ru' ? 'Все экскурсии' : 'All Tours', href: `${prefix}/tours` },
           { label: locale === 'ru' ? 'Экскурсии по Праге' : 'Prague Tours', href: `${prefix}/tours?category=prague-tours` },
-          { label: locale === 'ru' ? 'Из Праги' : 'From Prague', href: `${prefix}/tours?category=from-prague` },
+          { label: locale === 'ru' ? 'Однодневные поездки из Праги' : 'Day Trips from Prague', href: `${prefix}/tours?category=day-trips-from-prague` },
         ],
       },
       {
@@ -119,7 +119,7 @@ function homepageFallback(locale: string): HomepageData {
     categoriesHeading: locale === 'ru' ? 'Все экскурсии' : 'All Tours',
     categories: [
       { label: locale === 'ru' ? 'Экскурсии по Праге' : 'Prague Tours', href: '/tours?category=prague-tours' },
-      { label: locale === 'ru' ? 'Из Праги' : 'From Prague', href: '/tours?category=from-prague' },
+      { label: locale === 'ru' ? 'Однодневные поездки из Праги' : 'Day Trips from Prague', href: '/tours?category=day-trips-from-prague' },
     ],
     processHeading: locale === 'ru' ? 'Как это работает' : 'How It Works',
     processSteps: [

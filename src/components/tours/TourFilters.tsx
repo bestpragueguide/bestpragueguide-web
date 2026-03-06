@@ -53,10 +53,10 @@ export function TourFilters({
             {t('pragueTours')}
           </FilterPill>
         )}
-        {availableCategories.includes('from-prague') && (
+        {availableCategories.includes('day-trips-from-prague') && (
           <FilterPill
-            active={activeCategory === 'from-prague'}
-            onClick={() => setFilter('category', 'from-prague')}
+            active={activeCategory === 'day-trips-from-prague'}
+            onClick={() => setFilter('category', 'day-trips-from-prague')}
           >
             {t('fromPrague')}
           </FilterPill>

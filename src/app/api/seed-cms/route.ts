@@ -61,7 +61,7 @@ export async function POST() {
             links: [
               { label: 'All Tours', href: '/tours' },
               { label: 'Prague Tours', href: '/tours?category=prague-tours' },
-              { label: 'From Prague', href: '/tours?category=from-prague' },
+              { label: 'Day Trips from Prague', href: '/tours?category=day-trips-from-prague' },
             ],
           },
           {
@@ -141,7 +141,7 @@ export async function POST() {
         categoriesHeading: 'All Tours',
         categories: [
           { label: 'Prague Tours', href: '/tours?category=prague-tours' },
-          { label: 'From Prague', href: '/tours?category=from-prague' },
+          { label: 'Day Trips from Prague', href: '/tours?category=day-trips-from-prague' },
         ],
         processHeading: 'How It Works',
         processSteps: [

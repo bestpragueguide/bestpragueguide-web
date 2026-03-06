@@ -176,8 +176,8 @@ export default async function TourDetailPage({
         ? 'Экскурсии по Праге'
         : 'Prague Tours'
       : locale === 'ru'
-        ? 'Из Праги'
-        : 'From Prague'
+        ? 'Однодневные поездки из Праги'
+        : 'Day Trips from Prague'
 
   const galleryImages = ((tour as any).gallery || []).map(
     (item: any) => ({

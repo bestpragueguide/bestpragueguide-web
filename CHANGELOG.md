@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.1] - 2026-03-06
+
+### Changed
+- Rename tour category "From Prague" → "Day Trips from Prague" (EN) / "Однодневные поездки из Праги" (RU)
+- Category URL slug changed from `from-prague` to `day-trips-from-prague`
+- Updated in: Tours collection, i18n messages, navigation fallbacks, filters, seed scripts, tour detail breadcrumb
+
 ## [1.6.0] - 2026-03-06
 
 ### Added
