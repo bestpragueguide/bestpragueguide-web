@@ -57,8 +57,6 @@ export function TourGrid({ tours, locale }: TourGridProps) {
           title={tour.title}
           slug={tour.slug}
           excerpt={tour.excerpt}
-          category={tour.category}
-          subcategory={tour.subcategory}
           duration={tour.duration}
           groupPrice={tour.groupPrice}
           rating={tour.rating}

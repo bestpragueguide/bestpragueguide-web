@@ -4,8 +4,6 @@ interface TourCardProps {
   title: string
   slug: string
   excerpt: string
-  category: string
-  subcategory?: string | null
   duration: number
   groupPrice: number
   rating?: number | null
@@ -17,8 +15,6 @@ export function TourCard({
   title,
   slug,
   excerpt,
-  category,
-  subcategory,
   duration,
   groupPrice,
   rating,

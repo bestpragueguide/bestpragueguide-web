@@ -108,8 +108,6 @@ export async function FeaturedTours({ data, locale }: FeaturedToursProps) {
                   title={tour.title}
                   slug={tour.slug}
                   excerpt={tour.excerpt}
-                  category={tour.category}
-                  subcategory={tour.subcategory}
                   duration={tour.duration}
                   groupPrice={tour.groupPrice}
                   rating={tour.rating}
