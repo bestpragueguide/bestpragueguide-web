@@ -13,6 +13,11 @@ interface HeroProps {
 export function Hero({ data, locale }: HeroProps) {
   const bgUrl = resolveMediaUrl(data.heroBackgroundImage, 'hero')
     || `${SERVER_URL}/api/media/file/photo_2_2026-03-03_18-30-45.jpg`
+  const bgImage = typeof data.heroBackgroundImage === 'object' ? data.heroBackgroundImage : null
+  const focalPosition = bgImage
+    ? `${(bgImage as any)?.focalX ?? 50}% ${(bgImage as any)?.focalY ?? 50}%`
+    : '50% 50%'
+  const heroAlt = (bgImage as any)?.alt || (locale === 'ru' ? 'Панорама Праги' : 'Prague panoramic view')
 
   const ctaHref = data.heroCtaHref.startsWith('/')
     ? `/${locale}${data.heroCtaHref}`
@@ -23,9 +28,10 @@ export function Hero({ data, locale }: HeroProps) {
       {/* Background image */}
       <Image
         src={bgUrl}
-        alt="Prague panoramic view"
+        alt={heroAlt}
         fill
         className="object-cover"
+        style={{ objectPosition: focalPosition }}
         priority
         sizes="100vw"
       />
