@@ -183,6 +183,14 @@ export const Tours: CollectionConfig = {
       relationTo: 'media',
     },
     {
+      name: 'mobileHeroImage',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description: 'Optional mobile-specific hero image. Falls back to heroImage if empty.',
+      },
+    },
+    {
       name: 'gallery',
       type: 'array',
       fields: [
@@ -201,6 +209,24 @@ export const Tours: CollectionConfig = {
           name: 'alt',
           type: 'text',
           localized: true,
+        },
+        {
+          name: 'mobileImage',
+          type: 'upload',
+          relationTo: 'media',
+          admin: {
+            description: 'Optional mobile-specific image. Falls back to main image.',
+          },
+        },
+        {
+          name: 'objectFit',
+          type: 'select',
+          defaultValue: 'cover',
+          options: [
+            { label: 'Cover (fill & crop)', value: 'cover' },
+            { label: 'Contain (show all)', value: 'contain' },
+            { label: 'Fill (stretch)', value: 'fill' },
+          ],
         },
       ],
     },
