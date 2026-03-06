@@ -11,6 +11,11 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Replaced unused `LivePreviewListener` with `RefreshRouteOnSave` from `@payloadcms/live-preview-react`
 - Homepage hero switched from Next/Image to `<picture>` element for responsive image serving
+- Guide photo switched to horizontal landscape (4:3) layout with 50/50 grid
+
+### Fixed
+- Live preview 404: locale parameter is an object in Payload 3.x, now extracts `.code`
+- Added `serverURL` to `payload.config.ts` for live preview communication
 
 ### Removed
 - `LivePreviewListener` component (was never imported; replaced by `RefreshOnSave`)
