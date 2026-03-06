@@ -49,8 +49,10 @@ All site content is editable from Payload admin panel:
 ## Rich Text
 - Two editor configs in `src/lib/editors.ts`: `simplifiedEditor` and `fullEditor`
 - Most content fields use richText (Lexical) — see design doc for full field list
-- `SafeRichText` component handles both plain strings (legacy) and Lexical JSON
+- `SafeRichText` component handles both plain strings (legacy) and Lexical JSON (custom renderer, not Payload's)
+- `extractPlainText(data)` helper extracts plain text from richText fields (for meta tags, listings, schema.org)
 - SEO metaDescription fields remain textarea (must be plain text for meta tags)
+- When rendering richText in listings/cards, always use `extractPlainText()` — never render richText objects directly as JSX children
 - `/api/migrate-richtext` endpoint converts existing plain text to Lexical format
 
 ## Live Preview

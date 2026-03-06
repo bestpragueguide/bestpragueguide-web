@@ -30,6 +30,12 @@ All notable changes to this project will be documented in this file.
 - Homepage: `guideBio` converted to richText
 - AboutPage: `founderBio`, `teamDescription` converted to richText
 - All frontend components updated to render richText via SafeRichText helper
+- `extractPlainText()` helper for richText → plain text conversion (used in listings, meta tags, schema.org)
+
+### Fixed
+- SafeRichText uses custom Lexical renderer instead of `@payloadcms/richtext-lexical/react` (avoids SSR issues)
+- Blog listing, tour cards, testimonials, schema.org data now correctly extract plain text from richText fields
+- Meta description tags correctly extract plain text from richText excerpts
 
 ## [1.5.3] - 2026-03-06
 
