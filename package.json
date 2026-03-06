@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.78.0",
+    "@payloadcms/live-preview-react": "^3.79.0",
     "@payloadcms/next": "^3.78.0",
     "@payloadcms/richtext-lexical": "^3.78.0",
     "@react-email/components": "^1.0.8",

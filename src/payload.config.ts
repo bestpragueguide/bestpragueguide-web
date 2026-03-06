@@ -30,6 +30,47 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    livePreview: {
+      url: ({ data, collectionConfig, globalConfig, locale }) => {
+        const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+        const loc = (locale as string) || 'en'
+
+        if (collectionConfig) {
+          switch (collectionConfig.slug) {
+            case 'tours':
+              return `${baseUrl}/${loc}/tours/${data?.slug || ''}`
+            case 'pages':
+              return `${baseUrl}/${loc}/${data?.slug || ''}`
+            case 'blog-posts':
+              return `${baseUrl}/${loc}/blog/${data?.slug || ''}`
+            default:
+              return `${baseUrl}/${loc}`
+          }
+        }
+
+        if (globalConfig) {
+          switch (globalConfig.slug) {
+            case 'homepage':
+              return `${baseUrl}/${loc}`
+            case 'about-page':
+              return `${baseUrl}/${loc}/about`
+            case 'reviews-page':
+              return `${baseUrl}/${loc}/reviews`
+            default:
+              return `${baseUrl}/${loc}`
+          }
+        }
+
+        return `${baseUrl}/${loc}`
+      },
+      collections: ['tours', 'pages', 'blog-posts'],
+      globals: ['homepage', 'about-page', 'reviews-page', 'site-settings', 'navigation'],
+      breakpoints: [
+        { label: 'Mobile', name: 'mobile', width: 375, height: 667 },
+        { label: 'Tablet', name: 'tablet', width: 768, height: 1024 },
+        { label: 'Desktop', name: 'desktop', width: 1440, height: 900 },
+      ],
+    },
   },
 
   editor: lexicalEditor(),
