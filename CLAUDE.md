@@ -47,6 +47,15 @@ All site content is editable from Payload admin panel:
 - Design palette: navy (#1A1A1A), gold (#C4975C), cream (#FAF7F2)
 - Fonts: Cormorant Garamond (headings), DM Sans (body)
 
+## Analytics
+- `src/components/analytics/GoogleAnalytics.tsx` — GA4 via gtag.js (`NEXT_PUBLIC_GA_ID`)
+- `src/components/analytics/GoogleTagManager.tsx` — GTM head + noscript body (`NEXT_PUBLIC_GTM_ID`)
+- `src/components/analytics/UmamiAnalytics.tsx` — self-hosted Umami (`NEXT_PUBLIC_UMAMI_WEBSITE_ID` + `NEXT_PUBLIC_UMAMI_SRC`)
+- `src/components/analytics/YandexMetrika.tsx` — Yandex Metrika (`NEXT_PUBLIC_YANDEX_METRIKA_ID`)
+- `src/lib/analytics.ts` — `trackEvent(name, params)` pushes to GTM dataLayer + Yandex reachGoal
+- All components no-op when env vars are unset (safe for dev)
+- Umami dashboard: https://analytics.bestpragueguide.com
+
 ## Dev Commands
 ```bash
 docker compose up -d          # Start PostgreSQL + Redis
