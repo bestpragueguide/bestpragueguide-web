@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       ORDER BY table_name, column_name
     `)
 
-    // Try a simple tour query
+    // Test 1: Simple tour query
     let tourError = null
     let tourCount = 0
     try {
@@ -32,9 +32,45 @@ export async function POST(req: Request) {
       tourError = e.message || String(e)
     }
 
+    // Test 2: Filtered query (same as listing page)
+    let filteredError = null
+    let filteredCount = 0
+    try {
+      const filtered = await payload.find({
+        collection: 'tours',
+        where: {
+          status: { equals: 'published' },
+          publishedLocales: { in: ['en'] },
+        },
+        sort: 'sortOrder',
+        limit: 50,
+        locale: 'en',
+      })
+      filteredCount = filtered.totalDocs
+    } catch (e: any) {
+      filteredError = e.message || String(e)
+    }
+
+    // Test 3: Tour by slug
+    let slugError = null
+    let slugFound = false
+    try {
+      const bySlug = await payload.find({
+        collection: 'tours',
+        where: { slug: { equals: 'best-of-prague-car-tour' } },
+        limit: 1,
+        locale: 'en',
+      })
+      slugFound = bySlug.totalDocs > 0
+    } catch (e: any) {
+      slugError = e.message || String(e)
+    }
+
     return NextResponse.json({
       schema: schemaCheck.rows || schemaCheck,
       tourQuery: { count: tourCount, error: tourError },
+      filteredQuery: { count: filteredCount, error: filteredError },
+      slugQuery: { found: slugFound, error: slugError },
     })
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error'
