@@ -11,6 +11,9 @@ interface RelatedTour {
   groupPrice: number
   rating?: number | null
   heroImageUrl?: string | null
+  mobileImageUrl?: string | null
+  focalPoint?: string
+  imageAlt?: string
 }
 
 interface TourRelatedProps {
@@ -38,6 +41,9 @@ export function TourRelated({ tours, locale }: TourRelatedProps) {
             groupPrice={tour.groupPrice}
             rating={tour.rating}
             heroImageUrl={tour.heroImageUrl}
+            mobileImageUrl={tour.mobileImageUrl}
+            focalPoint={tour.focalPoint}
+            imageAlt={tour.imageAlt}
             locale={locale}
           />
         ))}

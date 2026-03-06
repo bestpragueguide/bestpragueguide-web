@@ -189,21 +189,24 @@ export default async function TourDetailPage({
     }),
   )
 
-  const relatedTourCards = (relatedTours as any[]).map((t: any) => ({
-    id: t.id,
-    title: t.title,
-    slug: t.slug,
-    excerpt: t.excerpt,
-    category: t.category,
-    subcategory: t.subcategory,
-    duration: t.duration,
-    groupPrice: t.groupPrice,
-    rating: t.rating,
-    heroImageUrl:
-      typeof t.heroImage === 'object'
-        ? t.heroImage?.sizes?.card?.url || t.heroImage?.url || null
-        : null,
-  }))
+  const relatedTourCards = (relatedTours as any[]).map((t: any) => {
+    const img = typeof t.heroImage === 'object' ? t.heroImage : null
+    return {
+      id: t.id,
+      title: t.title,
+      slug: t.slug,
+      excerpt: t.excerpt,
+      category: t.category,
+      subcategory: t.subcategory,
+      duration: t.duration,
+      groupPrice: t.groupPrice,
+      rating: t.rating,
+      heroImageUrl: img?.sizes?.card?.url || img?.url || null,
+      mobileImageUrl: img?.sizes?.mobileCard?.url || null,
+      focalPoint: img ? `${img?.focalX ?? 50}% ${img?.focalY ?? 50}%` : undefined,
+      imageAlt: img?.alt || undefined,
+    }
+  })
 
   const reviewCards = (reviews as any[]).map((r: any) => ({
     customerName: r.customerName,

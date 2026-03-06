@@ -76,10 +76,7 @@ export default async function ToursPage({
   ]
 
   const gridTours = tours.map((tour) => {
-    const heroImage =
-      typeof tour.heroImage === 'object' && tour.heroImage
-        ? tour.heroImage.sizes?.card?.url || tour.heroImage.url || null
-        : null
+    const img = typeof tour.heroImage === 'object' && tour.heroImage ? tour.heroImage : null
     return {
       id: tour.id,
       title: tour.title,
@@ -90,7 +87,10 @@ export default async function ToursPage({
       duration: tour.duration,
       groupPrice: tour.groupPrice,
       rating: tour.rating,
-      heroImageUrl: heroImage,
+      heroImageUrl: (img as any)?.sizes?.card?.url || img?.url || null,
+      mobileImageUrl: (img as any)?.sizes?.mobileCard?.url || null,
+      focalPoint: img ? `${(img as any)?.focalX ?? 50}% ${(img as any)?.focalY ?? 50}%` : undefined,
+      imageAlt: (img as any)?.alt || undefined,
     }
   })
 

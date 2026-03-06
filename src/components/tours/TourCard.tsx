@@ -8,6 +8,9 @@ interface TourCardProps {
   groupPrice: number
   rating?: number | null
   heroImageUrl?: string | null
+  mobileImageUrl?: string | null
+  focalPoint?: string
+  imageAlt?: string
   locale: string
 }
 
@@ -19,8 +22,14 @@ export function TourCard({
   groupPrice,
   rating,
   heroImageUrl,
+  mobileImageUrl,
+  focalPoint,
+  imageAlt,
   locale,
 }: TourCardProps) {
+  const objectPosition = focalPoint || '50% 50%'
+  const alt = imageAlt || title
+
   return (
     <Link
       href={`/${locale}/tours/${slug}`}
@@ -29,12 +38,18 @@ export function TourCard({
       {/* Image */}
       <div className="aspect-[4/3] bg-gray-light relative overflow-hidden">
         {heroImageUrl ? (
-          <img
-            src={heroImageUrl}
-            alt={title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            loading="lazy"
-          />
+          <picture>
+            {mobileImageUrl && (
+              <source media="(max-width: 768px)" srcSet={mobileImageUrl} />
+            )}
+            <img
+              src={heroImageUrl}
+              alt={alt}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              style={{ objectPosition }}
+              loading="lazy"
+            />
+          </picture>
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray text-sm">
             Tour Photo

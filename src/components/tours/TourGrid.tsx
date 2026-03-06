@@ -14,6 +14,9 @@ interface Tour {
   groupPrice: number
   rating?: number | null
   heroImageUrl?: string | null
+  mobileImageUrl?: string | null
+  focalPoint?: string
+  imageAlt?: string
 }
 
 interface TourGridProps {
@@ -61,6 +64,9 @@ export function TourGrid({ tours, locale }: TourGridProps) {
           groupPrice={tour.groupPrice}
           rating={tour.rating}
           heroImageUrl={tour.heroImageUrl}
+          mobileImageUrl={tour.mobileImageUrl}
+          focalPoint={tour.focalPoint}
+          imageAlt={tour.imageAlt}
           locale={locale}
         />
       ))}

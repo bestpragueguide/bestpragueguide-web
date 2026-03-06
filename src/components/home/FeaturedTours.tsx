@@ -97,10 +97,7 @@ export async function FeaturedTours({ data, locale }: FeaturedToursProps) {
         {tours.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {tours.map((tour) => {
-              const heroImage =
-                typeof tour.heroImage === 'object' && tour.heroImage
-                  ? tour.heroImage.sizes?.card?.url || tour.heroImage.url || null
-                  : null
+              const img = typeof tour.heroImage === 'object' && tour.heroImage ? tour.heroImage : null
 
               return (
                 <TourCard
@@ -111,7 +108,10 @@ export async function FeaturedTours({ data, locale }: FeaturedToursProps) {
                   duration={tour.duration}
                   groupPrice={tour.groupPrice}
                   rating={tour.rating}
-                  heroImageUrl={heroImage}
+                  heroImageUrl={(img as any)?.sizes?.card?.url || img?.url || null}
+                  mobileImageUrl={(img as any)?.sizes?.mobileCard?.url || null}
+                  focalPoint={img ? `${(img as any)?.focalX ?? 50}% ${(img as any)?.focalY ?? 50}%` : undefined}
+                  imageAlt={(img as any)?.alt || undefined}
                   locale={locale}
                 />
               )
