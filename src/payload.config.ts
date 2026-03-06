@@ -112,7 +112,7 @@ export default buildConfig({
 
   plugins: [],
 
-  serverURL: process.env.NEXT_PUBLIC_SERVER_URL || '',
+  serverURL: process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com',
 
   sharp,
 

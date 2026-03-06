@@ -1,0 +1,30 @@
+diff --git a/node_modules/@payloadcms/ui/dist/views/Edit/index.js b/node_modules/@payloadcms/ui/dist/views/Edit/index.js
+index fecbb50..8e49f5e 100644
+--- a/node_modules/@payloadcms/ui/dist/views/Edit/index.js
++++ b/node_modules/@payloadcms/ui/dist/views/Edit/index.js
+@@ -292,11 +292,7 @@ export function DefaultEditView({
+     }
+     if (id || globalSlug) {
+       const docPreferences = await getDocPreferences();
+-      const {
+-        livePreviewURL: livePreviewURL_0,
+-        previewURL,
+-        state
+-      } = await getFormState({
++      const _saveFormResult = await getFormState({
+         id,
+         collectionSlug,
+         data: document,
+@@ -313,6 +309,12 @@ export function DefaultEditView({
+         signal: controller.signal,
+         skipValidation: true
+       });
++      if (!_saveFormResult) { return; }
++      const {
++        livePreviewURL: livePreviewURL_0,
++        previewURL,
++        state
++      } = _saveFormResult;
+       // For upload collections, clear the file field from the returned state
+       // to prevent the File object from persisting in form state after save
+       if (upload && state) {
