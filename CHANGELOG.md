@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.3] - 2026-03-06
+
+### Removed
+- `highlights` and `itinerary` fields from Tours collection (removed from admin and database schema)
+- `TourItinerary` component and its usage on tour detail pages
+- `/api/migrate-itinerary` endpoint
+- Highlights and itinerary data from seed script
+
 ## [1.5.2] - 2026-03-06
 
 ### Removed

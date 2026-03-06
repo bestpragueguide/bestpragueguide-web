@@ -41,45 +41,6 @@ export const Tours: CollectionConfig = {
       localized: true,
     },
     {
-      name: 'highlights',
-      type: 'array',
-      localized: true,
-      fields: [
-        {
-          name: 'text',
-          type: 'text',
-          required: true,
-        },
-      ],
-    },
-    {
-      name: 'itinerary',
-      type: 'array',
-      localized: true,
-      fields: [
-        {
-          name: 'time',
-          type: 'text',
-          admin: {
-            description: 'Relative time from start (e.g. "Start", "+30 min", "+1h 30min")',
-          },
-        },
-        {
-          name: 'title',
-          type: 'text',
-          required: true,
-        },
-        {
-          name: 'description',
-          type: 'textarea',
-        },
-        {
-          name: 'location',
-          type: 'text',
-        },
-      ],
-    },
-    {
       name: 'included',
       type: 'array',
       localized: true,

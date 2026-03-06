@@ -7,7 +7,6 @@ import config from '@payload-config'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { Badge } from '@/components/shared/Badge'
 import { ImageGallery } from '@/components/tours/ImageGallery'
-import { TourItinerary } from '@/components/tours/TourItinerary'
 import { TourIncluded } from '@/components/tours/TourIncluded'
 import { TourFAQ } from '@/components/tours/TourFAQ'
 import { TourReviews } from '@/components/tours/TourReviews'
@@ -260,13 +259,6 @@ export default async function TourDetailPage({
               <RichText data={tour.description} />
             )}
           </div>
-
-          {/* Itinerary */}
-          <TourItinerary
-            stops={((tour as any).itinerary || []) as any[]}
-            duration={tour.duration}
-            locale={locale}
-          />
 
           {/* Included/Excluded */}
           <TourIncluded
