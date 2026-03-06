@@ -101,11 +101,43 @@ export async function POST(req: Request) {
       slugError = e.message || String(e)
     }
 
+    // Test 4: Homepage global fetch
+    let homepageError = null
+    let guideBioType = null
+    try {
+      const hp = await payload.findGlobal({ slug: 'homepage', locale: 'en' })
+      guideBioType = typeof (hp as any).guideBio
+      if (typeof (hp as any).guideBio === 'object') {
+        guideBioType = `object: ${JSON.stringify((hp as any).guideBio).substring(0, 200)}`
+      } else if (typeof (hp as any).guideBio === 'string') {
+        guideBioType = `string: ${((hp as any).guideBio as string).substring(0, 200)}`
+      }
+    } catch (e: any) {
+      homepageError = e.message || String(e)
+    }
+
+    // Test 5: Tour excerpt type
+    let tourExcerptType = null
+    let tourExcerptError = null
+    try {
+      const t = await payload.find({ collection: 'tours', limit: 1, locale: 'en', where: { status: { equals: 'published' }, publishedLocales: { in: ['en'] } } })
+      if (t.docs[0]) {
+        const ex = (t.docs[0] as any).excerpt
+        tourExcerptType = typeof ex
+        if (typeof ex === 'object') tourExcerptType = `object: ${JSON.stringify(ex).substring(0, 200)}`
+        if (typeof ex === 'string') tourExcerptType = `string: ${ex.substring(0, 200)}`
+      }
+    } catch (e: any) {
+      tourExcerptError = e.message || String(e)
+    }
+
     return NextResponse.json({
       schema: schemaCheck.rows || schemaCheck,
       tourQuery: { count: tourCount, error: tourError },
       filteredQuery: { count: filteredCount, error: filteredError },
       slugQuery: { found: slugFound, error: slugError },
+      homepage: { guideBioType, error: homepageError },
+      tourExcerpt: { type: tourExcerptType, error: tourExcerptError },
     })
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error'
