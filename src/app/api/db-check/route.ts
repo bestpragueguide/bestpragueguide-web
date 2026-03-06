@@ -22,6 +22,31 @@ export async function POST(req: Request) {
       ORDER BY table_name, column_name
     `)
 
+    // Fix: Add missing media columns for mobileCard and mobileHero sizes
+    const action = new URL(req.url).searchParams.get('action')
+    if (action === 'fix-media') {
+      const alterStatements = [
+        sql`ALTER TABLE media ADD COLUMN IF NOT EXISTS sizes_mobile_card_url varchar`,
+        sql`ALTER TABLE media ADD COLUMN IF NOT EXISTS sizes_mobile_card_width numeric`,
+        sql`ALTER TABLE media ADD COLUMN IF NOT EXISTS sizes_mobile_card_height numeric`,
+        sql`ALTER TABLE media ADD COLUMN IF NOT EXISTS sizes_mobile_card_mime_type varchar`,
+        sql`ALTER TABLE media ADD COLUMN IF NOT EXISTS sizes_mobile_card_filesize numeric`,
+        sql`ALTER TABLE media ADD COLUMN IF NOT EXISTS sizes_mobile_card_filename varchar`,
+        sql`ALTER TABLE media ADD COLUMN IF NOT EXISTS sizes_mobile_hero_url varchar`,
+        sql`ALTER TABLE media ADD COLUMN IF NOT EXISTS sizes_mobile_hero_width numeric`,
+        sql`ALTER TABLE media ADD COLUMN IF NOT EXISTS sizes_mobile_hero_height numeric`,
+        sql`ALTER TABLE media ADD COLUMN IF NOT EXISTS sizes_mobile_hero_mime_type varchar`,
+        sql`ALTER TABLE media ADD COLUMN IF NOT EXISTS sizes_mobile_hero_filesize numeric`,
+        sql`ALTER TABLE media ADD COLUMN IF NOT EXISTS sizes_mobile_hero_filename varchar`,
+      ]
+      const results = []
+      for (const stmt of alterStatements) {
+        await db.execute(stmt)
+        results.push('OK')
+      }
+      return NextResponse.json({ success: true, columns_added: results.length })
+    }
+
     // Test 1: Simple tour query
     let tourError = null
     let tourCount = 0
