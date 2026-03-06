@@ -12,6 +12,8 @@ export const Media: CollectionConfig = {
   },
   upload: {
     ...(mediaDir ? { staticDir: mediaDir } : {}),
+    crop: true,
+    focalPoint: true,
     imageSizes: [
       {
         name: 'thumbnail',

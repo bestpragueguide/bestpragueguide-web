@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.8] - 2026-03-06
+
+### Fixed
+- Enable crop and focal point on Media collection — adds `crop: true` and `focalPoint: true` to upload config
+
 ## [1.4.7] - 2026-03-06
 
 ### Removed
