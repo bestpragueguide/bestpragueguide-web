@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.6] - 2026-03-06
+
+### Removed
+- Telegram link from contact page
+
 ## [1.4.5] - 2026-03-05
 
 ### Changed
