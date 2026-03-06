@@ -9,60 +9,114 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  const action = new URL(req.url).searchParams.get('action') || 'inspect'
+
   try {
     const payload = await getPayload({ config })
     const db = (payload.db as any).drizzle
 
-    // Step 1: Update CHECK constraint on category column to allow new value
-    // First drop the old constraint, then add updated one
-    const constraints = await db.execute(sql`
-      SELECT constraint_name FROM information_schema.check_constraints
-      WHERE constraint_name LIKE '%tours_category%'
-    `)
-    const results: string[] = []
+    if (action === 'inspect') {
+      // Check column type and constraints
+      const colInfo = await db.execute(sql`
+        SELECT column_name, data_type, udt_name, column_default
+        FROM information_schema.columns
+        WHERE table_name = 'tours' AND column_name = 'category'
+      `)
 
-    for (const row of (constraints.rows || constraints)) {
-      const name = (row as any).constraint_name
-      await db.execute(sql.raw(`ALTER TABLE tours DROP CONSTRAINT IF EXISTS "${name}"`))
-      results.push(`dropped: ${name}`)
+      const constraints = await db.execute(sql`
+        SELECT con.conname, con.contype, pg_get_constraintdef(con.oid) as definition
+        FROM pg_constraint con
+        JOIN pg_class rel ON rel.oid = con.conrelid
+        WHERE rel.relname = 'tours'
+        AND pg_get_constraintdef(con.oid) LIKE '%category%'
+      `)
+
+      // Check enum types
+      const enums = await db.execute(sql`
+        SELECT t.typname, e.enumlabel
+        FROM pg_type t
+        JOIN pg_enum e ON e.enumtypid = t.oid
+        WHERE t.typname LIKE '%category%'
+        ORDER BY e.enumsortorder
+      `)
+
+      // Count tours with from-prague
+      const count = await db.execute(sql`
+        SELECT category, count(*) as cnt FROM tours GROUP BY category
+      `)
+
+      return NextResponse.json({
+        column: colInfo.rows || colInfo,
+        constraints: constraints.rows || constraints,
+        enums: enums.rows || enums,
+        categoryCounts: count.rows || count,
+      })
     }
 
-    // Also drop from versions table
-    const vConstraints = await db.execute(sql`
-      SELECT constraint_name FROM information_schema.check_constraints
-      WHERE constraint_name LIKE '%tours_v_version_category%'
-    `)
-    for (const row of (vConstraints.rows || vConstraints)) {
-      const name = (row as any).constraint_name
-      await db.execute(sql.raw(`ALTER TABLE _tours_v DROP CONSTRAINT IF EXISTS "${name}"`))
-      results.push(`dropped: ${name}`)
+    if (action === 'fix') {
+      const results: string[] = []
+
+      // Check if it's an enum type
+      const colInfo = await db.execute(sql`
+        SELECT data_type, udt_name FROM information_schema.columns
+        WHERE table_name = 'tours' AND column_name = 'category'
+      `)
+      const udtName = ((colInfo.rows || colInfo)[0] as any)?.udt_name
+
+      if (udtName && udtName !== 'varchar' && udtName !== 'text') {
+        // It's a custom enum type — add new value to enum
+        try {
+          await db.execute(sql.raw(`ALTER TYPE "${udtName}" ADD VALUE IF NOT EXISTS 'day-trips-from-prague'`))
+          results.push(`added 'day-trips-from-prague' to enum ${udtName}`)
+        } catch (e: any) {
+          results.push(`enum add error: ${e.message}`)
+        }
+      } else {
+        // It's varchar — drop CHECK constraints
+        const constraints = await db.execute(sql`
+          SELECT con.conname
+          FROM pg_constraint con
+          JOIN pg_class rel ON rel.oid = con.conrelid
+          WHERE rel.relname = 'tours'
+          AND pg_get_constraintdef(con.oid) LIKE '%category%'
+        `)
+        for (const row of (constraints.rows || constraints)) {
+          const name = (row as any).conname
+          await db.execute(sql.raw(`ALTER TABLE tours DROP CONSTRAINT IF EXISTS "${name}"`))
+          results.push(`dropped constraint: ${name}`)
+        }
+      }
+
+      // Also handle _tours_v table
+      const vColInfo = await db.execute(sql`
+        SELECT data_type, udt_name FROM information_schema.columns
+        WHERE table_name = '_tours_v' AND column_name = 'version_category'
+      `)
+      const vUdtName = ((vColInfo.rows || vColInfo)[0] as any)?.udt_name
+      if (vUdtName && vUdtName !== 'varchar' && vUdtName !== 'text' && vUdtName !== udtName) {
+        try {
+          await db.execute(sql.raw(`ALTER TYPE "${vUdtName}" ADD VALUE IF NOT EXISTS 'day-trips-from-prague'`))
+          results.push(`added 'day-trips-from-prague' to enum ${vUdtName}`)
+        } catch (e: any) {
+          results.push(`v enum add error: ${e.message}`)
+        }
+      }
+
+      // Now update the data
+      const updated = await db.execute(sql`
+        UPDATE tours SET category = 'day-trips-from-prague' WHERE category = 'from-prague'
+      `)
+      results.push(`tours updated: ${(updated as any).rowCount ?? 'done'}`)
+
+      const vUpdated = await db.execute(sql`
+        UPDATE _tours_v SET version_category = 'day-trips-from-prague' WHERE version_category = 'from-prague'
+      `)
+      results.push(`versions updated: ${(vUpdated as any).rowCount ?? 'done'}`)
+
+      return NextResponse.json({ success: true, results })
     }
 
-    // Step 2: Update the data
-    const updated = await db.execute(sql`
-      UPDATE tours SET category = 'day-trips-from-prague' WHERE category = 'from-prague'
-    `)
-    results.push(`tours updated: ${(updated as any).rowCount || 'done'}`)
-
-    const vUpdated = await db.execute(sql`
-      UPDATE _tours_v SET version_category = 'day-trips-from-prague' WHERE version_category = 'from-prague'
-    `)
-    results.push(`versions updated: ${(vUpdated as any).rowCount || 'done'}`)
-
-    // Step 3: Add new CHECK constraint with updated values
-    await db.execute(sql`
-      ALTER TABLE tours ADD CONSTRAINT tours_category_check
-      CHECK (category IN ('prague-tours', 'day-trips-from-prague'))
-    `)
-    results.push('added new tours constraint')
-
-    await db.execute(sql`
-      ALTER TABLE _tours_v ADD CONSTRAINT tours_v_version_category_check
-      CHECK (version_category IN ('prague-tours', 'day-trips-from-prague'))
-    `)
-    results.push('added new versions constraint')
-
-    return NextResponse.json({ success: true, results })
+    return NextResponse.json({ error: 'Use ?action=inspect or ?action=fix' }, { status: 400 })
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json({ error: message }, { status: 500 })
