@@ -5,7 +5,6 @@ import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
-import { Badge } from '@/components/shared/Badge'
 import { ImageGallery } from '@/components/tours/ImageGallery'
 import { TourIncluded } from '@/components/tours/TourIncluded'
 import { TourFAQ } from '@/components/tours/TourFAQ'
@@ -170,15 +169,6 @@ export default async function TourDetailPage({
     getRelatedTours(tour.id as number, tour.category, locale),
   ])
 
-  const categoryLabel =
-    tour.category === 'prague-tours'
-      ? locale === 'ru'
-        ? 'Экскурсии по Праге'
-        : 'Prague Tours'
-      : locale === 'ru'
-        ? 'Однодневные поездки из Праги'
-        : 'Day Trips from Prague'
-
   const galleryImages = ((tour as any).gallery || []).map(
     (item: any) => ({
       url:
@@ -243,30 +233,17 @@ export default async function TourDetailPage({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
         {/* Left column: content */}
         <div className="lg:col-span-2">
-          {/* Gallery */}
-          {galleryImages.length > 0 && (
-            <ImageGallery images={galleryImages} />
-          )}
-
-          {/* Badges */}
-          <div className="flex flex-wrap gap-2 mt-6">
-            <Badge variant="category">{categoryLabel}</Badge>
-            <Badge variant="tag">{tour.duration}h</Badge>
-            {tour.difficulty && (
-              <Badge variant="tag">{tour.difficulty}</Badge>
-            )}
-            {tour.rating && (
-              <Badge variant="trust">
-                ★ {tour.rating.toFixed(1)}
-                {tour.reviewCount ? ` (${tour.reviewCount})` : ''}
-              </Badge>
-            )}
-          </div>
-
           {/* Title */}
-          <h1 className="text-3xl sm:text-4xl font-heading font-bold text-navy mt-4">
+          <h1 className="text-3xl sm:text-4xl font-heading font-bold text-navy">
             {tour.title}
           </h1>
+
+          {/* Gallery */}
+          {galleryImages.length > 0 && (
+            <div className="mt-6">
+              <ImageGallery images={galleryImages} />
+            </div>
+          )}
 
           {/* Description */}
           <div className="mt-6 prose max-w-none prose-headings:font-heading prose-headings:text-navy prose-p:text-navy/80">
