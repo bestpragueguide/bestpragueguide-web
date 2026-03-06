@@ -57,7 +57,7 @@ All site content is editable from Payload admin panel:
 
 ## Live Preview
 - Payload Live Preview configured in `payload.config.ts` with Mobile/Tablet/Desktop breakpoints
-- `LivePreviewListener` client component for real-time admin editing preview
+- `RefreshOnSave` client component in layout — uses `RefreshRouteOnSave` from `@payloadcms/live-preview-react` to auto-refresh frontend on admin save
 - Collections: tours, pages, blog-posts; Globals: homepage, about-page, reviews-page, site-settings, navigation
 
 ## Conventions

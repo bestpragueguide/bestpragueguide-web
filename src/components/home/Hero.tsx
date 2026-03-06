@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { Button } from '@/components/shared/Button'
 import { resolveMediaUrl } from '@/lib/cms-data'
 import type { HomepageData } from '@/lib/cms-types'
@@ -11,9 +10,10 @@ interface HeroProps {
 }
 
 export function Hero({ data, locale }: HeroProps) {
-  const bgUrl = resolveMediaUrl(data.heroBackgroundImage, 'hero')
-    || `${SERVER_URL}/api/media/file/photo_2_2026-03-03_18-30-45.jpg`
   const bgImage = typeof data.heroBackgroundImage === 'object' ? data.heroBackgroundImage : null
+  const heroUrl = resolveMediaUrl(data.heroBackgroundImage, 'hero')
+    || `${SERVER_URL}/api/media/file/photo_2_2026-03-03_18-30-45.jpg`
+  const mobileUrl = resolveMediaUrl(data.heroBackgroundImage, 'mobileHero')
   const focalPosition = bgImage
     ? `${(bgImage as any)?.focalX ?? 50}% ${(bgImage as any)?.focalY ?? 50}%`
     : '50% 50%'
@@ -26,15 +26,18 @@ export function Hero({ data, locale }: HeroProps) {
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center bg-navy overflow-hidden">
       {/* Background image */}
-      <Image
-        src={bgUrl}
-        alt={heroAlt}
-        fill
-        className="object-cover"
-        style={{ objectPosition: focalPosition }}
-        priority
-        sizes="100vw"
-      />
+      <picture>
+        {mobileUrl && (
+          <source media="(max-width: 768px)" srcSet={mobileUrl} />
+        )}
+        <img
+          src={heroUrl}
+          alt={heroAlt}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ objectPosition: focalPosition }}
+          fetchPriority="high"
+        />
+      </picture>
       <div className="absolute inset-0 bg-gradient-to-b from-navy/80 via-navy/60 to-navy/90" />
 
       {/* Content */}

@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.2] - 2026-03-06
+
+### Added
+- `RefreshOnSave` component — wires Payload Live Preview to auto-refresh frontend on admin save
+- Homepage hero `<picture>` element with `mobileHero` source for mobile devices
+
+### Changed
+- Replaced unused `LivePreviewListener` with `RefreshRouteOnSave` from `@payloadcms/live-preview-react`
+- Homepage hero switched from Next/Image to `<picture>` element for responsive image serving
+
+### Removed
+- `LivePreviewListener` component (was never imported; replaced by `RefreshOnSave`)
+
 ## [1.6.1] - 2026-03-06
 
 ### Changed

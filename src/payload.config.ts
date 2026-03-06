@@ -33,7 +33,7 @@ export default buildConfig({
     livePreview: {
       url: ({ data, collectionConfig, globalConfig, locale }) => {
         const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
-        const loc = String(locale || 'en')
+        const loc = typeof locale === 'object' && locale !== null ? (locale as any).code || 'en' : String(locale || 'en')
 
         if (collectionConfig) {
           switch (collectionConfig.slug) {
@@ -111,6 +111,8 @@ export default buildConfig({
   globals: [SiteSettings, Navigation, Homepage, AboutPage, ReviewsPage],
 
   plugins: [],
+
+  serverURL: process.env.NEXT_PUBLIC_SERVER_URL || '',
 
   sharp,
 
