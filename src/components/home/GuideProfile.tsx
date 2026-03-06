@@ -20,7 +20,7 @@ export function GuideProfile({ data, locale }: GuideProfileProps) {
     : data.guideLearnMoreHref
 
   return (
-    <section className="py-16 lg:py-24 bg-cream">
+    <section className="py-10 lg:py-14 bg-cream">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-14 items-center">
           {/* Photo */}
