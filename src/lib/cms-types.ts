@@ -86,7 +86,7 @@ export interface HomepageData {
   heroBackgroundImage?: MediaImage | number
   trustBarItems: TrustBarItem[]
   guideHeading: string
-  guideBio: string
+  guideBio: any
   guideLearnMore: string
   guideLearnMoreHref: string
   guidePhoto?: MediaImage | number
@@ -121,11 +121,11 @@ export interface AboutValue {
 export interface AboutPageData {
   founderPhoto?: MediaImage | number
   founderHeading: string
-  founderBio: string
+  founderBio: any
   founderQuote: string
   stats: AboutStat[]
   teamHeading: string
-  teamDescription: string
+  teamDescription: any
   teamPhotos: Array<{ image: MediaImage | number }>
   teamBadges: Array<{ text: string }>
   valuesHeading: string
