@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { simplifiedEditor } from '../lib/editors'
 
 export const BlogPosts: CollectionConfig = {
   slug: 'blog-posts',
@@ -29,10 +30,10 @@ export const BlogPosts: CollectionConfig = {
     },
     {
       name: 'excerpt',
-      type: 'textarea',
+      type: 'richText',
       required: true,
       localized: true,
-      maxLength: 300,
+      editor: simplifiedEditor,
     },
     {
       name: 'content',

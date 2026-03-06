@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { simplifiedEditor, fullEditor } from '../lib/editors'
 
 export const ContactMessages: CollectionConfig = {
   slug: 'contact-messages',
@@ -27,8 +28,9 @@ export const ContactMessages: CollectionConfig = {
     },
     {
       name: 'message',
-      type: 'textarea',
+      type: 'richText',
       required: true,
+      editor: simplifiedEditor,
     },
     {
       name: 'locale',
@@ -66,7 +68,8 @@ export const ContactMessages: CollectionConfig = {
     },
     {
       name: 'internalNotes',
-      type: 'textarea',
+      type: 'richText',
+      editor: fullEditor,
       admin: {
         description: 'Internal notes (not visible to customer)',
       },

@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { fullEditor } from '../lib/editors'
 
 export const Homepage: GlobalConfig = {
   slug: 'homepage',
@@ -84,9 +85,10 @@ export const Homepage: GlobalConfig = {
             },
             {
               name: 'guideBio',
-              type: 'textarea',
+              type: 'richText',
               required: true,
               localized: true,
+              editor: fullEditor,
             },
             {
               name: 'guideLearnMore',

@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { simplifiedEditor, fullEditor } from '../lib/editors'
 
 export const Tours: CollectionConfig = {
   slug: 'tours',
@@ -29,10 +30,10 @@ export const Tours: CollectionConfig = {
     },
     {
       name: 'excerpt',
-      type: 'textarea',
+      type: 'richText',
       required: true,
       localized: true,
-      maxLength: 200,
+      editor: simplifiedEditor,
     },
     {
       name: 'description',
@@ -47,8 +48,9 @@ export const Tours: CollectionConfig = {
       fields: [
         {
           name: 'text',
-          type: 'text',
+          type: 'richText',
           required: true,
+          editor: simplifiedEditor,
         },
       ],
     },
@@ -59,8 +61,9 @@ export const Tours: CollectionConfig = {
       fields: [
         {
           name: 'text',
-          type: 'text',
+          type: 'richText',
           required: true,
+          editor: simplifiedEditor,
         },
       ],
     },
@@ -76,8 +79,9 @@ export const Tours: CollectionConfig = {
         },
         {
           name: 'answer',
-          type: 'textarea',
+          type: 'richText',
           required: true,
+          editor: fullEditor,
         },
       ],
     },
@@ -149,8 +153,9 @@ export const Tours: CollectionConfig = {
         },
         {
           name: 'instructions',
-          type: 'textarea',
+          type: 'richText',
           localized: true,
+          editor: simplifiedEditor,
         },
       ],
     },

@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { simplifiedEditor, fullEditor } from '../lib/editors'
 import {
   beforeChangeHook,
   afterChangeHook,
@@ -82,7 +83,8 @@ export const BookingRequests: CollectionConfig = {
     },
     {
       name: 'specialRequests',
-      type: 'textarea',
+      type: 'richText',
+      editor: simplifiedEditor,
     },
     {
       name: 'totalPrice',
@@ -141,7 +143,8 @@ export const BookingRequests: CollectionConfig = {
     },
     {
       name: 'internalNotes',
-      type: 'textarea',
+      type: 'richText',
+      editor: fullEditor,
       admin: {
         description: 'Internal notes (not visible to customer)',
       },

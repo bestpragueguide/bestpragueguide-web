@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { fullEditor } from '../lib/editors'
 
 export const AboutPage: GlobalConfig = {
   slug: 'about-page',
@@ -25,9 +26,10 @@ export const AboutPage: GlobalConfig = {
             },
             {
               name: 'founderBio',
-              type: 'textarea',
+              type: 'richText',
               required: true,
               localized: true,
+              editor: fullEditor,
             },
             {
               name: 'founderQuote',
@@ -72,8 +74,9 @@ export const AboutPage: GlobalConfig = {
             },
             {
               name: 'teamDescription',
-              type: 'textarea',
+              type: 'richText',
               localized: true,
+              editor: fullEditor,
             },
             {
               name: 'teamPhotos',

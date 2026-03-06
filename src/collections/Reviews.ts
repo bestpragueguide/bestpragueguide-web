@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { fullEditor } from '../lib/editors'
 
 export const Reviews: CollectionConfig = {
   slug: 'reviews',
@@ -37,9 +38,10 @@ export const Reviews: CollectionConfig = {
     },
     {
       name: 'body',
-      type: 'textarea',
+      type: 'richText',
       required: true,
       localized: true,
+      editor: fullEditor,
     },
     {
       name: 'language',
@@ -62,8 +64,9 @@ export const Reviews: CollectionConfig = {
     },
     {
       name: 'guideResponse',
-      type: 'textarea',
+      type: 'richText',
       localized: true,
+      editor: fullEditor,
     },
     {
       name: 'status',
