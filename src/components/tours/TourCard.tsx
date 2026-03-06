@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { Badge } from '@/components/shared/Badge'
 
 interface TourCardProps {
   title: string
@@ -26,19 +25,6 @@ export function TourCard({
   heroImageUrl,
   locale,
 }: TourCardProps) {
-  const categoryLabel =
-    category === 'prague-tours'
-      ? subcategory === 'beer-and-food'
-        ? locale === 'ru'
-          ? 'Пиво и еда'
-          : 'Beer & Food'
-        : locale === 'ru'
-          ? 'Обзорные'
-          : 'Sightseeing'
-      : locale === 'ru'
-        ? 'Из Праги'
-        : 'From Prague'
-
   return (
     <Link
       href={`/${locale}/tours/${slug}`}
@@ -58,9 +44,6 @@ export function TourCard({
             Tour Photo
           </div>
         )}
-        <div className="absolute top-3 left-3">
-          <Badge variant="category">{categoryLabel}</Badge>
-        </div>
       </div>
 
       {/* Content */}
@@ -69,7 +52,7 @@ export function TourCard({
           {title}
         </h3>
 
-        <p className="mt-2 text-sm text-gray line-clamp-2">{excerpt}</p>
+        <p className="mt-2 text-sm text-gray">{excerpt}</p>
 
         <div className="mt-4 flex items-center justify-between">
           <div>

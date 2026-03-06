@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.1] - 2026-03-06
+
+### Changed
+- Show full tour excerpt in tour cards instead of truncating to 2 lines
+
+### Removed
+- Category badge overlay from tour card images
+
 ## [1.5.0] - 2026-03-06
 
 ### Added
