@@ -392,10 +392,17 @@ export async function getPageBySlug(
 
 export function resolveMediaUrl(
   media: any,
-  size?: 'thumbnail' | 'card' | 'hero' | 'og',
+  size?: 'thumbnail' | 'card' | 'mobileCard' | 'hero' | 'mobileHero' | 'og',
 ): string | null {
   if (!media || typeof media === 'number') return null
   if (size && media.sizes?.[size]?.url) return media.sizes[size].url
   if (media.url) return media.url
   return null
+}
+
+export function getFocalPointStyle(media: any): string {
+  if (!media || typeof media === 'number') return '50% 50%'
+  const x = media.focalX ?? 50
+  const y = media.focalY ?? 50
+  return `${x}% ${y}%`
 }

@@ -2,10 +2,14 @@ export interface MediaImage {
   id: number
   url?: string
   alt?: string
+  focalX?: number
+  focalY?: number
   sizes?: {
     thumbnail?: { url?: string }
     card?: { url?: string }
+    mobileCard?: { url?: string }
     hero?: { url?: string }
+    mobileHero?: { url?: string }
     og?: { url?: string }
   }
 }
