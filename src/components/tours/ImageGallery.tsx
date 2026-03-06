@@ -4,8 +4,11 @@ import { useState } from 'react'
 
 interface GalleryImage {
   url: string
+  mobileUrl?: string
   alt: string
   caption?: string
+  objectFit?: 'cover' | 'contain' | 'fill'
+  focalPoint?: string
 }
 
 interface ImageGalleryProps {
@@ -29,12 +32,21 @@ export function ImageGallery({ images }: ImageGalleryProps) {
               index === 0 ? 'col-span-2 row-span-2' : ''
             }`}
           >
-            <img
-              src={image.url}
-              alt={image.alt}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              loading={index < 4 ? 'eager' : 'lazy'}
-            />
+            <picture>
+              {image.mobileUrl && (
+                <source media="(max-width: 768px)" srcSet={image.mobileUrl} />
+              )}
+              <img
+                src={image.url}
+                alt={image.alt}
+                className="w-full h-full group-hover:scale-105 transition-transform duration-300"
+                style={{
+                  objectFit: image.objectFit || 'cover',
+                  objectPosition: image.focalPoint || '50% 50%',
+                }}
+                loading={index < 4 ? 'eager' : 'lazy'}
+              />
+            </picture>
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
           </button>
         ))}

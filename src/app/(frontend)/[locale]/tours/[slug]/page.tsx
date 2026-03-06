@@ -184,8 +184,19 @@ export default async function TourDetailPage({
         typeof item.image === 'object'
           ? item.image?.sizes?.card?.url || item.image?.url || ''
           : '',
-      alt: item.alt || tour.title,
+      mobileUrl:
+        typeof item.mobileImage === 'object'
+          ? item.mobileImage?.sizes?.mobileCard?.url || item.mobileImage?.url || null
+          : typeof item.image === 'object'
+            ? item.image?.sizes?.mobileCard?.url || null
+            : null,
+      alt: item.alt || (typeof item.image === 'object' ? item.image?.alt : null) || tour.title,
       caption: item.caption,
+      objectFit: item.objectFit || 'cover',
+      focalPoint:
+        typeof item.image === 'object'
+          ? `${item.image?.focalX ?? 50}% ${item.image?.focalY ?? 50}%`
+          : '50% 50%',
     }),
   )
 
