@@ -12,7 +12,7 @@ import { TourFAQ } from '@/components/tours/TourFAQ'
 import { TourReviews } from '@/components/tours/TourReviews'
 import { TourRelated } from '@/components/tours/TourRelated'
 import { RichText } from '@payloadcms/richtext-lexical/react'
-import { SafeRichText } from '@/components/shared/SafeRichText'
+import { SafeRichText, extractPlainText } from '@/components/shared/SafeRichText'
 import { StickyBookButton } from '@/components/booking/StickyBookButton'
 import { BookingRequestForm } from '@/components/booking/BookingRequestForm'
 import { TourSchema } from '@/components/seo/TourSchema'
@@ -93,7 +93,7 @@ export async function generateMetadata({
   const title =
     (tour as any).seo?.metaTitle || `${tour.title} — Best Prague Guide`
   const description =
-    (tour as any).seo?.metaDescription || tour.excerpt
+    (tour as any).seo?.metaDescription || extractPlainText(tour.excerpt)
 
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'
   const otherLocale = locale === 'en' ? 'ru' : 'en'
@@ -370,7 +370,7 @@ export default async function TourDetailPage({
       {/* Schema.org JSON-LD */}
       <TourSchema
         title={tour.title}
-        description={tour.excerpt}
+        description={extractPlainText(tour.excerpt)}
         image={
           typeof (tour as any).heroImage === 'object'
             ? (tour as any).heroImage?.sizes?.hero?.url || (tour as any).heroImage?.url || undefined

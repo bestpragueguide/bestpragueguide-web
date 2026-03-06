@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { RichText } from '@payloadcms/richtext-lexical/react'
+import { extractPlainText } from '@/components/shared/SafeRichText'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { BlogPostSchema } from '@/components/seo/BlogPostSchema'
 import { categoryLabels, allCategories } from '@/lib/blog'
@@ -63,7 +64,7 @@ export async function generateMetadata({
 
     return {
       title: seo?.metaTitle || `${post.title} — Best Prague Guide`,
-      description: seo?.metaDescription || post.excerpt,
+      description: seo?.metaDescription || extractPlainText(post.excerpt),
       alternates: {
         canonical: `${baseUrl}/${locale}/blog/${slug}`,
         languages: {
@@ -73,7 +74,7 @@ export async function generateMetadata({
       },
       openGraph: {
         title: seo?.metaTitle || post.title,
-        description: seo?.metaDescription || post.excerpt,
+        description: seo?.metaDescription || extractPlainText(post.excerpt),
         images: [{ url: fullOgImage, width: 1200, height: 630 }],
         type: 'article',
         publishedTime: post.publishedAt as string,
@@ -84,7 +85,7 @@ export async function generateMetadata({
       twitter: {
         card: 'summary_large_image',
         title: seo?.metaTitle || (post.title as string),
-        description: seo?.metaDescription || (post.excerpt as string),
+        description: seo?.metaDescription || extractPlainText(post.excerpt),
         images: [fullOgImage],
       },
     }
@@ -355,7 +356,7 @@ export default async function BlogPostPage({
       {/* Schema.org JSON-LD */}
       <BlogPostSchema
         title={post.title as string}
-        description={post.excerpt as string}
+        description={extractPlainText(post.excerpt)}
         image={heroUrl ? fullHeroUrl : undefined}
         datePublished={post.publishedAt as string}
         dateModified={post.updatedAt as string}

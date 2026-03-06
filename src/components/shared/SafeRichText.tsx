@@ -1,3 +1,20 @@
+/** Extract plain text from a richText field (Lexical JSON or plain string) */
+export function extractPlainText(data: any): string {
+  if (!data) return ''
+  if (typeof data === 'string') return data
+  if (data?.root?.children) {
+    return data.root.children
+      .map((node: any) => {
+        if (node.type === 'text') return node.text || ''
+        if (node.children) return node.children.map((c: any) => c.text || '').join('')
+        return ''
+      })
+      .filter(Boolean)
+      .join(' ')
+  }
+  return ''
+}
+
 interface SafeRichTextProps {
   data: any
   className?: string
@@ -37,8 +54,11 @@ function renderNode(node: any, idx: number): React.ReactNode {
     case 'paragraph':
       return <p key={idx}>{children}</p>
     case 'heading': {
-      const Tag = (node.tag || 'h2') as keyof JSX.IntrinsicElements
-      return <Tag key={idx}>{children}</Tag>
+      const tag = node.tag || 'h2'
+      if (tag === 'h2') return <h2 key={idx}>{children}</h2>
+      if (tag === 'h3') return <h3 key={idx}>{children}</h3>
+      if (tag === 'h4') return <h4 key={idx}>{children}</h4>
+      return <h2 key={idx}>{children}</h2>
     }
     case 'list':
       if (node.listType === 'number') return <ol key={idx}>{children}</ol>

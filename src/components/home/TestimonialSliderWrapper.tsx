@@ -1,6 +1,7 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { TestimonialSlider } from './TestimonialSlider'
+import { extractPlainText } from '@/components/shared/SafeRichText'
 
 interface TestimonialSliderWrapperProps {
   heading: string
@@ -41,7 +42,7 @@ export async function TestimonialSliderWrapper({ heading, locale }: TestimonialS
           customerName: r.customerName,
           customerCountry: r.customerCountry,
           rating: r.rating,
-          body: r.body,
+          body: extractPlainText(r.body),
           tourTitle:
             typeof r.tour === 'object' && r.tour ? r.tour.title : undefined,
         }))

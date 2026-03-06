@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { extractPlainText } from '@/components/shared/SafeRichText'
 
 interface TourCardProps {
   title: string
@@ -63,7 +64,7 @@ export function TourCard({
           {title}
         </h3>
 
-        <p className="mt-2 text-sm text-gray">{excerpt}</p>
+        <p className="mt-2 text-sm text-gray">{extractPlainText(excerpt)}</p>
 
         <div className="mt-4 flex items-center justify-between">
           <div>

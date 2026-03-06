@@ -9,6 +9,7 @@ import config from '@payload-config'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { BlogCategoryFilter } from '@/components/blog/BlogCategoryFilter'
 import { categoryLabels } from '@/lib/blog'
+import { extractPlainText } from '@/components/shared/SafeRichText'
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
 
@@ -127,7 +128,7 @@ export default async function BlogPage({
                     {post.title}
                   </h2>
                   <p className="mt-2 text-sm text-navy/70 line-clamp-3">
-                    {post.excerpt}
+                    {extractPlainText(post.excerpt)}
                   </p>
                   <span className="mt-3 inline-block text-sm font-medium text-gold">
                     {locale === 'ru' ? 'Читать далее →' : 'Read more →'}
