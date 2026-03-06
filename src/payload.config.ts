@@ -33,7 +33,7 @@ export default buildConfig({
     livePreview: {
       url: ({ data, collectionConfig, globalConfig, locale }) => {
         const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
-        const loc = (locale as string) || 'en'
+        const loc = String(locale || 'en')
 
         if (collectionConfig) {
           switch (collectionConfig.slug) {
