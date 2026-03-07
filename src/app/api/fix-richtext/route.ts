@@ -167,25 +167,52 @@ export async function POST(req: Request) {
       results.push(`_tours_v_version_faq:SKIP:${e.message?.substring(0, 60)}`)
     }
 
-    // 7. Fix guest category labels — copy missing locale labels
+    // 7. Fix guest category labels — check for missing locale labels and copy from other locale
     try {
-      const gcRows = await drizzle.execute(sql.raw(
-        `SELECT gc.id, gc._parent_id, gc_loc._locale, gc_loc.label
-         FROM tours_pricing_guest_categories gc
-         JOIN tours_pricing_guest_categories_locales gc_loc ON gc_loc._parent_id = gc.id
-         WHERE gc_loc.label IS NOT NULL`
+      const gcLocRows = await drizzle.execute(sql.raw(
+        `SELECT id, _parent_id, _locale, label
+         FROM tours_pricing_guest_categories_locales
+         ORDER BY _parent_id, _locale`
       ))
-      results.push(`guest_categories:found ${(gcRows.rows || gcRows).length} rows`)
-    } catch (e: any) {
-      // Try without locales table — labels might be on main table
-      try {
-        const gcRows = await drizzle.execute(sql.raw(
-          `SELECT id, label FROM tours_pricing_guest_categories WHERE label IS NOT NULL`
-        ))
-        results.push(`guest_categories_main:found ${(gcRows.rows || gcRows).length} rows`)
-      } catch (e2: any) {
-        results.push(`guest_categories:SKIP:${e2.message?.substring(0, 60)}`)
+      const rows = gcLocRows.rows || gcLocRows
+      results.push(`guest_cat_locales: ${JSON.stringify(rows)}`)
+
+      // Group by parent_id
+      const byParent: Record<string, any[]> = {}
+      for (const row of rows) {
+        const key = String(row._parent_id)
+        if (!byParent[key]) byParent[key] = []
+        byParent[key].push(row)
       }
+
+      // For each parent, if one locale is missing or has null label, copy from the other
+      for (const [parentId, localeRows] of Object.entries(byParent)) {
+        const enRow = localeRows.find((r: any) => r._locale === 'en')
+        const ruRow = localeRows.find((r: any) => r._locale === 'ru')
+
+        if (enRow?.label && (!ruRow || !ruRow.label)) {
+          if (ruRow) {
+            await drizzle.execute(sql`UPDATE tours_pricing_guest_categories_locales SET label = ${enRow.label} WHERE id = ${ruRow.id}`)
+          } else {
+            await drizzle.execute(sql.raw(
+              `INSERT INTO tours_pricing_guest_categories_locales (_parent_id, _locale, label) VALUES (${parentId}, 'ru', '${enRow.label.replace(/'/g, "''")}')`
+            ))
+          }
+          results.push(`guest_cat:${parentId}:copied en→ru`)
+        }
+        if (ruRow?.label && (!enRow || !enRow.label)) {
+          if (enRow) {
+            await drizzle.execute(sql`UPDATE tours_pricing_guest_categories_locales SET label = ${ruRow.label} WHERE id = ${enRow.id}`)
+          } else {
+            await drizzle.execute(sql.raw(
+              `INSERT INTO tours_pricing_guest_categories_locales (_parent_id, _locale, label) VALUES (${parentId}, 'en', '${ruRow.label.replace(/'/g, "''")}')`
+            ))
+          }
+          results.push(`guest_cat:${parentId}:copied ru→en`)
+        }
+      }
+    } catch (e: any) {
+      results.push(`guest_categories:SKIP:${e.message?.substring(0, 80)}`)
     }
 
     // 8. List relevant tables for diagnostics
