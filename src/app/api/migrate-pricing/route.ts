@@ -240,11 +240,41 @@ export async function POST(req: Request) {
 
     // Try querying tours to check for errors
     try {
-      const test = await db.execute(sql.raw(`SELECT id, title, pricing_model FROM tours LIMIT 1`))
+      const test = await db.execute(sql.raw(`SELECT id, pricing_model FROM tours LIMIT 1`))
       const row = (test.rows || test)?.[0]
-      results.push(`--- test query: id=${(row as any)?.id}, title=${(row as any)?.title}, pricing_model=${(row as any)?.pricing_model}`)
+      results.push(`--- test query: id=${(row as any)?.id}, pricing_model=${(row as any)?.pricing_model}`)
     } catch (e: any) {
-      results.push(`Test query failed: ${e.message?.slice(0, 200)}`)
+      results.push(`Test query failed: ${e.message?.slice(0, 300)}`)
+    }
+
+    // List ALL tours columns
+    try {
+      const allCols = await db.execute(sql.raw(`
+        SELECT column_name FROM information_schema.columns
+        WHERE table_name = 'tours'
+        ORDER BY ordinal_position
+      `))
+      results.push('--- ALL tours columns ---')
+      for (const row of allCols.rows || allCols) {
+        results.push(`  ${(row as any).column_name}`)
+      }
+    } catch (e: any) {
+      results.push(`All cols failed: ${e.message?.slice(0, 100)}`)
+    }
+
+    // Check if tours_rels exists
+    try {
+      const rels = await db.execute(sql.raw(`
+        SELECT column_name FROM information_schema.columns
+        WHERE table_name = 'tours_rels'
+        ORDER BY ordinal_position
+      `))
+      results.push('--- tours_rels columns ---')
+      for (const row of rels.rows || rels) {
+        results.push(`  ${(row as any).column_name}`)
+      }
+    } catch (e: any) {
+      results.push(`Rels cols failed: ${e.message?.slice(0, 100)}`)
     }
 
     return NextResponse.json({ success: true, results })
