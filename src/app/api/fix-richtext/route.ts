@@ -48,25 +48,25 @@ export async function POST(req: Request) {
        FROM tours_locales`
     ))
     for (const row of localeRows.rows || localeRows) {
-      const updates: string[] = []
+      let changed = false
       if (typeof row.excerpt === 'string' && !row.excerpt.startsWith('{')) {
-        updates.push(`excerpt = '${textToLexical(row.excerpt).replace(/'/g, "''")}'`)
+        await drizzle.execute(sql`UPDATE tours_locales SET excerpt = ${textToLexical(row.excerpt)} WHERE id = ${row.id}`)
+        changed = true
       }
       if (typeof row.description === 'string' && !row.description.startsWith('{')) {
-        updates.push(`description = '${textToLexical(row.description).replace(/'/g, "''")}'`)
+        await drizzle.execute(sql`UPDATE tours_locales SET description = ${textToLexical(row.description)} WHERE id = ${row.id}`)
+        changed = true
       }
       if (typeof row.meeting_point_instructions === 'string' && !row.meeting_point_instructions.startsWith('{')) {
-        updates.push(`meeting_point_instructions = '${textToLexical(row.meeting_point_instructions).replace(/'/g, "''")}'`)
+        await drizzle.execute(sql`UPDATE tours_locales SET meeting_point_instructions = ${textToLexical(row.meeting_point_instructions)} WHERE id = ${row.id}`)
+        changed = true
       }
-      if (updates.length > 0) {
-        await drizzle.execute(sql.raw(
-          `UPDATE tours_locales SET ${updates.join(', ')} WHERE id = ${row.id}`
-        ))
-        results.push(`tours_locales:${row.id}:${row._locale}:${updates.length} fields`)
+      if (changed) {
+        results.push(`tours_locales:${row.id}:${row._locale}`)
       }
     }
 
-    // 2. Fix tours_included (localized array — text field on main table)
+    // 2. Fix tours_included and tours_excluded (text field)
     for (const table of ['tours_included', 'tours_excluded']) {
       try {
         const rows = await drizzle.execute(sql.raw(
@@ -74,32 +74,34 @@ export async function POST(req: Request) {
         ))
         for (const row of rows.rows || rows) {
           if (typeof row.text === 'string' && !row.text.startsWith('{')) {
-            await drizzle.execute(sql.raw(
-              `UPDATE ${table} SET text = '${textToLexical(row.text).replace(/'/g, "''")}' WHERE id = ${row.id}`
-            ))
+            const lexical = textToLexical(row.text)
+            if (table === 'tours_included') {
+              await drizzle.execute(sql`UPDATE tours_included SET text = ${lexical} WHERE id = ${row.id}`)
+            } else {
+              await drizzle.execute(sql`UPDATE tours_excluded SET text = ${lexical} WHERE id = ${row.id}`)
+            }
             results.push(`${table}:${row.id}`)
           }
         }
       } catch (e: any) {
-        results.push(`${table}:SKIP:${e.message?.substring(0, 60)}`)
+        results.push(`${table}:SKIP:${e.message?.substring(0, 80)}`)
       }
     }
 
-    // 3. Fix tours_faq (localized array — answer field on main table)
+    // 3. Fix tours_faq (answer field)
     try {
       const faqRows = await drizzle.execute(sql.raw(
         `SELECT id, answer FROM tours_faq WHERE answer IS NOT NULL`
       ))
       for (const row of faqRows.rows || faqRows) {
         if (typeof row.answer === 'string' && !row.answer.startsWith('{')) {
-          await drizzle.execute(sql.raw(
-            `UPDATE tours_faq SET answer = '${textToLexical(row.answer).replace(/'/g, "''")}' WHERE id = ${row.id}`
-          ))
+          const lexical = textToLexical(row.answer)
+          await drizzle.execute(sql`UPDATE tours_faq SET answer = ${lexical} WHERE id = ${row.id}`)
           results.push(`tours_faq:${row.id}`)
         }
       }
     } catch (e: any) {
-      results.push(`tours_faq:SKIP:${e.message?.substring(0, 60)}`)
+      results.push(`tours_faq:SKIP:${e.message?.substring(0, 80)}`)
     }
 
     // 5. Fix version tables too
