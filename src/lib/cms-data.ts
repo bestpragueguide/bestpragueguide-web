@@ -263,6 +263,7 @@ export async function getHomepageData(locale: string): Promise<HomepageData> {
       heroCta: data.heroCta || fallback.heroCta,
       heroCtaHref: data.heroCtaHref || fallback.heroCtaHref,
       heroBackgroundImage: data.heroBackgroundImage || fallback.heroBackgroundImage,
+      mobileHeroImage: data.mobileHeroImage,
       trustBarItems: data.trustBarItems && data.trustBarItems.length > 0
         ? data.trustBarItems
         : fallback.trustBarItems,

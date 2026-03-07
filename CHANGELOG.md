@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.3] - 2026-03-07
+
+### Fixed
+- Mobile hero image not showing: `mobileHeroImage` field was missing from `getHomepageData()` return object
+- Linked `heroBackgroundImage` (id=17) and `mobileHeroImage` (id=74) to Homepage global in production
+
 ## [1.6.2] - 2026-03-07
 
 ### Added
