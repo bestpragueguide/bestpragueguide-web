@@ -66,11 +66,17 @@ export async function POST(req: Request) {
     ]
 
     for (const [table, localesTable] of arrayTablesWithLocales) {
-      // 1. Drop FK on locales table first (if exists) so we can change parent type
+      // 1. Drop ALL FK constraints on locales table referencing this array table
       if (localesTable) {
+        // Payload-style name (from our previous fix runs)
         await run(
-          `Drop FK on ${localesTable}._parent_id`,
+          `Drop FK ${localesTable}_parent_id_fk`,
           `ALTER TABLE ${localesTable} DROP CONSTRAINT IF EXISTS ${localesTable}_parent_id_fk`
+        )
+        // Manual CREATE TABLE style name (double underscore + fkey)
+        await run(
+          `Drop FK ${localesTable}__parent_id_fkey`,
+          `ALTER TABLE ${localesTable} DROP CONSTRAINT IF EXISTS ${localesTable}__parent_id_fkey`
         )
       }
 
