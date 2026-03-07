@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.0] - 2026-03-07
+
+### Added
+- **Related tours** (`relatedTours` field) — admin can select which tours appear in "You May Also Like" section; falls back to same-category tours if empty
+- **Tabs in Tour admin** — Content, Images, Pricing, SEO tabs for better organization
+- Sidebar fields: slug, publishedLocales, status, sortOrder, rating, reviewCount
+
+### Changed
+- **"You May Also Like" RU heading** — changed from "Похожие экскурсии" to "Смотрите также"
+
 ## [1.9.0] - 2026-03-07
 
 ### Added

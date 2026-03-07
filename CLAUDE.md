@@ -30,7 +30,7 @@ All site content is editable from Payload admin panel:
 - **ReviewsPage** — page heading, photo gallery
 
 ### Collections
-- **Tours** — tour listings with pricing, gallery, included/excluded items, FAQ, SEO, meeting point, difficulty, tags
+- **Tours** — tour listings organized in tabs (Content, Images, Pricing, SEO) with `relatedTours` relationship for admin-selectable "You May Also Like" section; pricing, gallery, included/excluded items, FAQ, meeting point, difficulty, tags
 - **Services** — reusable add-on services (entry tickets, vehicles, restaurants) with own pricing models
 - **Reviews** — customer reviews with rating, reviewer name, tour reference
 - **BlogPosts** — blog articles with richText content, categories, SEO

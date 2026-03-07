@@ -29,7 +29,7 @@ export function TourRelated({ tours, locale }: TourRelatedProps) {
   return (
     <div className="mt-10">
       <h2 className="text-2xl font-heading font-bold text-navy mb-6">
-        {locale === 'ru' ? 'Похожие экскурсии' : 'You May Also Like'}
+        {locale === 'ru' ? 'Смотрите также' : 'You May Also Like'}
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
