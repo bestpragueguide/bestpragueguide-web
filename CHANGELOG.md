@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.3] - 2026-03-07
+
+### Added
+- **Duration info** on tour detail page — shown above description with clock icon
+
 ## [1.10.2] - 2026-03-07
 
 ### Fixed
