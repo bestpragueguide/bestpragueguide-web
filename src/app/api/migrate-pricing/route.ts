@@ -238,43 +238,34 @@ export async function POST(req: Request) {
       results.push(`Diagnostic failed: ${e.message?.slice(0, 100)}`)
     }
 
-    // Try querying tours to check for errors
+    // Count tours
     try {
-      const test = await db.execute(sql.raw(`SELECT id, pricing_model FROM tours LIMIT 1`))
-      const row = (test.rows || test)?.[0]
-      results.push(`--- test query: id=${(row as any)?.id}, pricing_model=${(row as any)?.pricing_model}`)
+      const countResult = await db.execute(sql.raw(`SELECT count(*) as cnt FROM tours`))
+      const cnt = (countResult.rows || countResult)?.[0]
+      results.push(`--- tours count: ${(cnt as any)?.cnt}`)
     } catch (e: any) {
-      results.push(`Test query failed: ${e.message?.slice(0, 300)}`)
+      results.push(`Count failed: ${e.message?.slice(0, 200)}`)
     }
 
-    // List ALL tours columns
+    // Try Payload Local API
     try {
-      const allCols = await db.execute(sql.raw(`
-        SELECT column_name FROM information_schema.columns
-        WHERE table_name = 'tours'
-        ORDER BY ordinal_position
-      `))
-      results.push('--- ALL tours columns ---')
-      for (const row of allCols.rows || allCols) {
-        results.push(`  ${(row as any).column_name}`)
-      }
+      const tourResult = await payload.find({ collection: 'tours', limit: 1 })
+      results.push(`--- Payload find tours: ${tourResult.totalDocs} total, first: ${tourResult.docs[0]?.title || 'none'}`)
     } catch (e: any) {
-      results.push(`All cols failed: ${e.message?.slice(0, 100)}`)
+      results.push(`Payload find failed: ${e.message?.slice(0, 300)}`)
     }
 
-    // Check if tours_rels exists
+    // Check table list
     try {
-      const rels = await db.execute(sql.raw(`
-        SELECT column_name FROM information_schema.columns
-        WHERE table_name = 'tours_rels'
-        ORDER BY ordinal_position
+      const tables = await db.execute(sql.raw(`
+        SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE '%tour%' ORDER BY tablename
       `))
-      results.push('--- tours_rels columns ---')
-      for (const row of rels.rows || rels) {
-        results.push(`  ${(row as any).column_name}`)
+      results.push('--- tour-related tables ---')
+      for (const row of tables.rows || tables) {
+        results.push(`  ${(row as any).tablename}`)
       }
     } catch (e: any) {
-      results.push(`Rels cols failed: ${e.message?.slice(0, 100)}`)
+      results.push(`Tables failed: ${e.message?.slice(0, 100)}`)
     }
 
     return NextResponse.json({ success: true, results })
