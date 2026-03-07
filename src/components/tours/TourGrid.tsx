@@ -2,6 +2,7 @@
 
 import { useSearchParams } from 'next/navigation'
 import { TourCard } from './TourCard'
+import type { TourPricing } from '@/lib/cms-types'
 
 interface Tour {
   id: number
@@ -11,7 +12,8 @@ interface Tour {
   category: string
   subcategory?: string | null
   duration: number
-  groupPrice: number
+  groupPrice?: number
+  pricing?: TourPricing
   rating?: number | null
   heroImageUrl?: string | null
   mobileImageUrl?: string | null
@@ -62,6 +64,7 @@ export function TourGrid({ tours, locale }: TourGridProps) {
           excerpt={tour.excerpt}
           duration={tour.duration}
           groupPrice={tour.groupPrice}
+          pricing={tour.pricing}
           rating={tour.rating}
           heroImageUrl={tour.heroImageUrl}
           mobileImageUrl={tour.mobileImageUrl}

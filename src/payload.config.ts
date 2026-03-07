@@ -12,6 +12,7 @@ import { Media } from './collections/Media'
 import { BlogPosts } from './collections/BlogPosts'
 import { ContactMessages } from './collections/ContactMessages'
 import { FAQs } from './collections/FAQs'
+import { Services } from './collections/Services'
 import { SiteSettings } from './globals/SiteSettings'
 import { Navigation } from './globals/Navigation'
 import { Homepage } from './globals/Homepage'
@@ -106,6 +107,7 @@ export default buildConfig({
     BlogPosts,
     ContactMessages,
     FAQs,
+    Services,
   ],
 
   globals: [SiteSettings, Navigation, Homepage, AboutPage, ReviewsPage],

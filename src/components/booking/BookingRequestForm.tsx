@@ -1,24 +1,26 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useTranslations } from 'next-intl'
 import { TIME_SLOTS } from '@/lib/booking'
 import { trackBookingSubmit } from '@/lib/analytics'
 import { currencies, formatPrice, type Currency } from '@/lib/currency'
+import { calculatePrice, getMaxGuests, getDisplayPrice } from '@/lib/pricing'
+import type { TourPricing } from '@/lib/cms-types'
 
 interface BookingRequestFormProps {
   tourId: number
   tourName: string
-  price: number
-  surchargePercent?: number
+  pricing: TourPricing
+  maxGroupSize?: number
   locale: string
 }
 
 export function BookingRequestForm({
   tourId,
   tourName,
-  price,
-  surchargePercent,
+  pricing,
+  maxGroupSize,
   locale,
 }: BookingRequestFormProps) {
   const t = useTranslations('booking')
@@ -34,16 +36,21 @@ export function BookingRequestForm({
   tomorrow.setDate(tomorrow.getDate() + 1)
   const minDate = tomorrow.toISOString().split('T')[0]
 
+  const maxGuests = useMemo(() => getMaxGuests(pricing, maxGroupSize), [pricing, maxGroupSize])
+
+  const priceResult = useMemo(
+    () => calculatePrice(pricing, guests),
+    [pricing, guests],
+  )
+
+  const displayInfo = useMemo(() => getDisplayPrice(pricing), [pricing])
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setStatus('loading')
     setErrors({})
 
     const form = e.currentTarget
-    const hasSurcharge = guests > 4 && surchargePercent && surchargePercent > 0
-    const totalPrice = hasSurcharge
-      ? Math.round(price * (1 + surchargePercent / 100))
-      : price
     const data = {
       tourId,
       tourName,
@@ -54,7 +61,9 @@ export function BookingRequestForm({
       customerEmail: (form.elements.namedItem('customerEmail') as HTMLInputElement).value,
       customerPhone: (form.elements.namedItem('customerPhone') as HTMLInputElement).value || '',
       specialRequests: (form.elements.namedItem('specialRequests') as HTMLTextAreaElement).value || '',
-      totalPrice,
+      totalPrice: priceResult.total,
+      pricingModel: pricing.model,
+      isOnRequest: priceResult.isOnRequest,
       currency,
       locale,
     }
@@ -122,10 +131,9 @@ export function BookingRequestForm({
   const inputClass =
     'w-full px-4 py-3 rounded-lg border border-gray-light focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors text-sm'
 
-  const hasSurchargeDisplay = guests > 4 && surchargePercent && surchargePercent > 0
-  const displayPrice = hasSurchargeDisplay
-    ? Math.round(price * (1 + surchargePercent / 100))
-    : price
+  const priceLabel = displayInfo.isPerPerson
+    ? (locale === 'ru' ? 'за человека' : 'per person')
+    : (locale === 'ru' ? 'за группу' : 'per group')
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -147,18 +155,19 @@ export function BookingRequestForm({
             </button>
           ))}
         </div>
-        <span className="text-2xl font-bold text-gold">
-          {formatPrice(displayPrice, currency)}
-        </span>
-        {hasSurchargeDisplay ? (
-          <p className="text-xs text-gray mt-1">
-            {formatPrice(price, currency)} + {surchargePercent}%{' '}
-            {locale === 'ru' ? 'за группу 5–8' : 'for group of 5–8'}
-          </p>
+        {priceResult.isOnRequest && priceResult.total === null ? (
+          <span className="text-xl font-bold text-gold">
+            {locale === 'ru' ? 'По запросу' : 'On Request'}
+          </span>
         ) : (
-          <p className="text-xs text-gray mt-1">
-            {locale === 'ru' ? 'за группу до 4 человек' : 'per group up to 4'}
-          </p>
+          <>
+            <span className="text-2xl font-bold text-gold">
+              {formatPrice(priceResult.total ?? 0, currency)}
+            </span>
+            <p className="text-xs text-gray mt-1">
+              {priceResult.breakdown.basePriceLabel}
+            </p>
+          </>
         )}
       </div>
 
@@ -212,15 +221,15 @@ export function BookingRequestForm({
           onChange={(e) => setGuests(Number(e.target.value))}
           className={inputClass}
         >
-          {Array.from({ length: 8 }, (_, i) => i + 1).map((n) => (
+          {Array.from({ length: maxGuests }, (_, i) => i + 1).map((n) => (
             <option key={n} value={n}>
               {n} {n === 1 ? (locale === 'ru' ? 'гость' : 'guest') : locale === 'ru' ? 'гостей' : 'guests'}
             </option>
           ))}
         </select>
-        {guests > 4 && surchargePercent && surchargePercent > 0 && (
-          <p className="text-xs text-gray mt-1">
-            +{surchargePercent}% {locale === 'ru' ? 'за группу 5–8' : 'surcharge for group of 5–8'}
+        {priceResult.isOnRequest && priceResult.total !== null && (
+          <p className="text-xs text-gold mt-1">
+            {locale === 'ru' ? 'Точная цена по запросу' : 'Exact price on request'}
           </p>
         )}
       </div>

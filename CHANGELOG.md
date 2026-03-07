@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.0] - 2026-03-07
+
+### Added
+- **Flexible tour pricing system** — 4 pricing models: GROUP_TIERS, PER_PERSON, FLAT_RATE, ON_REQUEST
+- `src/lib/pricing.ts` — shared pricing engine (`calculatePrice`, `getDisplayPrice`, `getMaxGuests`, `validateGuestBreakdown`)
+- `src/collections/Services.ts` — new Services collection for reusable add-on services (entry tickets, vehicles, restaurants, etc.)
+- `src/components/tours/PriceDisplay.tsx` — shared pricing display component (card, detail, sticky variants)
+- `pricing` group on Tours collection with model selector, group tiers, per-person, flat rate, and on-request fields
+- Guest categories and additional services fields on Tours pricing group
+- `requireGuestBreakdown` option on Services for per-person entry ticket validation
+
+### Changed
+- BookingRequestForm now uses `calculatePrice()` for dynamic pricing based on guest count
+- BookingModal and StickyBookButton use `getDisplayPrice()` for price header
+- TourCard uses `PriceDisplay` component instead of hardcoded `€{groupPrice}`
+- TourSchema handles optional price (ON_REQUEST tours omit price from schema.org)
+- Guest selector range is now dynamic based on `getMaxGuests()` instead of hardcoded 1-8
+- Booking validation schema allows up to 50 guests (was hardcoded max 8)
+- Notification formatters (Telegram, WhatsApp, Slack) show "On Request" for on-request bookings
+
+### Deprecated
+- `groupPrice` and `groupSurchargePercent` fields on Tours collection (kept as hidden fields for backward compatibility)
+
 ## [1.6.4] - 2026-03-07
 
 ### Added

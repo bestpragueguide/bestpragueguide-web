@@ -1,14 +1,15 @@
 'use client'
 
-import { useEffect, useCallback } from 'react'
-import { secondaryPrices } from '@/lib/currency'
+import { useEffect, useCallback, useMemo } from 'react'
+import { formatPrice, secondaryPrices } from '@/lib/currency'
+import { getDisplayPrice } from '@/lib/pricing'
+import type { TourPricing } from '@/lib/cms-types'
 
 interface BookingModalProps {
   isOpen: boolean
   onClose: () => void
   tourName: string
-  price: number
-  surchargePercent?: number
+  pricing: TourPricing
   locale: string
   children?: React.ReactNode
 }
@@ -17,8 +18,7 @@ export function BookingModal({
   isOpen,
   onClose,
   tourName,
-  price,
-  surchargePercent,
+  pricing,
   locale,
   children,
 }: BookingModalProps) {
@@ -40,6 +40,12 @@ export function BookingModal({
     }
   }, [isOpen, handleEscape])
 
+  const displayInfo = useMemo(() => getDisplayPrice(pricing), [pricing])
+
+  const priceLabel = displayInfo.isPerPerson
+    ? (locale === 'ru' ? 'за человека' : 'per person')
+    : (locale === 'ru' ? 'за группу' : 'per group')
+
   if (!isOpen) return null
 
   return (
@@ -60,17 +66,24 @@ export function BookingModal({
               <p className="text-sm font-medium text-navy truncate max-w-[250px]">
                 {tourName}
               </p>
-              <p className="text-lg font-bold text-gold">
-                €{price}
-                <span className="text-xs text-gray font-normal ml-1">
-                  {locale === 'ru'
-                    ? 'за группу до 4'
-                    : 'per group up to 4'}
-                </span>
-              </p>
-              <p className="text-[10px] text-gray/70">
-                {secondaryPrices(price)}
-              </p>
+              {displayInfo.isOnRequest ? (
+                <p className="text-lg font-bold text-gold">
+                  {locale === 'ru' ? 'По запросу' : 'On Request'}
+                </p>
+              ) : displayInfo.fromPrice !== null ? (
+                <>
+                  <p className="text-lg font-bold text-gold">
+                    {pricing.model === 'GROUP_TIERS' && (locale === 'ru' ? 'от ' : 'from ')}
+                    {formatPrice(displayInfo.fromPrice, 'EUR')}
+                    <span className="text-xs text-gray font-normal ml-1">
+                      {priceLabel}
+                    </span>
+                  </p>
+                  <p className="text-[10px] text-gray/70">
+                    {secondaryPrices(displayInfo.fromPrice)}
+                  </p>
+                </>
+              ) : null}
             </div>
             <button
               onClick={onClose}
@@ -95,14 +108,6 @@ export function BookingModal({
 
         {/* Content */}
         <div className="p-4 pb-8">
-          {surchargePercent && surchargePercent > 0 && (
-            <p className="text-xs text-gray mb-4">
-              {locale === 'ru'
-                ? `Группы 5–8: +${surchargePercent}%`
-                : `Groups 5–8: +${surchargePercent}%`}
-            </p>
-          )}
-
           {children || (
             <div className="text-center py-12 text-sm text-gray border-2 border-dashed border-gray-light rounded-lg">
               {locale === 'ru'

@@ -154,6 +154,84 @@ export interface ReviewsPageData {
   }
 }
 
+// --- Tour Pricing ---
+
+export type PricingModel = 'GROUP_TIERS' | 'PER_PERSON' | 'FLAT_RATE' | 'ON_REQUEST'
+
+export interface GroupTier {
+  minGuests: number
+  maxGuests?: number | null
+  price?: number | null
+  onRequest?: boolean
+}
+
+export interface GuestCategory {
+  label: string
+  ageMin?: number
+  ageMax?: number | null
+  priceModifier?: number
+  isFree?: boolean
+  onRequest?: boolean
+}
+
+export interface TourServiceAttachment {
+  service: ServiceData | number
+  overridePricing?: boolean
+  customPricingNote?: string
+}
+
+export interface TourPricing {
+  model: PricingModel
+  currency?: string
+  groupTiers?: GroupTier[]
+  perPersonPrice?: number
+  perPersonMaxGuests?: number
+  flatRatePrice?: number
+  flatRateMaxGuests?: number
+  onRequestNote?: string
+  guestCategories?: GuestCategory[]
+  additionalServices?: TourServiceAttachment[]
+}
+
+export type ServiceType =
+  | 'ENTRY_TICKET' | 'VEHICLE' | 'RESTAURANT' | 'DRIVER'
+  | 'BOAT_TICKET' | 'AUDIO_HEADSET' | 'VR' | 'OTHER'
+
+export type ServicePricingModel = 'PER_PERSON' | 'GROUP_TIERS' | 'FLAT' | 'ON_REQUEST'
+
+export interface ServiceGuestCategoryPrice {
+  label: string
+  ageMin?: number
+  ageMax?: number | null
+  price?: number | null
+  isFree?: boolean
+  onRequest?: boolean
+}
+
+export interface ServiceGroupTier {
+  minGuests: number
+  maxGuests?: number | null
+  price?: number | null
+  onRequest?: boolean
+}
+
+export interface ServiceData {
+  id: number
+  name: string
+  type: ServiceType
+  description?: string
+  pricingModel: ServicePricingModel
+  requireGuestBreakdown?: boolean
+  guestCategoryPricing?: ServiceGuestCategoryPrice[]
+  groupTierPricing?: ServiceGroupTier[]
+  flatPrice?: number
+  onRequestThreshold?: number
+}
+
+export type GuestBreakdown = Record<string, number>
+
+// --- FAQs ---
+
 export interface FAQItem {
   id: number
   question: string

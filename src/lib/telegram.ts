@@ -47,6 +47,7 @@ export function formatBookingTelegramMessage({
   customerPhone,
   specialRequests,
   totalPrice,
+  isOnRequest,
   currency,
   ip,
   location,
@@ -61,7 +62,8 @@ export function formatBookingTelegramMessage({
   customerEmail: string
   customerPhone: string
   specialRequests: string
-  totalPrice?: number
+  totalPrice?: number | null
+  isOnRequest?: boolean
   currency?: string
   ip?: string
   location?: string
@@ -73,7 +75,8 @@ export function formatBookingTelegramMessage({
   msg += `📅 <b>Date:</b> ${preferredDate}\n`
   msg += `🕐 <b>Time:</b> ${preferredTime}\n`
   msg += `👥 <b>Guests:</b> ${guests}\n`
-  if (totalPrice) msg += `💰 <b>Price:</b> ${formatPrice(totalPrice, (currency as Currency) || 'EUR')}\n`
+  if (isOnRequest) msg += `💰 <b>Price:</b> On Request\n`
+  else if (totalPrice) msg += `💰 <b>Price:</b> ${formatPrice(totalPrice, (currency as Currency) || 'EUR')}\n`
   msg += '\n'
   msg += `👤 <b>Customer:</b> ${customerName}\n`
   msg += `📧 <b>Email:</b> ${customerEmail}\n`

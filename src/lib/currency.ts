@@ -15,3 +15,14 @@ export function formatPrice(eurPrice: number, currency: Currency = 'EUR'): strin
 export function secondaryPrices(eurPrice: number): string {
   return `≈ ${formatPrice(eurPrice, 'USD')} / ${formatPrice(eurPrice, 'CZK')}`
 }
+
+export function formatPriceRange(
+  minPrice: number,
+  maxPrice: number | null,
+  currency: Currency = 'EUR',
+): string {
+  if (maxPrice === null || maxPrice === minPrice) {
+    return formatPrice(minPrice, currency)
+  }
+  return `${formatPrice(minPrice, currency)}–${formatPrice(maxPrice, currency)}`
+}

@@ -31,6 +31,7 @@ export async function FeaturedTours({ data, locale }: FeaturedToursProps) {
     subcategory?: string | null
     duration: number
     groupPrice: number
+    pricing?: any
     rating?: number | null
     heroImage?: { url?: string; sizes?: { card?: { url?: string } } } | number
   }> = []
@@ -107,6 +108,7 @@ export async function FeaturedTours({ data, locale }: FeaturedToursProps) {
                   excerpt={tour.excerpt}
                   duration={tour.duration}
                   groupPrice={tour.groupPrice}
+                  pricing={(tour as any).pricing}
                   rating={tour.rating}
                   heroImageUrl={(img as any)?.sizes?.card?.url || img?.url || null}
                   mobileImageUrl={(img as any)?.sizes?.mobileCard?.url || null}

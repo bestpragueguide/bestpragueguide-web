@@ -1,27 +1,35 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { BookingModal } from './BookingModal'
 import { BookingRequestForm } from './BookingRequestForm'
 import { trackCtaClick } from '@/lib/analytics'
-import { secondaryPrices } from '@/lib/currency'
+import { formatPrice, secondaryPrices } from '@/lib/currency'
+import { getDisplayPrice } from '@/lib/pricing'
+import type { TourPricing } from '@/lib/cms-types'
 
 interface StickyBookButtonProps {
   tourId: number
   tourName: string
-  price: number
-  surchargePercent?: number
+  pricing: TourPricing
+  maxGroupSize?: number
   locale: string
 }
 
 export function StickyBookButton({
   tourId,
   tourName,
-  price,
-  surchargePercent,
+  pricing,
+  maxGroupSize,
   locale,
 }: StickyBookButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const displayInfo = useMemo(() => getDisplayPrice(pricing), [pricing])
+
+  const priceLabel = displayInfo.isPerPerson
+    ? (locale === 'ru' ? 'за человека' : 'per person')
+    : (locale === 'ru' ? 'за группу' : 'per group')
 
   return (
     <>
@@ -29,17 +37,24 @@ export function StickyBookButton({
       <div className="fixed bottom-0 inset-x-0 z-[80] lg:hidden bg-white border-t border-gray-light/50 px-4 py-3 shadow-[0_-4px_12px_rgba(0,0,0,0.08)]">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <span className="text-xl font-bold text-gold">
-              €{price}
-            </span>
-            <p className="text-[10px] text-gray/70 leading-tight">
-              {secondaryPrices(price)}
-            </p>
-            <p className="text-xs text-gray">
-              {locale === 'ru'
-                ? 'за группу до 4'
-                : 'per group up to 4'}
-            </p>
+            {displayInfo.isOnRequest ? (
+              <span className="text-lg font-bold text-gold">
+                {locale === 'ru' ? 'По запросу' : 'On Request'}
+              </span>
+            ) : displayInfo.fromPrice !== null ? (
+              <>
+                <span className="text-xl font-bold text-gold">
+                  {pricing.model === 'GROUP_TIERS' && (locale === 'ru' ? 'от ' : 'from ')}
+                  {formatPrice(displayInfo.fromPrice, 'EUR')}
+                </span>
+                <p className="text-[10px] text-gray/70 leading-tight">
+                  {secondaryPrices(displayInfo.fromPrice)}
+                </p>
+                <p className="text-xs text-gray">
+                  {priceLabel}
+                </p>
+              </>
+            ) : null}
           </div>
           <button
             onClick={() => {
@@ -57,15 +72,14 @@ export function StickyBookButton({
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         tourName={tourName}
-        price={price}
-        surchargePercent={surchargePercent}
+        pricing={pricing}
         locale={locale}
       >
         <BookingRequestForm
           tourId={tourId}
           tourName={tourName}
-          price={price}
-          surchargePercent={surchargePercent}
+          pricing={pricing}
+          maxGroupSize={maxGroupSize}
           locale={locale}
         />
       </BookingModal>

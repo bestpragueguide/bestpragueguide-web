@@ -48,6 +48,7 @@ export function formatBookingWhatsAppMessage({
   customerEmail,
   customerPhone,
   totalPrice,
+  isOnRequest,
   currency,
   ip,
   location,
@@ -60,7 +61,8 @@ export function formatBookingWhatsAppMessage({
   customerName: string
   customerEmail: string
   customerPhone: string
-  totalPrice?: number
+  totalPrice?: number | null
+  isOnRequest?: boolean
   currency?: string
   ip?: string
   location?: string
@@ -70,7 +72,8 @@ export function formatBookingWhatsAppMessage({
   msg += `Tour: ${tourName}\n`
   msg += `Date: ${preferredDate} at ${preferredTime}\n`
   msg += `Guests: ${guests}\n`
-  if (totalPrice) msg += `Price: ${formatPrice(totalPrice, (currency as Currency) || 'EUR')}\n`
+  if (isOnRequest) msg += `Price: On Request\n`
+  else if (totalPrice) msg += `Price: ${formatPrice(totalPrice, (currency as Currency) || 'EUR')}\n`
   msg += '\n'
   msg += `Customer: ${customerName}\n`
   msg += `Email: ${customerEmail}\n`

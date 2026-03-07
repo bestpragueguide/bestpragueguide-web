@@ -1,12 +1,15 @@
 import Link from 'next/link'
 import { extractPlainText } from '@/components/shared/SafeRichText'
+import { PriceDisplay } from './PriceDisplay'
+import type { TourPricing } from '@/lib/cms-types'
 
 interface TourCardProps {
   title: string
   slug: string
   excerpt: string
   duration: number
-  groupPrice: number
+  groupPrice?: number
+  pricing?: TourPricing
   rating?: number | null
   heroImageUrl?: string | null
   mobileImageUrl?: string | null
@@ -21,6 +24,7 @@ export function TourCard({
   excerpt,
   duration,
   groupPrice,
+  pricing,
   rating,
   heroImageUrl,
   mobileImageUrl,
@@ -30,6 +34,16 @@ export function TourCard({
 }: TourCardProps) {
   const objectPosition = focalPoint || '50% 50%'
   const alt = imageAlt || title
+
+  // Build pricing object — prefer new pricing, fall back to legacy groupPrice
+  const tourPricing: TourPricing = pricing?.model
+    ? pricing
+    : {
+        model: 'GROUP_TIERS' as const,
+        groupTiers: groupPrice
+          ? [{ minGuests: 1, maxGuests: 8, price: groupPrice }]
+          : [],
+      }
 
   return (
     <Link
@@ -67,12 +81,7 @@ export function TourCard({
         <p className="mt-2 text-sm text-gray">{extractPlainText(excerpt)}</p>
 
         <div className="mt-4 flex items-center justify-between">
-          <div>
-            <span className="text-lg font-bold text-gold">€{groupPrice}</span>
-            <span className="text-xs text-gray ml-1">
-              {locale === 'ru' ? 'за группу' : 'per group'}
-            </span>
-          </div>
+          <PriceDisplay pricing={tourPricing} locale={locale} variant="card" />
 
           <div className="flex items-center gap-3 text-xs text-gray">
             {rating && (

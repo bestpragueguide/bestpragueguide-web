@@ -4,7 +4,7 @@ interface TourSchemaProps {
   title: string
   description: string
   image?: string
-  price: number
+  price?: number
   currency?: string
   duration: number
   rating?: number
@@ -27,6 +27,26 @@ export function TourSchema({
 }: TourSchemaProps) {
   const url = `https://bestpragueguide.com/${locale}/tours/${slug}`
 
+  const offers = price != null
+    ? {
+        '@type': 'Offer',
+        price: price.toString(),
+        priceCurrency: currency,
+        availability: 'https://schema.org/InStock',
+        validFrom: new Date().toISOString().split('T')[0],
+        priceSpecification: {
+          '@type': 'UnitPriceSpecification',
+          price: price.toString(),
+          priceCurrency: currency,
+          unitText: 'per group',
+        },
+      }
+    : {
+        '@type': 'Offer',
+        availability: 'https://schema.org/InStock',
+        validFrom: new Date().toISOString().split('T')[0],
+      }
+
   const touristTrip: Record<string, unknown> = {
     '@type': 'TouristTrip',
     '@id': `${url}#trip`,
@@ -39,19 +59,7 @@ export function TourSchema({
       name: 'Best Prague Guide',
       url: 'https://bestpragueguide.com',
     },
-    offers: {
-      '@type': 'Offer',
-      price: price.toString(),
-      priceCurrency: currency,
-      availability: 'https://schema.org/InStock',
-      validFrom: new Date().toISOString().split('T')[0],
-      priceSpecification: {
-        '@type': 'UnitPriceSpecification',
-        price: price.toString(),
-        priceCurrency: currency,
-        unitText: 'per group',
-      },
-    },
+    offers,
     duration: `PT${duration}H`,
   }
 
@@ -80,18 +88,7 @@ export function TourSchema({
       '@type': 'Brand',
       name: 'Best Prague Guide',
     },
-    offers: {
-      '@type': 'Offer',
-      price: price.toString(),
-      priceCurrency: currency,
-      availability: 'https://schema.org/InStock',
-      priceSpecification: {
-        '@type': 'UnitPriceSpecification',
-        price: price.toString(),
-        priceCurrency: currency,
-        unitText: 'per group',
-      },
-    },
+    offers,
   }
 
   if (image) {

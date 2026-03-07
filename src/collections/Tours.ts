@@ -5,7 +5,7 @@ export const Tours: CollectionConfig = {
   slug: 'tours',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'category', 'subcategory', 'groupPrice', 'status'],
+    defaultColumns: ['title', 'category', 'subcategory', 'status'],
     group: 'Content',
   },
   versions: {
@@ -119,20 +119,135 @@ export const Tours: CollectionConfig = {
       defaultValue: 8,
     },
     {
+      name: 'pricing',
+      type: 'group',
+      fields: [
+        {
+          name: 'model',
+          type: 'select',
+          required: true,
+          defaultValue: 'GROUP_TIERS',
+          options: [
+            { label: 'Group Tiers', value: 'GROUP_TIERS' },
+            { label: 'Per Person', value: 'PER_PERSON' },
+            { label: 'Flat Rate', value: 'FLAT_RATE' },
+            { label: 'On Request', value: 'ON_REQUEST' },
+          ],
+          admin: {
+            description: 'How pricing is calculated for this tour',
+          },
+        },
+        {
+          name: 'groupTiers',
+          type: 'array',
+          admin: {
+            condition: (data) => data?.pricing?.model === 'GROUP_TIERS',
+            description: 'Price tiers by group size. Add rows from smallest to largest group.',
+          },
+          fields: [
+            { name: 'minGuests', type: 'number', required: true },
+            { name: 'maxGuests', type: 'number', admin: { description: 'Empty = no upper limit' } },
+            { name: 'price', type: 'number', admin: { description: 'EUR. Empty = on request' } },
+            { name: 'onRequest', type: 'checkbox', defaultValue: false },
+          ],
+        },
+        {
+          name: 'perPersonPrice',
+          type: 'number',
+          admin: {
+            condition: (data) => data?.pricing?.model === 'PER_PERSON',
+            description: 'Price per guest in EUR',
+          },
+        },
+        {
+          name: 'perPersonMaxGuests',
+          type: 'number',
+          admin: {
+            condition: (data) => data?.pricing?.model === 'PER_PERSON',
+            description: 'Groups above this size → Contact us',
+          },
+        },
+        {
+          name: 'flatRatePrice',
+          type: 'number',
+          admin: {
+            condition: (data) => data?.pricing?.model === 'FLAT_RATE',
+            description: 'Flat price in EUR regardless of group size',
+          },
+        },
+        {
+          name: 'flatRateMaxGuests',
+          type: 'number',
+          admin: {
+            condition: (data) => data?.pricing?.model === 'FLAT_RATE',
+            description: 'Max group size for flat rate. Larger → Contact us',
+          },
+        },
+        {
+          name: 'onRequestNote',
+          type: 'text',
+          localized: true,
+          admin: {
+            description: 'Custom note shown when price is on request',
+          },
+        },
+        {
+          name: 'guestCategories',
+          type: 'array',
+          admin: {
+            description: 'Optional guest age categories (children, seniors, etc.)',
+          },
+          fields: [
+            { name: 'label', type: 'text', required: true, localized: true },
+            { name: 'ageMin', type: 'number' },
+            { name: 'ageMax', type: 'number', admin: { description: 'Empty = no upper limit' } },
+            { name: 'priceModifier', type: 'number', admin: { description: 'Price adjustment in EUR' } },
+            { name: 'isFree', type: 'checkbox', defaultValue: false },
+            { name: 'onRequest', type: 'checkbox', defaultValue: false },
+          ],
+        },
+        {
+          name: 'additionalServices',
+          type: 'array',
+          admin: {
+            description: 'Optional add-on services for this tour',
+          },
+          fields: [
+            {
+              name: 'service',
+              type: 'relationship',
+              relationTo: 'services',
+              required: true,
+            },
+            {
+              name: 'overridePricing',
+              type: 'checkbox',
+              defaultValue: false,
+              admin: { description: 'Override global service pricing for this tour' },
+            },
+            {
+              name: 'customPricingNote',
+              type: 'text',
+              localized: true,
+              admin: {
+                condition: (_, siblingData) => siblingData?.overridePricing,
+                description: 'Custom pricing note for this tour',
+              },
+            },
+          ],
+        },
+      ],
+    },
+    // DEPRECATED — kept for backward compat during migration
+    {
       name: 'groupPrice',
       type: 'number',
-      required: true,
-      admin: {
-        description: 'Price in EUR (whole euros) per group up to 4 people',
-      },
+      admin: { hidden: true },
     },
     {
       name: 'groupSurchargePercent',
       type: 'number',
-      defaultValue: 30,
-      admin: {
-        description: 'Surcharge percentage for groups of 5-8',
-      },
+      admin: { hidden: true },
     },
     {
       name: 'meetingPoint',

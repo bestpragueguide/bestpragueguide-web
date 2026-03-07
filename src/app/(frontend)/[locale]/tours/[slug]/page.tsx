@@ -16,6 +16,8 @@ import { StickyBookButton } from '@/components/booking/StickyBookButton'
 import { BookingRequestForm } from '@/components/booking/BookingRequestForm'
 import { TourSchema } from '@/components/seo/TourSchema'
 import { TourViewTracker } from '@/components/analytics/TourViewTracker'
+import { getDisplayPrice } from '@/lib/pricing'
+import type { TourPricing } from '@/lib/cms-types'
 
 async function getTour(slug: string, locale: string) {
   try {
@@ -191,6 +193,17 @@ export default async function TourDetailPage({
     }),
   )
 
+  const tourPricing: TourPricing = (tour as any).pricing?.model
+    ? (tour as any).pricing
+    : {
+        model: 'GROUP_TIERS' as const,
+        groupTiers: tour.groupPrice
+          ? [{ minGuests: 1, maxGuests: (tour as any).maxGroupSize || 8, price: tour.groupPrice }]
+          : [],
+      }
+
+  const displayPrice = getDisplayPrice(tourPricing)
+
   const relatedTourCards = (relatedTours as any[]).map((t: any) => {
     const img = typeof t.heroImage === 'object' ? t.heroImage : null
     return {
@@ -202,6 +215,7 @@ export default async function TourDetailPage({
       subcategory: t.subcategory,
       duration: t.duration,
       groupPrice: t.groupPrice,
+      pricing: t.pricing,
       rating: t.rating,
       heroImageUrl: img?.sizes?.card?.url || img?.url || null,
       mobileImageUrl: img?.sizes?.mobileCard?.url || null,
@@ -304,8 +318,8 @@ export default async function TourDetailPage({
             <BookingRequestForm
               tourId={tour.id as number}
               tourName={tour.title}
-              price={tour.groupPrice}
-              surchargePercent={tour.groupSurchargePercent ?? undefined}
+              pricing={tourPricing}
+              maxGroupSize={(tour as any).maxGroupSize}
               locale={locale}
             />
 
@@ -353,7 +367,7 @@ export default async function TourDetailPage({
             ? (tour as any).heroImage?.sizes?.hero?.url || (tour as any).heroImage?.url || undefined
             : undefined
         }
-        price={tour.groupPrice}
+        price={displayPrice.fromPrice ?? undefined}
         duration={tour.duration}
         rating={tour.rating ?? undefined}
         reviewCount={tour.reviewCount ?? undefined}
@@ -368,8 +382,8 @@ export default async function TourDetailPage({
       <StickyBookButton
         tourId={tour.id as number}
         tourName={tour.title}
-        price={tour.groupPrice}
-        surchargePercent={tour.groupSurchargePercent ?? undefined}
+        pricing={tourPricing}
+        maxGroupSize={(tour as any).maxGroupSize}
         locale={locale}
       />
     </div>
