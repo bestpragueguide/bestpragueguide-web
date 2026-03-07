@@ -255,12 +255,12 @@ export async function POST(req: Request) {
       results.push(`Payload find failed: ${e.message?.slice(0, 1000)}`)
     }
 
-    // Check table list
+    // Check ALL table names in public schema
     try {
       const tables = await db.execute(sql.raw(`
-        SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE '%tour%' ORDER BY tablename
+        SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename
       `))
-      results.push('--- tour-related tables ---')
+      results.push('--- ALL public tables ---')
       for (const row of tables.rows || tables) {
         results.push(`  ${(row as any).tablename}`)
       }
