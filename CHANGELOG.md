@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.3] - 2026-03-07
+
+### Changed
+- **Guide profile photo** on homepage enlarged — 40:60 photo-to-text ratio (was 33:66), portrait aspect ratio for bigger visual presence
+
 ## [1.8.2] - 2026-03-07
 
 ### Removed

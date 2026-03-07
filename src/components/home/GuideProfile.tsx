@@ -22,20 +22,20 @@ export function GuideProfile({ data, locale }: GuideProfileProps) {
   return (
     <section className="py-10 lg:py-14 bg-cream">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-14 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-14 items-center">
           {/* Photo */}
-          <div className="relative aspect-[4/3] rounded-2xl overflow-hidden order-2 lg:order-1">
+          <div className="relative aspect-[3/4] rounded-2xl overflow-hidden order-2 lg:order-1 lg:col-span-2">
             <Image
               src={photoUrl}
               alt={locale === 'ru' ? 'Ульяна Формина — ваш гид по Праге' : 'Uliana Formina — Your Prague Guide'}
               fill
               className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
+              sizes="(max-width: 1024px) 100vw, 40vw"
             />
           </div>
 
           {/* Text */}
-          <div className="order-1 lg:order-2 lg:col-span-2">
+          <div className="order-1 lg:order-2 lg:col-span-3">
             <h2 className="text-3xl sm:text-4xl font-heading font-bold text-navy">
               {data.guideHeading}
             </h2>
