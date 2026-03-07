@@ -97,8 +97,12 @@ export async function POST(req: Request) {
           }
         }
         if (Object.keys(updates).length > 0) {
-          await payload.update({ collection: 'tours', id: tour.id, data: updates, locale })
-          results.push(`tour:${tour.id}:${locale}`)
+          try {
+            await payload.update({ collection: 'tours', id: tour.id, data: updates, locale })
+            results.push(`tour:${tour.id}:${locale}`)
+          } catch (e: any) {
+            results.push(`tour:${tour.id}:${locale}:SKIP:${e.message?.substring(0, 60)}`)
+          }
         }
       }
     }
