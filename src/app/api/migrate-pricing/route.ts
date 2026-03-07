@@ -154,13 +154,7 @@ export async function POST(req: Request) {
     `)
 
     // Relationship for service field in additional_services
-    await run('Create tours_pricing_additional_services_rels (use tours_rels)', `
-      DO $$ BEGIN
-        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'tours_rels' AND column_name = 'services_id') THEN
-          ALTER TABLE tours_rels ADD COLUMN services_id integer REFERENCES services(id) ON DELETE CASCADE;
-        END IF;
-      END $$;
-    `)
+    await run('Add services_id to tours_rels', `ALTER TABLE tours_rels ADD COLUMN IF NOT EXISTS services_id integer REFERENCES services(id) ON DELETE CASCADE`)
 
     // ===== 4. VERSION TABLES (tours have versions: { drafts: true }) =====
     await run('Add pricing_model to _tours_v', `ALTER TABLE _tours_v ADD COLUMN IF NOT EXISTS version_pricing_model varchar`)
@@ -227,13 +221,7 @@ export async function POST(req: Request) {
     `)
 
     // Version rels for services
-    await run('Add services_id to _tours_v_rels', `
-      DO $$ BEGIN
-        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = '_tours_v_rels' AND column_name = 'services_id') THEN
-          ALTER TABLE _tours_v_rels ADD COLUMN services_id integer REFERENCES services(id) ON DELETE CASCADE;
-        END IF;
-      END $$;
-    `)
+    await run('Add services_id to _tours_v_rels', `ALTER TABLE _tours_v_rels ADD COLUMN IF NOT EXISTS services_id integer REFERENCES services(id) ON DELETE CASCADE`)
 
     return NextResponse.json({ success: true, results })
   } catch (error: unknown) {
