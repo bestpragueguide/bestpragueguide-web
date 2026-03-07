@@ -22,7 +22,8 @@ export async function POST(req: Request) {
         await db.execute(sql.raw(query))
         results.push(`OK: ${label}`)
       } catch (e: any) {
-        results.push(`SKIP: ${label} — ${e.message?.slice(0, 500)}`)
+        const cause = e.cause?.message || e.cause || ''
+        results.push(`SKIP: ${label} — ${cause || e.message?.slice(0, 500)}`)
       }
     }
 
@@ -40,17 +41,18 @@ export async function POST(req: Request) {
     `))
     results.push(`DIAG: ${JSON.stringify(diagResult.rows)}`)
 
-    // Check all constraints on failing tables
-    const constraintResult = await db.execute(sql.raw(`
-      SELECT conname, conrelid::regclass, contype, confrelid::regclass
+    // Check all constraints referencing the failing tables (inbound FKs)
+    const refResult = await db.execute(sql.raw(`
+      SELECT conname, conrelid::regclass AS from_table, confrelid::regclass AS to_table
       FROM pg_constraint
-      WHERE conrelid::regclass::text IN (
+      WHERE contype = 'f'
+      AND confrelid::regclass::text IN (
         'tours_pricing_guest_categories', 'tours_pricing_additional_services',
         'services_guest_category_pricing'
       )
-      ORDER BY conrelid::regclass::text, conname
+      ORDER BY confrelid::regclass::text, conname
     `))
-    results.push(`CONSTRAINTS: ${JSON.stringify(constraintResult.rows)}`)
+    results.push(`INBOUND_FKS: ${JSON.stringify(refResult.rows)}`)
 
     // Array tables that need id changed from serial/integer to varchar.
     // Payload 3.x generates string ObjectIds for array row IDs.
