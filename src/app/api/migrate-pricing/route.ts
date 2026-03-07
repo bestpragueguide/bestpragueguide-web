@@ -54,6 +54,53 @@ export async function POST(req: Request) {
         results.push(`  ${row.tablename}`)
       }
 
+      // Check column mismatches between Payload schema and actual DB
+      results.push('=== Column Comparison for Pricing Tables ===')
+      const pricingTables = [
+        'tours', 'tours_locales', 'tours_pricing_group_tiers',
+        'tours_pricing_guest_categories', 'tours_pricing_guest_categories_locales',
+        'tours_pricing_additional_services', 'tours_pricing_additional_services_locales',
+        'services', 'services_locales', 'services_guest_category_pricing',
+        'services_guest_category_pricing_locales', 'services_group_tier_pricing',
+        '_tours_v', '_tours_v_locales',
+      ]
+
+      const tables = (payload.db as any).tables
+      for (const tableName of pricingTables) {
+        const schemaTable = tables?.[tableName]
+        if (!schemaTable) continue
+
+        // Get schema columns
+        const schemaCols: string[] = []
+        for (const [colKey, colObj] of Object.entries(schemaTable)) {
+          if (typeof colObj === 'object' && colObj !== null && 'name' in (colObj as any)) {
+            schemaCols.push((colObj as any).name)
+          }
+        }
+
+        // Get actual DB columns
+        try {
+          const dbCols = await query(`
+            SELECT column_name FROM information_schema.columns
+            WHERE table_name = '${tableName}' ORDER BY ordinal_position
+          `)
+          const dbColNames = dbCols.map((r: any) => r.column_name)
+
+          const missing = schemaCols.filter(c => !dbColNames.includes(c))
+          const extra = dbColNames.filter((c: string) => !schemaCols.includes(c))
+
+          if (missing.length > 0 || extra.length > 0) {
+            results.push(`  ${tableName}:`)
+            if (missing.length) results.push(`    MISSING: ${missing.join(', ')}`)
+            if (extra.length) results.push(`    EXTRA: ${extra.join(', ')}`)
+          } else {
+            results.push(`  ${tableName}: OK (${schemaCols.length} cols)`)
+          }
+        } catch (e: any) {
+          results.push(`  ${tableName}: DB query failed — ${e.message?.slice(0, 100)}`)
+        }
+      }
+
       // Check Payload find
       results.push('=== Payload Find Test ===')
       try {
@@ -61,16 +108,15 @@ export async function POST(req: Request) {
         results.push(`OK: ${tourResult.totalDocs} tours, first: ${tourResult.docs[0]?.title || 'none'}`)
       } catch (e: any) {
         const msg = e.message || ''
-        // Get the error part after the SQL query
-        results.push(`FAIL (first 800): ${msg.slice(0, 800)}`)
-        results.push(`FAIL (last 500): ${msg.slice(-500)}`)
+        // Get the middle of the error (where the PG error usually is)
+        results.push(`FAIL (800-1600): ${msg.slice(800, 1600)}`)
       }
 
       try {
         const svcResult = await payload.find({ collection: 'services', limit: 1 })
         results.push(`OK: ${svcResult.totalDocs} services`)
       } catch (e: any) {
-        results.push(`FAIL services: ${e.message?.slice(0, 500)}`)
+        results.push(`FAIL services: ${e.message?.slice(-500)}`)
       }
     }
 
