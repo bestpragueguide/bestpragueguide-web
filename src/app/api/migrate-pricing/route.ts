@@ -225,7 +225,29 @@ export async function POST(req: Request) {
       )
     `)
 
-    // ===== 5. TEST =====
+    // ===== 5. FIX: Add missing _uuid column to ALL array tables =====
+    // Payload 3.x requires _uuid on array row tables for tracking
+    const arrayTables = [
+      'tours_pricing_group_tiers',
+      'tours_pricing_guest_categories',
+      'tours_pricing_additional_services',
+      'tours_pricing_guest_categories_locales',
+      'tours_pricing_additional_services_locales',
+      '_tours_v_version_pricing_group_tiers',
+      '_tours_v_version_pricing_guest_categories',
+      '_tours_v_version_pricing_additional_services',
+      '_tours_v_version_pricing_guest_categories_locales',
+      '_tours_v_version_pricing_additional_services_locales',
+      'services_guest_category_pricing',
+      'services_guest_category_pricing_locales',
+      'services_group_tier_pricing',
+    ]
+
+    for (const table of arrayTables) {
+      await run(`Add _uuid to ${table}`, `ALTER TABLE "${table}" ADD COLUMN IF NOT EXISTS _uuid varchar`)
+    }
+
+    // ===== 6. TEST =====
     results.push('=== Testing Payload find ===')
     try {
       const tourResult = await payload.find({ collection: 'tours', limit: 1 })
