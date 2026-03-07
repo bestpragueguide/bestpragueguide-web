@@ -253,13 +253,57 @@ export async function POST(req: Request) {
       await run(`Add _uuid to ${table}`, `ALTER TABLE "${table}" ADD COLUMN IF NOT EXISTS _uuid varchar`)
     }
 
-    // ===== 6. TEST =====
+    // ===== 7. DATA MIGRATION: Convert groupPrice → GROUP_TIERS =====
+    results.push('=== Data Migration ===')
+
+    // Set pricing_model for all tours that have group_price but no pricing_model yet
+    await run('Set pricing_model=GROUP_TIERS for legacy tours', `
+      UPDATE tours
+      SET pricing_model = 'GROUP_TIERS'
+      WHERE group_price IS NOT NULL AND (pricing_model IS NULL OR pricing_model = '')
+    `)
+
+    // Insert group tier rows for tours that have group_price but no tiers yet
+    await run('Create group tier rows from legacy groupPrice', `
+      INSERT INTO tours_pricing_group_tiers (_order, _parent_id, min_guests, max_guests, price)
+      SELECT 1, t.id, 1, COALESCE(t.max_group_size, 8), t.group_price
+      FROM tours t
+      WHERE t.group_price IS NOT NULL
+        AND NOT EXISTS (
+          SELECT 1 FROM tours_pricing_group_tiers gt WHERE gt._parent_id = t.id
+        )
+    `)
+
+    // Same for version tables
+    await run('Set version_pricing_model on _tours_v', `
+      UPDATE _tours_v
+      SET version_pricing_model = 'GROUP_TIERS'
+      WHERE version_group_price IS NOT NULL AND (version_pricing_model IS NULL OR version_pricing_model = '')
+    `)
+
+    await run('Create version group tier rows from legacy groupPrice', `
+      INSERT INTO _tours_v_version_pricing_group_tiers (_order, _parent_id, min_guests, max_guests, price)
+      SELECT 1, v.id, 1, COALESCE(v.version_max_group_size, 8), v.version_group_price
+      FROM _tours_v v
+      WHERE v.version_group_price IS NOT NULL
+        AND NOT EXISTS (
+          SELECT 1 FROM _tours_v_version_pricing_group_tiers gt WHERE gt._parent_id = v.id
+        )
+    `)
+
+    // ===== 8. TEST =====
     results.push('=== Testing Payload find ===')
     try {
       const tourResult = await payload.find({ collection: 'tours', limit: 1 })
-      results.push(`OK: ${tourResult.totalDocs} tours found, first: ${tourResult.docs[0]?.title || 'none'}`)
+      const tour = tourResult.docs[0] as any
+      results.push(`OK: ${tourResult.totalDocs} tours found, first: ${tour?.title || 'none'}`)
+      if (tour?.pricing?.model) {
+        results.push(`  pricing.model: ${tour.pricing.model}`)
+        results.push(`  pricing.groupTiers: ${JSON.stringify(tour.pricing.groupTiers)}`)
+      } else {
+        results.push(`  WARNING: no pricing.model on first tour`)
+      }
     } catch (e: any) {
-      // Show the actual PG error (usually at end of message after the SQL)
       const msg = e.message || ''
       const pgErrorMatch = msg.match(/error:.*$/im)
       results.push(`FAIL: ${pgErrorMatch?.[0] || msg.slice(-300)}`)
