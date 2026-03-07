@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.4] - 2026-03-07
+
+### Added
+- Comprehensive implementation plan for flexible tour pricing system (`docs/plans/2026-03-07-tour-pricing-configuration.md`)
+  - 4 pricing models: GROUP_TIERS, PER_PERSON, FLAT_RATE, ON_REQUEST
+  - Services collection for reusable add-ons (entry tickets, vehicles, etc.)
+  - Guest category breakdown with sum-to-group-size validation
+  - 14-task implementation plan with dependency graph
+
 ## [1.6.3] - 2026-03-07
 
 ### Fixed
