@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.2] - 2026-03-07
+
+### Removed
+- Temporary `fix-schema` API endpoint (no longer needed after DB columns were added)
+
 ## [1.8.1] - 2026-03-07
 
 ### Added
