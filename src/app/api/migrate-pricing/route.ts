@@ -9,10 +9,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  const action = req.headers.get('x-action') || 'diagnose'
+
   try {
     const payload = await getPayload({ config })
     const db = (payload.db as any).drizzle
-
     const results: string[] = []
 
     // Helper to run SQL and log
@@ -21,251 +22,271 @@ export async function POST(req: Request) {
         await db.execute(sql.raw(query))
         results.push(`OK: ${label}`)
       } catch (e: any) {
-        results.push(`SKIP: ${label} — ${e.message?.slice(0, 100)}`)
+        results.push(`SKIP: ${label} — ${e.message?.slice(0, 200)}`)
       }
     }
 
-    // ===== 1. SERVICES COLLECTION =====
-    await run('Create services table', `
-      CREATE TABLE IF NOT EXISTS services (
-        id serial PRIMARY KEY,
-        name varchar,
-        type varchar NOT NULL,
-        description varchar,
-        pricing_model varchar NOT NULL,
-        require_guest_breakdown boolean DEFAULT true,
-        flat_price numeric,
-        on_request_threshold numeric,
-        updated_at timestamp(3) with time zone DEFAULT now() NOT NULL,
-        created_at timestamp(3) with time zone DEFAULT now() NOT NULL
-      )
-    `)
+    // Helper to query rows
+    async function query(q: string): Promise<any[]> {
+      const result = await db.execute(sql.raw(q))
+      return result.rows || result || []
+    }
 
-    await run('Create services_locales table', `
-      CREATE TABLE IF NOT EXISTS services_locales (
-        name varchar,
-        description varchar,
-        id serial PRIMARY KEY,
-        _locale varchar NOT NULL,
-        _parent_id integer NOT NULL REFERENCES services(id) ON DELETE CASCADE,
-        UNIQUE(_locale, _parent_id)
-      )
-    `)
-
-    await run('Create services_guest_category_pricing', `
-      CREATE TABLE IF NOT EXISTS services_guest_category_pricing (
-        _order integer NOT NULL,
-        _parent_id integer NOT NULL REFERENCES services(id) ON DELETE CASCADE,
-        id serial PRIMARY KEY,
-        label varchar,
-        age_min numeric,
-        age_max numeric,
-        price numeric,
-        is_free boolean DEFAULT false,
-        on_request boolean DEFAULT false
-      )
-    `)
-
-    await run('Create services_guest_category_pricing_locales', `
-      CREATE TABLE IF NOT EXISTS services_guest_category_pricing_locales (
-        label varchar,
-        id serial PRIMARY KEY,
-        _locale varchar NOT NULL,
-        _parent_id integer NOT NULL REFERENCES services_guest_category_pricing(id) ON DELETE CASCADE,
-        UNIQUE(_locale, _parent_id)
-      )
-    `)
-
-    await run('Create services_group_tier_pricing', `
-      CREATE TABLE IF NOT EXISTS services_group_tier_pricing (
-        _order integer NOT NULL,
-        _parent_id integer NOT NULL REFERENCES services(id) ON DELETE CASCADE,
-        id serial PRIMARY KEY,
-        min_guests numeric NOT NULL,
-        max_guests numeric,
-        price numeric,
-        on_request boolean DEFAULT false
-      )
-    `)
-
-    // ===== 2. TOURS PRICING GROUP (columns on tours table) =====
-    await run('Add pricing_model to tours', `ALTER TABLE tours ADD COLUMN IF NOT EXISTS pricing_model varchar`)
-    await run('Add pricing_per_person_price to tours', `ALTER TABLE tours ADD COLUMN IF NOT EXISTS pricing_per_person_price numeric`)
-    await run('Add pricing_per_person_max_guests to tours', `ALTER TABLE tours ADD COLUMN IF NOT EXISTS pricing_per_person_max_guests numeric`)
-    await run('Add pricing_flat_rate_price to tours', `ALTER TABLE tours ADD COLUMN IF NOT EXISTS pricing_flat_rate_price numeric`)
-    await run('Add pricing_flat_rate_max_guests to tours', `ALTER TABLE tours ADD COLUMN IF NOT EXISTS pricing_flat_rate_max_guests numeric`)
-
-    // Localized field in pricing group
-    await run('Add pricing_on_request_note to tours_locales', `ALTER TABLE tours_locales ADD COLUMN IF NOT EXISTS pricing_on_request_note varchar`)
-
-    // ===== 3. TOURS PRICING ARRAYS =====
-    await run('Create tours_pricing_group_tiers', `
-      CREATE TABLE IF NOT EXISTS tours_pricing_group_tiers (
-        _order integer NOT NULL,
-        _parent_id integer NOT NULL REFERENCES tours(id) ON DELETE CASCADE,
-        id serial PRIMARY KEY,
-        min_guests numeric NOT NULL,
-        max_guests numeric,
-        price numeric,
-        on_request boolean DEFAULT false
-      )
-    `)
-
-    await run('Create tours_pricing_guest_categories', `
-      CREATE TABLE IF NOT EXISTS tours_pricing_guest_categories (
-        _order integer NOT NULL,
-        _parent_id integer NOT NULL REFERENCES tours(id) ON DELETE CASCADE,
-        id serial PRIMARY KEY,
-        age_min numeric,
-        age_max numeric,
-        price_modifier numeric,
-        is_free boolean DEFAULT false,
-        on_request boolean DEFAULT false
-      )
-    `)
-
-    await run('Create tours_pricing_guest_categories_locales', `
-      CREATE TABLE IF NOT EXISTS tours_pricing_guest_categories_locales (
-        label varchar,
-        id serial PRIMARY KEY,
-        _locale varchar NOT NULL,
-        _parent_id integer NOT NULL REFERENCES tours_pricing_guest_categories(id) ON DELETE CASCADE,
-        UNIQUE(_locale, _parent_id)
-      )
-    `)
-
-    await run('Create tours_pricing_additional_services', `
-      CREATE TABLE IF NOT EXISTS tours_pricing_additional_services (
-        _order integer NOT NULL,
-        _parent_id integer NOT NULL REFERENCES tours(id) ON DELETE CASCADE,
-        id serial PRIMARY KEY,
-        override_pricing boolean DEFAULT false
-      )
-    `)
-
-    await run('Create tours_pricing_additional_services_locales', `
-      CREATE TABLE IF NOT EXISTS tours_pricing_additional_services_locales (
-        custom_pricing_note varchar,
-        id serial PRIMARY KEY,
-        _locale varchar NOT NULL,
-        _parent_id integer NOT NULL REFERENCES tours_pricing_additional_services(id) ON DELETE CASCADE,
-        UNIQUE(_locale, _parent_id)
-      )
-    `)
-
-    // Relationship for service field in additional_services
-    await run('Add services_id to tours_rels', `ALTER TABLE tours_rels ADD COLUMN IF NOT EXISTS services_id integer REFERENCES services(id) ON DELETE CASCADE`)
-
-    // ===== 4. VERSION TABLES (tours have versions: { drafts: true }) =====
-    await run('Add pricing_model to _tours_v', `ALTER TABLE _tours_v ADD COLUMN IF NOT EXISTS version_pricing_model varchar`)
-    await run('Add pricing_per_person_price to _tours_v', `ALTER TABLE _tours_v ADD COLUMN IF NOT EXISTS version_pricing_per_person_price numeric`)
-    await run('Add pricing_per_person_max_guests to _tours_v', `ALTER TABLE _tours_v ADD COLUMN IF NOT EXISTS version_pricing_per_person_max_guests numeric`)
-    await run('Add pricing_flat_rate_price to _tours_v', `ALTER TABLE _tours_v ADD COLUMN IF NOT EXISTS version_pricing_flat_rate_price numeric`)
-    await run('Add pricing_flat_rate_max_guests to _tours_v', `ALTER TABLE _tours_v ADD COLUMN IF NOT EXISTS version_pricing_flat_rate_max_guests numeric`)
-
-    await run('Add pricing_on_request_note to _tours_v_locales', `ALTER TABLE _tours_v_locales ADD COLUMN IF NOT EXISTS version_pricing_on_request_note varchar`)
-
-    // Version array tables
-    await run('Create _tours_v_version_pricing_group_tiers', `
-      CREATE TABLE IF NOT EXISTS _tours_v_version_pricing_group_tiers (
-        _order integer NOT NULL,
-        _parent_id integer NOT NULL REFERENCES _tours_v(id) ON DELETE CASCADE,
-        id serial PRIMARY KEY,
-        min_guests numeric,
-        max_guests numeric,
-        price numeric,
-        on_request boolean DEFAULT false
-      )
-    `)
-
-    await run('Create _tours_v_version_pricing_guest_categories', `
-      CREATE TABLE IF NOT EXISTS _tours_v_version_pricing_guest_categories (
-        _order integer NOT NULL,
-        _parent_id integer NOT NULL REFERENCES _tours_v(id) ON DELETE CASCADE,
-        id serial PRIMARY KEY,
-        age_min numeric,
-        age_max numeric,
-        price_modifier numeric,
-        is_free boolean DEFAULT false,
-        on_request boolean DEFAULT false
-      )
-    `)
-
-    await run('Create _tours_v_version_pricing_guest_categories_locales', `
-      CREATE TABLE IF NOT EXISTS _tours_v_version_pricing_guest_categories_locales (
-        label varchar,
-        id serial PRIMARY KEY,
-        _locale varchar NOT NULL,
-        _parent_id integer NOT NULL REFERENCES _tours_v_version_pricing_guest_categories(id) ON DELETE CASCADE,
-        UNIQUE(_locale, _parent_id)
-      )
-    `)
-
-    await run('Create _tours_v_version_pricing_additional_services', `
-      CREATE TABLE IF NOT EXISTS _tours_v_version_pricing_additional_services (
-        _order integer NOT NULL,
-        _parent_id integer NOT NULL REFERENCES _tours_v(id) ON DELETE CASCADE,
-        id serial PRIMARY KEY,
-        override_pricing boolean DEFAULT false
-      )
-    `)
-
-    await run('Create _tours_v_version_pricing_additional_services_locales', `
-      CREATE TABLE IF NOT EXISTS _tours_v_version_pricing_additional_services_locales (
-        custom_pricing_note varchar,
-        id serial PRIMARY KEY,
-        _locale varchar NOT NULL,
-        _parent_id integer NOT NULL REFERENCES _tours_v_version_pricing_additional_services(id) ON DELETE CASCADE,
-        UNIQUE(_locale, _parent_id)
-      )
-    `)
-
-    // Version rels for services
-    await run('Add services_id to _tours_v_rels', `ALTER TABLE _tours_v_rels ADD COLUMN IF NOT EXISTS services_id integer REFERENCES services(id) ON DELETE CASCADE`)
-
-    // Diagnostic: list tours table columns
-    try {
-      const cols = await db.execute(sql.raw(`
-        SELECT column_name, data_type FROM information_schema.columns
-        WHERE table_name = 'tours' AND column_name LIKE 'pricing%'
-        ORDER BY ordinal_position
-      `))
-      results.push('--- tours pricing columns ---')
-      for (const row of cols.rows || cols) {
-        results.push(`  ${(row as any).column_name}: ${(row as any).data_type}`)
+    if (action === 'diagnose') {
+      // ===== DIAGNOSE: Get Payload's expected table names from schema =====
+      results.push('=== Payload Schema Table Names ===')
+      const tables = (payload.db as any).tables
+      if (tables) {
+        const tableNames = Object.keys(tables).sort()
+        for (const name of tableNames) {
+          const tableObj = tables[name]
+          const pgName = tableObj?.[Symbol.for('drizzle:Name')] || tableObj?._.name || name
+          results.push(`  schema: ${name} → pg: ${pgName}`)
+        }
+      } else {
+        results.push('  No tables found in payload.db.tables')
       }
-    } catch (e: any) {
-      results.push(`Diagnostic failed: ${e.message?.slice(0, 100)}`)
-    }
 
-    // Count tours
-    try {
-      const countResult = await db.execute(sql.raw(`SELECT count(*) as cnt FROM tours`))
-      const cnt = (countResult.rows || countResult)?.[0]
-      results.push(`--- tours count: ${(cnt as any)?.cnt}`)
-    } catch (e: any) {
-      results.push(`Count failed: ${e.message?.slice(0, 200)}`)
-    }
-
-    // Try Payload Local API
-    try {
-      const tourResult = await payload.find({ collection: 'tours', limit: 1 })
-      results.push(`--- Payload find tours: ${tourResult.totalDocs} total, first: ${tourResult.docs[0]?.title || 'none'}`)
-    } catch (e: any) {
-      results.push(`Payload find failed: ${e.message?.slice(0, 1000)}`)
-    }
-
-    // Check ALL table names in public schema
-    try {
-      const tables = await db.execute(sql.raw(`
-        SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename
-      `))
-      results.push('--- ALL public tables ---')
-      for (const row of tables.rows || tables) {
-        results.push(`  ${(row as any).tablename}`)
+      // List actual DB tables
+      results.push('=== Actual DB Tables ===')
+      const dbTables = await query(`SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public' ORDER BY tablename`)
+      for (const row of dbTables) {
+        results.push(`  ${row.tablename}`)
       }
-    } catch (e: any) {
-      results.push(`Tables failed: ${e.message?.slice(0, 100)}`)
+
+      // Check Payload find
+      results.push('=== Payload Find Test ===')
+      try {
+        const tourResult = await payload.find({ collection: 'tours', limit: 1 })
+        results.push(`OK: ${tourResult.totalDocs} tours, first: ${tourResult.docs[0]?.title || 'none'}`)
+      } catch (e: any) {
+        results.push(`FAIL: ${e.message?.slice(0, 500)}`)
+      }
+
+      try {
+        const svcResult = await payload.find({ collection: 'services', limit: 1 })
+        results.push(`OK: ${svcResult.totalDocs} services`)
+      } catch (e: any) {
+        results.push(`FAIL services: ${e.message?.slice(0, 500)}`)
+      }
+    }
+
+    if (action === 'fix-tables') {
+      // ===== FIX: Rename wrongly-named tables to match Payload's expected names =====
+      // First, get what Payload expects
+      const expectedTables: Record<string, string> = {}
+      const tables = (payload.db as any).tables
+      if (tables) {
+        for (const [key, tableObj] of Object.entries(tables)) {
+          const pgName = (tableObj as any)?.[Symbol.for('drizzle:Name')] || (tableObj as any)?._.name || key
+          expectedTables[key] = pgName
+        }
+      }
+
+      // List expected tables that contain 'pricing' or 'services'
+      results.push('=== Expected pricing/services tables ===')
+      for (const [key, pgName] of Object.entries(expectedTables)) {
+        if (pgName.includes('pricing') || pgName.includes('services')) {
+          results.push(`  ${key} → ${pgName}`)
+        }
+      }
+
+      // Get actual tables
+      const dbTables = await query(`SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public' ORDER BY tablename`)
+      const actualTableNames = new Set(dbTables.map((r: any) => r.tablename))
+
+      // Find mismatches and rename
+      results.push('=== Fixing table names ===')
+
+      // Known potential renames (snake_case → what Payload expects)
+      const renameMap: Record<string, string> = {}
+
+      // Build rename map from expected tables
+      for (const [, pgName] of Object.entries(expectedTables)) {
+        if (!pgName.includes('pricing') && !pgName.includes('services')) continue
+        if (actualTableNames.has(pgName)) {
+          results.push(`  EXISTS: ${pgName}`)
+          continue
+        }
+
+        // Try to find a snake_case equivalent
+        const snakeVersion = pgName.replace(/[A-Z]/g, (m) => `_${m.toLowerCase()}`)
+        if (actualTableNames.has(snakeVersion)) {
+          renameMap[snakeVersion] = pgName
+        } else {
+          results.push(`  MISSING: ${pgName} (no snake_case equivalent ${snakeVersion} found)`)
+        }
+      }
+
+      // Execute renames
+      for (const [from, to] of Object.entries(renameMap)) {
+        await run(`Rename ${from} → ${to}`, `ALTER TABLE "${from}" RENAME TO "${to}"`)
+      }
+
+      // After renames, check if any tables are still missing and need creation
+      const dbTablesAfter = await query(`SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public' ORDER BY tablename`)
+      const actualAfter = new Set(dbTablesAfter.map((r: any) => r.tablename))
+
+      results.push('=== Still missing after renames ===')
+      for (const [, pgName] of Object.entries(expectedTables)) {
+        if (!pgName.includes('pricing') && !pgName.includes('services')) continue
+        if (!actualAfter.has(pgName)) {
+          results.push(`  STILL MISSING: ${pgName}`)
+        }
+      }
+
+      // Test Payload find after fix
+      results.push('=== Payload Find Test After Fix ===')
+      try {
+        const tourResult = await payload.find({ collection: 'tours', limit: 1 })
+        results.push(`OK: ${tourResult.totalDocs} tours, first: ${tourResult.docs[0]?.title || 'none'}`)
+      } catch (e: any) {
+        results.push(`FAIL: ${e.message?.slice(0, 500)}`)
+      }
+    }
+
+    if (action === 'create-missing') {
+      // ===== CREATE: Drop wrongly-named tables and create with Payload's expected names =====
+      // Get what Payload expects
+      const expectedTables: Record<string, string> = {}
+      const tables = (payload.db as any).tables
+      if (tables) {
+        for (const [key, tableObj] of Object.entries(tables)) {
+          const pgName = (tableObj as any)?.[Symbol.for('drizzle:Name')] || (tableObj as any)?._.name || key
+          expectedTables[key] = pgName
+        }
+      }
+
+      // Log all pricing/services expected tables
+      results.push('=== Expected tables (pricing/services) ===')
+      for (const [key, pgName] of Object.entries(expectedTables)) {
+        if (pgName.includes('pricing') || pgName.includes('services')) {
+          results.push(`  ${key} → ${pgName}`)
+        }
+      }
+
+      // Get actual tables
+      const dbTables = await query(`SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public' ORDER BY tablename`)
+      const actualTableNames = new Set(dbTables.map((r: any) => r.tablename))
+
+      // Drop ALL tables that are wrong and should not exist
+      const wrongTables = [
+        'tours_pricing_group_tiers',
+        'tours_pricing_guest_categories_locales',
+        'tours_pricing_guest_categories',
+        'tours_pricing_additional_services_locales',
+        'tours_pricing_additional_services',
+        '_tours_v_version_pricing_group_tiers',
+        '_tours_v_version_pricing_guest_categories_locales',
+        '_tours_v_version_pricing_guest_categories',
+        '_tours_v_version_pricing_additional_services_locales',
+        '_tours_v_version_pricing_additional_services',
+        'services_guest_category_pricing_locales',
+        'services_guest_category_pricing',
+        'services_group_tier_pricing',
+      ]
+
+      results.push('=== Dropping wrongly-named tables ===')
+      for (const t of wrongTables) {
+        if (actualTableNames.has(t)) {
+          await run(`Drop ${t}`, `DROP TABLE IF EXISTS "${t}" CASCADE`)
+        }
+      }
+
+      // Now use pushDevSchema to create correct tables
+      results.push('=== Attempting pushDevSchema ===')
+      try {
+        // Access the push function from Payload's DB adapter
+        const dbAdapter = payload.db as any
+        if (dbAdapter.push) {
+          await dbAdapter.push({ force: true })
+          results.push('OK: pushDevSchema completed')
+        } else {
+          results.push('SKIP: No push function on db adapter')
+        }
+      } catch (e: any) {
+        results.push(`FAIL pushDevSchema: ${e.message?.slice(0, 300)}`)
+      }
+
+      // Check final state
+      const dbTablesAfter = await query(`SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public' ORDER BY tablename`)
+      const actualAfter = new Set(dbTablesAfter.map((r: any) => r.tablename))
+
+      results.push('=== Final state of pricing/services tables ===')
+      for (const [, pgName] of Object.entries(expectedTables)) {
+        if (!pgName.includes('pricing') && !pgName.includes('services')) continue
+        results.push(`  ${pgName}: ${actualAfter.has(pgName) ? 'EXISTS' : 'MISSING'}`)
+      }
+
+      // Test Payload find
+      results.push('=== Payload Find Test ===')
+      try {
+        const tourResult = await payload.find({ collection: 'tours', limit: 1 })
+        results.push(`OK: ${tourResult.totalDocs} tours, first: ${tourResult.docs[0]?.title || 'none'}`)
+      } catch (e: any) {
+        results.push(`FAIL: ${e.message?.slice(0, 500)}`)
+      }
+    }
+
+    if (action === 'manual-create') {
+      // ===== MANUAL CREATE: Create tables with exact names from Payload schema =====
+      // First get exact expected names from Payload
+      const expectedPG: string[] = []
+      const tables = (payload.db as any).tables
+      if (tables) {
+        for (const [, tableObj] of Object.entries(tables)) {
+          const pgName = (tableObj as any)?.[Symbol.for('drizzle:Name')] || (tableObj as any)?._.name
+          if (pgName && (pgName.includes('pricing') || (pgName.includes('services') && !pgName.includes('_rels')))) {
+            expectedPG.push(pgName)
+          }
+        }
+      }
+      results.push(`Expected tables: ${JSON.stringify(expectedPG.sort())}`)
+
+      // Drop wrong tables first
+      const wrongTables = [
+        'tours_pricing_group_tiers',
+        'tours_pricing_guest_categories_locales',
+        'tours_pricing_guest_categories',
+        'tours_pricing_additional_services_locales',
+        'tours_pricing_additional_services',
+        '_tours_v_version_pricing_group_tiers',
+        '_tours_v_version_pricing_guest_categories_locales',
+        '_tours_v_version_pricing_guest_categories',
+        '_tours_v_version_pricing_additional_services_locales',
+        '_tours_v_version_pricing_additional_services',
+        'services_guest_category_pricing_locales',
+        'services_guest_category_pricing',
+        'services_group_tier_pricing',
+      ]
+
+      for (const t of wrongTables) {
+        await run(`Drop ${t}`, `DROP TABLE IF EXISTS "${t}" CASCADE`)
+      }
+
+      // Now create with the EXACT names from Payload's schema
+      // We need to check what names Payload actually uses
+      // The table names should match what Payload's Drizzle adapter generates
+      // Based on Payload 3.x convention: array tables use the exact field path
+
+      // For now, just report what names Payload expects so we can create them correctly
+      results.push('=== Payload schema introspection ===')
+      if (tables) {
+        for (const [key, tableObj] of Object.entries(tables)) {
+          const obj = tableObj as any
+          const pgName = obj?.[Symbol.for('drizzle:Name')] || obj?._.name || key
+          if (pgName.includes('pricing') || (pgName.includes('services') && !pgName.includes('_rels'))) {
+            // Try to get column names
+            const cols: string[] = []
+            for (const [colKey, colObj] of Object.entries(obj)) {
+              if (colKey.startsWith('_') || colKey === Symbol.for('drizzle:Name') as any) continue
+              const colPgName = (colObj as any)?.name
+              if (colPgName) cols.push(`${colKey}→${colPgName}`)
+            }
+            results.push(`  TABLE ${pgName}: ${cols.join(', ')}`)
+          }
+        }
+      }
     }
 
     return NextResponse.json({ success: true, results })
