@@ -192,16 +192,24 @@ export const Tours: CollectionConfig = {
           },
         },
         {
+          name: 'guestCategoriesHeading',
+          type: 'text',
+          localized: true,
+          admin: {
+            description: 'Custom heading for guest categories section (e.g. "Zoo/Museum Ticket", "Entry Tickets"). Defaults to "Guest Categories".',
+          },
+        },
+        {
           name: 'guestCategories',
           type: 'array',
           admin: {
-            description: 'Optional guest age categories (children, seniors, etc.)',
+            description: 'Guest options with price modifiers — use for ticket types, age categories, or any per-guest selection',
           },
           fields: [
-            { name: 'label', type: 'text', required: true, localized: true },
+            { name: 'label', type: 'text', required: true, localized: true, admin: { description: 'Category name shown to customer (e.g. "Adult", "Child 6-15", "Student")' } },
             { name: 'ageMin', type: 'number' },
             { name: 'ageMax', type: 'number', admin: { description: 'Empty = no upper limit' } },
-            { name: 'priceModifier', type: 'number', admin: { description: 'Price adjustment in EUR' } },
+            { name: 'priceModifier', type: 'number', admin: { description: 'Price adjustment in EUR (e.g. 15 for +€15)' } },
             { name: 'isFree', type: 'checkbox', defaultValue: false },
             { name: 'onRequest', type: 'checkbox', defaultValue: false },
           ],

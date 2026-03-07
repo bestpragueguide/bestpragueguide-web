@@ -189,6 +189,7 @@ export interface TourPricing {
   flatRatePrice?: number
   flatRateMaxGuests?: number
   onRequestNote?: string
+  guestCategoriesHeading?: string
   guestCategories?: GuestCategory[]
   additionalServices?: TourServiceAttachment[]
 }

@@ -289,7 +289,7 @@ export function BookingRequestForm({
       {pricing.guestCategories && pricing.guestCategories.length > 0 && (
         <div>
           <p className="text-sm font-medium text-navy mb-2">
-            {locale === 'ru' ? 'Категории гостей' : 'Guest Categories'}
+            {pricing.guestCategoriesHeading || (locale === 'ru' ? 'Категории гостей' : 'Guest Categories')}
           </p>
           <div className="space-y-2">
             {pricing.guestCategories.map((cat) => (

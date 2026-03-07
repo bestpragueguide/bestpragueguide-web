@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.1] - 2026-03-07
+
+### Added
+- **Configurable guest categories heading** — admin can set custom title per tour (e.g., "Zoo/Museum Ticket", "Entry Tickets") via `pricing.guestCategoriesHeading` (localized)
+- Updated admin descriptions for guest categories to clarify they support any guest option (tickets, age categories, etc.)
+
 ## [1.8.0] - 2026-03-07
 
 ### Added
