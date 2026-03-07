@@ -225,7 +225,13 @@ export async function POST(req: Request) {
       )
     `)
 
-    // ===== 5. FIX: Add missing _uuid column to ALL array tables =====
+    // ===== 5. FIX: Add services_id to payload system rels tables =====
+    await run('Add services_id to payload_locked_documents_rels', `
+      ALTER TABLE payload_locked_documents_rels
+      ADD COLUMN IF NOT EXISTS services_id integer REFERENCES services(id) ON DELETE CASCADE
+    `)
+
+    // ===== 6. FIX: Add missing _uuid column to ALL array tables =====
     // Payload 3.x requires _uuid on array row tables for tracking
     const arrayTables = [
       'tours_pricing_group_tiers',
