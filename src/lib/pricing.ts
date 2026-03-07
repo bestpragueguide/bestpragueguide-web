@@ -250,7 +250,9 @@ export function getMaxGuests(pricing: TourPricing, tourMaxGroupSize?: number): n
       const allTiers = pricing.groupTiers || []
       if (allTiers.length === 0) return tourMaxGroupSize || DEFAULT_MAX
       const lastTier = allTiers[allTiers.length - 1]
-      return lastTier.maxGuests ?? tourMaxGroupSize ?? DEFAULT_MAX
+      // Open-ended last tier: return its minGuests (dropdown will show "X+")
+      if (lastTier.maxGuests == null) return lastTier.minGuests
+      return lastTier.maxGuests
     }
 
     case 'PER_PERSON':
@@ -262,4 +264,11 @@ export function getMaxGuests(pricing: TourPricing, tourMaxGroupSize?: number): n
     case 'ON_REQUEST':
       return tourMaxGroupSize || DEFAULT_MAX
   }
+}
+
+export function hasOpenEndedTier(pricing: TourPricing): boolean {
+  if (pricing.model !== 'GROUP_TIERS') return false
+  const tiers = pricing.groupTiers || []
+  if (tiers.length === 0) return false
+  return tiers[tiers.length - 1].maxGuests == null
 }

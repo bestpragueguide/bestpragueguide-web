@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.3] - 2026-03-07
+
+### Fixed
+- Guest selector now shows "X+ guests" as last option when last pricing tier has no upper cap, instead of listing individual numbers up to 20
+- `getMaxGuests()` returns `minGuests` of open-ended last tier so dropdown ends with that value
+
 ## [1.7.2] - 2026-03-07
 
 ### Fixed

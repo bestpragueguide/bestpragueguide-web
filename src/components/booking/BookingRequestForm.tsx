@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl'
 import { TIME_SLOTS } from '@/lib/booking'
 import { trackBookingSubmit } from '@/lib/analytics'
 import { currencies, formatPrice, type Currency } from '@/lib/currency'
-import { calculatePrice, getMaxGuests, getDisplayPrice } from '@/lib/pricing'
+import { calculatePrice, getMaxGuests, getDisplayPrice, hasOpenEndedTier } from '@/lib/pricing'
 import type { TourPricing } from '@/lib/cms-types'
 
 interface BookingRequestFormProps {
@@ -37,6 +37,7 @@ export function BookingRequestForm({
   const minDate = tomorrow.toISOString().split('T')[0]
 
   const maxGuests = useMemo(() => getMaxGuests(pricing, maxGroupSize), [pricing, maxGroupSize])
+  const openEnded = useMemo(() => hasOpenEndedTier(pricing), [pricing])
 
   const priceResult = useMemo(
     () => calculatePrice(pricing, guests),
@@ -223,7 +224,9 @@ export function BookingRequestForm({
         >
           {Array.from({ length: maxGuests }, (_, i) => i + 1).map((n) => (
             <option key={n} value={n}>
-              {n} {n === 1 ? (locale === 'ru' ? 'гость' : 'guest') : locale === 'ru' ? 'гостей' : 'guests'}
+              {n === maxGuests && openEnded
+                ? `${n}+ ${locale === 'ru' ? 'гостей' : 'guests'}`
+                : `${n} ${n === 1 ? (locale === 'ru' ? 'гость' : 'guest') : locale === 'ru' ? 'гостей' : 'guests'}`}
             </option>
           ))}
         </select>
