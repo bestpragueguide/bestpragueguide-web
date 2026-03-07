@@ -1,6 +1,7 @@
 import { formatPrice, type Currency } from '@/lib/currency'
 import { getDisplayPrice } from '@/lib/pricing'
 import type { TourPricing } from '@/lib/cms-types'
+import { guestsLabel } from '@/lib/plurals'
 
 interface PriceDisplayProps {
   pricing: TourPricing
@@ -50,8 +51,8 @@ export function PriceDisplay({ pricing, locale, currency = 'EUR', variant = 'car
           <div key={i} className="flex justify-between text-sm">
             <span className="text-navy/70">
               {tier.maxGuests
-                ? `${tier.minGuests}–${tier.maxGuests} ${locale === 'ru' ? 'гостей' : 'guests'}`
-                : `${tier.minGuests}+ ${locale === 'ru' ? 'гостей' : 'guests'}`}
+                ? `${tier.minGuests}–${tier.maxGuests} ${guestsLabel(tier.maxGuests, locale)}`
+                : `${tier.minGuests}+ ${guestsLabel(tier.minGuests, locale)}`}
             </span>
             <span className="font-medium text-navy">
               {tier.onRequest || tier.price == null

@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.4] - 2026-03-07
+
+### Fixed
+- **Russian plural forms** for guest labels — now uses correct 3-form pluralization (1 гость, 2-4 гостя, 5+ гостей) in booking form dropdown and pricing table
+- Added shared `src/lib/plurals.ts` helper with `guestsLabel()` and `ruPlural()` functions
+
 ## [1.8.3] - 2026-03-07
 
 ### Changed

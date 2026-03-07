@@ -7,6 +7,7 @@ import { trackBookingSubmit } from '@/lib/analytics'
 import { currencies, formatPrice, type Currency } from '@/lib/currency'
 import { calculatePrice, getMaxGuests, getDisplayPrice, hasOpenEndedTier } from '@/lib/pricing'
 import type { TourPricing, ServiceData } from '@/lib/cms-types'
+import { guestsLabel } from '@/lib/plurals'
 
 interface BookingRequestFormProps {
   tourId: number
@@ -273,8 +274,8 @@ export function BookingRequestForm({
           {Array.from({ length: maxGuests }, (_, i) => i + 1).map((n) => (
             <option key={n} value={n}>
               {n === maxGuests && openEnded
-                ? `${n}+ ${locale === 'ru' ? 'гостей' : 'guests'}`
-                : `${n} ${n === 1 ? (locale === 'ru' ? 'гость' : 'guest') : locale === 'ru' ? 'гостей' : 'guests'}`}
+                ? `${n}+ ${guestsLabel(n, locale)}`
+                : `${n} ${guestsLabel(n, locale)}`}
             </option>
           ))}
         </select>
