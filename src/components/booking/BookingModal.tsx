@@ -126,7 +126,7 @@ export function BookingModal({
                 ? 'Бесплатная отмена за 24 часа'
                 : 'Free cancellation 24h before',
               locale === 'ru'
-                ? '100% приватно — только ваша группа'
+                ? '100% индивидуально — только ваша группа'
                 : '100% private — just your group',
             ].map((text, i) => (
               <div

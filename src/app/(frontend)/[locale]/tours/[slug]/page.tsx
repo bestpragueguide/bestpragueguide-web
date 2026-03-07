@@ -391,7 +391,7 @@ export default async function TourDetailPage({
                   icon: '✓',
                   text:
                     locale === 'ru'
-                      ? '100% приватно — только ваша группа'
+                      ? '100% индивидуально — только ваша группа'
                       : '100% private — just your group',
                 },
               ].map((badge, i) => (

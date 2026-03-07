@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.7] - 2026-03-07
+
+### Fixed
+- **RU translation**: replaced "приватно/приватная" with "индивидуально/индивидуальная" across all files (i18n, booking modal, tour detail, seed data)
+
 ## [1.8.6] - 2026-03-07
 
 ### Fixed
