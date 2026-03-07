@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.0] - 2026-03-07
+
+### Added
+- **Tour import endpoint** (`/api/import-tours`) — imports 32 tours from ulitravel.com with descriptions, durations, hero images and gallery photos from tildacdn.com
+- All imported tours use ON_REQUEST pricing model, RU-only locale
+- Automatic slug generation from Russian titles (transliteration)
+- Auto-categorization: prague-tours vs day-trips-from-prague based on title keywords and duration
+
+### Changed
+- **Tour catalog**: replaced 18 seed RU-only tours with 32 real tours from ulitravel.com
+
 ## [1.8.7] - 2026-03-07
 
 ### Fixed
