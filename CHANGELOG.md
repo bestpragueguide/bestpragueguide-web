@@ -2,20 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.6.2] - 2026-03-06
+## [1.6.2] - 2026-03-07
 
 ### Added
 - `RefreshOnSave` component — wires Payload Live Preview to auto-refresh frontend on admin save
 - Homepage hero `<picture>` element with `mobileHero` source for mobile devices
+- `mobileHeroImage` field on Homepage global — upload separate mobile-optimized hero image with its own crop/focal point
+- `patch-package` for patching Payload bugs until upstream fixes
 
 ### Changed
 - Replaced unused `LivePreviewListener` with `RefreshRouteOnSave` from `@payloadcms/live-preview-react`
 - Homepage hero switched from Next/Image to `<picture>` element for responsive image serving
-- Guide photo switched to horizontal landscape (4:3) layout with 50/50 grid
+- Guide photo: horizontal landscape (4:3), 1/3 image + 2/3 text layout
+- Reduced vertical padding on all homepage sections (`py-10 lg:py-14`)
+- Tour detail page: title moved above gallery, removed category/duration/difficulty/rating badges
+- Upgraded Payload packages from 3.78.0 to 3.79.0
 
 ### Fixed
 - Live preview 404: locale parameter is an object in Payload 3.x, now extracts `.code`
 - Added `serverURL` to `payload.config.ts` for live preview communication
+- Patched Payload `@payloadcms/ui` destructure bug on page navigation (`livePreviewURL` undefined guard)
 
 ### Removed
 - `LivePreviewListener` component (was never imported; replaced by `RefreshOnSave`)
