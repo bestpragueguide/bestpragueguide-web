@@ -194,9 +194,7 @@ export async function POST(req: Request) {
           if (ruRow) {
             await drizzle.execute(sql`UPDATE tours_pricing_guest_categories_locales SET label = ${enRow.label} WHERE id = ${ruRow.id}`)
           } else {
-            await drizzle.execute(sql.raw(
-              `INSERT INTO tours_pricing_guest_categories_locales (_parent_id, _locale, label) VALUES (${parentId}, 'ru', '${enRow.label.replace(/'/g, "''")}')`
-            ))
+            await drizzle.execute(sql`INSERT INTO tours_pricing_guest_categories_locales (_parent_id, _locale, label) VALUES (${parentId}, ${'ru'}, ${enRow.label})`)
           }
           results.push(`guest_cat:${parentId}:copied en→ru`)
         }
@@ -204,9 +202,7 @@ export async function POST(req: Request) {
           if (enRow) {
             await drizzle.execute(sql`UPDATE tours_pricing_guest_categories_locales SET label = ${ruRow.label} WHERE id = ${enRow.id}`)
           } else {
-            await drizzle.execute(sql.raw(
-              `INSERT INTO tours_pricing_guest_categories_locales (_parent_id, _locale, label) VALUES (${parentId}, 'en', '${ruRow.label.replace(/'/g, "''")}')`
-            ))
+            await drizzle.execute(sql`INSERT INTO tours_pricing_guest_categories_locales (_parent_id, _locale, label) VALUES (${parentId}, ${'en'}, ${ruRow.label})`)
           }
           results.push(`guest_cat:${parentId}:copied ru→en`)
         }
