@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Production DB schema: manually created pricing tables via SQL migration (pushDevSchema hangs in prod)
+- Array table `id` columns changed from `serial` (integer) to `varchar` — Payload 3.x generates string ObjectIds for array rows, causing "invalid input syntax for type integer" on save
 - Missing `_uuid` column on all Payload 3.x array tables (required for row tracking)
 - Missing `service_id` column on `tours_pricing_additional_services` and version table
 - Missing `services_id` on `payload_locked_documents_rels` (required for new Services collection)
