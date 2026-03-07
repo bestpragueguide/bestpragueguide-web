@@ -169,6 +169,10 @@ export async function POST(req: Request) {
         subcategory: tour.subcategory,
         duration: tour.duration,
         groupPrice: tour.groupPrice,
+        pricing: {
+          model: 'GROUP_TIERS',
+          groupTiers: [{ minGuests: 1, maxGuests: 8, price: tour.groupPrice }],
+        },
         publishedLocales: tour.publishedLocales,
         status: 'published',
         sortOrder: tour.sortOrder,
@@ -223,6 +227,10 @@ export async function POST(req: Request) {
         subcategory: tour.subcategory,
         duration: tour.duration,
         groupPrice: tour.price,
+        pricing: {
+          model: 'GROUP_TIERS',
+          groupTiers: [{ minGuests: 1, maxGuests: tour.duration >= 7 ? 6 : 8, price: tour.price }],
+        },
         publishedLocales: ['ru'],
         status: 'published',
         sortOrder: tour.sortOrder,

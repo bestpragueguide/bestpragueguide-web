@@ -21,6 +21,14 @@ All notable changes to this project will be documented in this file.
 - Guest selector range is now dynamic based on `getMaxGuests()` instead of hardcoded 1-8
 - Booking validation schema allows up to 50 guests (was hardcoded max 8)
 - Notification formatters (Telegram, WhatsApp, Slack) show "On Request" for on-request bookings
+- Seed script now populates new `pricing.model` and `pricing.groupTiers` fields alongside legacy `groupPrice`
+
+### Fixed
+- Production DB schema: manually created pricing tables via SQL migration (pushDevSchema hangs in prod)
+- Missing `_uuid` column on all Payload 3.x array tables (required for row tracking)
+- Missing `service_id` column on `tours_pricing_additional_services` and version table
+- Missing `services_id` on `payload_locked_documents_rels` (required for new Services collection)
+- Migrated all 21 existing tours from legacy `groupPrice` to `GROUP_TIERS` pricing model with group tier rows
 
 ### Deprecated
 - `groupPrice` and `groupSurchargePercent` fields on Tours collection (kept as hidden fields for backward compatibility)

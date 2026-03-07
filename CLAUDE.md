@@ -12,11 +12,11 @@ Bilingual (EN/RU) private tour portal for Prague.
 ## Project Structure
 - `src/app/(payload)/` — Payload admin panel and API routes
 - `src/app/(frontend)/[locale]/` — Public-facing pages with i18n
-- `src/collections/` — Payload CMS collection configs (Tours, Reviews, Pages, FAQs, BlogPosts, BookingRequests, ContactMessages, Media)
+- `src/collections/` — Payload CMS collection configs (Tours, Reviews, Pages, FAQs, BlogPosts, BookingRequests, ContactMessages, Media, Services)
 - `src/globals/` — Payload CMS global configs (SiteSettings, Navigation, Homepage, AboutPage, ReviewsPage)
 - `src/components/` — React components (shared, layout, home, tours, blog, booking, reviews, seo, analytics)
 - `src/emails/` — React Email templates
-- `src/lib/` — Utilities (cms-data, cms-types, icon-map, email, telegram, whatsapp, slack, booking, blog, ip, currency, metadata, analytics)
+- `src/lib/` — Utilities (cms-data, cms-types, icon-map, email, telegram, whatsapp, slack, booking, blog, ip, currency, pricing, metadata, analytics)
 - `src/i18n/` — next-intl routing, request config, message files
 
 ## CMS Architecture
@@ -37,6 +37,15 @@ All site content is editable from Payload admin panel:
 - Legal pages try Pages collection first, fall back to i18n
 - Client Components receive CMS data as serialized props from parent Server Components
 - Never use `select` option in payload.find() — fails silently on localized fields in PostgreSQL
+
+## Tour Pricing
+- 4 pricing models: GROUP_TIERS (default), PER_PERSON, FLAT_RATE, ON_REQUEST
+- `src/lib/pricing.ts` — shared engine: `calculatePrice`, `getDisplayPrice`, `getMaxGuests`, `validateGuestBreakdown`
+- `src/components/tours/PriceDisplay.tsx` — renders price in card, detail, and sticky variants
+- `src/collections/Services.ts` — reusable add-on services (entry tickets, vehicles, etc.)
+- Tours have `pricing` group with `model` selector, `groupTiers[]`, `guestCategories[]`, `additionalServices[]`
+- Legacy `groupPrice`/`groupSurchargePercent` fields hidden but kept for backward compat
+- TourCard falls back to legacy `groupPrice` if `pricing.model` is not set
 
 ## Image System
 - Media collection uses `focalPoint: true` with all sizes set to `position: 'focalpoint'`
