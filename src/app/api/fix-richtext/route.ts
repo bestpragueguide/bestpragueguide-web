@@ -66,55 +66,40 @@ export async function POST(req: Request) {
       }
     }
 
-    // 2. Fix tours_included locales
-    try {
-      const inclRows = await drizzle.execute(sql.raw(
-        `SELECT id, text FROM tours_included_locales WHERE text IS NOT NULL`
-      ))
-      for (const row of inclRows.rows || inclRows) {
-        if (typeof row.text === 'string' && !row.text.startsWith('{')) {
-          await drizzle.execute(sql.raw(
-            `UPDATE tours_included_locales SET text = '${textToLexical(row.text).replace(/'/g, "''")}' WHERE id = ${row.id}`
-          ))
-          results.push(`tours_included_locales:${row.id}`)
+    // 2. Fix tours_included (localized array — text field on main table)
+    for (const table of ['tours_included', 'tours_excluded']) {
+      try {
+        const rows = await drizzle.execute(sql.raw(
+          `SELECT id, text FROM ${table} WHERE text IS NOT NULL`
+        ))
+        for (const row of rows.rows || rows) {
+          if (typeof row.text === 'string' && !row.text.startsWith('{')) {
+            await drizzle.execute(sql.raw(
+              `UPDATE ${table} SET text = '${textToLexical(row.text).replace(/'/g, "''")}' WHERE id = ${row.id}`
+            ))
+            results.push(`${table}:${row.id}`)
+          }
         }
+      } catch (e: any) {
+        results.push(`${table}:SKIP:${e.message?.substring(0, 60)}`)
       }
-    } catch (e: any) {
-      results.push(`tours_included_locales:SKIP:${e.message?.substring(0, 60)}`)
     }
 
-    // 3. Fix tours_excluded locales
-    try {
-      const exclRows = await drizzle.execute(sql.raw(
-        `SELECT id, text FROM tours_excluded_locales WHERE text IS NOT NULL`
-      ))
-      for (const row of exclRows.rows || exclRows) {
-        if (typeof row.text === 'string' && !row.text.startsWith('{')) {
-          await drizzle.execute(sql.raw(
-            `UPDATE tours_excluded_locales SET text = '${textToLexical(row.text).replace(/'/g, "''")}' WHERE id = ${row.id}`
-          ))
-          results.push(`tours_excluded_locales:${row.id}`)
-        }
-      }
-    } catch (e: any) {
-      results.push(`tours_excluded_locales:SKIP:${e.message?.substring(0, 60)}`)
-    }
-
-    // 4. Fix tours_faq locales (answer field)
+    // 3. Fix tours_faq (localized array — answer field on main table)
     try {
       const faqRows = await drizzle.execute(sql.raw(
-        `SELECT id, answer FROM tours_faq_locales WHERE answer IS NOT NULL`
+        `SELECT id, answer FROM tours_faq WHERE answer IS NOT NULL`
       ))
       for (const row of faqRows.rows || faqRows) {
         if (typeof row.answer === 'string' && !row.answer.startsWith('{')) {
           await drizzle.execute(sql.raw(
-            `UPDATE tours_faq_locales SET answer = '${textToLexical(row.answer).replace(/'/g, "''")}' WHERE id = ${row.id}`
+            `UPDATE tours_faq SET answer = '${textToLexical(row.answer).replace(/'/g, "''")}' WHERE id = ${row.id}`
           ))
-          results.push(`tours_faq_locales:${row.id}`)
+          results.push(`tours_faq:${row.id}`)
         }
       }
     } catch (e: any) {
-      results.push(`tours_faq_locales:SKIP:${e.message?.substring(0, 60)}`)
+      results.push(`tours_faq:SKIP:${e.message?.substring(0, 60)}`)
     }
 
     // 5. Fix version tables too
@@ -146,7 +131,7 @@ export async function POST(req: Request) {
     }
 
     // 6. Fix version included/excluded/faq
-    for (const table of ['_tours_v_version_included_locales', '_tours_v_version_excluded_locales']) {
+    for (const table of ['_tours_v_version_included', '_tours_v_version_excluded']) {
       try {
         const rows = await drizzle.execute(sql.raw(
           `SELECT id, text FROM ${table} WHERE text IS NOT NULL`
@@ -166,18 +151,49 @@ export async function POST(req: Request) {
 
     try {
       const vFaqRows = await drizzle.execute(sql.raw(
-        `SELECT id, answer FROM _tours_v_version_faq_locales WHERE answer IS NOT NULL`
+        `SELECT id, answer FROM _tours_v_version_faq WHERE answer IS NOT NULL`
       ))
       for (const row of vFaqRows.rows || vFaqRows) {
         if (typeof row.answer === 'string' && !row.answer.startsWith('{')) {
           await drizzle.execute(sql.raw(
-            `UPDATE _tours_v_version_faq_locales SET answer = '${textToLexical(row.answer).replace(/'/g, "''")}' WHERE id = ${row.id}`
+            `UPDATE _tours_v_version_faq SET answer = '${textToLexical(row.answer).replace(/'/g, "''")}' WHERE id = ${row.id}`
           ))
-          results.push(`_tours_v_version_faq_locales:${row.id}`)
+          results.push(`_tours_v_version_faq:${row.id}`)
         }
       }
     } catch (e: any) {
-      results.push(`_tours_v_version_faq_locales:SKIP:${e.message?.substring(0, 60)}`)
+      results.push(`_tours_v_version_faq:SKIP:${e.message?.substring(0, 60)}`)
+    }
+
+    // 7. Fix guest category labels — copy missing locale labels
+    try {
+      const gcRows = await drizzle.execute(sql.raw(
+        `SELECT gc.id, gc._parent_id, gc_loc._locale, gc_loc.label
+         FROM tours_pricing_guest_categories gc
+         JOIN tours_pricing_guest_categories_locales gc_loc ON gc_loc._parent_id = gc.id
+         WHERE gc_loc.label IS NOT NULL`
+      ))
+      results.push(`guest_categories:found ${(gcRows.rows || gcRows).length} rows`)
+    } catch (e: any) {
+      // Try without locales table — labels might be on main table
+      try {
+        const gcRows = await drizzle.execute(sql.raw(
+          `SELECT id, label FROM tours_pricing_guest_categories WHERE label IS NOT NULL`
+        ))
+        results.push(`guest_categories_main:found ${(gcRows.rows || gcRows).length} rows`)
+      } catch (e2: any) {
+        results.push(`guest_categories:SKIP:${e2.message?.substring(0, 60)}`)
+      }
+    }
+
+    // 8. List relevant tables for diagnostics
+    try {
+      const tables = await drizzle.execute(sql.raw(
+        `SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'tours%' ORDER BY tablename`
+      ))
+      results.push(`tables: ${(tables.rows || tables).map((r: any) => r.tablename).join(', ')}`)
+    } catch (e: any) {
+      results.push(`tables:SKIP`)
     }
 
     return NextResponse.json({ success: true, results })
