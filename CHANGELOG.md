@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.2] - 2026-03-07
+
+### Fixed
+- `getMaxGuests()` default raised from 8 to 20 when last tier has no maxGuests and tour has no maxGroupSize — supports open-ended "5+ guests" tiers
+
 ## [1.7.1] - 2026-03-07
 
 ### Added

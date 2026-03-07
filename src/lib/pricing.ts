@@ -243,21 +243,23 @@ export function getDisplayPrice(pricing: TourPricing): {
 }
 
 export function getMaxGuests(pricing: TourPricing, tourMaxGroupSize?: number): number {
+  const DEFAULT_MAX = 20
+
   switch (pricing.model) {
     case 'GROUP_TIERS': {
       const allTiers = pricing.groupTiers || []
-      if (allTiers.length === 0) return tourMaxGroupSize || 8
+      if (allTiers.length === 0) return tourMaxGroupSize || DEFAULT_MAX
       const lastTier = allTiers[allTiers.length - 1]
-      return lastTier.maxGuests ?? tourMaxGroupSize ?? 8
+      return lastTier.maxGuests ?? tourMaxGroupSize ?? DEFAULT_MAX
     }
 
     case 'PER_PERSON':
-      return pricing.perPersonMaxGuests ?? tourMaxGroupSize ?? 8
+      return pricing.perPersonMaxGuests ?? tourMaxGroupSize ?? DEFAULT_MAX
 
     case 'FLAT_RATE':
-      return pricing.flatRateMaxGuests ?? tourMaxGroupSize ?? 8
+      return pricing.flatRateMaxGuests ?? tourMaxGroupSize ?? DEFAULT_MAX
 
     case 'ON_REQUEST':
-      return tourMaxGroupSize || 8
+      return tourMaxGroupSize || DEFAULT_MAX
   }
 }
