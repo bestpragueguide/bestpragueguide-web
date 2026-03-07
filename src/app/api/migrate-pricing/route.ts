@@ -223,6 +223,30 @@ export async function POST(req: Request) {
     // Version rels for services
     await run('Add services_id to _tours_v_rels', `ALTER TABLE _tours_v_rels ADD COLUMN IF NOT EXISTS services_id integer REFERENCES services(id) ON DELETE CASCADE`)
 
+    // Diagnostic: list tours table columns
+    try {
+      const cols = await db.execute(sql.raw(`
+        SELECT column_name, data_type FROM information_schema.columns
+        WHERE table_name = 'tours' AND column_name LIKE 'pricing%'
+        ORDER BY ordinal_position
+      `))
+      results.push('--- tours pricing columns ---')
+      for (const row of cols.rows || cols) {
+        results.push(`  ${(row as any).column_name}: ${(row as any).data_type}`)
+      }
+    } catch (e: any) {
+      results.push(`Diagnostic failed: ${e.message?.slice(0, 100)}`)
+    }
+
+    // Try querying tours to check for errors
+    try {
+      const test = await db.execute(sql.raw(`SELECT id, title, pricing_model FROM tours LIMIT 1`))
+      const row = (test.rows || test)?.[0]
+      results.push(`--- test query: id=${(row as any)?.id}, title=${(row as any)?.title}, pricing_model=${(row as any)?.pricing_model}`)
+    } catch (e: any) {
+      results.push(`Test query failed: ${e.message?.slice(0, 200)}`)
+    }
+
     return NextResponse.json({ success: true, results })
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error'
