@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { sql } from 'drizzle-orm'
 
 export async function POST(req: Request) {
   const secret = req.headers.get('x-init-secret')
@@ -13,19 +14,17 @@ export async function POST(req: Request) {
     const db = (payload.db as any).drizzle
 
     const queries = [
-      // Main locales table
-      `ALTER TABLE tours_locales ADD COLUMN IF NOT EXISTS pricing_guest_categories_heading varchar`,
-      // Version locales table
-      `ALTER TABLE _tours_v_locales ADD COLUMN IF NOT EXISTS version_pricing_guest_categories_heading varchar`,
+      sql`ALTER TABLE tours_locales ADD COLUMN IF NOT EXISTS pricing_guest_categories_heading varchar`,
+      sql`ALTER TABLE _tours_v_locales ADD COLUMN IF NOT EXISTS version_pricing_guest_categories_heading varchar`,
     ]
 
     const results: string[] = []
-    for (const sql of queries) {
+    for (const q of queries) {
       try {
-        await db.execute({ sql })
-        results.push(`OK: ${sql.substring(0, 80)}`)
+        await db.execute(q)
+        results.push(`OK`)
       } catch (err: any) {
-        results.push(`ERR: ${sql.substring(0, 80)} — ${err.message}`)
+        results.push(`ERR: ${err.message}`)
       }
     }
 
