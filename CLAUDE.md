@@ -51,7 +51,7 @@ All site content is editable from Payload admin panel:
 
 ## Booking System
 - `src/components/booking/BookingModal.tsx` — modal wrapper with price header
-- `src/components/booking/BookingRequestForm.tsx` — form with date, time, guests, customer info; uses `calculatePrice()` for dynamic pricing
+- `src/components/booking/BookingRequestForm.tsx` — form with date, time, guests, guest categories, additional services, customer info; uses `calculatePrice()` for dynamic pricing
 - `src/components/booking/StickyBookButton.tsx` — sticky CTA on tour detail pages
 - `src/app/api/booking/request/route.ts` — POST endpoint: validates, saves to BookingRequests, sends notifications
 - Notifications: email (Resend), Telegram, WhatsApp, Slack — all fire in parallel on new booking
@@ -60,10 +60,15 @@ All site content is editable from Payload admin panel:
 
 ## Tour Pricing
 - 4 pricing models: GROUP_TIERS (default), PER_PERSON, FLAT_RATE, ON_REQUEST
-- `src/lib/pricing.ts` — shared engine: `calculatePrice`, `getDisplayPrice`, `getMaxGuests`, `validateGuestBreakdown`
+- `src/lib/pricing.ts` — shared engine: `calculatePrice`, `getDisplayPrice`, `getMaxGuests`, `hasOpenEndedTier`, `validateGuestBreakdown`
 - `src/components/tours/PriceDisplay.tsx` — renders price in card, detail, and sticky variants
 - `src/collections/Services.ts` — reusable add-on services (entry tickets, vehicles, etc.)
-- Tours have `pricing` group with `model` selector, `groupTiers[]`, `guestCategories[]`, `additionalServices[]`
+- Tours have `pricing` group with `model` selector, `groupTiers[]`, `guestCategoriesHeading`, `guestCategories[]`, `additionalServices[]`
+- Tour detail sidebar shows group tiers table + additional services list above the booking form
+- Guest categories appear as per-category counters in the booking form with price modifiers (e.g., Junior +€10)
+- `guestCategoriesHeading` (localized) — custom section title (e.g., "Zoo/Museum Ticket"); falls back to "Guest Categories"
+- Additional services appear as checkboxes in the booking form; selecting adds price to total
+- Open-ended last tier (no `maxGuests`): dropdown shows "X+ guests" as last option, `getMaxGuests()` returns `minGuests` of that tier
 - Legacy `groupPrice`/`groupSurchargePercent` fields hidden but kept for backward compat
 - TourCard falls back to legacy `groupPrice` if `pricing.model` is not set
 
