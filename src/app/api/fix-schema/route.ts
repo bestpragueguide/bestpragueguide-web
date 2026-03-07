@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { sql } from 'drizzle-orm'
 
 export async function POST(req: Request) {
   const secret = req.headers.get('x-init-secret')
@@ -43,10 +44,10 @@ export async function POST(req: Request) {
       `CREATE INDEX IF NOT EXISTS _tours_v_rels_tours_id_idx ON _tours_v_rels (tours_id)`,
     ]
 
-    for (const sql of queries) {
+    for (const query of queries) {
       try {
-        await drizzle.execute({ sql, params: [] })
-        results.push(`OK: ${sql.substring(0, 60)}...`)
+        await drizzle.execute(sql.raw(query))
+        results.push(`OK: ${query.substring(0, 60)}...`)
       } catch (e: any) {
         results.push(`SKIP: ${e.message?.substring(0, 80)}`)
       }
