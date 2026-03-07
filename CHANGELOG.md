@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.0] - 2026-03-07
+
+### Added
+- **Selectable additional services** in booking form — checkboxes with dynamic price calculation
+- **Guest category breakdown** in booking form — per-category counters with price modifiers (e.g., Junior +€10)
+- Service and category selections included in booking request submission data
+
 ## [1.7.3] - 2026-03-07
 
 ### Fixed

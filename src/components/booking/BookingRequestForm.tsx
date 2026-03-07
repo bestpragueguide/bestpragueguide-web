@@ -6,7 +6,7 @@ import { TIME_SLOTS } from '@/lib/booking'
 import { trackBookingSubmit } from '@/lib/analytics'
 import { currencies, formatPrice, type Currency } from '@/lib/currency'
 import { calculatePrice, getMaxGuests, getDisplayPrice, hasOpenEndedTier } from '@/lib/pricing'
-import type { TourPricing } from '@/lib/cms-types'
+import type { TourPricing, ServiceData } from '@/lib/cms-types'
 
 interface BookingRequestFormProps {
   tourId: number
@@ -31,6 +31,8 @@ export function BookingRequestForm({
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [guests, setGuests] = useState(2)
   const [currency, setCurrency] = useState<Currency>('EUR')
+  const [selectedServiceIds, setSelectedServiceIds] = useState<Set<number>>(new Set())
+  const [categoryBreakdown, setCategoryBreakdown] = useState<Record<string, number>>({})
 
   const tomorrow = new Date()
   tomorrow.setDate(tomorrow.getDate() + 1)
@@ -39,12 +41,48 @@ export function BookingRequestForm({
   const maxGuests = useMemo(() => getMaxGuests(pricing, maxGroupSize), [pricing, maxGroupSize])
   const openEnded = useMemo(() => hasOpenEndedTier(pricing), [pricing])
 
+  const availableServices = useMemo(() => {
+    return (pricing.additionalServices || [])
+      .map(a => typeof a.service === 'object' ? a.service as ServiceData : null)
+      .filter((s): s is ServiceData => s !== null)
+  }, [pricing])
+
+  const selectedServices = useMemo(() => {
+    return availableServices.filter(s => selectedServiceIds.has(s.id))
+  }, [availableServices, selectedServiceIds])
+
   const priceResult = useMemo(
-    () => calculatePrice(pricing, guests),
-    [pricing, guests],
+    () => calculatePrice(pricing, guests, selectedServices),
+    [pricing, guests, selectedServices],
   )
 
+  const categoryModifier = useMemo(() => {
+    if (!pricing.guestCategories?.length) return 0
+    return pricing.guestCategories.reduce((total, cat) => {
+      const count = categoryBreakdown[cat.label] || 0
+      if (cat.isFree || cat.onRequest) return total
+      return total + count * (cat.priceModifier || 0)
+    }, 0)
+  }, [pricing.guestCategories, categoryBreakdown])
+
   const displayInfo = useMemo(() => getDisplayPrice(pricing), [pricing])
+
+  const totalWithModifiers = priceResult.total !== null
+    ? priceResult.total + categoryModifier
+    : null
+
+  function toggleService(id: number) {
+    setSelectedServiceIds(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  function updateCategory(label: string, count: number) {
+    setCategoryBreakdown(prev => ({ ...prev, [label]: count }))
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -62,11 +100,13 @@ export function BookingRequestForm({
       customerEmail: (form.elements.namedItem('customerEmail') as HTMLInputElement).value,
       customerPhone: (form.elements.namedItem('customerPhone') as HTMLInputElement).value || '',
       specialRequests: (form.elements.namedItem('specialRequests') as HTMLTextAreaElement).value || '',
-      totalPrice: priceResult.total,
+      totalPrice: totalWithModifiers,
       pricingModel: pricing.model,
       isOnRequest: priceResult.isOnRequest,
       currency,
       locale,
+      selectedServices: selectedServices.map(s => ({ id: s.id, name: s.name })),
+      guestCategories: Object.keys(categoryBreakdown).length > 0 ? categoryBreakdown : undefined,
     }
 
     try {
@@ -132,9 +172,17 @@ export function BookingRequestForm({
   const inputClass =
     'w-full px-4 py-3 rounded-lg border border-gray-light focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors text-sm'
 
-  const priceLabel = displayInfo.isPerPerson
-    ? (locale === 'ru' ? 'за человека' : 'per person')
-    : (locale === 'ru' ? 'за группу' : 'per group')
+  const servicePrice = (service: ServiceData): string => {
+    if (service.pricingModel === 'FLAT' && service.flatPrice != null)
+      return `+${formatPrice(service.flatPrice, currency)}`
+    if (service.pricingModel === 'PER_PERSON') {
+      const cat = service.guestCategoryPricing?.find(c => !c.isFree && !c.onRequest && c.price != null)
+      if (cat?.price != null) return `+${formatPrice(cat.price, currency)}/${locale === 'ru' ? 'чел' : 'pp'}`
+    }
+    if (service.pricingModel === 'ON_REQUEST')
+      return locale === 'ru' ? 'по запросу' : 'on request'
+    return ''
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -156,14 +204,14 @@ export function BookingRequestForm({
             </button>
           ))}
         </div>
-        {priceResult.isOnRequest && priceResult.total === null ? (
+        {priceResult.isOnRequest && totalWithModifiers === null ? (
           <span className="text-xl font-bold text-gold">
             {locale === 'ru' ? 'По запросу' : 'On Request'}
           </span>
         ) : (
           <>
             <span className="text-2xl font-bold text-gold">
-              {formatPrice(priceResult.total ?? 0, currency)}
+              {formatPrice(totalWithModifiers ?? 0, currency)}
             </span>
             <p className="text-xs text-gray mt-1">
               {priceResult.breakdown.basePriceLabel}
@@ -236,6 +284,61 @@ export function BookingRequestForm({
           </p>
         )}
       </div>
+
+      {/* Guest Categories */}
+      {pricing.guestCategories && pricing.guestCategories.length > 0 && (
+        <div>
+          <p className="text-sm font-medium text-navy mb-2">
+            {locale === 'ru' ? 'Категории гостей' : 'Guest Categories'}
+          </p>
+          <div className="space-y-2">
+            {pricing.guestCategories.map((cat) => (
+              <div key={cat.label} className="flex items-center justify-between">
+                <span className="text-sm text-navy/70">
+                  {cat.label}
+                  {cat.isFree
+                    ? ` (${locale === 'ru' ? 'бесплатно' : 'free'})`
+                    : cat.priceModifier
+                      ? ` (+${formatPrice(cat.priceModifier, currency)})`
+                      : ''}
+                </span>
+                <select
+                  value={categoryBreakdown[cat.label] || 0}
+                  onChange={(e) => updateCategory(cat.label, Number(e.target.value))}
+                  className="w-16 px-2 py-1.5 rounded-lg border border-gray-light focus:border-gold focus:ring-1 focus:ring-gold outline-none text-sm text-center"
+                >
+                  {Array.from({ length: guests + 1 }, (_, i) => (
+                    <option key={i} value={i}>{i}</option>
+                  ))}
+                </select>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Additional Services */}
+      {availableServices.length > 0 && (
+        <div>
+          <p className="text-sm font-medium text-navy mb-2">
+            {locale === 'ru' ? 'Дополнительные услуги' : 'Additional Services'}
+          </p>
+          <div className="space-y-2">
+            {availableServices.map((service) => (
+              <label key={service.id} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={selectedServiceIds.has(service.id)}
+                  onChange={() => toggleService(service.id)}
+                  className="h-4 w-4 rounded border-gray-light text-gold focus:ring-gold accent-[#C4975C]"
+                />
+                <span className="text-sm text-navy/70 flex-1">{service.name}</span>
+                <span className="text-sm font-medium text-navy">{servicePrice(service)}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Name */}
       <div>
