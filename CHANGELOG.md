@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.2] - 2026-03-07
+
+### Fixed
+- **Related tours** — only show "You May Also Like" section when admin has explicitly selected related tours (removed auto-fallback to same-category tours)
+- **Lexical editor errors** — migrate-richtext endpoint now processes both EN and RU locales, converting plain text strings to Lexical format in all richText fields
+
 ## [1.10.1] - 2026-03-07
 
 ### Changed

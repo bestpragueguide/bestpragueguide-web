@@ -53,48 +53,53 @@ export async function POST(req: Request) {
     }
 
     // Migrate Tours: excerpt, faq answers, included/excluded text, meeting point instructions
-    const tours = await payload.find({ collection: 'tours', limit: 1000 })
-    for (const tour of tours.docs) {
-      const updates: Record<string, unknown> = {}
-      if (typeof tour.excerpt === 'string') {
-        updates.excerpt = textToLexical(tour.excerpt)
-      }
-      if (Array.isArray((tour as any).faq)) {
-        const faq = (tour as any).faq.map((item: any) => ({
-          ...item,
-          answer: typeof item.answer === 'string' ? textToLexical(item.answer) : item.answer,
-        }))
-        if (faq.some((item: any, i: number) => item.answer !== (tour as any).faq[i].answer)) {
-          updates.faq = faq
+    for (const locale of ['en', 'ru'] as const) {
+      const tours = await payload.find({ collection: 'tours', limit: 1000, locale })
+      for (const tour of tours.docs) {
+        const updates: Record<string, unknown> = {}
+        if (typeof tour.excerpt === 'string') {
+          updates.excerpt = textToLexical(tour.excerpt)
         }
-      }
-      if (Array.isArray((tour as any).included)) {
-        const included = (tour as any).included.map((item: any) => ({
-          ...item,
-          text: typeof item.text === 'string' ? textToLexical(item.text) : item.text,
-        }))
-        if (included.some((item: any, i: number) => item.text !== (tour as any).included[i].text)) {
-          updates.included = included
+        if (typeof tour.description === 'string') {
+          updates.description = textToLexical(tour.description)
         }
-      }
-      if (Array.isArray((tour as any).excluded)) {
-        const excluded = (tour as any).excluded.map((item: any) => ({
-          ...item,
-          text: typeof item.text === 'string' ? textToLexical(item.text) : item.text,
-        }))
-        if (excluded.some((item: any, i: number) => item.text !== (tour as any).excluded[i].text)) {
-          updates.excluded = excluded
+        if (Array.isArray((tour as any).faq)) {
+          const faq = (tour as any).faq.map((item: any) => ({
+            ...item,
+            answer: typeof item.answer === 'string' ? textToLexical(item.answer) : item.answer,
+          }))
+          if (faq.some((item: any, i: number) => item.answer !== (tour as any).faq[i].answer)) {
+            updates.faq = faq
+          }
         }
-      }
-      if (typeof (tour as any).meetingPoint?.instructions === 'string') {
-        updates.meetingPoint = {
-          ...(tour as any).meetingPoint,
-          instructions: textToLexical((tour as any).meetingPoint.instructions),
+        if (Array.isArray((tour as any).included)) {
+          const included = (tour as any).included.map((item: any) => ({
+            ...item,
+            text: typeof item.text === 'string' ? textToLexical(item.text) : item.text,
+          }))
+          if (included.some((item: any, i: number) => item.text !== (tour as any).included[i].text)) {
+            updates.included = included
+          }
         }
-      }
-      if (Object.keys(updates).length > 0) {
-        await payload.update({ collection: 'tours', id: tour.id, data: updates })
-        results.push(`tour:${tour.id}`)
+        if (Array.isArray((tour as any).excluded)) {
+          const excluded = (tour as any).excluded.map((item: any) => ({
+            ...item,
+            text: typeof item.text === 'string' ? textToLexical(item.text) : item.text,
+          }))
+          if (excluded.some((item: any, i: number) => item.text !== (tour as any).excluded[i].text)) {
+            updates.excluded = excluded
+          }
+        }
+        if (typeof (tour as any).meetingPoint?.instructions === 'string') {
+          updates.meetingPoint = {
+            ...(tour as any).meetingPoint,
+            instructions: textToLexical((tour as any).meetingPoint.instructions),
+          }
+        }
+        if (Object.keys(updates).length > 0) {
+          await payload.update({ collection: 'tours', id: tour.id, data: updates, locale })
+          results.push(`tour:${tour.id}:${locale}`)
+        }
       }
     }
 

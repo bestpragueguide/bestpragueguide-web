@@ -39,38 +39,20 @@ async function getTour(slug: string, locale: string) {
 }
 
 async function getRelatedTours(
-  tourId: number,
-  category: string,
   locale: string,
   selectedIds?: number[],
 ) {
+  if (!selectedIds || selectedIds.length === 0) return []
+
   try {
     const payload = await getPayload({ config })
-
-    // If admin selected specific related tours, fetch those
-    if (selectedIds && selectedIds.length > 0) {
-      const result = await payload.find({
-        collection: 'tours',
-        where: {
-          id: { in: selectedIds },
-          status: { equals: 'published' },
-        },
-        limit: selectedIds.length,
-        locale: locale as 'en' | 'ru',
-      })
-      return result.docs
-    }
-
-    // Fallback: same category tours
     const result = await payload.find({
       collection: 'tours',
       where: {
-        id: { not_equals: tourId },
-        category: { equals: category },
+        id: { in: selectedIds },
         status: { equals: 'published' },
-        publishedLocales: { in: [locale] },
       },
-      limit: 3,
+      limit: selectedIds.length,
       locale: locale as 'en' | 'ru',
     })
     return result.docs
@@ -191,7 +173,7 @@ export default async function TourDetailPage({
 
   const [reviews, relatedTours] = await Promise.all([
     getTourReviews(tour.id as number, locale),
-    getRelatedTours(tour.id as number, tour.category, locale, selectedRelatedIds.length > 0 ? selectedRelatedIds : undefined),
+    getRelatedTours(locale, selectedRelatedIds.length > 0 ? selectedRelatedIds : undefined),
   ])
 
   const galleryImages = ((tour as any).gallery || []).map(
