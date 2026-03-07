@@ -1,0 +1,243 @@
+import { NextResponse } from 'next/server'
+import { getPayload } from 'payload'
+import config from '@payload-config'
+import { sql } from 'drizzle-orm'
+
+export async function POST(req: Request) {
+  const secret = req.headers.get('x-init-secret')
+  if (secret !== process.env.PAYLOAD_SECRET) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  try {
+    const payload = await getPayload({ config })
+    const db = (payload.db as any).drizzle
+
+    const results: string[] = []
+
+    // Helper to run SQL and log
+    async function run(label: string, query: string) {
+      try {
+        await db.execute(sql.raw(query))
+        results.push(`OK: ${label}`)
+      } catch (e: any) {
+        results.push(`SKIP: ${label} — ${e.message?.slice(0, 100)}`)
+      }
+    }
+
+    // ===== 1. SERVICES COLLECTION =====
+    await run('Create services table', `
+      CREATE TABLE IF NOT EXISTS services (
+        id serial PRIMARY KEY,
+        name varchar,
+        type varchar NOT NULL,
+        description varchar,
+        pricing_model varchar NOT NULL,
+        require_guest_breakdown boolean DEFAULT true,
+        flat_price numeric,
+        on_request_threshold numeric,
+        updated_at timestamp(3) with time zone DEFAULT now() NOT NULL,
+        created_at timestamp(3) with time zone DEFAULT now() NOT NULL
+      )
+    `)
+
+    await run('Create services_locales table', `
+      CREATE TABLE IF NOT EXISTS services_locales (
+        name varchar,
+        description varchar,
+        id serial PRIMARY KEY,
+        _locale varchar NOT NULL,
+        _parent_id integer NOT NULL REFERENCES services(id) ON DELETE CASCADE,
+        UNIQUE(_locale, _parent_id)
+      )
+    `)
+
+    await run('Create services_guest_category_pricing', `
+      CREATE TABLE IF NOT EXISTS services_guest_category_pricing (
+        _order integer NOT NULL,
+        _parent_id integer NOT NULL REFERENCES services(id) ON DELETE CASCADE,
+        id serial PRIMARY KEY,
+        label varchar,
+        age_min numeric,
+        age_max numeric,
+        price numeric,
+        is_free boolean DEFAULT false,
+        on_request boolean DEFAULT false
+      )
+    `)
+
+    await run('Create services_guest_category_pricing_locales', `
+      CREATE TABLE IF NOT EXISTS services_guest_category_pricing_locales (
+        label varchar,
+        id serial PRIMARY KEY,
+        _locale varchar NOT NULL,
+        _parent_id integer NOT NULL REFERENCES services_guest_category_pricing(id) ON DELETE CASCADE,
+        UNIQUE(_locale, _parent_id)
+      )
+    `)
+
+    await run('Create services_group_tier_pricing', `
+      CREATE TABLE IF NOT EXISTS services_group_tier_pricing (
+        _order integer NOT NULL,
+        _parent_id integer NOT NULL REFERENCES services(id) ON DELETE CASCADE,
+        id serial PRIMARY KEY,
+        min_guests numeric NOT NULL,
+        max_guests numeric,
+        price numeric,
+        on_request boolean DEFAULT false
+      )
+    `)
+
+    // ===== 2. TOURS PRICING GROUP (columns on tours table) =====
+    await run('Add pricing_model to tours', `ALTER TABLE tours ADD COLUMN IF NOT EXISTS pricing_model varchar`)
+    await run('Add pricing_per_person_price to tours', `ALTER TABLE tours ADD COLUMN IF NOT EXISTS pricing_per_person_price numeric`)
+    await run('Add pricing_per_person_max_guests to tours', `ALTER TABLE tours ADD COLUMN IF NOT EXISTS pricing_per_person_max_guests numeric`)
+    await run('Add pricing_flat_rate_price to tours', `ALTER TABLE tours ADD COLUMN IF NOT EXISTS pricing_flat_rate_price numeric`)
+    await run('Add pricing_flat_rate_max_guests to tours', `ALTER TABLE tours ADD COLUMN IF NOT EXISTS pricing_flat_rate_max_guests numeric`)
+
+    // Localized field in pricing group
+    await run('Add pricing_on_request_note to tours_locales', `ALTER TABLE tours_locales ADD COLUMN IF NOT EXISTS pricing_on_request_note varchar`)
+
+    // ===== 3. TOURS PRICING ARRAYS =====
+    await run('Create tours_pricing_group_tiers', `
+      CREATE TABLE IF NOT EXISTS tours_pricing_group_tiers (
+        _order integer NOT NULL,
+        _parent_id integer NOT NULL REFERENCES tours(id) ON DELETE CASCADE,
+        id serial PRIMARY KEY,
+        min_guests numeric NOT NULL,
+        max_guests numeric,
+        price numeric,
+        on_request boolean DEFAULT false
+      )
+    `)
+
+    await run('Create tours_pricing_guest_categories', `
+      CREATE TABLE IF NOT EXISTS tours_pricing_guest_categories (
+        _order integer NOT NULL,
+        _parent_id integer NOT NULL REFERENCES tours(id) ON DELETE CASCADE,
+        id serial PRIMARY KEY,
+        age_min numeric,
+        age_max numeric,
+        price_modifier numeric,
+        is_free boolean DEFAULT false,
+        on_request boolean DEFAULT false
+      )
+    `)
+
+    await run('Create tours_pricing_guest_categories_locales', `
+      CREATE TABLE IF NOT EXISTS tours_pricing_guest_categories_locales (
+        label varchar,
+        id serial PRIMARY KEY,
+        _locale varchar NOT NULL,
+        _parent_id integer NOT NULL REFERENCES tours_pricing_guest_categories(id) ON DELETE CASCADE,
+        UNIQUE(_locale, _parent_id)
+      )
+    `)
+
+    await run('Create tours_pricing_additional_services', `
+      CREATE TABLE IF NOT EXISTS tours_pricing_additional_services (
+        _order integer NOT NULL,
+        _parent_id integer NOT NULL REFERENCES tours(id) ON DELETE CASCADE,
+        id serial PRIMARY KEY,
+        override_pricing boolean DEFAULT false
+      )
+    `)
+
+    await run('Create tours_pricing_additional_services_locales', `
+      CREATE TABLE IF NOT EXISTS tours_pricing_additional_services_locales (
+        custom_pricing_note varchar,
+        id serial PRIMARY KEY,
+        _locale varchar NOT NULL,
+        _parent_id integer NOT NULL REFERENCES tours_pricing_additional_services(id) ON DELETE CASCADE,
+        UNIQUE(_locale, _parent_id)
+      )
+    `)
+
+    // Relationship for service field in additional_services
+    await run('Create tours_pricing_additional_services_rels (use tours_rels)', `
+      DO $$ BEGIN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'tours_rels' AND column_name = 'services_id') THEN
+          ALTER TABLE tours_rels ADD COLUMN services_id integer REFERENCES services(id) ON DELETE CASCADE;
+        END IF;
+      END $$;
+    `)
+
+    // ===== 4. VERSION TABLES (tours have versions: { drafts: true }) =====
+    await run('Add pricing_model to _tours_v', `ALTER TABLE _tours_v ADD COLUMN IF NOT EXISTS version_pricing_model varchar`)
+    await run('Add pricing_per_person_price to _tours_v', `ALTER TABLE _tours_v ADD COLUMN IF NOT EXISTS version_pricing_per_person_price numeric`)
+    await run('Add pricing_per_person_max_guests to _tours_v', `ALTER TABLE _tours_v ADD COLUMN IF NOT EXISTS version_pricing_per_person_max_guests numeric`)
+    await run('Add pricing_flat_rate_price to _tours_v', `ALTER TABLE _tours_v ADD COLUMN IF NOT EXISTS version_pricing_flat_rate_price numeric`)
+    await run('Add pricing_flat_rate_max_guests to _tours_v', `ALTER TABLE _tours_v ADD COLUMN IF NOT EXISTS version_pricing_flat_rate_max_guests numeric`)
+
+    await run('Add pricing_on_request_note to _tours_v_locales', `ALTER TABLE _tours_v_locales ADD COLUMN IF NOT EXISTS version_pricing_on_request_note varchar`)
+
+    // Version array tables
+    await run('Create _tours_v_version_pricing_group_tiers', `
+      CREATE TABLE IF NOT EXISTS _tours_v_version_pricing_group_tiers (
+        _order integer NOT NULL,
+        _parent_id integer NOT NULL REFERENCES _tours_v(id) ON DELETE CASCADE,
+        id serial PRIMARY KEY,
+        min_guests numeric,
+        max_guests numeric,
+        price numeric,
+        on_request boolean DEFAULT false
+      )
+    `)
+
+    await run('Create _tours_v_version_pricing_guest_categories', `
+      CREATE TABLE IF NOT EXISTS _tours_v_version_pricing_guest_categories (
+        _order integer NOT NULL,
+        _parent_id integer NOT NULL REFERENCES _tours_v(id) ON DELETE CASCADE,
+        id serial PRIMARY KEY,
+        age_min numeric,
+        age_max numeric,
+        price_modifier numeric,
+        is_free boolean DEFAULT false,
+        on_request boolean DEFAULT false
+      )
+    `)
+
+    await run('Create _tours_v_version_pricing_guest_categories_locales', `
+      CREATE TABLE IF NOT EXISTS _tours_v_version_pricing_guest_categories_locales (
+        label varchar,
+        id serial PRIMARY KEY,
+        _locale varchar NOT NULL,
+        _parent_id integer NOT NULL REFERENCES _tours_v_version_pricing_guest_categories(id) ON DELETE CASCADE,
+        UNIQUE(_locale, _parent_id)
+      )
+    `)
+
+    await run('Create _tours_v_version_pricing_additional_services', `
+      CREATE TABLE IF NOT EXISTS _tours_v_version_pricing_additional_services (
+        _order integer NOT NULL,
+        _parent_id integer NOT NULL REFERENCES _tours_v(id) ON DELETE CASCADE,
+        id serial PRIMARY KEY,
+        override_pricing boolean DEFAULT false
+      )
+    `)
+
+    await run('Create _tours_v_version_pricing_additional_services_locales', `
+      CREATE TABLE IF NOT EXISTS _tours_v_version_pricing_additional_services_locales (
+        custom_pricing_note varchar,
+        id serial PRIMARY KEY,
+        _locale varchar NOT NULL,
+        _parent_id integer NOT NULL REFERENCES _tours_v_version_pricing_additional_services(id) ON DELETE CASCADE,
+        UNIQUE(_locale, _parent_id)
+      )
+    `)
+
+    // Version rels for services
+    await run('Add services_id to _tours_v_rels', `
+      DO $$ BEGIN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = '_tours_v_rels' AND column_name = 'services_id') THEN
+          ALTER TABLE _tours_v_rels ADD COLUMN services_id integer REFERENCES services(id) ON DELETE CASCADE;
+        END IF;
+      END $$;
+    `)
+
+    return NextResponse.json({ success: true, results })
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
+}
