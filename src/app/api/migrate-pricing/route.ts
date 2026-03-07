@@ -60,7 +60,10 @@ export async function POST(req: Request) {
         const tourResult = await payload.find({ collection: 'tours', limit: 1 })
         results.push(`OK: ${tourResult.totalDocs} tours, first: ${tourResult.docs[0]?.title || 'none'}`)
       } catch (e: any) {
-        results.push(`FAIL: ${e.message?.slice(0, 500)}`)
+        const msg = e.message || ''
+        // Get the error part after the SQL query
+        results.push(`FAIL (first 800): ${msg.slice(0, 800)}`)
+        results.push(`FAIL (last 500): ${msg.slice(-500)}`)
       }
 
       try {
