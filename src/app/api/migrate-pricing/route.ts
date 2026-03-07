@@ -252,7 +252,7 @@ export async function POST(req: Request) {
       const tourResult = await payload.find({ collection: 'tours', limit: 1 })
       results.push(`--- Payload find tours: ${tourResult.totalDocs} total, first: ${tourResult.docs[0]?.title || 'none'}`)
     } catch (e: any) {
-      results.push(`Payload find failed: ${e.message?.slice(0, 300)}`)
+      results.push(`Payload find failed: ${e.message?.slice(0, 1000)}`)
     }
 
     // Check table list
