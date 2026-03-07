@@ -2,6 +2,7 @@ import type {
   TourPricing, GroupTier, ServiceData, ServiceGroupTier,
   GuestBreakdown, PricingModel,
 } from './cms-types'
+import { guestsLabel } from './plurals'
 
 export interface PriceResult {
   basePrice: number | null
@@ -30,22 +31,25 @@ export function calculatePrice(
   guestCount: number,
   selectedServices?: ServiceData[],
   guestBreakdowns?: Record<number, GuestBreakdown>,
+  locale: string = 'en',
 ): PriceResult {
   let basePrice: number | null = null
   let isOnRequest = false
   let basePriceLabel = ''
+  const gl = (n: number) => guestsLabel(n, locale)
+  const isRu = locale === 'ru'
 
   switch (pricing.model) {
     case 'GROUP_TIERS': {
       const tier = findTier(pricing.groupTiers || [], guestCount)
       if (!tier || tier.onRequest || tier.price == null) {
         isOnRequest = true
-        basePriceLabel = `${guestCount}+ guests`
+        basePriceLabel = `${guestCount}+ ${gl(guestCount)}`
       } else {
         basePrice = tier.price
         basePriceLabel = tier.maxGuests
-          ? `${tier.minGuests}–${tier.maxGuests} guests`
-          : `${tier.minGuests}+ guests`
+          ? `${tier.minGuests}–${tier.maxGuests} ${gl(tier.maxGuests)}`
+          : `${tier.minGuests}+ ${gl(tier.minGuests)}`
       }
       break
     }
@@ -53,10 +57,12 @@ export function calculatePrice(
     case 'PER_PERSON': {
       if (pricing.perPersonMaxGuests && guestCount > pricing.perPersonMaxGuests) {
         isOnRequest = true
-        basePriceLabel = `${guestCount} guests (over ${pricing.perPersonMaxGuests} max)`
+        basePriceLabel = isRu
+          ? `${guestCount} ${gl(guestCount)} (макс. ${pricing.perPersonMaxGuests})`
+          : `${guestCount} guests (over ${pricing.perPersonMaxGuests} max)`
       } else {
         basePrice = (pricing.perPersonPrice || 0) * guestCount
-        basePriceLabel = `${guestCount} × ${pricing.perPersonPrice} per person`
+        basePriceLabel = `${guestCount} × ${pricing.perPersonPrice} ${isRu ? 'за чел.' : 'per person'}`
       }
       break
     }
@@ -64,19 +70,21 @@ export function calculatePrice(
     case 'FLAT_RATE': {
       if (pricing.flatRateMaxGuests && guestCount > pricing.flatRateMaxGuests) {
         isOnRequest = true
-        basePriceLabel = `${guestCount} guests (over ${pricing.flatRateMaxGuests} max)`
+        basePriceLabel = isRu
+          ? `${guestCount} ${gl(guestCount)} (макс. ${pricing.flatRateMaxGuests})`
+          : `${guestCount} guests (over ${pricing.flatRateMaxGuests} max)`
       } else {
         basePrice = pricing.flatRatePrice || 0
         basePriceLabel = pricing.flatRateMaxGuests
-          ? `flat rate (up to ${pricing.flatRateMaxGuests})`
-          : 'flat rate'
+          ? (isRu ? `фикс. цена (до ${pricing.flatRateMaxGuests})` : `flat rate (up to ${pricing.flatRateMaxGuests})`)
+          : (isRu ? 'фикс. цена' : 'flat rate')
       }
       break
     }
 
     case 'ON_REQUEST': {
       isOnRequest = true
-      basePriceLabel = pricing.onRequestNote || 'Contact us for pricing'
+      basePriceLabel = pricing.onRequestNote || (isRu ? 'Свяжитесь с нами' : 'Contact us for pricing')
       break
     }
   }

@@ -53,8 +53,8 @@ export function BookingRequestForm({
   }, [availableServices, selectedServiceIds])
 
   const priceResult = useMemo(
-    () => calculatePrice(pricing, guests, selectedServices),
-    [pricing, guests, selectedServices],
+    () => calculatePrice(pricing, guests, selectedServices, undefined, locale),
+    [pricing, guests, selectedServices, locale],
   )
 
   const categoryModifier = useMemo(() => {

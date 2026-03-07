@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.5] - 2026-03-07
+
+### Fixed
+- **Localize pricing labels** in `calculatePrice()` — basePriceLabel (e.g., "1–2 guests") now uses locale-aware text throughout all pricing models (GROUP_TIERS, PER_PERSON, FLAT_RATE, ON_REQUEST)
+
 ## [1.8.4] - 2026-03-07
 
 ### Fixed
