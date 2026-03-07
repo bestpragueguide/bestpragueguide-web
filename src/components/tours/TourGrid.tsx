@@ -11,10 +11,8 @@ interface Tour {
   excerpt: string
   category: string
   subcategory?: string | null
-  duration: number
   groupPrice?: number
   pricing?: TourPricing
-  rating?: number | null
   heroImageUrl?: string | null
   mobileImageUrl?: string | null
   focalPoint?: string
@@ -62,10 +60,8 @@ export function TourGrid({ tours, locale }: TourGridProps) {
           title={tour.title}
           slug={tour.slug}
           excerpt={tour.excerpt}
-          duration={tour.duration}
           groupPrice={tour.groupPrice}
           pricing={tour.pricing}
-          rating={tour.rating}
           heroImageUrl={tour.heroImageUrl}
           mobileImageUrl={tour.mobileImageUrl}
           focalPoint={tour.focalPoint}

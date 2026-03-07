@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.4] - 2026-03-07
+
+### Changed
+- **Tour cards** — removed rating stars and duration from tour cards (listing, homepage, related tours)
+
 ## [1.10.3] - 2026-03-07
 
 ### Added

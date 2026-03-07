@@ -42,10 +42,8 @@ export default async function ToursPage({
     excerpt: string
     category: string
     subcategory?: string | null
-    duration: number
     groupPrice: number
     pricing?: any
-    rating?: number | null
     heroImage?: { url?: string; sizes?: { card?: { url?: string } } } | number
   }> = []
 
@@ -85,10 +83,8 @@ export default async function ToursPage({
       excerpt: tour.excerpt,
       category: tour.category,
       subcategory: tour.subcategory,
-      duration: tour.duration,
       groupPrice: tour.groupPrice,
       pricing: tour.pricing,
-      rating: tour.rating,
       heroImageUrl: (img as any)?.sizes?.card?.url || img?.url || null,
       mobileImageUrl: (img as any)?.sizes?.mobileCard?.url || null,
       focalPoint: img ? `${(img as any)?.focalX ?? 50}% ${(img as any)?.focalY ?? 50}%` : undefined,

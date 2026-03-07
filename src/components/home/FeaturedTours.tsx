@@ -106,10 +106,8 @@ export async function FeaturedTours({ data, locale }: FeaturedToursProps) {
                   title={tour.title}
                   slug={tour.slug}
                   excerpt={tour.excerpt}
-                  duration={tour.duration}
                   groupPrice={tour.groupPrice}
                   pricing={(tour as any).pricing}
-                  rating={tour.rating}
                   heroImageUrl={(img as any)?.sizes?.card?.url || img?.url || null}
                   mobileImageUrl={(img as any)?.sizes?.mobileCard?.url || null}
                   focalPoint={img ? `${(img as any)?.focalX ?? 50}% ${(img as any)?.focalY ?? 50}%` : undefined}
