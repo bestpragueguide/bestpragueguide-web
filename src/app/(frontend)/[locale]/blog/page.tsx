@@ -8,7 +8,6 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { BlogCategoryFilter } from '@/components/blog/BlogCategoryFilter'
-import { categoryLabels } from '@/lib/blog'
 import { extractPlainText } from '@/components/shared/SafeRichText'
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
@@ -110,11 +109,6 @@ export default async function BlogPage({
                   ) : (
                     <div className="w-full h-full bg-gray-light" />
                   )}
-                  <div className="absolute top-3 left-3">
-                    <span className="px-2 py-1 bg-gold/90 text-white text-xs font-medium rounded">
-                      {categoryLabels[locale]?.[post.category] || post.category}
-                    </span>
-                  </div>
                 </div>
                 <div className="p-5">
                   <time className="text-xs text-gray">

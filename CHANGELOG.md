@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.1] - 2026-03-07
+
+### Changed
+- **Blog cards** — removed category tag badge overlay from blog post cards
+
 ## [1.10.0] - 2026-03-07
 
 ### Added
