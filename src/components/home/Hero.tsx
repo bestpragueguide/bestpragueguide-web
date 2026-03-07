@@ -13,10 +13,12 @@ export function Hero({ data, locale }: HeroProps) {
   const bgImage = typeof data.heroBackgroundImage === 'object' ? data.heroBackgroundImage : null
   const heroUrl = resolveMediaUrl(data.heroBackgroundImage, 'hero')
     || `${SERVER_URL}/api/media/file/photo_2_2026-03-03_18-30-45.jpg`
-  const mobileUrl = resolveMediaUrl(data.heroBackgroundImage, 'mobileHero')
   const focalPosition = bgImage
     ? `${(bgImage as any)?.focalX ?? 50}% ${(bgImage as any)?.focalY ?? 50}%`
     : '50% 50%'
+  const mobileImage = typeof data.mobileHeroImage === 'object' ? data.mobileHeroImage : null
+  const mobileUrl = resolveMediaUrl(data.mobileHeroImage, 'mobileHero')
+    || resolveMediaUrl(data.heroBackgroundImage, 'mobileHero')
   const heroAlt = (bgImage as any)?.alt || (locale === 'ru' ? 'Панорама Праги' : 'Prague panoramic view')
 
   const ctaHref = data.heroCtaHref.startsWith('/')

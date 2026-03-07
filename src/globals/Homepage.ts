@@ -44,6 +44,14 @@ export const Homepage: GlobalConfig = {
               type: 'upload',
               relationTo: 'media',
             },
+            {
+              name: 'mobileHeroImage',
+              type: 'upload',
+              relationTo: 'media',
+              admin: {
+                description: 'Optional mobile-specific hero image with its own crop/focal point. Falls back to auto-generated mobileHero size from the main image.',
+              },
+            },
           ],
         },
         {

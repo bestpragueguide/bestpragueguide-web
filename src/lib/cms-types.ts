@@ -84,6 +84,7 @@ export interface HomepageData {
   heroCta: string
   heroCtaHref: string
   heroBackgroundImage?: MediaImage | number
+  mobileHeroImage?: MediaImage | number
   trustBarItems: TrustBarItem[]
   guideHeading: string
   guideBio: any
