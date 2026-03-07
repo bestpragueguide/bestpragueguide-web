@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.6] - 2026-03-07
+
+### Fixed
+- **Guide photo** on homepage — restored horizontal (4:3 landscape) aspect ratio while keeping 40:60 layout split
+
 ## [1.8.5] - 2026-03-07
 
 ### Fixed

@@ -24,7 +24,7 @@ export function GuideProfile({ data, locale }: GuideProfileProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-14 items-center">
           {/* Photo */}
-          <div className="relative aspect-[3/4] rounded-2xl overflow-hidden order-2 lg:order-1 lg:col-span-2">
+          <div className="relative aspect-[4/3] rounded-2xl overflow-hidden order-2 lg:order-1 lg:col-span-2">
             <Image
               src={photoUrl}
               alt={locale === 'ru' ? 'Ульяна Формина — ваш гид по Праге' : 'Uliana Formina — Your Prague Guide'}
