@@ -22,9 +22,35 @@ export async function POST(req: Request) {
         await db.execute(sql.raw(query))
         results.push(`OK: ${label}`)
       } catch (e: any) {
-        results.push(`SKIP: ${label} — ${e.message?.slice(0, 200)}`)
+        results.push(`SKIP: ${label} — ${e.message?.slice(0, 500)}`)
       }
     }
+
+    // Diagnostic: check current id column types
+    const diagResult = await db.execute(sql.raw(`
+      SELECT table_name, column_name, data_type, udt_name
+      FROM information_schema.columns
+      WHERE column_name = 'id'
+      AND table_name IN (
+        'tours_pricing_group_tiers', 'tours_pricing_guest_categories',
+        'tours_pricing_additional_services', 'services_group_tier_pricing',
+        'services_guest_category_pricing'
+      )
+      ORDER BY table_name
+    `))
+    results.push(`DIAG: ${JSON.stringify(diagResult.rows)}`)
+
+    // Check all constraints on failing tables
+    const constraintResult = await db.execute(sql.raw(`
+      SELECT conname, conrelid::regclass, contype, confrelid::regclass
+      FROM pg_constraint
+      WHERE conrelid::regclass::text IN (
+        'tours_pricing_guest_categories', 'tours_pricing_additional_services',
+        'services_guest_category_pricing'
+      )
+      ORDER BY conrelid::regclass::text, conname
+    `))
+    results.push(`CONSTRAINTS: ${JSON.stringify(constraintResult.rows)}`)
 
     // Array tables that need id changed from serial/integer to varchar.
     // Payload 3.x generates string ObjectIds for array row IDs.
