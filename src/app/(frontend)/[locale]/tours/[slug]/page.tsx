@@ -17,6 +17,7 @@ import { BookingRequestForm } from '@/components/booking/BookingRequestForm'
 import { TourSchema } from '@/components/seo/TourSchema'
 import { TourViewTracker } from '@/components/analytics/TourViewTracker'
 import { getDisplayPrice } from '@/lib/pricing'
+import { PriceDisplay } from '@/components/tours/PriceDisplay'
 import type { TourPricing } from '@/lib/cms-types'
 
 async function getTour(slug: string, locale: string) {
@@ -314,6 +315,52 @@ export default async function TourDetailPage({
         {/* Right column: booking sidebar */}
         <div className="hidden lg:block">
           <div className="sticky top-24 bg-white rounded-xl border border-gray-light/50 p-6 shadow-sm">
+            {/* Group tiers pricing table */}
+            {tourPricing.model === 'GROUP_TIERS' && tourPricing.groupTiers && tourPricing.groupTiers.length > 0 && (
+              <div className="mb-5 pb-5 border-b border-gray-light/50">
+                <h3 className="text-sm font-medium text-navy mb-3">
+                  {locale === 'ru' ? 'Стоимость' : 'Pricing'}
+                </h3>
+                <PriceDisplay pricing={tourPricing} locale={locale} variant="detail" />
+              </div>
+            )}
+
+            {/* Additional services */}
+            {tourPricing.additionalServices && tourPricing.additionalServices.length > 0 && (
+              <div className="mb-5 pb-5 border-b border-gray-light/50">
+                <h3 className="text-sm font-medium text-navy mb-3">
+                  {locale === 'ru' ? 'Дополнительные услуги' : 'Additional Services'}
+                </h3>
+                <div className="space-y-2">
+                  {tourPricing.additionalServices.map((attachment, i) => {
+                    const service = typeof attachment.service === 'object' ? attachment.service : null
+                    if (!service) return null
+                    return (
+                      <div key={i} className="flex justify-between text-sm">
+                        <span className="text-navy/70">{service.name}</span>
+                        <span className="font-medium text-navy">
+                          {attachment.customPricingNote
+                            ? attachment.customPricingNote
+                            : service.pricingModel === 'ON_REQUEST'
+                              ? (locale === 'ru' ? 'По запросу' : 'On request')
+                              : service.pricingModel === 'FLAT' && service.flatPrice != null
+                                ? `€${service.flatPrice}`
+                                : service.pricingModel === 'PER_PERSON' && service.guestCategoryPricing?.length
+                                  ? (() => {
+                                      const adultCat = service.guestCategoryPricing.find(
+                                        (c: any) => !c.isFree && !c.onRequest && c.price != null,
+                                      )
+                                      return adultCat ? `€${adultCat.price}/${locale === 'ru' ? 'чел' : 'pp'}` : (locale === 'ru' ? 'По запросу' : 'On request')
+                                    })()
+                                  : (locale === 'ru' ? 'По запросу' : 'On request')}
+                        </span>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Booking form (includes price + currency selector at top) */}
             <BookingRequestForm
               tourId={tour.id as number}

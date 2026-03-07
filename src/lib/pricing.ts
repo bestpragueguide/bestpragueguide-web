@@ -245,10 +245,10 @@ export function getDisplayPrice(pricing: TourPricing): {
 export function getMaxGuests(pricing: TourPricing, tourMaxGroupSize?: number): number {
   switch (pricing.model) {
     case 'GROUP_TIERS': {
-      const pricedTiers = (pricing.groupTiers || []).filter(t => !t.onRequest && t.price != null)
-      if (pricedTiers.length === 0) return tourMaxGroupSize || 8
-      const lastPriced = pricedTiers[pricedTiers.length - 1]
-      return lastPriced.maxGuests ?? tourMaxGroupSize ?? 8
+      const allTiers = pricing.groupTiers || []
+      if (allTiers.length === 0) return tourMaxGroupSize || 8
+      const lastTier = allTiers[allTiers.length - 1]
+      return lastTier.maxGuests ?? tourMaxGroupSize ?? 8
     }
 
     case 'PER_PERSON':

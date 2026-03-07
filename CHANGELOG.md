@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.1] - 2026-03-07
+
+### Added
+- Group tiers pricing table in tour detail sidebar — shows tier breakdown above booking form
+- Additional services display in tour detail sidebar — shows service names with prices
+
+### Fixed
+- `getMaxGuests()` now includes on-request tiers when determining max selectable guests (was excluding them, limiting guest dropdown)
+
 ## [1.7.0] - 2026-03-07
 
 ### Added
