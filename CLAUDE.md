@@ -21,13 +21,24 @@ Bilingual (EN/RU) private tour portal for Prague.
 
 ## CMS Architecture
 All site content is editable from Payload admin panel:
-- **SiteSettings** global — contact info, social links, map coordinates, WhatsApp templates, license/copyright
-- **Navigation** global — header links, CTA button, footer columns with links
-- **Homepage** global — hero, trust bar, guide profile, categories, process steps, testimonials heading, FAQ heading, CTA
-- **AboutPage** global — founder profile, stats, team, values, gallery, CTAs
-- **ReviewsPage** global — page heading, photo gallery
-- **FAQs** collection — question/answer (richText), category, sortOrder, showOnHomepage flag
-- **Pages** collection — legal pages (privacy, terms, cancellation) with richText content
+
+### Globals
+- **SiteSettings** — contact info, social links, map coordinates, WhatsApp templates, license/copyright
+- **Navigation** — header links, CTA button, footer columns with links
+- **Homepage** — hero, trust bar, guide profile, categories, process steps, testimonials heading, FAQ heading, CTA
+- **AboutPage** — founder profile, stats, team, values, gallery, CTAs
+- **ReviewsPage** — page heading, photo gallery
+
+### Collections
+- **Tours** — tour listings with pricing, gallery, included/excluded items, FAQ, SEO, meeting point, difficulty, tags
+- **Services** — reusable add-on services (entry tickets, vehicles, restaurants) with own pricing models
+- **Reviews** — customer reviews with rating, reviewer name, tour reference
+- **BlogPosts** — blog articles with richText content, categories, SEO
+- **FAQs** — question/answer (richText), category, sortOrder, showOnHomepage flag
+- **Pages** — legal pages (privacy, terms, cancellation) with richText content
+- **BookingRequests** — booking submissions from frontend (tour, date, guests, customer info, price)
+- **ContactMessages** — contact form submissions
+- **Media** — images with focal point, 6 sizes, localized alt text
 
 ### Data Flow
 - `src/lib/cms-data.ts` — async functions with hardcoded fallbacks for all globals
@@ -37,6 +48,15 @@ All site content is editable from Payload admin panel:
 - Legal pages try Pages collection first, fall back to i18n
 - Client Components receive CMS data as serialized props from parent Server Components
 - Never use `select` option in payload.find() — fails silently on localized fields in PostgreSQL
+
+## Booking System
+- `src/components/booking/BookingModal.tsx` — modal wrapper with price header
+- `src/components/booking/BookingRequestForm.tsx` — form with date, time, guests, customer info; uses `calculatePrice()` for dynamic pricing
+- `src/components/booking/StickyBookButton.tsx` — sticky CTA on tour detail pages
+- `src/app/api/booking/request/route.ts` — POST endpoint: validates, saves to BookingRequests, sends notifications
+- Notifications: email (Resend), Telegram, WhatsApp, Slack — all fire in parallel on new booking
+- `src/emails/` — React Email templates: request-received (customer), new-request-admin, request-confirmed, request-declined, pre-tour-reminder, payment-received
+- `src/lib/booking.ts` — Zod validation schema, guest max dynamic from `getMaxGuests()`
 
 ## Tour Pricing
 - 4 pricing models: GROUP_TIERS (default), PER_PERSON, FLAT_RATE, ON_REQUEST

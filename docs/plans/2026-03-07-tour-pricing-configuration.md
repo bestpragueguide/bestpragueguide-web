@@ -1,6 +1,8 @@
 # Tour Pricing Configuration — Implementation Plan
 
-> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
+> **Status:** COMPLETED (v1.7.0, deployed 2026-03-07)
+
+> **For Claude:** This plan has been fully implemented. See CHANGELOG.md [1.7.0] for summary.
 
 **Goal:** Replace the flat `groupPrice` + `groupSurchargePercent` pricing with a flexible, multi-model pricing system configurable entirely from Payload CMS admin.
 

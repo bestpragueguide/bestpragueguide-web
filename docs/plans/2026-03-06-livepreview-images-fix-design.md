@@ -1,5 +1,7 @@
 # Live Preview & Image System Fix — Design
 
+> **Status:** COMPLETED (v1.6.2, deployed 2026-03-07)
+
 ## Problem
 
 1. **Live Preview**: `LivePreviewListener` component exists but is never imported anywhere. Payload admin preview iframe loads the page but never refreshes on save.

@@ -1,5 +1,7 @@
 # Design: Image Control, Live Preview & Rich Text Everywhere
 
+> **Status:** COMPLETED (v1.6.0, deployed 2026-03-06)
+
 **Date:** 2026-03-06
 **Version target:** 1.6.0
 

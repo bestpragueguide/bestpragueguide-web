@@ -1,6 +1,8 @@
 # Image Control, Live Preview & Rich Text Implementation Plan
 
-> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
+> **Status:** COMPLETED (v1.6.0–v1.6.2, deployed 2026-03-06)
+
+> **For Claude:** This plan has been fully implemented. See CHANGELOG.md [1.6.0]–[1.6.2] for summary.
 
 **Goal:** Add focal-point-aware responsive images with mobile variants, Payload Live Preview for real-time editing, and rich text (Lexical) editors on all content textarea fields.
 
