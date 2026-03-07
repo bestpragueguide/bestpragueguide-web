@@ -110,6 +110,36 @@ export default buildConfig({
 
   globals: [SiteSettings, Navigation, Homepage, AboutPage, ReviewsPage],
 
+  endpoints: [
+    {
+      path: '/fix-homepage-images',
+      method: 'get',
+      handler: async (req) => {
+        const url = new URL(req.url || '', 'http://localhost')
+        const secret = url.searchParams.get('secret') || ''
+        if (secret !== process.env.PAYLOAD_SECRET) {
+          return Response.json({ error: 'Unauthorized' }, { status: 401 })
+        }
+        try {
+          const result = await req.payload.updateGlobal({
+            slug: 'homepage',
+            data: {
+              heroBackgroundImage: 17,
+              mobileHeroImage: 74,
+            } as any,
+          })
+          return Response.json({
+            success: true,
+            heroBackgroundImage: result.heroBackgroundImage,
+            mobileHeroImage: result.mobileHeroImage,
+          })
+        } catch (error: any) {
+          return Response.json({ error: error.message }, { status: 500 })
+        }
+      },
+    },
+  ],
+
   plugins: [],
 
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com',
