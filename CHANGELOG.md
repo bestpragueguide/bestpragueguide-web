@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - **Tour Order admin link** — fixed import map registration for TourOrderLink component so it appears in admin sidebar
+- **Admin tour list locale filter** — switched from deprecated `baseListFilter` to `baseFilter` for reliable locale-based filtering
+- **Tour order locale support** — added EN/RU language toggle to tour order page; each locale shows and reorders only its published tours
 
 ## [1.13.0] - 2026-03-08
 

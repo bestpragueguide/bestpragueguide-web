@@ -97,6 +97,7 @@ export function TourOrderView() {
   const [saving, setSaving] = useState(false)
   const [dirty, setDirty] = useState(false)
   const [message, setMessage] = useState('')
+  const [locale, setLocale] = useState<'en' | 'ru'>('en')
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -105,8 +106,10 @@ export function TourOrderView() {
     }),
   )
 
-  useEffect(() => {
-    fetch('/api/tour-order')
+  const loadTours = useCallback((loc: string) => {
+    setLoading(true)
+    setMessage('')
+    fetch(`/api/tour-order?locale=${loc}`)
       .then((res) => {
         if (res.status === 401) {
           setUnauthorized(true)
@@ -123,6 +126,20 @@ export function TourOrderView() {
       })
       .catch(() => setLoading(false))
   }, [])
+
+  useEffect(() => {
+    loadTours(locale)
+  }, [locale, loadTours])
+
+  const handleLocaleChange = (newLocale: 'en' | 'ru') => {
+    if (dirty) {
+      if (!window.confirm('You have unsaved changes. Switch language and discard them?')) {
+        return
+      }
+    }
+    setDirty(false)
+    setLocale(newLocale)
+  }
 
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event
@@ -158,14 +175,6 @@ export function TourOrderView() {
       setMessage('Failed to save order')
     }
     setSaving(false)
-  }
-
-  if (loading) {
-    return (
-      <div style={{ padding: 40, textAlign: 'center', color: '#999' }}>
-        Loading tours...
-      </div>
-    )
   }
 
   if (unauthorized) {
@@ -207,22 +216,57 @@ export function TourOrderView() {
             Drag and drop to reorder tours. This order is used on the website.
           </p>
         </div>
-        <button
-          onClick={handleSave}
-          disabled={!dirty || saving}
-          style={{
-            padding: '10px 24px',
-            borderRadius: 6,
-            border: 'none',
-            background: dirty ? '#1A1A1A' : '#ccc',
-            color: '#fff',
-            cursor: dirty ? 'pointer' : 'default',
-            fontSize: 14,
-            fontWeight: 500,
-          }}
-        >
-          {saving ? 'Saving...' : 'Save Order'}
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ display: 'flex', borderRadius: 6, overflow: 'hidden', border: '1px solid #e5e7eb' }}>
+            <button
+              type="button"
+              onClick={() => handleLocaleChange('en')}
+              style={{
+                padding: '8px 16px',
+                border: 'none',
+                background: locale === 'en' ? '#1A1A1A' : '#fff',
+                color: locale === 'en' ? '#fff' : '#666',
+                cursor: 'pointer',
+                fontSize: 13,
+                fontWeight: 500,
+              }}
+            >
+              English
+            </button>
+            <button
+              type="button"
+              onClick={() => handleLocaleChange('ru')}
+              style={{
+                padding: '8px 16px',
+                border: 'none',
+                borderLeft: '1px solid #e5e7eb',
+                background: locale === 'ru' ? '#1A1A1A' : '#fff',
+                color: locale === 'ru' ? '#fff' : '#666',
+                cursor: 'pointer',
+                fontSize: 13,
+                fontWeight: 500,
+              }}
+            >
+              Русский
+            </button>
+          </div>
+          <button
+            onClick={handleSave}
+            disabled={!dirty || saving}
+            style={{
+              padding: '10px 24px',
+              borderRadius: 6,
+              border: 'none',
+              background: dirty ? '#1A1A1A' : '#ccc',
+              color: '#fff',
+              cursor: dirty ? 'pointer' : 'default',
+              fontSize: 14,
+              fontWeight: 500,
+            }}
+          >
+            {saving ? 'Saving...' : 'Save Order'}
+          </button>
+        </div>
       </div>
 
       {message && (
@@ -240,27 +284,35 @@ export function TourOrderView() {
         </div>
       )}
 
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext
-          items={tours.map((t) => t.id)}
-          strategy={verticalListSortingStrategy}
-        >
-          <div>
-            {tours.map((tour, index) => (
-              <SortableItem key={tour.id} tour={tour} index={index} />
-            ))}
-          </div>
-        </SortableContext>
-      </DndContext>
+      {loading ? (
+        <div style={{ padding: 40, textAlign: 'center', color: '#999' }}>
+          Loading tours...
+        </div>
+      ) : (
+        <>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={tours.map((t) => t.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div>
+                {tours.map((tour, index) => (
+                  <SortableItem key={tour.id} tour={tour} index={index} />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
 
-      {tours.length === 0 && (
-        <p style={{ textAlign: 'center', color: '#999', padding: 40 }}>
-          No tours found
-        </p>
+          {tours.length === 0 && (
+            <p style={{ textAlign: 'center', color: '#999', padding: 40 }}>
+              No tours found for {locale === 'en' ? 'English' : 'Russian'}
+            </p>
+          )}
+        </>
       )}
     </div>
   )

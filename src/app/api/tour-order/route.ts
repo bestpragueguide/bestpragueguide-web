@@ -17,19 +17,30 @@ async function getUser() {
   }
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const user = await getUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const url = new URL(req.url)
+    const locale = url.searchParams.get('locale') as 'en' | 'ru' | null
+
     const payload = await getPayload({ config })
+
+    const where: Record<string, unknown> = {}
+    if (locale) {
+      where.publishedLocales = { in: [locale] }
+    }
+
     const result = await payload.find({
       collection: 'tours',
       sort: 'sortOrder',
       limit: 200,
       depth: 0,
+      locale: locale || 'en',
+      where: Object.keys(where).length > 0 ? where : undefined,
     })
 
     const tours = result.docs.map((doc: any) => ({
