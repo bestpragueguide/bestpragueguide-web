@@ -46,6 +46,58 @@ export const BookingRequests: CollectionConfig = {
           }).catch(console.error)
         }
       },
+      async ({ doc, previousDoc }) => {
+        // Update TourDate.confirmedGuests when booking is confirmed or un-confirmed
+        const becameConfirmed =
+          doc.status === 'confirmed' && previousDoc?.status !== 'confirmed'
+        const lostConfirmed =
+          doc.status !== 'confirmed' &&
+          (previousDoc?.status === 'confirmed' || previousDoc?.status === 'completed')
+
+        if (!becameConfirmed && !lostConfirmed) return
+        if (!doc.preferredDate) return
+
+        const tourId =
+          typeof doc.tour === 'object' && doc.tour !== null
+            ? (doc.tour as { id: unknown }).id
+            : doc.tour
+
+        if (!tourId) return
+
+        const { getPayload } = await import('payload')
+        const { default: configPromise } = await import('@payload-config')
+        const payload = await getPayload({ config: configPromise })
+
+        const result = await payload.find({
+          collection: 'tour-dates',
+          where: {
+            and: [
+              { tour: { equals: tourId } },
+              { date: { equals: doc.preferredDate } },
+            ],
+          },
+          limit: 1,
+          depth: 0,
+        })
+
+        if (!result.docs.length) return
+        const tourDate = result.docs[0]
+
+        const delta = becameConfirmed ? (doc.guests ?? 1) : -(doc.guests ?? 1)
+        const newConfirmed = Math.max(0, (tourDate.confirmedGuests ?? 0) + delta)
+        const available = (tourDate.maxCapacity ?? 12) - newConfirmed
+
+        const newStatus =
+          available <= 0 ? 'full' :
+          available <= 2 ? 'limited' :
+          'available'
+
+        await payload.update({
+          collection: 'tour-dates',
+          id: String(tourDate.id),
+          data: { confirmedGuests: newConfirmed, status: newStatus },
+        })
+      },
     ],
   },
   fields: [
