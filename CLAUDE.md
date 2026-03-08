@@ -13,11 +13,12 @@ Bilingual (EN/RU) private tour portal for Prague.
 - `src/app/(payload)/` — Payload admin panel and API routes
 - `src/app/(frontend)/[locale]/` — Public-facing pages with i18n
 - `src/app/tour-order/` — Standalone admin page (tour drag-and-drop reordering)
-- `src/collections/` — Payload CMS collection configs (Tours, Reviews, Pages, FAQs, BlogPosts, BookingRequests, ContactMessages, Media, Services)
-- `src/globals/` — Payload CMS global configs (SiteSettings, Navigation, Homepage, AboutPage, ReviewsPage)
+- `src/collections/` — Payload CMS collection configs (Tours, Reviews, Pages, FAQs, BlogPosts, BookingRequests, ContactMessages, Media, Services, TourDates)
+- `src/globals/` — Payload CMS global configs (SiteSettings, Navigation, Homepage, AboutPage, ReviewsPage, PaymentConfig)
 - `src/components/` — React components (shared, layout, home, tours, blog, booking, reviews, seo, analytics, admin)
 - `src/emails/` — React Email templates
-- `src/lib/` — Utilities (cms-data, cms-types, icon-map, email, telegram, whatsapp, slack, booking, blog, ip, currency, pricing, metadata, analytics, editors, plurals)
+- `src/lib/` — Utilities (cms-data, cms-types, icon-map, email, telegram, whatsapp, slack, booking, blog, ip, currency, pricing, metadata, analytics, editors, plurals, n8n, stripe, chatwoot, mautic, formbricks, twenty-crm)
+- `migrations/` — Fallback SQL scripts for schema changes when /api/init-db hangs
 - `src/i18n/` — next-intl routing, request config, message files (EN/RU)
 
 ## CMS Architecture
@@ -97,15 +98,32 @@ All site content is editable from Payload admin panel:
 | `/api/import-tours` | POST | No | Import tours from JSON |
 | `/api/assign-photos` | POST | No | Associate photos to tours |
 | `/api/upload-photos` | POST | No | Upload photos to Media |
+| `/api/booking/send-payment-link` | POST | JWT | Create Stripe Checkout session for confirmed booking deposit |
+| `/api/stripe/webhook` | POST | Stripe sig | Handle checkout.session.completed, update booking payment status |
+| `/api/availability/[tourSlug]` | GET | No | Return available tour dates for a month (YYYY-MM) |
+| `/api/health` | GET | No | Lightweight DB check for Uptime Kuma monitoring |
 
 ## Booking System
 - `src/components/booking/BookingModal.tsx` — modal wrapper with price header
 - `src/components/booking/BookingRequestForm.tsx` — form with date, time, guests, guest categories, additional services, customer info; uses `calculatePrice()` for dynamic pricing
 - `src/components/booking/StickyBookButton.tsx` — sticky CTA on tour detail pages
 - `src/app/api/booking/request/route.ts` — POST endpoint: validates, saves to BookingRequests, sends notifications
-- Notifications: email (Resend), Telegram, WhatsApp, Slack — all fire in parallel on new booking
+- Notifications: email (Resend), Telegram, WhatsApp, Slack, n8n — all fire in parallel on new booking
 - `src/emails/` — React Email templates: request-received (customer), new-request-admin, request-confirmed, request-declined, pre-tour-reminder, payment-received
 - `src/lib/booking.ts` — Zod validation schema, guest max dynamic from `getMaxGuests()`, request ref format: BPG-YYYY-NNNNN
+
+## OSS Integration (v1.15.0)
+- **n8n** (`src/lib/n8n.ts`) — fire-and-forget webhook hub; 4 methods: bookingNew, bookingConfirmed, tourCompleted, paymentReceived
+- **Stripe** (`src/lib/stripe.ts`) — Checkout session for deposits, refund helper; PaymentConfig global controls deposit %
+- **Chatwoot** (`src/lib/chatwoot.ts`) — conversation notes + booking note formatter
+- **Mautic** (`src/lib/mautic.ts`) — OAuth2 contact upsert for email automation
+- **Formbricks** (`src/lib/formbricks.ts`) — survey URL builder with hidden fields
+- **Twenty CRM** (`src/lib/twenty-crm.ts`) — GraphQL person find-or-create
+- **TourDates** (`src/collections/TourDates.ts`) — availability calendar with capacity auto-management
+- **AvailabilityCalendar** (`src/components/tours/AvailabilityCalendar.tsx`) — interactive date picker
+- **PaymentLinkButton** (`src/components/admin/PaymentLinkButton.tsx`) — admin button for Stripe payment links
+- All OSS clients are fire-and-forget — booking flow works when services are unconfigured
+- Spec: `OSS-INTEGRATION-SPEC-v2.md` (v2.2) in bestpragueguide-docs
 
 ## Tour Pricing
 - 4 pricing models: GROUP_TIERS (default), PER_PERSON, FLAT_RATE, ON_REQUEST

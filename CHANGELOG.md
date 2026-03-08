@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.15.0] - 2026-03-08
+
+### Added
+- **n8n webhook client** (`src/lib/n8n.ts`) — fire-and-forget webhook hub with 4 payload types: bookingNew, bookingConfirmed, tourCompleted, paymentReceived
+- **n8n booking hook** — added n8n.bookingNew() to booking request API notification array
+- **PaymentConfig global** (`src/globals/PaymentConfig.ts`) — admin-configurable deposit %, payment deadline, cash currencies, exchange rates
+- **Stripe library** (`src/lib/stripe.ts`) — Checkout session creation for deposits and refund helper
+- **Send payment link API** (`/api/booking/send-payment-link`) — auth-gated admin endpoint to create Stripe Checkout sessions
+- **Stripe webhook handler** (`/api/stripe/webhook`) — handles checkout.session.completed, updates booking payment status
+- **PaymentLinkButton admin component** — "Send Payment Link" button on confirmed bookings in admin panel
+- **Payment result pages** — payment-success and payment-cancelled pages with EN/RU i18n
+- **BookingRequests payment fields** — paymentStatus, depositAmountEur, cashBalanceEur, npsScore, stripe fields, paidAt, chatwootConversationId, mauticContactId, twentyContactId
+- **BookingRequests capacity hook** — auto-updates TourDate.confirmedGuests when booking status changes
+- **Chatwoot client** (`src/lib/chatwoot.ts`) — API helper for private notes and booking note formatter
+- **Mautic client** (`src/lib/mautic.ts`) — OAuth2 client with token caching and contact upsert
+- **Formbricks URL builder** (`src/lib/formbricks.ts`) — pre-filled survey link generator for EN/RU
+- **Twenty CRM client** (`src/lib/twenty-crm.ts`) — GraphQL client with person find-or-create
+- **TourDates collection** (`src/collections/TourDates.ts`) — availability calendar with capacity tracking, auto-status
+- **Availability API** (`/api/availability/[tourSlug]`) — public GET endpoint for calendar date slots
+- **AvailabilityCalendar component** — interactive month calendar with color-coded availability
+- **TourBookingSection component** — wraps calendar + booking modal with date pre-fill
+- **Health check API** (`/api/health`) — lightweight DB check for Uptime Kuma monitoring
+- **Migration SQL scripts** — phase2-payment-config.sql and phase7-tour-dates.sql fallbacks
+- **Booking.payment i18n keys** — EN/RU translations for payment success/cancelled pages
+
+### Changed
+- **BookingModal** — added defaultDate/defaultTime props for calendar integration
+- **BookingRequestForm** — added defaultDate/defaultTime props
+- **payload.config.ts** — registered PaymentConfig global and TourDates collection
+- **importMap.js** — registered PaymentLinkButton admin component
+- **i18n/routing.ts** — added /booking/payment-success and /booking/payment-cancelled routes
+
 ## [1.14.1] - 2026-03-08
 
 ### Added
