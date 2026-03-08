@@ -1,9 +1,29 @@
 import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { cookies } from 'next/headers'
+
+async function getUser() {
+  const payload = await getPayload({ config })
+  const cookieStore = await cookies()
+  const token = cookieStore.get('payload-token')?.value
+  if (!token) return null
+
+  try {
+    const { user } = await payload.auth({ headers: new Headers({ Authorization: `JWT ${token}` }) })
+    return user
+  } catch {
+    return null
+  }
+}
 
 export async function GET() {
   try {
+    const user = await getUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const payload = await getPayload({ config })
     const result = await payload.find({
       collection: 'tours',
@@ -29,20 +49,17 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const payload = await getPayload({ config })
-
-    // Verify user is authenticated
-    const { user } = await payload.auth({ headers: req.headers })
+    const user = await getUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const payload = await getPayload({ config })
     const { order } = await req.json()
     if (!Array.isArray(order)) {
       return NextResponse.json({ error: 'Invalid order data' }, { status: 400 })
     }
 
-    // Update each tour's sortOrder
     for (const item of order) {
       await payload.update({
         collection: 'tours',

@@ -37,25 +37,35 @@ function SortableItem({ tour, index }: { tour: Tour; index: number }) {
     isDragging,
   } = useSortable({ id: tour.id })
 
-  const style = {
+  const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    padding: '12px 16px',
+    background: '#fff',
+    border: isDragging ? '1px solid #60a5fa' : '1px solid #e5e7eb',
+    borderRadius: 8,
+    marginBottom: 8,
+    boxShadow: isDragging ? '0 4px 12px rgba(0,0,0,0.15)' : '0 1px 2px rgba(0,0,0,0.05)',
   }
 
+  const statusColors: Record<string, { bg: string; color: string }> = {
+    published: { bg: '#dcfce7', color: '#166534' },
+    draft: { bg: '#fef9c3', color: '#854d0e' },
+    archived: { bg: '#f3f4f6', color: '#6b7280' },
+  }
+  const sc = statusColors[tour.status] || statusColors.archived
+
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className={`flex items-center gap-3 px-4 py-3 bg-white border rounded-md ${
-        isDragging ? 'shadow-lg border-blue-400' : 'border-gray-200'
-      }`}
-    >
+    <div ref={setNodeRef} style={style}>
       <button
         {...attributes}
         {...listeners}
         type="button"
-        className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 px-1"
+        style={{ cursor: 'grab', color: '#9ca3af', padding: '0 4px', background: 'none', border: 'none' }}
         aria-label="Drag to reorder"
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -67,20 +77,14 @@ function SortableItem({ tour, index }: { tour: Tour; index: number }) {
           <circle cx="11" cy="13" r="1.5" />
         </svg>
       </button>
-      <span className="text-sm text-gray-400 w-6 text-right font-mono">{index + 1}</span>
-      <span className="flex-1 font-medium text-sm">{tour.title}</span>
-      <span
-        className={`text-xs px-2 py-0.5 rounded ${
-          tour.status === 'published'
-            ? 'bg-green-100 text-green-700'
-            : tour.status === 'draft'
-              ? 'bg-yellow-100 text-yellow-700'
-              : 'bg-gray-100 text-gray-500'
-        }`}
-      >
+      <span style={{ fontSize: 13, color: '#9ca3af', width: 24, textAlign: 'right', fontFamily: 'monospace' }}>
+        {index + 1}
+      </span>
+      <span style={{ flex: 1, fontWeight: 500, fontSize: 14 }}>{tour.title}</span>
+      <span style={{ fontSize: 12, padding: '2px 8px', borderRadius: 4, background: sc.bg, color: sc.color }}>
         {tour.status}
       </span>
-      <span className="text-xs text-gray-400">{tour.category}</span>
+      <span style={{ fontSize: 12, color: '#9ca3af' }}>{tour.category}</span>
     </div>
   )
 }
@@ -88,6 +92,7 @@ function SortableItem({ tour, index }: { tour: Tour; index: number }) {
 export function TourOrderView() {
   const [tours, setTours] = useState<Tour[]>([])
   const [loading, setLoading] = useState(true)
+  const [unauthorized, setUnauthorized] = useState(false)
   const [saving, setSaving] = useState(false)
   const [dirty, setDirty] = useState(false)
   const [message, setMessage] = useState('')
@@ -101,10 +106,19 @@ export function TourOrderView() {
 
   useEffect(() => {
     fetch('/api/tour-order')
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.status === 401) {
+          setUnauthorized(true)
+          setLoading(false)
+          return null
+        }
+        return res.json()
+      })
       .then((data) => {
-        setTours(data.tours || [])
-        setLoading(false)
+        if (data) {
+          setTours(data.tours || [])
+          setLoading(false)
+        }
       })
       .catch(() => setLoading(false))
   }, [])
@@ -139,7 +153,7 @@ export function TourOrderView() {
       } else {
         setMessage(`Error: ${data.error}`)
       }
-    } catch (e) {
+    } catch {
       setMessage('Failed to save order')
     }
     setSaving(false)
@@ -147,23 +161,47 @@ export function TourOrderView() {
 
   if (loading) {
     return (
-      <div className="p-8">
-        <p className="text-gray-500">Loading tours...</p>
+      <div style={{ padding: 40, textAlign: 'center', color: '#999' }}>
+        Loading tours...
+      </div>
+    )
+  }
+
+  if (unauthorized) {
+    return (
+      <div style={{ maxWidth: 400, margin: '80px auto', textAlign: 'center' }}>
+        <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 12 }}>Login Required</h1>
+        <p style={{ fontSize: 14, color: '#666', marginBottom: 24 }}>
+          Please log in to the admin panel first.
+        </p>
+        <a
+          href="/admin"
+          style={{
+            display: 'inline-block',
+            padding: '10px 24px',
+            background: '#1A1A1A',
+            color: '#fff',
+            borderRadius: 6,
+            textDecoration: 'none',
+            fontSize: 14,
+          }}
+        >
+          Go to Admin
+        </a>
       </div>
     )
   }
 
   return (
-    <div
-      style={{
-        maxWidth: 800,
-        margin: '0 auto',
-        padding: '40px 20px',
-      }}
-    >
-      <div className="flex items-center justify-between mb-6">
+    <div style={{ maxWidth: 800, margin: '0 auto', padding: '40px 20px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Tour Order</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Tour Order</h1>
+            <a href="/admin" style={{ fontSize: 13, color: '#666', textDecoration: 'none' }}>
+              ← Back to Admin
+            </a>
+          </div>
           <p style={{ fontSize: 14, color: '#666', marginTop: 4 }}>
             Drag and drop to reorder tours. This order is used on the website.
           </p>
@@ -172,7 +210,7 @@ export function TourOrderView() {
           onClick={handleSave}
           disabled={!dirty || saving}
           style={{
-            padding: '8px 20px',
+            padding: '10px 24px',
             borderRadius: 6,
             border: 'none',
             background: dirty ? '#1A1A1A' : '#ccc',
@@ -189,7 +227,7 @@ export function TourOrderView() {
       {message && (
         <div
           style={{
-            padding: '8px 16px',
+            padding: '10px 16px',
             marginBottom: 16,
             borderRadius: 6,
             background: message.startsWith('Error') ? '#fef2f2' : '#f0fdf4',
@@ -210,7 +248,7 @@ export function TourOrderView() {
           items={tours.map((t) => t.id)}
           strategy={verticalListSortingStrategy}
         >
-          <div className="space-y-2">
+          <div>
             {tours.map((tour, index) => (
               <SortableItem key={tour.id} tour={tour} index={index} />
             ))}
