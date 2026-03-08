@@ -15,6 +15,7 @@ import {
 } from '@/lib/whatsapp'
 import { getIpInfo, formatLocation } from '@/lib/ip'
 import { sendSlackMessage, formatBookingSlackMessage } from '@/lib/slack'
+import { n8n } from '@/lib/n8n'
 import { z } from 'zod'
 
 const rateLimitMap = new Map<string, number[]>()
@@ -59,7 +60,7 @@ export async function POST(request: NextRequest) {
 
     const payload = await getPayload({ config })
 
-    await payload.create({
+    const savedBooking = await payload.create({
       collection: 'booking-requests',
       data: {
         requestRef,
@@ -137,6 +138,25 @@ export async function POST(request: NextRequest) {
       sendSlackMessage(
         formatBookingSlackMessage(notificationData),
       ),
+      n8n.bookingNew({
+        bookingId: String(savedBooking.id),
+        requestRef,
+        tourId: String(data.tourId),
+        tourTitle: data.tourName,
+        tourSlug: '',
+        preferredDate: data.preferredDate,
+        preferredTime: data.preferredTime,
+        guests: data.guests,
+        customerName: data.customerName,
+        customerEmail: data.customerEmail,
+        customerPhone: data.customerPhone,
+        customerLanguage: data.locale as 'en' | 'ru',
+        specialRequests: data.specialRequests,
+        totalPrice: data.totalPrice ?? undefined,
+        currency: data.currency || 'EUR',
+        ipCountry: ipInfo?.country,
+        submittedAt: new Date().toISOString(),
+      }),
     ]
 
     // Fire and forget — don't block the response
