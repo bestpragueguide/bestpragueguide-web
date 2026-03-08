@@ -10,6 +10,7 @@ import { Footer } from '@/components/layout/Footer'
 import { WhatsAppButton } from '@/components/shared/WhatsAppButton'
 import { OrganizationSchema } from '@/components/seo/OrganizationSchema'
 import { RefreshOnSave } from '@/components/shared/RefreshOnSave'
+import { CookieConsent } from '@/components/shared/CookieConsent'
 import {
   GoogleTagManagerHead,
   GoogleTagManagerBody,
@@ -89,6 +90,7 @@ export default async function FrontendLayout({
             tourMessageTemplate={siteSettings.whatsappTourMessageTemplate}
             locale={locale}
           />
+          <CookieConsent locale={locale} />
           <OrganizationSchema />
           <RefreshOnSave />
         </NextIntlClientProvider>

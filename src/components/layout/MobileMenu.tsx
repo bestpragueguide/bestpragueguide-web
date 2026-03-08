@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
-import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher'
 
 interface MobileMenuProps {
   open: boolean
@@ -86,10 +85,6 @@ export function MobileMenu({ open, onClose, navLinks, ctaLabel, ctaHref }: Mobil
             {ctaLabel}
           </Link>
 
-          {/* Language switcher */}
-          <div className="mt-4 flex justify-center">
-            <LanguageSwitcher />
-          </div>
         </nav>
       </div>
     </>

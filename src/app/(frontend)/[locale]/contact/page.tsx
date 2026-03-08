@@ -31,10 +31,6 @@ export default async function ContactPage({
   const t = await getTranslations({ locale, namespace: 'contact' })
   const siteSettings = await getSiteSettings(locale)
 
-  const mapSrc = siteSettings.mapCoordinates
-    ? `https://maps.google.com/maps?q=${siteSettings.mapCoordinates.lat},${siteSettings.mapCoordinates.lng}&z=15&output=embed`
-    : 'https://maps.google.com/maps?q=50.0875,14.4213&z=15&output=embed'
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Breadcrumbs
@@ -92,37 +88,11 @@ export default async function ContactPage({
               <span className="text-sm text-navy">{siteSettings.contactPhoneDisplay}</span>
             </a>
 
-            {siteSettings.socialLinks.instagramUrl && (
-              <a
-                href={siteSettings.socialLinks.instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 p-4 bg-white rounded-lg border border-gray-light/50 hover:border-pink-400/50 transition-colors"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-pink-500">
-                  <rect x="2" y="2" width="20" height="20" rx="5" />
-                  <circle cx="12" cy="12" r="5" />
-                  <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
-                </svg>
-                <span className="text-sm text-navy">Instagram</span>
-              </a>
-            )}
           </div>
 
           <p className="mt-6 text-sm text-gray">
             {locale === 'ru' ? 'Режим работы' : 'Business Hours'}: {siteSettings.businessHours}
           </p>
-
-          {/* Map */}
-          <div className="mt-8">
-            <iframe
-              title="Office Location"
-              src={mapSrc}
-              className="w-full h-64 rounded-lg border border-gray-light"
-              loading="lazy"
-              allowFullScreen
-            />
-          </div>
         </div>
       </div>
     </div>

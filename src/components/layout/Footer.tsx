@@ -46,6 +46,25 @@ export function Footer({ navigation, siteSettings, locale }: FooterProps) {
               {siteSettings.contactPhoneDisplay}
             </a>
           </p>
+
+          {/* Social icons */}
+          {siteSettings.socialLinks?.instagramUrl && (
+            <div className="mt-4 flex justify-center gap-4">
+              <a
+                href={siteSettings.socialLinks.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/40 hover:text-gold transition-colors"
+                aria-label="Instagram"
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <rect x="2" y="2" width="20" height="20" rx="5" />
+                  <circle cx="12" cy="12" r="5" />
+                  <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+                </svg>
+              </a>
+            </div>
+          )}
         </div>
 
         {/* Navigation columns */}

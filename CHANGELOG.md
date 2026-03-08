@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.13.0] - 2026-03-08
+
+### Added
+- **Cookie consent banner** — shows on first visit, hides after acceptance (persisted in localStorage), links to privacy policy, bilingual (EN/RU)
+- **Instagram icon in footer** — gold-colored Instagram icon link from SiteSettings
+- **Language switcher in mobile header** — always visible next to hamburger menu
+
+### Changed
+- **Contact page** — removed Instagram link and embedded Google Map
+- **Locale detection** — visitors from RU-speaking regions see Russian version by default (next-intl `localeDetection`)
+
+### Removed
+- **Language switcher from mobile menu** — moved to header for constant visibility
+
 ## [1.12.0] - 2026-03-08
 
 ### Added

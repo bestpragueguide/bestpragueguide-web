@@ -57,12 +57,14 @@ export function Nav({ navigation, locale }: NavProps) {
             </Link>
           </div>
 
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setMobileOpen(true)}
-            className="md:hidden p-2 text-navy"
-            aria-label="Open menu"
-          >
+          {/* Mobile: language switcher + hamburger */}
+          <div className="md:hidden flex items-center gap-2">
+            <LanguageSwitcher />
+            <button
+              onClick={() => setMobileOpen(true)}
+              className="p-2 text-navy"
+              aria-label="Open menu"
+            >
             <svg
               width="24"
               height="24"
@@ -76,7 +78,8 @@ export function Nav({ navigation, locale }: NavProps) {
               <line x1="3" y1="12" x2="21" y2="12" />
               <line x1="3" y1="18" x2="21" y2="18" />
             </svg>
-          </button>
+            </button>
+          </div>
         </nav>
       </header>
 
