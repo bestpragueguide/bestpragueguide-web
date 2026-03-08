@@ -5,11 +5,10 @@ All notable changes to this project will be documented in this file.
 ## [1.11.0] - 2026-03-08
 
 ### Added
-- **Logo mark** — SVG icon (italic gold "B" on navy rounded square) used as favicon and inline logo component (`LogoMark`)
-- Logo now displays icon mark + text side-by-side in header, footer, and homepage
+- **Logo mark** — SVG icon (italic gold "B" on navy rounded square) used as favicon (`LogoMark` component available for standalone use)
 
 ### Changed
-- **Favicon** — updated favicon.svg and favicon.ico with new logo mark design
+- **Favicon** — updated favicon.svg and favicon.ico with new logo mark design (16, 32, 48, 256px)
 
 ## [1.10.4] - 2026-03-07
 

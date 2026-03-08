@@ -56,19 +56,16 @@ export function LogoMark({ variant = 'default', className = '' }: { variant?: Lo
 
 export function Logo({ variant = 'default', locale = 'en' }: { variant?: LogoVariant; locale?: string }) {
   return (
-    <div className="flex items-center gap-2.5">
-      <LogoMark variant={variant} />
-      <div>
-        <div
-          className={`font-heading font-semibold leading-none tracking-[1px] ${brandSizeClass[variant]} ${brandColorClass[variant]}`}
-        >
-          Best <em className="text-gold font-medium italic">Prague</em> Guide
-        </div>
-        <div
-          className={`font-body font-normal uppercase ${taglineClass[variant]}`}
-        >
-          {taglines[locale] || taglines.en}
-        </div>
+    <div className="text-center">
+      <div
+        className={`font-heading font-semibold leading-none tracking-[1px] ${brandSizeClass[variant]} ${brandColorClass[variant]}`}
+      >
+        Best <em className="text-gold font-medium italic">Prague</em> Guide
+      </div>
+      <div
+        className={`font-body font-normal uppercase ${taglineClass[variant]}`}
+      >
+        {taglines[locale] || taglines.en}
       </div>
     </div>
   )
