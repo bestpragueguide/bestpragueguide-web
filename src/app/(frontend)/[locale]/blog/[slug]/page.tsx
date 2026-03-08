@@ -174,22 +174,10 @@ export default async function BlogPostPage({
                 <span className="px-2 py-1 bg-gold/10 text-gold text-xs font-medium rounded">
                   {labels[post.category as string] || post.category}
                 </span>
-                <time className="text-sm text-gray">
-                  {new Date(post.publishedAt as string).toLocaleDateString(locale === 'ru' ? 'ru-RU' : 'en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </time>
               </div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-navy leading-tight">
                 {post.title}
               </h1>
-              {post.author && (
-                <p className="mt-3 text-navy/60">
-                  {locale === 'ru' ? 'Автор:' : 'By'} {post.author}
-                </p>
-              )}
             </header>
 
             {/* Hero image */}

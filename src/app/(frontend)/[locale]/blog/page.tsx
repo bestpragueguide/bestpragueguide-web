@@ -111,14 +111,7 @@ export default async function BlogPage({
                   )}
                 </div>
                 <div className="p-5">
-                  <time className="text-xs text-gray">
-                    {new Date(post.publishedAt).toLocaleDateString(locale === 'ru' ? 'ru-RU' : 'en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </time>
-                  <h2 className="mt-2 text-lg font-heading font-semibold text-navy group-hover:text-gold transition-colors">
+                  <h2 className="text-lg font-heading font-semibold text-navy group-hover:text-gold transition-colors">
                     {post.title}
                   </h2>
                   <p className="mt-2 text-sm text-navy/70 line-clamp-3">

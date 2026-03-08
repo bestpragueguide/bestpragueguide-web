@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 - **Tour order page** — standalone drag-and-drop page at `/tour-order` for reordering tours; linked from admin sidebar
 - **Admin tour list filtering** — tour list view filters by current admin locale (EN shows EN-published tours, RU shows RU-published tours)
 
+### Changed
+- **Blog cards** — removed publish date from blog list cards
+- **Blog detail** — removed publish date and author name from blog post header
+
 ### Fixed
 - **Tour Order admin link** — fixed import map registration for TourOrderLink component so it appears in admin sidebar
 - **Admin tour list locale filter** — switched from deprecated `baseListFilter` to `baseFilter` for reliable locale-based filtering
