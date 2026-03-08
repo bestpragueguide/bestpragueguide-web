@@ -39,17 +39,18 @@ export function LogoMark({ variant = 'default', className = '' }: { variant?: Lo
       <rect width="32" height="32" rx="6" fill="#1A1A1A" />
       <text
         x="16"
-        y="22.5"
+        y="21.5"
         textAnchor="middle"
         fill="#C4975C"
         fontFamily="'Cormorant Garamond',Georgia,serif"
         fontWeight="600"
         fontStyle="italic"
-        fontSize="21"
+        fontSize="13"
+        letterSpacing="0.5"
       >
-        B
+        BPG
       </text>
-      <line x1="9" y1="25.5" x2="23" y2="25.5" stroke="#C4975C" strokeWidth="0.8" strokeLinecap="round" />
+      <line x1="7" y1="24.5" x2="25" y2="24.5" stroke="#C4975C" strokeWidth="0.8" strokeLinecap="round" />
     </svg>
   )
 }
