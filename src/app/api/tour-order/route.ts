@@ -29,18 +29,13 @@ export async function GET(req: Request) {
 
     const payload = await getPayload({ config })
 
-    const where: Record<string, unknown> = {}
-    if (locale) {
-      where.publishedLocales = { in: [locale] }
-    }
-
     const result = await payload.find({
       collection: 'tours',
       sort: 'sortOrder',
       limit: 200,
       depth: 0,
       locale: locale || 'en',
-      where: Object.keys(where).length > 0 ? where : undefined,
+      ...(locale ? { where: { publishedLocales: { in: [locale] } } } : {}),
     })
 
     const tours = result.docs.map((doc: any) => ({
