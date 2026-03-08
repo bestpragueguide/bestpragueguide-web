@@ -27,6 +27,9 @@ All notable changes to this project will be documented in this file.
 - **Migration SQL scripts** — phase2-payment-config.sql and phase7-tour-dates.sql fallbacks
 - **Booking.payment i18n keys** — EN/RU translations for payment success/cancelled pages
 
+### Fixed
+- **tour_dates migration SQL** — fixed column types: collection id must be `serial` (not `varchar`), tour_id must be `integer`, locale column must be `_locale` (Payload convention)
+
 ### Changed
 - **BookingModal** — added defaultDate/defaultTime props for calendar integration
 - **BookingRequestForm** — added defaultDate/defaultTime props
