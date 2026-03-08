@@ -2,10 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.0] - 2026-03-08
+
+### Added
+- **Tour order drag-and-drop** — custom admin view at `/admin/tour-order` for reordering tours via drag-and-drop; order syncs to website via `sortOrder` field
+- **Tour Order nav link** — added link in admin sidebar navigation
+
 ## [1.11.0] - 2026-03-08
 
 ### Added
-- **Logo mark** — SVG icon (italic gold "B" on navy rounded square) used as favicon (`LogoMark` component available for standalone use)
+- **Logo mark** — SVG icon (italic gold "BPG" on navy rounded square) used as favicon (`LogoMark` component available for standalone use)
 
 ### Changed
 - **Favicon** — updated favicon.svg and favicon.ico with new logo mark design (16, 32, 48, 256px)
