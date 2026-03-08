@@ -21,5 +21,7 @@ export const routing = defineRouting({
       en: '/cancellation-policy',
       ru: '/cancellation-policy',
     },
+    '/booking/payment-success': '/booking/payment-success',
+    '/booking/payment-cancelled': '/booking/payment-cancelled',
   },
 })

@@ -146,5 +146,14 @@
     "cancellationByUs": "In the rare event that we need to cancel a tour (e.g., due to extreme weather or guide illness), we will offer a full refund or reschedule at no extra cost.",
     "cancellationRefundsTitle": "Refunds",
     "cancellationRefunds": "Approved refunds are processed within 5–10 business days via the original payment method."
+  },
+  "Booking": {
+    "payment": {
+      "successTitle": "Payment confirmed!",
+      "successBody": "Your deposit has been received. You'll receive full tour details by email shortly. See you in Prague!",
+      "cancelledTitle": "Payment not completed",
+      "cancelledBody": "No payment was taken. Your booking is still held — use the link in your confirmation email to complete payment.",
+      "reference": "Booking reference"
+    }
   }
 }
