@@ -31,6 +31,9 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    components: {
+      afterNavLinks: ['./components/admin/TourOrderLink#TourOrderLink'],
+    },
     livePreview: {
       url: ({ data, collectionConfig, globalConfig, locale }) => {
         const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'

@@ -3,7 +3,7 @@
 export function TourOrderLink() {
   return (
     <a
-      href="/admin/tour-order"
+      href="/tour-order"
       style={{
         display: 'flex',
         alignItems: 'center',
