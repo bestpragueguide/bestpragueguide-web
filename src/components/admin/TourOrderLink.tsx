@@ -1,8 +1,10 @@
 'use client'
 
+import Link from 'next/link'
+
 export function TourOrderLink() {
   return (
-    <a
+    <Link
       href="/tour-order"
       style={{
         display: 'flex',
@@ -21,7 +23,7 @@ export function TourOrderLink() {
         <rect x="1" y="12" width="14" height="3" rx="1" />
       </svg>
       Tour Order
-    </a>
+    </Link>
   )
 }
 

@@ -18,6 +18,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import Link from 'next/link'
 
 interface Tour {
   id: number
@@ -174,7 +175,7 @@ export function TourOrderView() {
         <p style={{ fontSize: 14, color: '#666', marginBottom: 24 }}>
           Please log in to the admin panel first.
         </p>
-        <a
+        <Link
           href="/admin"
           style={{
             display: 'inline-block',
@@ -187,7 +188,7 @@ export function TourOrderView() {
           }}
         >
           Go to Admin
-        </a>
+        </Link>
       </div>
     )
   }
@@ -198,9 +199,9 @@ export function TourOrderView() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Tour Order</h1>
-            <a href="/admin" style={{ fontSize: 13, color: '#666', textDecoration: 'none' }}>
+            <Link href="/admin" style={{ fontSize: 13, color: '#666', textDecoration: 'none' }}>
               ← Back to Admin
-            </a>
+            </Link>
           </div>
           <p style={{ fontSize: 14, color: '#666', marginTop: 4 }}>
             Drag and drop to reorder tours. This order is used on the website.
