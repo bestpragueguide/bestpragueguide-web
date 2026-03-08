@@ -13,6 +13,7 @@ import { BlogPosts } from './collections/BlogPosts'
 import { ContactMessages } from './collections/ContactMessages'
 import { FAQs } from './collections/FAQs'
 import { Services } from './collections/Services'
+import { TourDates } from './collections/TourDates'
 import { SiteSettings } from './globals/SiteSettings'
 import { Navigation } from './globals/Navigation'
 import { Homepage } from './globals/Homepage'
@@ -112,6 +113,7 @@ export default buildConfig({
     ContactMessages,
     FAQs,
     Services,
+    TourDates,
   ],
 
   globals: [SiteSettings, Navigation, Homepage, AboutPage, ReviewsPage, PaymentConfig],
