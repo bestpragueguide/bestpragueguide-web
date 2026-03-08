@@ -12,6 +12,8 @@ interface BookingModalProps {
   pricing: TourPricing
   locale: string
   children?: React.ReactNode
+  defaultDate?: string
+  defaultTime?: string
 }
 
 export function BookingModal({
@@ -21,6 +23,8 @@ export function BookingModal({
   pricing,
   locale,
   children,
+  defaultDate,
+  defaultTime,
 }: BookingModalProps) {
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {

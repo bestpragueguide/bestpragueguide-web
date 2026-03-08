@@ -15,6 +15,8 @@ interface BookingRequestFormProps {
   pricing: TourPricing
   maxGroupSize?: number
   locale: string
+  defaultDate?: string
+  defaultTime?: string
 }
 
 export function BookingRequestForm({
@@ -23,6 +25,8 @@ export function BookingRequestForm({
   pricing,
   maxGroupSize,
   locale,
+  defaultDate,
+  defaultTime,
 }: BookingRequestFormProps) {
   const t = useTranslations('booking')
   const [status, setStatus] = useState<
