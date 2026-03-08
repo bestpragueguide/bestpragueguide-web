@@ -16,7 +16,32 @@ export const BookingRequests: CollectionConfig = {
   timestamps: true,
   hooks: {
     beforeChange: [beforeChangeHook],
-    afterChange: [afterChangeHook],
+    afterChange: [
+      afterChangeHook,
+      async ({ doc, previousDoc }) => {
+        // Fire n8n when status changes to 'completed'
+        if (
+          doc.status === 'completed' &&
+          previousDoc?.status !== 'completed' &&
+          process.env.N8N_WEBHOOK_TOUR_COMPLETED
+        ) {
+          const { n8n } = await import('@/lib/n8n')
+          n8n.tourCompleted({
+            bookingId: String(doc.id),
+            requestRef: doc.requestRef,
+            customerName: doc.customerName,
+            customerEmail: doc.customerEmail,
+            customerLanguage: doc.customerLanguage as 'en' | 'ru',
+            tourTitle: String(
+              typeof doc.tour === 'object' ? (doc.tour as { title?: string }).title : ''
+            ),
+            mauticContactId: doc.mauticContactId ?? undefined,
+            chatwootConversationId: doc.chatwootConversationId ?? undefined,
+            completedAt: new Date().toISOString(),
+          }).catch(console.error)
+        }
+      },
+    ],
   },
   fields: [
     {
@@ -148,6 +173,83 @@ export const BookingRequests: CollectionConfig = {
       admin: {
         description: 'Internal notes (not visible to customer)',
       },
+    },
+    {
+      name: 'paymentStatus',
+      type: 'select',
+      label: 'Payment Status',
+      defaultValue: 'not_required',
+      options: [
+        { label: 'Not Required',   value: 'not_required' },
+        { label: 'Awaiting',       value: 'awaiting' },
+        { label: 'Link Sent',      value: 'link_sent' },
+        { label: 'Deposit Paid',   value: 'deposit_paid' },
+        { label: 'Fully Paid',     value: 'fully_paid' },
+        { label: 'Refund Pending', value: 'refund_pending' },
+        { label: 'Refunded',       value: 'refunded' },
+      ],
+      admin: { position: 'sidebar' },
+    },
+    {
+      name: 'depositAmountEur',
+      type: 'number',
+      label: 'Deposit (EUR)',
+      admin: { readOnly: true },
+    },
+    {
+      name: 'cashBalanceEur',
+      type: 'number',
+      label: 'Cash Balance (EUR)',
+      admin: {
+        readOnly: true,
+        description: 'Amount guide collects on tour day',
+      },
+    },
+    {
+      name: 'npsScore',
+      type: 'number',
+      label: 'NPS Score (0–10)',
+      min: 0,
+      max: 10,
+      admin: { readOnly: true },
+    },
+    {
+      name: 'stripePaymentIntentId',
+      type: 'text',
+      admin: { readOnly: true },
+    },
+    {
+      name: 'stripeChargedCents',
+      type: 'number',
+      admin: {
+        readOnly: true,
+        description: 'Amount charged in smallest currency unit',
+      },
+    },
+    {
+      name: 'stripeChargeCurrency',
+      type: 'text',
+      admin: { readOnly: true },
+    },
+    {
+      name: 'paidAt',
+      type: 'date',
+      admin: { readOnly: true },
+    },
+    {
+      name: 'chatwootConversationId',
+      type: 'number',
+      admin: { readOnly: true, description: 'Chatwoot conversation ID' },
+    },
+    {
+      name: 'mauticContactId',
+      type: 'number',
+      admin: { readOnly: true },
+    },
+    {
+      name: 'twentyContactId',
+      type: 'text',
+      admin: { readOnly: true, description: 'Twenty CRM person ID' },
     },
   ],
 }
