@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.14.0] - 2026-03-08
+## [1.14.1] - 2026-03-08
 
 ### Added
 - **Tour order page** — standalone drag-and-drop page at `/tour-order` for reordering tours; linked from admin sidebar
@@ -11,6 +11,10 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - **Blog cards** — removed publish date from blog list cards
 - **Blog detail** — removed publish date and author name from blog post header
+
+### Documentation
+- **System specification** — comprehensive `docs/SYSTEM-SPECIFICATION.md` covering data model, pricing engine, booking flow, notifications, i18n, SEO, analytics, deployment, and extension points
+- **CLAUDE.md** — updated with frontend pages, API routes, SEO, admin tools, middleware, and deployment sections
 
 ### Fixed
 - **Tour Order admin link** — fixed import map registration for TourOrderLink component so it appears in admin sidebar
