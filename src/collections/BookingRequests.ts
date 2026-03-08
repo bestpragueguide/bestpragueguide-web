@@ -14,7 +14,7 @@ export const BookingRequests: CollectionConfig = {
     listSearchableFields: ['requestRef', 'customerName', 'customerEmail'],
     components: {
       edit: {
-        afterFields: ['@/components/admin/PaymentLinkButton#PaymentLinkButton'],
+        beforeDocumentControls: ['@/components/admin/PaymentLinkButton#PaymentLinkButton'],
       },
     },
   },
