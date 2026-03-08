@@ -18,6 +18,7 @@ import { Navigation } from './globals/Navigation'
 import { Homepage } from './globals/Homepage'
 import { AboutPage } from './globals/AboutPage'
 import { ReviewsPage } from './globals/ReviewsPage'
+import { PaymentConfig } from './globals/PaymentConfig'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -113,7 +114,7 @@ export default buildConfig({
     Services,
   ],
 
-  globals: [SiteSettings, Navigation, Homepage, AboutPage, ReviewsPage],
+  globals: [SiteSettings, Navigation, Homepage, AboutPage, ReviewsPage, PaymentConfig],
 
   plugins: [],
 
