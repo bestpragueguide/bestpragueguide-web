@@ -7,6 +7,10 @@ export const Tours: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'subcategory', 'status'],
     group: 'Content',
+    baseListFilter: ({ locale }) => {
+      if (!locale) return null
+      return { publishedLocales: { in: [locale] } }
+    },
   },
   versions: {
     drafts: true,
