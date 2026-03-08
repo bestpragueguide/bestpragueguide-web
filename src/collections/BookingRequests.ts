@@ -12,6 +12,11 @@ export const BookingRequests: CollectionConfig = {
     defaultColumns: ['requestRef', 'customerName', 'tour', 'preferredDate', 'status', 'createdAt'],
     group: 'Bookings',
     listSearchableFields: ['requestRef', 'customerName', 'customerEmail'],
+    components: {
+      edit: {
+        afterFields: ['@/components/admin/PaymentLinkButton#PaymentLinkButton'],
+      },
+    },
   },
   timestamps: true,
   hooks: {
