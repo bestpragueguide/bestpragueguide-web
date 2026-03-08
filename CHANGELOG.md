@@ -8,6 +8,9 @@ All notable changes to this project will be documented in this file.
 - **Tour order page** — standalone drag-and-drop page at `/tour-order` for reordering tours; linked from admin sidebar
 - **Admin tour list filtering** — tour list view filters by current admin locale (EN shows EN-published tours, RU shows RU-published tours)
 
+### Fixed
+- **Tour Order admin link** — fixed import map registration for TourOrderLink component so it appears in admin sidebar
+
 ## [1.13.0] - 2026-03-08
 
 ### Added
