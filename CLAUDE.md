@@ -112,7 +112,7 @@ All site content is editable from Payload admin panel:
 - `src/emails/` — React Email templates: request-received (customer), new-request-admin, request-confirmed, request-declined, pre-tour-reminder, payment-received
 - `src/lib/booking.ts` — Zod validation schema, guest max dynamic from `getMaxGuests()`, request ref format: BPG-YYYY-NNNNN
 
-## OSS Integration (v1.15.0)
+## OSS Integration (v1.15.1)
 - **n8n** (`src/lib/n8n.ts`) — fire-and-forget webhook hub; 4 methods: bookingNew, bookingConfirmed, tourCompleted, paymentReceived
 - **Stripe** (`src/lib/stripe.ts`) — Checkout session for deposits, refund helper; PaymentConfig global controls deposit %
 - **Chatwoot** (`src/lib/chatwoot.ts`) — conversation notes + booking note formatter
@@ -124,6 +124,16 @@ All site content is editable from Payload admin panel:
 - **PaymentLinkButton** (`src/components/admin/PaymentLinkButton.tsx`) — admin button for Stripe payment links
 - All OSS clients are fire-and-forget — booking flow works when services are unconfigured
 - Spec: `OSS-INTEGRATION-SPEC-v2.md` (v2.2) in bestpragueguide-docs
+
+### Deployed Services (prod01)
+| Service | Domain | Purpose |
+|---------|--------|---------|
+| n8n | n8n.bestpragueguide.com | Webhook automation |
+| Chatwoot | chat.bestpragueguide.com | Customer messaging |
+| Mautic | mail.bestpragueguide.com | Email automation |
+| Formbricks | survey.bestpragueguide.com | NPS/feedback surveys |
+| Twenty CRM | crm.bestpragueguide.com | CRM |
+| Uptime Kuma | status.bestpragueguide.com | Uptime monitoring |
 
 ## Tour Pricing
 - 4 pricing models: GROUP_TIERS (default), PER_PERSON, FLAT_RATE, ON_REQUEST

@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.15.1] - 2026-03-08
+
+### Infrastructure
+- **OSS services deployed** — all 6 services running on prod01 via Coolify:
+  - n8n (n8n.bestpragueguide.com) — webhook automation hub
+  - Chatwoot (chat.bestpragueguide.com) — customer messaging
+  - Mautic (mail.bestpragueguide.com) — email automation
+  - Formbricks (survey.bestpragueguide.com) — NPS/feedback surveys
+  - Twenty CRM (crm.bestpragueguide.com) — customer relationship management
+  - Uptime Kuma (status.bestpragueguide.com) — uptime monitoring with 6 monitors
+- **Environment variables configured** — CHATWOOT_*, TWENTY_*, FORMBRICKS_*, MAUTIC_*, N8N_WEBHOOK_* env vars set on production app
+- **Admin accounts created** — Chatwoot, Twenty CRM, Formbricks, Uptime Kuma initialized with admin credentials
+
 ## [1.15.0] - 2026-03-08
 
 ### Added
