@@ -112,7 +112,7 @@ All site content is editable from Payload admin panel:
 - `src/emails/` — React Email templates: request-received (customer), new-request-admin, request-confirmed, request-declined, pre-tour-reminder, payment-received
 - `src/lib/booking.ts` — Zod validation schema, guest max dynamic from `getMaxGuests()`, request ref format: BPG-YYYY-NNNNN
 
-## OSS Integration (v1.15.1)
+## OSS Integration (v1.15.2)
 - **n8n** (`src/lib/n8n.ts`) — fire-and-forget webhook hub; 4 methods: bookingNew, bookingConfirmed, tourCompleted, paymentReceived
 - **Stripe** (`src/lib/stripe.ts`) — Checkout session for deposits, refund helper; PaymentConfig global controls deposit %
 - **Chatwoot** (`src/lib/chatwoot.ts`) — conversation notes + booking note formatter

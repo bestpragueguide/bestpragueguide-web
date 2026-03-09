@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.15.2] - 2026-03-09
+
+### Infrastructure
+- **Mautic API enabled** — OAuth2 credentials created (bestpragueguide-web), MAUTIC_CLIENT_ID + MAUTIC_CLIENT_SECRET env vars set
+- **n8n webhooks configured** — 4 webhook workflows created and activated (W-01 booking-new, W-02 booking-confirmed, W-03 tour-completed, W-04 payment-received), webhook URLs set as env vars
+- **Formbricks surveys created** — EN and RU tour feedback surveys with hidden fields (bookingRef, customerName, tourTitle), FORMBRICKS_SURVEY_EN + FORMBRICKS_SURVEY_RU env vars set
+- **Chatwoot inbox created** — website channel for bestpragueguide.com with widget token, admin agent assigned
+- **n8n admin account** — owner account created with API key (no expiration)
+
 ## [1.15.1] - 2026-03-08
 
 ### Infrastructure
