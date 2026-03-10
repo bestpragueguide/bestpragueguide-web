@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.15.3] - 2026-03-10
+
+### Changed
+- **Unlimited group size by default** — removed default maxGroupSize=8 from Tours, removed hardcoded maxGuests from legacy pricing fallbacks and seed data; when no limit is set, booking form shows up to 50 guests
+- **Migration endpoint** — `POST /api/migrate/clear-max-guests` clears existing maxGroupSize and groupTiers.maxGuests from all tours
+
 ## [1.15.2] - 2026-03-09
 
 ### Infrastructure

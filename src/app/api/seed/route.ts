@@ -171,7 +171,7 @@ export async function POST(req: Request) {
         groupPrice: tour.groupPrice,
         pricing: {
           model: 'GROUP_TIERS',
-          groupTiers: [{ minGuests: 1, maxGuests: 8, price: tour.groupPrice }],
+          groupTiers: [{ minGuests: 1, price: tour.groupPrice }],
         },
         publishedLocales: tour.publishedLocales,
         status: 'published',
@@ -229,7 +229,7 @@ export async function POST(req: Request) {
         groupPrice: tour.price,
         pricing: {
           model: 'GROUP_TIERS',
-          groupTiers: [{ minGuests: 1, maxGuests: tour.duration >= 7 ? 6 : 8, price: tour.price }],
+          groupTiers: [{ minGuests: 1, price: tour.price }],
         },
         publishedLocales: ['ru'],
         status: 'published',

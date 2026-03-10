@@ -37,7 +37,7 @@ export function TourCard({
     : {
         model: 'GROUP_TIERS' as const,
         groupTiers: groupPrice
-          ? [{ minGuests: 1, maxGuests: 8, price: groupPrice }]
+          ? [{ minGuests: 1, price: groupPrice }]
           : [],
       }
 

@@ -203,7 +203,7 @@ export default async function TourDetailPage({
     : {
         model: 'GROUP_TIERS' as const,
         groupTiers: tour.groupPrice
-          ? [{ minGuests: 1, maxGuests: (tour as any).maxGroupSize || 8, price: tour.groupPrice }]
+          ? [{ minGuests: 1, maxGuests: (tour as any).maxGroupSize || undefined, price: tour.groupPrice }]
           : [],
       }
 

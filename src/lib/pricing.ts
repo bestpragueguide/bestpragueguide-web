@@ -251,12 +251,12 @@ export function getDisplayPrice(pricing: TourPricing): {
 }
 
 export function getMaxGuests(pricing: TourPricing, tourMaxGroupSize?: number): number {
-  const DEFAULT_MAX = 20
+  const UNLIMITED = 50
 
   switch (pricing.model) {
     case 'GROUP_TIERS': {
       const allTiers = pricing.groupTiers || []
-      if (allTiers.length === 0) return tourMaxGroupSize || DEFAULT_MAX
+      if (allTiers.length === 0) return tourMaxGroupSize || UNLIMITED
       const lastTier = allTiers[allTiers.length - 1]
       // Open-ended last tier: return its minGuests (dropdown will show "X+")
       if (lastTier.maxGuests == null) return lastTier.minGuests
@@ -264,13 +264,13 @@ export function getMaxGuests(pricing: TourPricing, tourMaxGroupSize?: number): n
     }
 
     case 'PER_PERSON':
-      return pricing.perPersonMaxGuests ?? tourMaxGroupSize ?? DEFAULT_MAX
+      return pricing.perPersonMaxGuests ?? tourMaxGroupSize ?? UNLIMITED
 
     case 'FLAT_RATE':
-      return pricing.flatRateMaxGuests ?? tourMaxGroupSize ?? DEFAULT_MAX
+      return pricing.flatRateMaxGuests ?? tourMaxGroupSize ?? UNLIMITED
 
     case 'ON_REQUEST':
-      return tourMaxGroupSize || DEFAULT_MAX
+      return tourMaxGroupSize || UNLIMITED
   }
 }
 

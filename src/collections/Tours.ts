@@ -117,7 +117,7 @@ export const Tours: CollectionConfig = {
             {
               name: 'maxGroupSize',
               type: 'number',
-              defaultValue: 8,
+              admin: { description: 'Leave empty for unlimited' },
             },
             {
               name: 'meetingPoint',
