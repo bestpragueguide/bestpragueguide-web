@@ -17,7 +17,7 @@ Bilingual (EN/RU) private tour portal for Prague.
 - `src/globals/` — Payload CMS global configs (SiteSettings, Navigation, Homepage, AboutPage, ReviewsPage, PaymentConfig)
 - `src/components/` — React components (shared, layout, home, tours, blog, booking, reviews, seo, analytics, admin)
 - `src/emails/` — React Email templates
-- `src/lib/` — Utilities (cms-data, cms-types, icon-map, email, telegram, whatsapp, slack, booking, blog, ip, currency, pricing, metadata, analytics, editors, plurals, n8n, stripe, chatwoot, mautic, formbricks, twenty-crm)
+- `src/lib/` — Utilities (cms-data, cms-types, icon-map, email, telegram, whatsapp, slack, booking, blog, ip, currency, pricing, metadata, analytics, editors, plurals, n8n, stripe, chatwoot, mautic, formbricks, twenty-crm, richtext)
 - `migrations/` — Fallback SQL scripts for schema changes when /api/init-db hangs
 - `src/i18n/` — next-intl routing, request config, message files (EN/RU)
 
@@ -93,6 +93,7 @@ All site content is editable from Payload admin panel:
 | `/api/seed-cms` | POST | No | Seed globals (Navigation, SiteSettings, Homepage, AboutPage, ReviewsPage) |
 | `/api/seed-blog` | POST | No | Seed blog posts |
 | `/api/fix-schema` | GET/POST | No | Fix schema issues (add missing columns) |
+| `/api/fix-tier-maxguests` | POST | Secret | Fix pricing tier maxGuests using SQL LEAD() window function |
 | `/api/fix-richtext` | POST | No | Fix richText field data |
 | `/api/migrate-richtext` | POST | No | Convert plain text to Lexical richText |
 | `/api/import-tours` | POST | No | Import tours from JSON |
@@ -160,8 +161,10 @@ All site content is editable from Payload admin panel:
 ## Rich Text
 - Two editor configs in `src/lib/editors.ts`: `simplifiedEditor` and `fullEditor`
 - Most content fields use richText (Lexical) — see design doc for full field list
-- `SafeRichText` component handles both plain strings (legacy) and Lexical JSON (custom renderer, not Payload's)
+- `SafeRichText` component handles both plain strings (legacy) and Lexical JSON (custom renderer, not Payload's); resolves internal links for tours, blog-posts, and pages collections
 - `extractPlainText(data)` helper extracts plain text from richText fields (for meta tags, listings, schema.org)
+- `resolveRichTextLinks(data, locale)` in `src/lib/richtext.ts` — server-only function that walks Lexical JSON tree, finds internal link nodes, batch-fetches doc slugs from Payload, and populates `doc.value` with `{ id, slug }`. Call before passing data to RichText or SafeRichText.
+- Tour detail page uses Payload's `RichText` component with custom `LinkJSXConverter({ internalDocToHref })` for locale-aware internal link URLs
 - SEO metaDescription fields remain textarea (must be plain text for meta tags)
 - When rendering richText in listings/cards, always use `extractPlainText()` — never render richText objects directly as JSX children
 - `/api/migrate-richtext` endpoint converts existing plain text to Lexical format

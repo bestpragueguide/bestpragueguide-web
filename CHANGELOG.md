@@ -2,11 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.15.4] - 2026-03-14
+## [1.15.5] - 2026-03-14
+
+### Fixed
+- **Internal links in tour descriptions** — richText internal links (e.g., "замка Карлштейн" on Konopiste tour) now resolve to actual tour URLs instead of `href="#"`
+  - Added `src/lib/richtext.ts` — server-side `resolveRichTextLinks()` walks Lexical JSON tree, batch-fetches doc slugs from Payload, populates link nodes
+  - Tour detail page uses Payload's `RichText` component with custom `LinkJSXConverter` and `internalDocToHref` callback for locale-aware URLs
+  - `SafeRichText` component updated to handle internal links for tours, blog-posts, and pages collections
+- **Pricing tier display** — restored `maxGuests` values for non-last tiers across all 14 tours (were incorrectly cleared by the "Remove Max Group" migration, showing "1+, 4+, 8+, 13+" instead of "1-3, 4-7, 8-12, 13+")
+  - Added `POST /api/fix-tier-maxguests` endpoint using SQL LEAD() window function to derive maxGuests from next tier's minGuests
+  - Fixed 28 rows in main table, 148 in version table
+- **Homepage guideBio Lexical error** — converted plain text string in RU locale to proper Lexical JSON format (was causing "value passed to the Lexical editor is not an object" error in admin)
 
 ### Added
 - **`POST /api/restore-media`** — temporary endpoint to restore media files to container filesystem from multipart upload (writes directly to MEDIA_DIR, skips existing files, auth via x-init-secret)
 - **`GET /api/restore-media`** — returns current media directory file count
+
+## [1.15.4] - 2026-03-14
+
+(restore-media endpoint moved to 1.15.5)
 
 ## [1.15.3] - 2026-03-10
 
