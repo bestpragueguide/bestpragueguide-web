@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.15.4] - 2026-03-14
+
+### Added
+- **`POST /api/restore-media`** — temporary endpoint to restore media files to container filesystem from multipart upload (writes directly to MEDIA_DIR, skips existing files, auth via x-init-secret)
+- **`GET /api/restore-media`** — returns current media directory file count
+
 ## [1.15.3] - 2026-03-10
 
 ### Changed
