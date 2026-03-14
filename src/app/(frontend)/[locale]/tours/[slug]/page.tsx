@@ -10,7 +10,7 @@ import { TourIncluded } from '@/components/tours/TourIncluded'
 import { TourFAQ } from '@/components/tours/TourFAQ'
 import { TourReviews } from '@/components/tours/TourReviews'
 import { TourRelated } from '@/components/tours/TourRelated'
-import { RichText } from '@payloadcms/richtext-lexical/react'
+import { RichText, defaultJSXConverters, LinkJSXConverter } from '@payloadcms/richtext-lexical/react'
 import { SafeRichText, extractPlainText } from '@/components/shared/SafeRichText'
 import { resolveRichTextLinks } from '@/lib/richtext'
 import { StickyBookButton } from '@/components/booking/StickyBookButton'
@@ -284,7 +284,29 @@ export default async function TourDetailPage({
           {/* Description */}
           <div className="mt-6 prose max-w-none prose-headings:font-heading prose-headings:text-navy prose-p:text-navy/80">
             {tour.description && (
-              <RichText data={tour.description} />
+              <RichText
+                data={tour.description}
+                converters={{
+                  ...defaultJSXConverters,
+                  ...LinkJSXConverter({
+                    internalDocToHref: ({ linkNode }) => {
+                      const doc = linkNode.fields?.doc
+                      if (!doc) return '#'
+                      const slug = typeof doc.value === 'object' ? doc.value?.slug : null
+                      const tourPath = locale === 'ru' ? 'ekskursii' : 'tours'
+                      const prefixes: Record<string, string> = {
+                        tours: `/${locale}/${tourPath}`,
+                        'blog-posts': `/${locale}/blog`,
+                        pages: `/${locale}`,
+                      }
+                      if (slug && doc.relationTo) {
+                        return `${prefixes[doc.relationTo] || ''}/${slug}`
+                      }
+                      return '#'
+                    },
+                  }),
+                }}
+              />
             )}
           </div>
 

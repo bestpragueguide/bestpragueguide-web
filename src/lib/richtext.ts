@@ -49,7 +49,7 @@ export async function resolveRichTextLinks(
     byCollection.set(ref.collection, ids)
   }
 
-  const slugMap = new Map<string, string>()
+  const docMap = new Map<string, { id: number; slug: string }>()
   for (const [collection, ids] of byCollection) {
     try {
       const result = await payload.find({
@@ -59,19 +59,21 @@ export async function resolveRichTextLinks(
         limit: ids.length,
       })
       for (const doc of result.docs) {
-        const prefix = collectionPrefixes[collection] ?? ''
-        slugMap.set(`${collection}:${doc.id}`, `${prefix}/${(doc as any).slug}`)
+        docMap.set(`${collection}:${doc.id}`, {
+          id: doc.id as number,
+          slug: (doc as any).slug,
+        })
       }
     } catch {
       // ignore lookup failures
     }
   }
 
-  // Patch link nodes with resolved URLs
+  // Patch link nodes: populate doc.value with slug so LinkJSXConverter can use it
   for (const ref of refs) {
-    const url = slugMap.get(`${ref.collection}:${ref.id}`)
-    if (url) {
-      ref.node.fields.url = url
+    const resolved = docMap.get(`${ref.collection}:${ref.id}`)
+    if (resolved) {
+      ref.node.fields.doc.value = resolved
     }
   }
 
