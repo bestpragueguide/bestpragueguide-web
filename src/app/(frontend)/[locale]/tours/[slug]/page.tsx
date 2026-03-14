@@ -12,6 +12,7 @@ import { TourReviews } from '@/components/tours/TourReviews'
 import { TourRelated } from '@/components/tours/TourRelated'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { SafeRichText, extractPlainText } from '@/components/shared/SafeRichText'
+import { resolveRichTextLinks } from '@/lib/richtext'
 import { StickyBookButton } from '@/components/booking/StickyBookButton'
 import { BookingRequestForm } from '@/components/booking/BookingRequestForm'
 import { TourSchema } from '@/components/seo/TourSchema'
@@ -164,6 +165,11 @@ export default async function TourDetailPage({
 
   if (!tour) {
     notFound()
+  }
+
+  // Resolve internal links in richText description
+  if (tour.description) {
+    tour.description = await resolveRichTextLinks(tour.description, locale)
   }
 
   // Extract admin-selected related tour IDs

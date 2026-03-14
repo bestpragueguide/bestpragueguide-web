@@ -35,7 +35,20 @@ function renderNode(node: any, idx: number): React.ReactNode {
   }
 
   if (node.type === 'link') {
-    const url = node.fields?.url || node.url || '#'
+    let url = node.fields?.url || node.url || '#'
+    // Resolve internal links
+    if (node.fields?.linkType === 'internal' && node.fields?.doc) {
+      const doc = node.fields.doc
+      const slug = typeof doc.value === 'object' ? doc.value?.slug : null
+      if (slug && doc.relationTo === 'tours') {
+        url = `/tours/${slug}`
+      } else if (slug && doc.relationTo === 'blog-posts') {
+        url = `/blog/${slug}`
+      } else if (slug && doc.relationTo === 'pages') {
+        url = `/${slug}`
+      }
+      // If slug wasn't populated, url stays as resolvedUrl (set by resolveRichTextLinks) or '#'
+    }
     const target = node.fields?.newTab ? '_blank' : undefined
     return (
       <a key={idx} href={url} target={target} rel={target ? 'noopener noreferrer' : undefined}>
