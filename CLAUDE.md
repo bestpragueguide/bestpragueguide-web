@@ -94,6 +94,7 @@ All site content is editable from Payload admin panel:
 | `/api/seed-blog` | POST | No | Seed blog posts |
 | `/api/fix-schema` | GET/POST | No | Fix schema issues (add missing columns) |
 | `/api/fix-tier-maxguests` | POST | Secret | Fix pricing tier maxGuests using SQL LEAD() window function |
+| `/api/fix-preferred-times` | GET/POST | Secret | GET: list tours table names + columns. POST: create `tours_preferred_times` + version table |
 | `/api/fix-richtext` | POST | No | Fix richText field data |
 | `/api/migrate-richtext` | POST | No | Convert plain text to Lexical richText |
 | `/api/import-tours` | POST | No | Import tours from JSON |

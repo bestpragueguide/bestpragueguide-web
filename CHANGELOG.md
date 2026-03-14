@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - **Custom preferred times per tour** — optional `preferredTimes` select (hasMany) field on Tours collection allows setting specific available booking times (e.g., 16:00 and 20:00 only); when empty, default 9:00–18:00 range with 30-min steps is shown; time options range from 08:00 to 22:00
+- **`POST /api/fix-preferred-times`** — schema migration endpoint for `preferredTimes` tables (creates `tours_preferred_times` + `_tours_v_version_preferred_times`)
+- **`GET /api/fix-preferred-times`** — debug endpoint listing all tours-related table names and column structures
 
 ## [1.15.5] - 2026-03-14
 
