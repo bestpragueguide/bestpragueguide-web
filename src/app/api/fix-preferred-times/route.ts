@@ -16,27 +16,31 @@ export async function POST(req: Request) {
 
     const results: string[] = []
 
-    // Create tours_preferred_times table (select hasMany)
+    // Drop incorrectly-named snake_case tables
+    await drizzle.execute(sql`DROP TABLE IF EXISTS tours_preferred_times`)
+    await drizzle.execute(sql`DROP TABLE IF EXISTS _tours_v_version_preferred_times`)
+    results.push('Dropped old snake_case tables')
+
+    // Payload uses camelCase (quoted) for multi-word sub-table names
     await drizzle.execute(sql`
-      CREATE TABLE IF NOT EXISTS tours_preferred_times (
+      CREATE TABLE IF NOT EXISTS "tours_preferredTimes" (
         id        varchar PRIMARY KEY DEFAULT gen_random_uuid(),
         parent_id integer REFERENCES tours(id) ON DELETE CASCADE,
         value     varchar(10),
         "order"   integer
       )
     `)
-    results.push('Created tours_preferred_times')
+    results.push('Created "tours_preferredTimes"')
 
-    // Create version table equivalent
     await drizzle.execute(sql`
-      CREATE TABLE IF NOT EXISTS _tours_v_version_preferred_times (
+      CREATE TABLE IF NOT EXISTS "_tours_v_version_preferredTimes" (
         id         varchar PRIMARY KEY DEFAULT gen_random_uuid(),
         _parent_id integer REFERENCES _tours_v(id) ON DELETE CASCADE,
         value      varchar(10),
         "order"    integer
       )
     `)
-    results.push('Created _tours_v_version_preferred_times')
+    results.push('Created "_tours_v_version_preferredTimes"')
 
     return NextResponse.json({ success: true, results })
   } catch (error: any) {
