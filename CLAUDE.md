@@ -32,7 +32,7 @@ All site content is editable from Payload admin panel:
 - **ReviewsPage** — page heading, photo gallery, SEO
 
 ### Collections
-- **Tours** — tour listings organized in tabs (Content, Images, Pricing, SEO) with `relatedTours` relationship for admin-selectable "You May Also Like" section; pricing, gallery, included/excluded items, FAQ, meeting point, difficulty, tags; `publishedLocales` (select hasMany: en/ru) controls visibility per locale; `sortOrder` controls display order; `baseFilter` filters admin list by current locale
+- **Tours** — tour listings organized in tabs (Content, Images, Pricing, SEO) with `relatedTours` relationship for admin-selectable "You May Also Like" section; pricing, gallery, included/excluded items, FAQ, meeting point, difficulty, tags; `publishedLocales` (select hasMany: en/ru) controls visibility per locale; `sortOrder` controls display order; `baseFilter` filters admin list by current locale; `preferredTimes` (select hasMany, 08:00–22:00) — optional custom booking time slots, falls back to default 9:00–18:00
 - **Services** — reusable add-on services (entry tickets, vehicles, restaurants) with own pricing models (per_person, per_group, flat, on_request) and guest category pricing
 - **Reviews** — customer reviews with rating (1-5), reviewer name/country, tour reference, guide response, language, featured flag
 - **BlogPosts** — blog articles with richText content, categories (prague-guide, food-and-drink, day-trips, tips, history), heroImage, SEO fields, `publishedLocales`
@@ -106,7 +106,7 @@ All site content is editable from Payload admin panel:
 
 ## Booking System
 - `src/components/booking/BookingModal.tsx` — modal wrapper with price header
-- `src/components/booking/BookingRequestForm.tsx` — form with date, time, guests, guest categories, additional services, customer info; uses `calculatePrice()` for dynamic pricing
+- `src/components/booking/BookingRequestForm.tsx` — form with date, time, guests, guest categories, additional services, customer info; uses `calculatePrice()` for dynamic pricing; accepts optional `preferredTimes` prop (falls back to `TIME_SLOTS` from `booking.ts`)
 - `src/components/booking/StickyBookButton.tsx` — sticky CTA on tour detail pages
 - `src/app/api/booking/request/route.ts` — POST endpoint: validates, saves to BookingRequests, sends notifications
 - Notifications: email (Resend), Telegram, WhatsApp, Slack, n8n — all fire in parallel on new booking

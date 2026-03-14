@@ -17,6 +17,7 @@ interface BookingRequestFormProps {
   locale: string
   defaultDate?: string
   defaultTime?: string
+  preferredTimes?: string[]
 }
 
 export function BookingRequestForm({
@@ -27,6 +28,7 @@ export function BookingRequestForm({
   locale,
   defaultDate,
   defaultTime,
+  preferredTimes,
 }: BookingRequestFormProps) {
   const t = useTranslations('booking')
   const [status, setStatus] = useState<
@@ -254,7 +256,7 @@ export function BookingRequestForm({
           required
           className={inputClass}
         >
-          {TIME_SLOTS.map((slot) => (
+          {(preferredTimes && preferredTimes.length > 0 ? preferredTimes : TIME_SLOTS).map((slot) => (
             <option key={slot} value={slot}>
               {slot}
             </option>

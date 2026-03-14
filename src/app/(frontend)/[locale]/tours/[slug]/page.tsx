@@ -411,6 +411,7 @@ export default async function TourDetailPage({
               pricing={tourPricing}
               maxGroupSize={(tour as any).maxGroupSize}
               locale={locale}
+              preferredTimes={(tour as any).preferredTimes}
             />
 
             {/* Trust badges */}
@@ -475,6 +476,7 @@ export default async function TourDetailPage({
         pricing={tourPricing}
         maxGroupSize={(tour as any).maxGroupSize}
         locale={locale}
+        preferredTimes={(tour as any).preferredTimes}
       />
     </div>
   )

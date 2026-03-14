@@ -14,6 +14,7 @@ interface StickyBookButtonProps {
   pricing: TourPricing
   maxGroupSize?: number
   locale: string
+  preferredTimes?: string[]
 }
 
 export function StickyBookButton({
@@ -22,6 +23,7 @@ export function StickyBookButton({
   pricing,
   maxGroupSize,
   locale,
+  preferredTimes,
 }: StickyBookButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -81,6 +83,7 @@ export function StickyBookButton({
           pricing={pricing}
           maxGroupSize={maxGroupSize}
           locale={locale}
+          preferredTimes={preferredTimes}
         />
       </BookingModal>
     </>
