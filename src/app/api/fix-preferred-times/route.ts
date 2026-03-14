@@ -16,31 +16,31 @@ export async function POST(req: Request) {
 
     const results: string[] = []
 
-    // Drop incorrectly-named snake_case tables
-    await drizzle.execute(sql`DROP TABLE IF EXISTS tours_preferred_times`)
-    await drizzle.execute(sql`DROP TABLE IF EXISTS _tours_v_version_preferred_times`)
-    results.push('Dropped old snake_case tables')
+    // Drop incorrectly-named camelCase tables
+    await drizzle.execute(sql`DROP TABLE IF EXISTS "tours_preferredTimes"`)
+    await drizzle.execute(sql`DROP TABLE IF EXISTS "_tours_v_version_preferredTimes"`)
+    results.push('Dropped camelCase tables')
 
-    // Payload uses camelCase (quoted) for multi-word sub-table names
+    // Payload uses snake_case for all sub-tables
     await drizzle.execute(sql`
-      CREATE TABLE IF NOT EXISTS "tours_preferredTimes" (
+      CREATE TABLE IF NOT EXISTS tours_preferred_times (
         id        varchar PRIMARY KEY DEFAULT gen_random_uuid(),
         parent_id integer REFERENCES tours(id) ON DELETE CASCADE,
         value     varchar(10),
         "order"   integer
       )
     `)
-    results.push('Created "tours_preferredTimes"')
+    results.push('Created tours_preferred_times')
 
     await drizzle.execute(sql`
-      CREATE TABLE IF NOT EXISTS "_tours_v_version_preferredTimes" (
+      CREATE TABLE IF NOT EXISTS _tours_v_version_preferred_times (
         id         varchar PRIMARY KEY DEFAULT gen_random_uuid(),
         _parent_id integer REFERENCES _tours_v(id) ON DELETE CASCADE,
         value      varchar(10),
         "order"    integer
       )
     `)
-    results.push('Created "_tours_v_version_preferredTimes"')
+    results.push('Created _tours_v_version_preferred_times')
 
     return NextResponse.json({ success: true, results })
   } catch (error: any) {
@@ -48,7 +48,6 @@ export async function POST(req: Request) {
   }
 }
 
-// GET: list all tours-related table names in the database
 export async function GET(req: Request) {
   const secret = req.headers.get('x-init-secret')
   if (secret !== process.env.PAYLOAD_SECRET) {
