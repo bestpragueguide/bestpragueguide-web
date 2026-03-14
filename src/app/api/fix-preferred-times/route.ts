@@ -16,31 +16,34 @@ export async function POST(req: Request) {
 
     const results: string[] = []
 
-    // Drop incorrectly-named camelCase tables
+    // Drop any existing tables (both naming variants)
     await drizzle.execute(sql`DROP TABLE IF EXISTS "tours_preferredTimes"`)
     await drizzle.execute(sql`DROP TABLE IF EXISTS "_tours_v_version_preferredTimes"`)
-    results.push('Dropped camelCase tables')
+    await drizzle.execute(sql`DROP TABLE IF EXISTS tours_preferred_times`)
+    await drizzle.execute(sql`DROP TABLE IF EXISTS _tours_v_version_preferred_times`)
+    results.push('Dropped all existing preferred_times tables')
 
-    // Payload uses snake_case for all sub-tables
+    // Main table: parent_id (no underscore prefix)
     await drizzle.execute(sql`
-      CREATE TABLE IF NOT EXISTS tours_preferred_times (
+      CREATE TABLE tours_preferred_times (
         id        varchar PRIMARY KEY DEFAULT gen_random_uuid(),
         parent_id integer REFERENCES tours(id) ON DELETE CASCADE,
         value     varchar(10),
         "order"   integer
       )
     `)
-    results.push('Created tours_preferred_times')
+    results.push('Created tours_preferred_times (parent_id)')
 
+    // Version table: also parent_id (no underscore) — NOT _parent_id
     await drizzle.execute(sql`
-      CREATE TABLE IF NOT EXISTS _tours_v_version_preferred_times (
-        id         varchar PRIMARY KEY DEFAULT gen_random_uuid(),
-        _parent_id integer REFERENCES _tours_v(id) ON DELETE CASCADE,
-        value      varchar(10),
-        "order"    integer
+      CREATE TABLE _tours_v_version_preferred_times (
+        id        varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+        parent_id integer REFERENCES _tours_v(id) ON DELETE CASCADE,
+        value     varchar(10),
+        "order"   integer
       )
     `)
-    results.push('Created _tours_v_version_preferred_times')
+    results.push('Created _tours_v_version_preferred_times (parent_id)')
 
     return NextResponse.json({ success: true, results })
   } catch (error: any) {
@@ -59,14 +62,40 @@ export async function GET(req: Request) {
     const db = payload.db as any
     const drizzle = db.drizzle
 
-    const result = await drizzle.execute(sql`
+    // List tables and their columns for debugging
+    const tables = await drizzle.execute(sql`
       SELECT tablename FROM pg_tables
       WHERE schemaname = 'public'
       AND (tablename LIKE 'tours%' OR tablename LIKE '_tours%')
       ORDER BY tablename
     `)
 
-    return NextResponse.json({ tables: result.rows || result })
+    // Get columns for version published_locales (known working reference)
+    const refCols = await drizzle.execute(sql`
+      SELECT column_name, data_type FROM information_schema.columns
+      WHERE table_name = '_tours_v_version_published_locales'
+      ORDER BY ordinal_position
+    `)
+
+    // Get columns for our new tables
+    const mainCols = await drizzle.execute(sql`
+      SELECT column_name, data_type FROM information_schema.columns
+      WHERE table_name = 'tours_preferred_times'
+      ORDER BY ordinal_position
+    `)
+
+    const versionCols = await drizzle.execute(sql`
+      SELECT column_name, data_type FROM information_schema.columns
+      WHERE table_name = '_tours_v_version_preferred_times'
+      ORDER BY ordinal_position
+    `)
+
+    return NextResponse.json({
+      tables: tables.rows || tables,
+      reference_published_locales_columns: refCols.rows || refCols,
+      tours_preferred_times_columns: mainCols.rows || mainCols,
+      _tours_v_version_preferred_times_columns: versionCols.rows || versionCols,
+    })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
