@@ -47,3 +47,28 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }
+
+// GET: list all tours-related table names in the database
+export async function GET(req: Request) {
+  const secret = req.headers.get('x-init-secret')
+  if (secret !== process.env.PAYLOAD_SECRET) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  try {
+    const payload = await getPayload({ config })
+    const db = payload.db as any
+    const drizzle = db.drizzle
+
+    const result = await drizzle.execute(sql`
+      SELECT tablename FROM pg_tables
+      WHERE schemaname = 'public'
+      AND (tablename LIKE 'tours%' OR tablename LIKE '_tours%')
+      ORDER BY tablename
+    `)
+
+    return NextResponse.json({ tables: result.rows || result })
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+}
