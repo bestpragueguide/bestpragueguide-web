@@ -35,50 +35,17 @@ export async function TestimonialSliderWrapper({ heading, locale }: TestimonialS
     // No reviews yet
   }
 
-  // Fallback: hardcoded placeholder reviews if none exist
-  const displayReviews =
-    reviews.length > 0
-      ? reviews.map((r) => ({
-          id: r.id,
-          customerName: r.customerName,
-          customerCountry: r.customerCountry,
-          rating: r.rating,
-          body: extractPlainText(r.body),
-          tourTitle:
-            typeof r.tour === 'object' && r.tour ? r.tour.title : undefined,
-        }))
-      : [
-          {
-            id: 1,
-            customerName: 'Sarah M.',
-            customerCountry: 'United States',
-            rating: 5,
-            body:
-              locale === 'ru'
-                ? 'Невероятная экскурсия! Ульяна показала нам такие места, которых нет в путеводителях. Лучший гид в Праге!'
-                : 'Incredible tour! Uliana showed us places not in any guidebook. Best guide in Prague by far!',
-          },
-          {
-            id: 2,
-            customerName: 'James T.',
-            customerCountry: 'United Kingdom',
-            rating: 5,
-            body:
-              locale === 'ru'
-                ? 'Наша семья в восторге от экскурсии. Гид адаптировала маршрут под наших детей. Незабываемые впечатления!'
-                : 'Our family absolutely loved the tour. The guide adapted everything for our kids. An unforgettable experience!',
-          },
-          {
-            id: 3,
-            customerName: 'Мария К.',
-            customerCountry: 'Россия',
-            rating: 5,
-            body:
-              locale === 'ru'
-                ? 'Третий раз заказываем экскурсии у Ульяны. Каждый раз открываем Прагу заново. Профессионализм на высшем уровне.'
-                : 'Third time booking tours with Uliana. Each time we discover Prague anew. Professionalism at its finest.',
-          },
-        ]
+  if (reviews.length === 0) return null
+
+  const displayReviews = reviews.map((r) => ({
+    id: r.id,
+    customerName: r.customerName,
+    customerCountry: r.customerCountry,
+    rating: r.rating,
+    body: extractPlainText(r.body),
+    tourTitle:
+      typeof r.tour === 'object' && r.tour ? r.tour.title : undefined,
+  }))
 
   return <TestimonialSlider reviews={displayReviews} heading={heading} />
 }
