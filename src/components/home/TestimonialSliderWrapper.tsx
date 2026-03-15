@@ -24,7 +24,8 @@ export async function TestimonialSliderWrapper({ heading, locale }: TestimonialS
       collection: 'reviews',
       where: {
         status: { equals: 'approved' },
-        featured: { equals: true },
+        showOnHomepage: { equals: true },
+        language: { equals: locale },
       },
       limit: 8,
       locale: locale as 'en' | 'ru',

@@ -5,7 +5,7 @@ export const Reviews: CollectionConfig = {
   slug: 'reviews',
   admin: {
     useAsTitle: 'customerName',
-    defaultColumns: ['customerName', 'tour', 'rating', 'status', 'featured'],
+    defaultColumns: ['customerName', 'tour', 'rating', 'language', 'status', 'showOnHomepage'],
     group: 'Content',
   },
   fields: [
@@ -83,6 +83,14 @@ export const Reviews: CollectionConfig = {
       name: 'featured',
       type: 'checkbox',
       defaultValue: false,
+    },
+    {
+      name: 'showOnHomepage',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        description: 'Show this review in the homepage testimonials slider',
+      },
     },
   ],
 }

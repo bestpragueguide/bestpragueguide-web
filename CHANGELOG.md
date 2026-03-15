@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.22.0] - 2026-03-15
+
+### Added
+- **Homepage review filtering by locale** — testimonials slider now shows only reviews matching the current locale (EN reviews for EN, RU reviews for RU)
+- **`showOnHomepage` flag on Reviews** — new checkbox to control which reviews appear in the homepage testimonials slider (replaces `featured` in homepage query)
+
 ## [1.21.1] - 2026-03-15
 
 ### Added
