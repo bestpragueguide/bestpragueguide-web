@@ -95,7 +95,7 @@ All site content is editable from Payload admin panel:
 | `/api/fix-schema` | GET/POST | No | Fix schema issues (add missing columns) |
 | `/api/fix-tier-maxguests` | POST | Secret | Fix pricing tier maxGuests using SQL LEAD() window function |
 | `/api/fix-preferred-times` | GET/POST | Secret | GET: list tours table names + columns. POST: create `tours_preferred_times` + version table |
-| `/api/fix-richtext` | POST | No | Fix richText field data |
+| `/api/fix-richtext` | POST | Secret | Convert plain-text richText fields to Lexical JSON in tours + about-page tables |
 | `/api/migrate-richtext` | POST | No | Convert plain text to Lexical richText |
 | `/api/import-tours` | POST | No | Import tours from JSON |
 | `/api/assign-photos` | POST | No | Associate photos to tours |
@@ -167,7 +167,7 @@ All site content is editable from Payload admin panel:
 ## Rich Text
 - Two editor configs in `src/lib/editors.ts`: `simplifiedEditor` and `fullEditor`
 - Most content fields use richText (Lexical) — see design doc for full field list
-- `SafeRichText` component handles both plain strings (legacy) and Lexical JSON (custom renderer, not Payload's); resolves internal links for tours, blog-posts, and pages collections
+- `SafeRichText` component handles both plain strings (legacy, split by newlines into `<p>` tags) and Lexical JSON (custom renderer, not Payload's); resolves internal links for tours, blog-posts, and pages collections
 - `extractPlainText(data)` helper extracts plain text from richText fields (for meta tags, listings, schema.org)
 - `resolveRichTextLinks(data, locale)` in `src/lib/richtext.ts` — server-only function that walks Lexical JSON tree, finds internal link nodes, batch-fetches doc slugs from Payload, and populates `doc.value` with `{ id, slug }`. Call before passing data to RichText or SafeRichText.
 - Tour detail page uses Payload's `RichText` component with custom `LinkJSXConverter({ internalDocToHref })` for locale-aware internal link URLs
@@ -195,7 +195,7 @@ All site content is editable from Payload admin panel:
 - Form fields: `aria-invalid` + `aria-describedby` on booking (date, name, email) and contact (message) error states
 - Nav hamburger: `aria-expanded`, `aria-controls="mobile-menu"`, locale-aware `aria-label`
 - Tour filter buttons: `aria-pressed` for active state
-- Image `onError` fallback on TourCard and Hero (hides broken images, reveals background)
+- **No event handlers in Server Components** — Hero and TourCard are server components; `onError`/`onClick` etc. cause RSC serialization errors (500). Use CSS fallbacks or client wrappers instead
 - `<noscript>` fallback messages on booking and contact forms
 - Form `autoComplete` hints (name, email, tel) for browser autofill
 - Back-to-top button (`BackToTop` component, bottom-left, appears after 400px scroll)
