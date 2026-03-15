@@ -7,11 +7,6 @@ export const Reviews: CollectionConfig = {
     useAsTitle: 'customerName',
     defaultColumns: ['customerName', 'tour', 'rating', 'language', 'status', 'showOnHomepage'],
     group: 'Content',
-    baseFilter: ({ locale, req }) => {
-      const loc = locale || req?.locale
-      if (!loc) return null
-      return { language: { equals: loc } }
-    },
   },
   fields: [
     {

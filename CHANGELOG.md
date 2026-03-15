@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.22.4] - 2026-03-15
+
+### Fixed
+- **Admin panel crash on filtered-out documents** — removed `baseFilter` from Tours and Reviews collections; `baseFilter` blocks direct document access (e.g., `/admin/collections/tours/55`) when the document doesn't match the current locale, causing a client-side crash instead of showing the document
+
+### Reverted
+- **Tours/Reviews admin locale filtering** — `baseFilter` removed from both collections; all documents now visible regardless of admin locale (use column filters to narrow by locale)
+
 ## [1.22.3] - 2026-03-15
 
 ### Added
