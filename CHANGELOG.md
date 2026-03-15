@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.22.1] - 2026-03-15
+
+### Fixed
+- **FAQ 42 missing RU translation** — added Russian translation for "Do you accept USD, EUR and card payments?" FAQ; previously showed English text on RU homepage due to Payload locale fallback
+- **Review locale data** — fixed all 8 reviews to have proper EN and RU translations (title + body) via fix-schema endpoint
+
 ## [1.22.0] - 2026-03-15
 
 ### Added
