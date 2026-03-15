@@ -25,7 +25,7 @@ Bilingual (EN/RU) private tour portal for Prague.
 All site content is editable from Payload admin panel:
 
 ### Globals
-- **SiteSettings** — contact info, social links (Instagram, YouTube, TripAdvisor, Google Business), map coordinates, WhatsApp templates, license/copyright, booking trust badges, announcement banner
+- **SiteSettings** — contact info, social links (Instagram, YouTube, TripAdvisor, Google Business), map coordinates, WhatsApp templates, license/copyright, booking pricing description, booking trust badges, announcement banner
 - **Navigation** — header links, CTA button, footer columns with links
 - **Homepage** — hero (tagline, subtitle, CTA, background image, mobile image), trust bar items, guide profile, categories grid, process steps, testimonials heading, FAQ heading, CTA section, SEO
 - **AboutPage** — founder profile (photo, bio, quote), stats, team section, values, gallery, dual CTAs, SEO
@@ -58,7 +58,7 @@ All site content is editable from Payload admin panel:
 |-------|------|-------------|
 | `/` | Homepage | Hero, trust bar, guide profile, featured tours, process steps, testimonials, FAQ, CTA |
 | `/tours` | Tour Catalog | TourGrid with filters (category, subcategory, search), sorted by sortOrder |
-| `/tours/[slug]` | Tour Detail | Hero image, description, included/excluded, pricing sidebar, gallery, FAQ, reviews, related tours |
+| `/tours/[slug]` | Tour Detail | Hero image, description, included/excluded, pricing sidebar (pricing table, pricing description, additional services, booking form, trust badges), gallery, FAQ, reviews, related tours |
 | `/about` | About | Founder bio, stats, team, values, gallery, CTAs |
 | `/reviews` | Reviews | Review cards with language filter, photo gallery |
 | `/contact` | Contact | Contact form (name, email, phone, message) |

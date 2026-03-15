@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [1.21.1] - 2026-03-15
 
 ### Added
-- **Booking pricing description in CMS** — `bookingPricingDescription` localized textarea in SiteSettings → Booking tab; renders above pricing table in tour detail sidebar
+- **Booking pricing description in CMS** — `bookingPricingDescription` localized textarea in SiteSettings → Booking tab; renders below pricing table in tour detail sidebar
 - **Related tours relationship** — `relatedTours` hasMany self-relationship on Tours collection with fix-schema SQL for `tours_rels` and `_tours_v_rels` tables
 
 ## [1.21.0] - 2026-03-15
