@@ -81,6 +81,47 @@ export async function POST(req: Request) {
       }
     }
 
+    // Fix review locales: move body/title from EN to correct locale for non-EN reviews
+    const allReviews = await payload.find({ collection: 'reviews', limit: 100, locale: 'en' })
+    for (const review of allReviews.docs) {
+      const lang = (review as any).language
+      if (lang && lang !== 'en') {
+        const enBody = (review as any).body
+        const enTitle = (review as any).title
+        if (enBody || enTitle) {
+          // Check if target locale already has body
+          const targetDoc = await payload.findByID({ collection: 'reviews', id: review.id, locale: lang })
+          const targetBody = (targetDoc as any).body
+          if (!targetBody) {
+            // Copy EN body/title to target locale
+            await payload.update({
+              collection: 'reviews',
+              id: review.id,
+              locale: lang,
+              data: {
+                ...(enBody ? { body: enBody } : {}),
+                ...(enTitle ? { title: enTitle } : {}),
+              },
+            })
+            // Clear EN body/title (set to empty richText)
+            const emptyRoot = { root: { type: 'root', children: [{ type: 'paragraph', children: [], direction: null, format: '', indent: 0, version: 1 }], direction: null, format: '', indent: 0, version: 1 } }
+            await payload.update({
+              collection: 'reviews',
+              id: review.id,
+              locale: 'en',
+              data: {
+                body: emptyRoot as any,
+                title: '',
+              },
+            })
+            results.push(`FIXED: review ${review.id} — moved body/title from EN to ${lang}`)
+          } else {
+            results.push(`SKIP: review ${review.id} — ${lang} body already exists`)
+          }
+        }
+      }
+    }
+
     return NextResponse.json({ success: true, results })
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error'
