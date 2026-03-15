@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.20.2] - 2026-03-15
+
+### Fixed
+- **About page Lexical editor error** — added about-page global support to `/api/fix-richtext` endpoint to convert plain-text `founderBio` and `teamDescription` fields to Lexical JSON format in `about_page_locales` table
+
 ## [1.20.1] - 2026-03-15
 
 ### Fixed

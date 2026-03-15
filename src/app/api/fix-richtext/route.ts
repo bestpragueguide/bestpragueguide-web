@@ -211,10 +211,36 @@ export async function POST(req: Request) {
       results.push(`guest_categories:SKIP:${e.message?.substring(0, 80)}`)
     }
 
-    // 8. List relevant tables for diagnostics
+    // 8. Fix about_page locales: founderBio, teamDescription (richText + localized)
+    try {
+      const aboutRows = await drizzle.execute(sql.raw(
+        `SELECT id, _parent_id, _locale, founder_bio, team_description
+         FROM about_page_locales`
+      ))
+      for (const row of aboutRows.rows || aboutRows) {
+        let changed = false
+        if (typeof row.founder_bio === 'string' && row.founder_bio && !row.founder_bio.startsWith('{')) {
+          await drizzle.execute(sql`UPDATE about_page_locales SET founder_bio = ${textToLexical(row.founder_bio)} WHERE id = ${row.id}`)
+          changed = true
+          results.push(`about_page_locales:${row.id}:${row._locale}:founder_bio`)
+        }
+        if (typeof row.team_description === 'string' && row.team_description && !row.team_description.startsWith('{')) {
+          await drizzle.execute(sql`UPDATE about_page_locales SET team_description = ${textToLexical(row.team_description)} WHERE id = ${row.id}`)
+          changed = true
+          results.push(`about_page_locales:${row.id}:${row._locale}:team_description`)
+        }
+        if (!changed) {
+          results.push(`about_page_locales:${row.id}:${row._locale}:already_ok`)
+        }
+      }
+    } catch (e: any) {
+      results.push(`about_page_locales:SKIP:${e.message?.substring(0, 80)}`)
+    }
+
+    // 9. List relevant tables for diagnostics
     try {
       const tables = await drizzle.execute(sql.raw(
-        `SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'tours%' ORDER BY tablename`
+        `SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND (tablename LIKE 'tours%' OR tablename LIKE 'about_page%') ORDER BY tablename`
       ))
       results.push(`tables: ${(tables.rows || tables).map((r: any) => r.tablename).join(', ')}`)
     } catch (e: any) {
