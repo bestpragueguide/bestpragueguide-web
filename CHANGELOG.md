@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.20.3] - 2026-03-15
+
+### Fixed
+- **About page plain text rendering** — `SafeRichText` now splits plain strings by newlines into separate `<p>` tags instead of rendering as one unformatted block
+
 ## [1.20.2] - 2026-03-15
 
 ### Fixed

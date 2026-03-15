@@ -91,9 +91,19 @@ function renderNode(node: any, idx: number): React.ReactNode {
 export function SafeRichText({ data, className }: SafeRichTextProps) {
   if (!data) return null
 
-  // If it's a plain string (legacy data), render as paragraph
+  // If it's a plain string (legacy data), split into paragraphs by newlines
   if (typeof data === 'string') {
-    return <p className={className}>{data}</p>
+    const paragraphs = data.split(/\n\s*\n|\n/).filter(Boolean)
+    if (paragraphs.length <= 1) {
+      return <p className={className}>{data}</p>
+    }
+    return (
+      <div className={className}>
+        {paragraphs.map((p, i) => (
+          <p key={i}>{p}</p>
+        ))}
+      </div>
+    )
   }
 
   // If it's Lexical richText format
