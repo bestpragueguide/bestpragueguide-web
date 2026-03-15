@@ -17,22 +17,26 @@ export async function POST(req: Request) {
     const results: string[] = []
 
     const queries = [
+      // Drop old incorrectly-created tables (wrong column names)
+      `DROP TABLE IF EXISTS site_settings_booking_trust_badges_locales`,
+      `DROP TABLE IF EXISTS site_settings_booking_trust_badges`,
+
       // site_settings_booking_trust_badges array table
       `CREATE TABLE IF NOT EXISTS site_settings_booking_trust_badges (
-        id varchar PRIMARY KEY,
-        parent_id integer REFERENCES site_settings(id) ON DELETE CASCADE,
-        "order" integer
+        _order integer NOT NULL,
+        _parent_id integer NOT NULL REFERENCES site_settings(id) ON DELETE CASCADE,
+        id varchar PRIMARY KEY
       )`,
-      `CREATE INDEX IF NOT EXISTS site_settings_booking_trust_badges_order_idx ON site_settings_booking_trust_badges ("order")`,
-      `CREATE INDEX IF NOT EXISTS site_settings_booking_trust_badges_parent_id_idx ON site_settings_booking_trust_badges (parent_id)`,
+      `CREATE INDEX IF NOT EXISTS site_settings_booking_trust_badges_order_idx ON site_settings_booking_trust_badges (_order)`,
+      `CREATE INDEX IF NOT EXISTS site_settings_booking_trust_badges_parent_id_idx ON site_settings_booking_trust_badges (_parent_id)`,
 
       // site_settings_booking_trust_badges_locales table (text is localized)
       `CREATE TABLE IF NOT EXISTS site_settings_booking_trust_badges_locales (
+        text varchar NOT NULL,
         id serial PRIMARY KEY,
-        text varchar,
-        _locale varchar NOT NULL,
+        _locale _locales NOT NULL,
         _parent_id varchar NOT NULL REFERENCES site_settings_booking_trust_badges(id) ON DELETE CASCADE,
-        UNIQUE(_parent_id, _locale)
+        UNIQUE(_locale, _parent_id)
       )`,
 
       // tours_rels table for relatedTours hasMany relationship
