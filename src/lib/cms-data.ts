@@ -215,6 +215,7 @@ export async function getSiteSettings(locale: string): Promise<SiteSettingsData>
       mapCoordinates: data.mapCoordinates || { lat: 50.0875, lng: 14.4213 },
       licenseText: data.licenseText || siteSettingsFallback(locale).licenseText,
       copyrightText: data.copyrightText || siteSettingsFallback(locale).copyrightText,
+      bookingPricingDescription: (data as any).bookingPricingDescription || undefined,
       bookingTrustBadges: (data as any).bookingTrustBadges?.length
         ? (data as any).bookingTrustBadges.map((b: any) => ({ text: b.text }))
         : siteSettingsFallback(locale).bookingTrustBadges,

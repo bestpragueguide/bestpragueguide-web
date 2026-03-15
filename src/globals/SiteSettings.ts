@@ -154,6 +154,14 @@ export const SiteSettings: GlobalConfig = {
           label: 'Booking',
           fields: [
             {
+              name: 'bookingPricingDescription',
+              type: 'textarea',
+              localized: true,
+              admin: {
+                description: 'Pricing explanation shown above the booking form in the sidebar (e.g. "Price is per group, not per person")',
+              },
+            },
+            {
               name: 'bookingTrustBadges',
               type: 'array',
               labels: {

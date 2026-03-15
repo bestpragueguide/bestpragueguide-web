@@ -17,6 +17,9 @@ export async function POST(req: Request) {
     const results: string[] = []
 
     const queries = [
+      // Add bookingPricingDescription column to site_settings_locales (textarea, localized)
+      `ALTER TABLE site_settings_locales ADD COLUMN IF NOT EXISTS booking_pricing_description varchar`,
+
       // Drop old incorrectly-created tables (wrong column names)
       `DROP TABLE IF EXISTS site_settings_booking_trust_badges_locales`,
       `DROP TABLE IF EXISTS site_settings_booking_trust_badges`,
