@@ -28,6 +28,11 @@ export async function POST() {
         mapCoordinates: { lat: 50.0875, lng: 14.4213 },
         licenseText: 'Licensed Guide, Czech Guide Association',
         copyrightText: '© {year} Best Prague Guide. All rights reserved.',
+        bookingTrustBadges: [
+          { text: 'No payment until we confirm' },
+          { text: 'Free cancellation 24h before' },
+          { text: '100% private — just your group' },
+        ],
       },
     })
     await payload.updateGlobal({
@@ -39,6 +44,11 @@ export async function POST() {
         whatsappTourMessageTemplate: 'Здравствуйте! Меня интересует экскурсия "{tourName}".',
         licenseText: 'Лицензированный гид, Ассоциация гидов Чехии',
         copyrightText: '© {year} Best Prague Guide. Все права защищены.',
+        bookingTrustBadges: [
+          { text: 'Оплата только после подтверждения' },
+          { text: 'Бесплатная отмена за 24 часа' },
+          { text: '100% индивидуально — только ваша группа' },
+        ],
       },
     })
 

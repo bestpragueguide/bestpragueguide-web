@@ -41,6 +41,11 @@ function siteSettingsFallback(locale: string): SiteSettingsData {
     copyrightText: locale === 'ru'
       ? '© {year} Best Prague Guide. Все права защищены.'
       : '© {year} Best Prague Guide. All rights reserved.',
+    bookingTrustBadges: [
+      { text: locale === 'ru' ? 'Оплата только после подтверждения' : 'No payment until we confirm' },
+      { text: locale === 'ru' ? 'Бесплатная отмена за 24 часа' : 'Free cancellation 24h before' },
+      { text: locale === 'ru' ? '100% индивидуально — только ваша группа' : '100% private — just your group' },
+    ],
   }
 }
 
@@ -210,6 +215,9 @@ export async function getSiteSettings(locale: string): Promise<SiteSettingsData>
       mapCoordinates: data.mapCoordinates || { lat: 50.0875, lng: 14.4213 },
       licenseText: data.licenseText || siteSettingsFallback(locale).licenseText,
       copyrightText: data.copyrightText || siteSettingsFallback(locale).copyrightText,
+      bookingTrustBadges: (data as any).bookingTrustBadges?.length
+        ? (data as any).bookingTrustBadges.map((b: any) => ({ text: b.text }))
+        : siteSettingsFallback(locale).bookingTrustBadges,
       announcement: data.announcement,
     } as SiteSettingsData
   } catch {

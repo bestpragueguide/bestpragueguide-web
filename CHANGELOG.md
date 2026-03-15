@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.21.0] - 2026-03-15
+
+### Added
+- **Booking trust badges editable from CMS** — trust badges ("No payment until we confirm", "Free cancellation 24h before", "100% private") moved from hardcoded i18n/static text to `bookingTrustBadges` array in SiteSettings → Booking tab; localized, user-editable from admin panel
+- **SiteSettings Booking tab** — new tab in admin panel for booking-related settings
+
+### Changed
+- **Rate-limited phone uses SiteSettings** — booking form rate-limit phone number now uses `contactPhoneDisplay` from SiteSettings instead of hardcoded value
+- **BookingModal trust badges from CMS** — mobile modal trust badges now receive data from SiteSettings instead of hardcoded EN/RU strings
+
 ## [1.20.6] - 2026-03-15
 
 ### Fixed

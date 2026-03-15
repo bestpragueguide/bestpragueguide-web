@@ -79,6 +79,7 @@ export interface SiteSettingsData {
   mapCoordinates: { lat: number; lng: number }
   licenseText: string
   copyrightText: string
+  bookingTrustBadges?: Array<{ text: string }>
   announcement?: {
     enabled?: boolean
     text?: string

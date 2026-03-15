@@ -25,7 +25,7 @@ Bilingual (EN/RU) private tour portal for Prague.
 All site content is editable from Payload admin panel:
 
 ### Globals
-- **SiteSettings** — contact info, social links (Instagram, YouTube, TripAdvisor, Google Business), map coordinates, WhatsApp templates, license/copyright, announcement banner
+- **SiteSettings** — contact info, social links (Instagram, YouTube, TripAdvisor, Google Business), map coordinates, WhatsApp templates, license/copyright, booking trust badges, announcement banner
 - **Navigation** — header links, CTA button, footer columns with links
 - **Homepage** — hero (tagline, subtitle, CTA, background image, mobile image), trust bar items, guide profile, categories grid, process steps, testimonials heading, FAQ heading, CTA section, SEO
 - **AboutPage** — founder profile (photo, bio, quote), stats, team section, values, gallery, dual CTAs, SEO

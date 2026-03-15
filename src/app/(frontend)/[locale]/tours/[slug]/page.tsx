@@ -14,6 +14,7 @@ import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical
 import { RichText, defaultJSXConverters, LinkJSXConverter } from '@payloadcms/richtext-lexical/react'
 import { SafeRichText, extractPlainText } from '@/components/shared/SafeRichText'
 import { resolveRichTextLinks } from '@/lib/richtext'
+import { getSiteSettings } from '@/lib/cms-data'
 import { StickyBookButton } from '@/components/booking/StickyBookButton'
 import { BookingRequestForm } from '@/components/booking/BookingRequestForm'
 import { TourSchema } from '@/components/seo/TourSchema'
@@ -153,6 +154,7 @@ export default async function TourDetailPage({
 
   const t = await getTranslations({ locale, namespace: 'tour' })
   const tCommon = await getTranslations({ locale, namespace: 'common' })
+  const siteSettings = await getSiteSettings(locale)
 
   // Resolve internal links in richText description
   if (tour.description) {
@@ -396,30 +398,20 @@ export default async function TourDetailPage({
               maxGroupSize={tour.maxGroupSize}
               locale={locale}
               preferredTimes={tour.preferredTimes}
+              contactPhoneDisplay={siteSettings.contactPhoneDisplay}
             />
 
             {/* Trust badges */}
-            <div className="mt-6 space-y-3">
-              {[
-                {
-                  icon: '✓',
-                  text: t('trustNoPayment'),
-                },
-                {
-                  icon: '✓',
-                  text: t('trustFreeCancellation'),
-                },
-                {
-                  icon: '✓',
-                  text: t('trustPrivate'),
-                },
-              ].map((badge, i) => (
-                <div key={i} className="flex items-center gap-2 text-sm">
-                  <span className="text-trust font-bold">{badge.icon}</span>
-                  <span className="text-navy/70">{badge.text}</span>
-                </div>
-              ))}
-            </div>
+            {siteSettings.bookingTrustBadges && siteSettings.bookingTrustBadges.length > 0 && (
+              <div className="mt-6 space-y-3">
+                {siteSettings.bookingTrustBadges.map((badge, i) => (
+                  <div key={i} className="flex items-center gap-2 text-sm">
+                    <span className="text-trust font-bold">✓</span>
+                    <span className="text-navy/70">{badge.text}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -452,6 +444,8 @@ export default async function TourDetailPage({
         maxGroupSize={tour.maxGroupSize}
         locale={locale}
         preferredTimes={tour.preferredTimes}
+        trustBadges={siteSettings.bookingTrustBadges}
+        contactPhoneDisplay={siteSettings.contactPhoneDisplay}
       />
     </div>
   )

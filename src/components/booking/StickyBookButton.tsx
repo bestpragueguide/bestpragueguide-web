@@ -16,6 +16,8 @@ interface StickyBookButtonProps {
   maxGroupSize?: number
   locale: string
   preferredTimes?: string[]
+  trustBadges?: Array<{ text: string }>
+  contactPhoneDisplay?: string
 }
 
 export function StickyBookButton({
@@ -25,6 +27,8 @@ export function StickyBookButton({
   maxGroupSize,
   locale,
   preferredTimes,
+  trustBadges,
+  contactPhoneDisplay,
 }: StickyBookButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -78,6 +82,7 @@ export function StickyBookButton({
         tourName={tourName}
         pricing={pricing}
         locale={locale}
+        trustBadges={trustBadges}
       >
         <BookingRequestForm
           tourId={tourId}
@@ -86,6 +91,7 @@ export function StickyBookButton({
           maxGroupSize={maxGroupSize}
           locale={locale}
           preferredTimes={preferredTimes}
+          contactPhoneDisplay={contactPhoneDisplay}
         />
       </BookingModal>
     </>

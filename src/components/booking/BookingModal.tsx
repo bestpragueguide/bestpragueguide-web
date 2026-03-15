@@ -14,6 +14,7 @@ interface BookingModalProps {
   children?: React.ReactNode
   defaultDate?: string
   defaultTime?: string
+  trustBadges?: Array<{ text: string }>
 }
 
 export function BookingModal({
@@ -25,6 +26,7 @@ export function BookingModal({
   children,
   defaultDate,
   defaultTime,
+  trustBadges,
 }: BookingModalProps) {
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {
@@ -121,27 +123,19 @@ export function BookingModal({
           )}
 
           {/* Trust badges */}
-          <div className="mt-6 space-y-2">
-            {[
-              locale === 'ru'
-                ? 'Оплата только после подтверждения'
-                : 'No payment until we confirm',
-              locale === 'ru'
-                ? 'Бесплатная отмена за 24 часа'
-                : 'Free cancellation 24h before',
-              locale === 'ru'
-                ? '100% индивидуально — только ваша группа'
-                : '100% private — just your group',
-            ].map((text, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-2 text-xs"
-              >
-                <span className="text-trust font-bold">✓</span>
-                <span className="text-navy/70">{text}</span>
-              </div>
-            ))}
-          </div>
+          {trustBadges && trustBadges.length > 0 && (
+            <div className="mt-6 space-y-2">
+              {trustBadges.map((badge, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-2 text-xs"
+                >
+                  <span className="text-trust font-bold">✓</span>
+                  <span className="text-navy/70">{badge.text}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

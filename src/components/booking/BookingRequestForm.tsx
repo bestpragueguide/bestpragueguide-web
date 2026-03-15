@@ -19,6 +19,7 @@ interface BookingRequestFormProps {
   defaultDate?: string
   defaultTime?: string
   preferredTimes?: string[]
+  contactPhoneDisplay?: string
 }
 
 export function BookingRequestForm({
@@ -30,6 +31,7 @@ export function BookingRequestForm({
   defaultDate,
   defaultTime,
   preferredTimes,
+  contactPhoneDisplay,
 }: BookingRequestFormProps) {
   const t = useTranslations('booking')
   const [status, setStatus] = useState<
@@ -450,8 +452,8 @@ export function BookingRequestForm({
           <p className="text-navy">
             {t('rateLimitTitle')}
           </p>
-          <a href="tel:+420776306858" className="text-gold font-medium">
-            +420 776 306 858
+          <a href={`tel:${(contactPhoneDisplay || '+420 776 306 858').replace(/\s/g, '')}`} className="text-gold font-medium">
+            {contactPhoneDisplay || '+420 776 306 858'}
           </a>
         </div>
       )}

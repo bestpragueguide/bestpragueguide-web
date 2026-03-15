@@ -151,6 +151,30 @@ export const SiteSettings: GlobalConfig = {
           ],
         },
         {
+          label: 'Booking',
+          fields: [
+            {
+              name: 'bookingTrustBadges',
+              type: 'array',
+              labels: {
+                singular: 'Trust Badge',
+                plural: 'Trust Badges',
+              },
+              admin: {
+                description: 'Checkmark badges shown below the booking form (e.g. "No payment until we confirm")',
+              },
+              fields: [
+                {
+                  name: 'text',
+                  type: 'text',
+                  required: true,
+                  localized: true,
+                },
+              ],
+            },
+          ],
+        },
+        {
           label: 'Announcement',
           fields: [
             {
