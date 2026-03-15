@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.20.1] - 2026-03-15
+
+### Fixed
+- **Homepage 500 error** — removed `onError` event handlers from Hero and TourCard server components; event handlers are not supported in React Server Components and caused RSC serialization errors on the homepage
+
 ## [1.20.0] - 2026-03-15
 
 ### Added

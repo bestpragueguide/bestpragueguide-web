@@ -37,7 +37,6 @@ export function Hero({ data, locale }: HeroProps) {
           className="absolute inset-0 w-full h-full object-cover"
           style={{ objectPosition: focalPosition }}
           fetchPriority="high"
-          onError={(e) => { e.currentTarget.style.display = 'none' }}
         />
       </picture>
       <div className="absolute inset-0 bg-gradient-to-b from-navy/80 via-navy/60 to-navy/90" />
