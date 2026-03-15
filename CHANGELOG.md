@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.22.3] - 2026-03-15
+
+### Added
+- **Reviews admin locale filtering** — `baseFilter` on Reviews collection filters admin list by `language` matching selected locale (EN shows only English reviews, RU shows only Russian)
+
 ## [1.22.2] - 2026-03-15
 
 ### Changed

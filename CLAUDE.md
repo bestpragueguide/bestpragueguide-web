@@ -34,7 +34,7 @@ All site content is editable from Payload admin panel:
 ### Collections
 - **Tours** — tour listings organized in tabs (Content, Images, Pricing, SEO) with `relatedTours` relationship for admin-selectable "You May Also Like" section; pricing, gallery, included/excluded items, FAQ, meeting point, difficulty, tags; `publishedLocales` (select hasMany: en/ru) controls visibility per locale; `sortOrder` controls display order; `baseFilter` filters admin list by current locale; `preferredTimes` (select hasMany, 00:00–23:30) — optional custom booking time slots, falls back to default 9:00–18:00
 - **Services** — reusable add-on services (entry tickets, vehicles, restaurants) with own pricing models (per_person, per_group, flat, on_request) and guest category pricing
-- **Reviews** — customer reviews with rating (1-5), reviewer name/country, tour reference, guide response, language, featured flag, `showOnHomepage` flag; homepage testimonials filtered by `language` matching locale + `showOnHomepage: true`
+- **Reviews** — customer reviews with rating (1-5), reviewer name/country, tour reference, guide response, language, featured flag, `showOnHomepage` flag; homepage testimonials filtered by `language` matching locale + `showOnHomepage: true`; `baseFilter` filters admin list by `language` matching selected locale
 - **BlogPosts** — blog articles with richText content, categories (prague-guide, food-and-drink, day-trips, tips, history), heroImage, SEO fields, `publishedLocales`
 - **FAQs** — question/answer (richText), category, sortOrder, showOnHomepage flag
 - **Pages** — legal pages (privacy, terms, cancellation) with richText content, template selector
@@ -210,6 +210,7 @@ All site content is editable from Payload admin panel:
 - **Tour Order** (`/tour-order`) — standalone drag-and-drop page with EN/RU locale toggle; reorders tours by `sortOrder` field
 - **Tour Order Link** (`src/components/admin/TourOrderLink.tsx`) — Payload `afterNavLinks` component in admin sidebar; registered in `importMap.js`
 - **Tour List Filtering** — `baseFilter` on Tours collection filters admin list view by selected locale (`publishedLocales`)
+- **Review List Filtering** — `baseFilter` on Reviews collection filters admin list view by selected locale (`language`)
 
 ## Middleware
 - `src/middleware.ts` — www→non-www redirect (301), next-intl locale detection/prefix
