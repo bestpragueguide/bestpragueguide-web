@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.22.2] - 2026-03-15
+
+### Changed
+- **Booking form labels** — "Preferred Time" → "Start Time" (EN), "Желаемое время" → "Время начала" (RU); "Количество гостей" → "Сколько вас будет человек" (RU)
+
 ## [1.22.1] - 2026-03-15
 
 ### Fixed

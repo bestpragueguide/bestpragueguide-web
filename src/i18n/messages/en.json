@@ -1,7 +1,7 @@
 {
   "booking": {
     "date": "Preferred Date",
-    "time": "Preferred Time",
+    "time": "Start Time",
     "guests": "Number of Guests",
     "name": "Your Name",
     "email": "Email",
