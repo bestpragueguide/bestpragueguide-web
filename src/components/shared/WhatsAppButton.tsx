@@ -23,7 +23,7 @@ export function WhatsAppButton({ phone, messageTemplate, tourMessageTemplate, to
       target="_blank"
       rel="noopener noreferrer"
       onClick={() => trackWhatsAppClick(tourName)}
-      className="fixed bottom-20 lg:bottom-6 right-4 z-[70] w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+      className="fixed bottom-24 lg:bottom-6 right-4 z-[70] w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
       aria-label="WhatsApp"
     >
       <svg

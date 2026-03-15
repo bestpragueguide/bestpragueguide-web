@@ -416,8 +416,14 @@ export function BookingRequestForm({
       <button
         type="submit"
         disabled={status === 'loading'}
-        className="w-full px-6 py-3 bg-gold text-white font-medium rounded-lg hover:bg-gold-dark transition-colors disabled:opacity-50 min-h-[44px]"
+        className="w-full px-6 py-3 bg-gold text-white font-medium rounded-lg hover:bg-gold-dark transition-colors disabled:opacity-50 min-h-[44px] flex items-center justify-center gap-2"
       >
+        {status === 'loading' && (
+          <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
+        )}
         {status === 'loading' ? t('sending') : t('submit')}
       </button>
 

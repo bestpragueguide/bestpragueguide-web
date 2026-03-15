@@ -44,6 +44,7 @@ export default async function AboutPage({
 }) {
   const { locale } = await params
   const data = await getAboutPageData(locale)
+  const tPages = await getTranslations({ locale, namespace: 'pages' })
 
   const founderPhotoUrl = resolveMediaUrl(data.founderPhoto) || fallbackFounderPhoto
 
@@ -61,7 +62,7 @@ export default async function AboutPage({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Breadcrumbs
-        items={[{ label: locale === 'ru' ? 'О нас' : 'About Us' }]}
+        items={[{ label: tPages('aboutBreadcrumb') }]}
         locale={locale}
       />
 

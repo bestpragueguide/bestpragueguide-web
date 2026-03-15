@@ -29,12 +29,13 @@ export default async function ContactPage({
 }) {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'contact' })
+  const tPages = await getTranslations({ locale, namespace: 'pages' })
   const siteSettings = await getSiteSettings(locale)
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Breadcrumbs
-        items={[{ label: locale === 'ru' ? 'Контакты' : 'Contact' }]}
+        items={[{ label: tPages('contactBreadcrumb') }]}
         locale={locale}
       />
 
@@ -91,7 +92,7 @@ export default async function ContactPage({
           </div>
 
           <p className="mt-6 text-sm text-gray">
-            {locale === 'ru' ? 'Режим работы' : 'Business Hours'}: {siteSettings.businessHours}
+            {tPages('businessHoursLabel')}: {siteSettings.businessHours}
           </p>
         </div>
       </div>

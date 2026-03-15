@@ -6,6 +6,7 @@ import { sendEmail, sendAdminEmail } from '@/lib/email'
 import { sendTelegramMessage } from '@/lib/telegram'
 import { getIpInfo, formatLocation, type IpInfo } from '@/lib/ip'
 import { sendSlackMessage, formatContactSlackMessage } from '@/lib/slack'
+import { isRateLimited } from '@/lib/rate-limit'
 import React from 'react'
 
 const contactSchema = z.object({
@@ -15,25 +16,6 @@ const contactSchema = z.object({
   message: z.string().min(4).max(1000),
   locale: z.enum(['en', 'ru']),
 })
-
-const rateLimitMap = new Map<string, number[]>()
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now()
-  const windowMs = 60 * 60 * 1000 // 1 hour
-  const maxRequests = 20
-
-  const timestamps = rateLimitMap.get(ip) || []
-  const recent = timestamps.filter((t) => now - t < windowMs)
-
-  if (recent.length >= maxRequests) {
-    return true
-  }
-
-  recent.push(now)
-  rateLimitMap.set(ip, recent)
-  return false
-}
 
 function ContactNotificationEmail({
   name,
@@ -193,7 +175,7 @@ export async function POST(request: NextRequest) {
     request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
     'unknown'
 
-  if (isRateLimited(ip)) {
+  if (await isRateLimited(ip, 'contact')) {
     // Still save the message marked as rate_limited
     try {
       const body = await request.json()

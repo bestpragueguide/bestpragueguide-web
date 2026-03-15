@@ -16,33 +16,15 @@ import {
 import { getIpInfo, formatLocation } from '@/lib/ip'
 import { sendSlackMessage, formatBookingSlackMessage } from '@/lib/slack'
 import { n8n } from '@/lib/n8n'
+import { isRateLimited } from '@/lib/rate-limit'
 import { z } from 'zod'
-
-const rateLimitMap = new Map<string, number[]>()
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now()
-  const windowMs = 60 * 60 * 1000
-  const maxRequests = 20
-
-  const timestamps = rateLimitMap.get(ip) || []
-  const recent = timestamps.filter((t) => now - t < windowMs)
-
-  if (recent.length >= maxRequests) {
-    return true
-  }
-
-  recent.push(now)
-  rateLimitMap.set(ip, recent)
-  return false
-}
 
 export async function POST(request: NextRequest) {
   const ip =
     request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
     'unknown'
 
-  if (isRateLimited(ip)) {
+  if (await isRateLimited(ip, 'booking')) {
     return NextResponse.json(
       { error: 'Too many requests. Please try again later.' },
       { status: 429 },

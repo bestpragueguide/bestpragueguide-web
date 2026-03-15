@@ -1,5 +1,3 @@
-export const dynamic = 'force-dynamic'
-
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -7,12 +5,16 @@ import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { RichText } from '@payloadcms/richtext-lexical/react'
+import { getTranslations } from 'next-intl/server'
 import { extractPlainText } from '@/components/shared/SafeRichText'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
+import { ShareButtons } from '@/components/shared/ShareButtons'
 import { BlogPostSchema } from '@/components/seo/BlogPostSchema'
 import { categoryLabels, allCategories } from '@/lib/blog'
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
+
+export const revalidate = 3600
 
 export async function generateMetadata({
   params,
@@ -114,6 +116,7 @@ export default async function BlogPostPage({
 
   const post = result.docs[0]
   if (!post) notFound()
+  const tPages = await getTranslations({ locale, namespace: 'pages' })
 
   const heroImage = typeof post.heroImage === 'object' ? post.heroImage : null
   const heroUrl = heroImage?.sizes?.hero?.url || heroImage?.url || ''
@@ -158,7 +161,7 @@ export default async function BlogPostPage({
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Breadcrumbs
         items={[
-          { label: locale === 'ru' ? 'Блог' : 'Blog', href: `/${locale}/blog` },
+          { label: tPages('blogBreadcrumb'), href: `/${locale}/blog` },
           { label: post.title as string },
         ]}
         locale={locale}
@@ -178,6 +181,14 @@ export default async function BlogPostPage({
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-navy leading-tight">
                 {post.title}
               </h1>
+              <div className="mt-4 flex items-center gap-3">
+                <span className="text-xs text-navy/40">{tPages('share')}:</span>
+                <ShareButtons
+                  url={`${process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'}/${locale}/blog/${slug}`}
+                  title={post.title as string}
+                  locale={locale}
+                />
+              </div>
             </header>
 
             {/* Hero image */}
@@ -204,15 +215,13 @@ export default async function BlogPostPage({
             {/* CTA (mobile — shown below content, hidden on lg where sidebar has CTA) */}
             <div className="mt-12 p-6 bg-gold/5 border border-gold/20 rounded-xl text-center lg:hidden">
               <p className="text-lg font-heading font-semibold text-navy mb-3">
-                {locale === 'ru'
-                  ? 'Хотите увидеть Прагу своими глазами?'
-                  : 'Want to see Prague for yourself?'}
+                {tPages('blogCtaHeading')}
               </p>
               <Link
                 href={`/${locale}/tours`}
                 className="inline-flex items-center px-6 py-3 bg-gold text-white font-medium rounded-lg hover:bg-gold-dark transition-colors"
               >
-                {locale === 'ru' ? 'Смотреть экскурсии' : 'Explore Our Tours'}
+                {tPages('blogCtaButton')}
               </Link>
             </div>
           </article>
@@ -221,7 +230,7 @@ export default async function BlogPostPage({
           {relatedPosts.length > 0 && (
             <section className="mt-16 pt-8 border-t border-gray-light/50">
               <h2 className="text-2xl font-heading font-bold text-navy mb-6">
-                {locale === 'ru' ? 'Читайте также' : 'You May Also Like'}
+                {tPages('blogRelated')}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 {relatedPosts.map((related: any) => {
@@ -264,7 +273,7 @@ export default async function BlogPostPage({
             {/* Categories */}
             <div className="bg-white rounded-xl border border-gray-light/50 p-5">
               <h3 className="font-heading font-bold text-navy mb-4">
-                {locale === 'ru' ? 'Категории' : 'Categories'}
+                {tPages('blogCategories')}
               </h3>
               <ul className="space-y-2">
                 {allCategories
@@ -287,7 +296,7 @@ export default async function BlogPostPage({
             {popularPosts.length > 0 && (
               <div className="bg-white rounded-xl border border-gray-light/50 p-5">
                 <h3 className="font-heading font-bold text-navy mb-4">
-                  {locale === 'ru' ? 'Популярные статьи' : 'Popular Articles'}
+                  {tPages('blogPopular')}
                 </h3>
                 <div className="space-y-4">
                   {popularPosts.map((p: any) => {
@@ -326,15 +335,13 @@ export default async function BlogPostPage({
             {/* Choose a Tour CTA */}
             <div className="bg-gold/5 border border-gold/20 rounded-xl p-5 text-center">
               <p className="font-heading font-semibold text-navy mb-3">
-                {locale === 'ru'
-                  ? 'Хотите увидеть Прагу своими глазами?'
-                  : 'Want to see Prague for yourself?'}
+                {tPages('blogCtaHeading')}
               </p>
               <Link
                 href={`/${locale}/tours`}
                 className="inline-flex items-center px-5 py-2.5 bg-gold text-white text-sm font-medium rounded-lg hover:bg-gold-dark transition-colors"
               >
-                {locale === 'ru' ? 'Смотреть экскурсии' : 'Explore Our Tours'}
+                {tPages('blogCtaButton')}
               </Link>
             </div>
           </div>

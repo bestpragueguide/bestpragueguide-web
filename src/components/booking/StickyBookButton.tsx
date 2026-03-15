@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import { useTranslations } from 'next-intl'
 import { BookingModal } from './BookingModal'
 import { BookingRequestForm } from './BookingRequestForm'
 import { trackCtaClick } from '@/lib/analytics'
@@ -28,10 +29,11 @@ export function StickyBookButton({
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const displayInfo = useMemo(() => getDisplayPrice(pricing), [pricing])
+  const tTour = useTranslations('tour')
+  const tCommon = useTranslations('common')
+  const tBooking = useTranslations('booking')
 
-  const priceLabel = displayInfo.isPerPerson
-    ? (locale === 'ru' ? 'за человека' : 'per person')
-    : (locale === 'ru' ? 'за группу' : 'per group')
+  const priceLabel = displayInfo.isPerPerson ? tTour('perPerson') : tTour('perGroup')
 
   return (
     <>
@@ -41,12 +43,12 @@ export function StickyBookButton({
           <div>
             {displayInfo.isOnRequest ? (
               <span className="text-lg font-bold text-gold">
-                {locale === 'ru' ? 'По запросу' : 'On Request'}
+                {tBooking('onRequest')}
               </span>
             ) : displayInfo.fromPrice !== null ? (
               <>
                 <span className="text-xl font-bold text-gold">
-                  {pricing.model === 'GROUP_TIERS' && (locale === 'ru' ? 'от ' : 'from ')}
+                  {pricing.model === 'GROUP_TIERS' && (tCommon('from') + ' ')}
                   {formatPrice(displayInfo.fromPrice, 'EUR')}
                 </span>
                 <p className="text-[10px] text-gray/70 leading-tight">
@@ -65,7 +67,7 @@ export function StickyBookButton({
             }}
             className="px-6 py-3 bg-gold text-white font-medium rounded-lg hover:bg-gold-dark transition-colors text-sm min-h-[44px]"
           >
-            {locale === 'ru' ? 'Забронировать' : 'Book Now'}
+            {tCommon('bookNow')}
           </button>
         </div>
       </div>

@@ -113,6 +113,8 @@ All site content is editable from Payload admin panel:
 - Notifications: email (Resend), Telegram, WhatsApp, Slack, n8n — all fire in parallel on new booking
 - `src/emails/` — React Email templates: request-received (customer), new-request-admin, request-confirmed, request-declined, pre-tour-reminder, payment-received
 - `src/lib/booking.ts` — Zod validation schema, guest max dynamic from `getMaxGuests()`, request ref format: BPG-YYYY-NNNNN
+- `src/lib/rate-limit.ts` — shared rate limiter (Redis sorted sets with in-memory fallback), used by booking and contact API routes
+- `src/components/shared/ShareButtons.tsx` — social share buttons (Facebook, Twitter/X, LinkedIn, copy link) used on tour detail and blog post pages
 
 ## OSS Integration (v1.15.2)
 - **n8n** (`src/lib/n8n.ts`) — fire-and-forget webhook hub; 4 methods: bookingNew, bookingConfirmed, tourCompleted, paymentReceived
@@ -202,9 +204,9 @@ All site content is editable from Payload admin panel:
 ## Conventions
 - Server Components by default; Client Components only for interactivity
 - Payload Local API for data fetching in Server Components
-- ISR for tour pages (revalidate on change)
+- ISR for tour and blog pages (`revalidate = 3600`)
 - All commits must update CHANGELOG.md, VERSION, and affected docs
-- EN/RU localization: next-intl for UI strings (booking, contact, common, tour, notFound, meta, legal), Payload for all CMS content
+- EN/RU localization: next-intl for UI strings (booking, contact, common, tour, pages, notFound, meta, legal), Payload for all CMS content
 - Design palette: navy (#1A1A1A), gold (#C4975C), cream (#FAF7F2)
 - Fonts: Cormorant Garamond (headings), DM Sans (body)
 

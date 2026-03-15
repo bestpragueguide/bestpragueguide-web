@@ -11,6 +11,7 @@ interface ContactFormProps {
 export function ContactForm({ locale, phoneDisplay }: ContactFormProps) {
   const phone = phoneDisplay || '+420 776 306 858'
   const t = useTranslations('contact')
+  const tPages = useTranslations('pages')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error' | 'rate_limited' | 'too_long'>('idle')
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -129,36 +130,32 @@ export function ContactForm({ locale, phoneDisplay }: ContactFormProps) {
       <button
         type="submit"
         disabled={status === 'loading'}
-        className="w-full px-6 py-3 bg-gold text-white font-medium rounded-lg hover:bg-gold-dark transition-colors disabled:opacity-50"
+        className="w-full px-6 py-3 bg-gold text-white font-medium rounded-lg hover:bg-gold-dark transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
       >
-        {status === 'loading'
-          ? locale === 'ru'
-            ? 'Отправка...'
-            : 'Sending...'
-          : t('formSubmit')}
+        {status === 'loading' && (
+          <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
+        )}
+        {status === 'loading' ? tPages('contactSending') : t('formSubmit')}
       </button>
 
       {status === 'too_long' && (
         <p className="text-sm text-error text-center">
-          {locale === 'ru'
-            ? 'Сообщение слишком длинное. Максимум 1000 символов.'
-            : 'Message is too long. Maximum 1000 characters.'}
+          {tPages('contactTooLong')}
         </p>
       )}
 
       {status === 'rate_limited' && (
         <p className="text-sm text-error text-center">
-          {locale === 'ru'
-            ? `Слишком много сообщений. Пожалуйста, свяжитесь с нами по телефону: ${phone}`
-            : `Too many messages. Please contact us by phone: ${phone}`}
+          {tPages('contactRateLimit', { phone })}
         </p>
       )}
 
       {status === 'error' && (
         <p className="text-sm text-error text-center">
-          {locale === 'ru'
-            ? 'Ошибка отправки. Попробуйте ещё раз.'
-            : 'Failed to send. Please try again.'}
+          {tPages('contactError')}
         </p>
       )}
     </form>

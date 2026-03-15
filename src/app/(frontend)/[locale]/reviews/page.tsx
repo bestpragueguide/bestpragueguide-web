@@ -50,6 +50,7 @@ export default async function ReviewsPage({
 }) {
   const { locale } = await params
   const pageData = await getReviewsPageData(locale)
+  const tPages = await getTranslations({ locale, namespace: 'pages' })
 
   const galleryPhotos = pageData.galleryPhotos.length > 0
     ? pageData.galleryPhotos.map((p, i) => ({
@@ -109,7 +110,7 @@ export default async function ReviewsPage({
       )}
 
       <Breadcrumbs
-        items={[{ label: locale === 'ru' ? 'Отзывы' : 'Reviews' }]}
+        items={[{ label: tPages('reviewsBreadcrumb') }]}
         locale={locale}
       />
 
@@ -158,9 +159,7 @@ export default async function ReviewsPage({
         ) : (
           <div className="text-center py-12 text-gray">
             <p>
-              {locale === 'ru'
-                ? 'Отзывы скоро появятся!'
-                : 'Reviews coming soon!'}
+              {tPages('reviewsComingSoon')}
             </p>
           </div>
         )}

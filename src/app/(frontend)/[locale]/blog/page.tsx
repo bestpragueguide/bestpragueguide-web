@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { getTranslations } from 'next-intl/server'
 import { buildPageMetadata } from '@/lib/metadata'
 import { getPayload } from 'payload'
 import config from '@payload-config'
@@ -18,10 +19,9 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const title = locale === 'ru' ? 'Блог — Best Prague Guide' : 'Blog — Best Prague Guide'
-  const description = locale === 'ru'
-    ? 'Статьи о Праге, советы путешественникам, гастрономические маршруты и истории от гида с 17-летним опытом.'
-    : 'Articles about Prague, travel tips, food guides, and stories from a guide with 17 years of experience.'
+  const t = await getTranslations({ locale, namespace: 'meta' })
+  const title = t('blogTitle')
+  const description = t('blogDesc')
 
   return {
     title,
@@ -39,6 +39,7 @@ export default async function BlogPage({
 }) {
   const { locale } = await params
   const { category: selectedCategory } = await searchParams
+  const tPages = await getTranslations({ locale, namespace: 'pages' })
 
   let allPosts: any[] = []
   try {
@@ -69,12 +70,12 @@ export default async function BlogPage({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Breadcrumbs
-        items={[{ label: locale === 'ru' ? 'Блог' : 'Blog' }]}
+        items={[{ label: tPages('blogBreadcrumb') }]}
         locale={locale}
       />
 
       <h1 className="text-3xl sm:text-4xl font-heading font-bold text-navy mb-8">
-        {locale === 'ru' ? 'Блог' : 'Blog'}
+        {tPages('blogHeading')}
       </h1>
 
       {availableCategories.length > 1 && (
@@ -118,7 +119,7 @@ export default async function BlogPage({
                     {extractPlainText(post.excerpt)}
                   </p>
                   <span className="mt-3 inline-block text-sm font-medium text-gold">
-                    {locale === 'ru' ? 'Читать далее →' : 'Read more →'}
+                    {tPages('blogReadMore')}
                   </span>
                 </div>
               </Link>
@@ -128,9 +129,7 @@ export default async function BlogPage({
       ) : (
         <div className="text-center py-16 text-gray">
           <p className="text-lg">
-            {locale === 'ru'
-              ? selectedCategory ? 'Нет статей в этой категории.' : 'Статьи скоро появятся!'
-              : selectedCategory ? 'No articles in this category.' : 'Articles coming soon!'}
+            {selectedCategory ? tPages('blogNoArticles') : tPages('blogComingSoon')}
           </p>
         </div>
       )}

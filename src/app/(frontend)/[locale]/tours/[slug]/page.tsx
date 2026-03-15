@@ -9,7 +9,6 @@ import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { ImageGallery } from '@/components/tours/ImageGallery'
 import { TourIncluded } from '@/components/tours/TourIncluded'
 import { TourFAQ } from '@/components/tours/TourFAQ'
-import { TourReviews } from '@/components/tours/TourReviews'
 import { TourRelated } from '@/components/tours/TourRelated'
 import { RichText, defaultJSXConverters, LinkJSXConverter } from '@payloadcms/richtext-lexical/react'
 import { SafeRichText, extractPlainText } from '@/components/shared/SafeRichText'
@@ -20,6 +19,7 @@ import { TourSchema } from '@/components/seo/TourSchema'
 import { TourViewTracker } from '@/components/analytics/TourViewTracker'
 import { getDisplayPrice } from '@/lib/pricing'
 import { PriceDisplay } from '@/components/tours/PriceDisplay'
+import { ShareButtons } from '@/components/shared/ShareButtons'
 import type { TourPricing } from '@/lib/cms-types'
 
 async function getTour(slug: string, locale: string) {
@@ -55,24 +55,6 @@ async function getRelatedTours(
         status: { equals: 'published' },
       },
       limit: selectedIds.length,
-      locale: locale as 'en' | 'ru',
-    })
-    return result.docs
-  } catch {
-    return []
-  }
-}
-
-async function getTourReviews(tourId: number, locale: string) {
-  try {
-    const payload = await getPayload({ config })
-    const result = await payload.find({
-      collection: 'reviews',
-      where: {
-        tour: { equals: tourId },
-        status: { equals: 'approved' },
-      },
-      limit: 5,
       locale: locale as 'en' | 'ru',
     })
     return result.docs
@@ -182,10 +164,7 @@ export default async function TourDetailPage({
     .map((t: any) => (typeof t === 'object' ? t.id : t))
     .filter((id: any): id is number => typeof id === 'number')
 
-  const [reviews, relatedTours] = await Promise.all([
-    getTourReviews(tour.id as number, locale),
-    getRelatedTours(locale, selectedRelatedIds.length > 0 ? selectedRelatedIds : undefined),
-  ])
+  const relatedTours = await getRelatedTours(locale, selectedRelatedIds.length > 0 ? selectedRelatedIds : undefined)
 
   const galleryImages = ((tour as any).gallery || []).map(
     (item: any) => ({
@@ -238,13 +217,6 @@ export default async function TourDetailPage({
     }
   })
 
-  const reviewCards = (reviews as any[]).map((r: any) => ({
-    customerName: r.customerName,
-    customerCountry: r.customerCountry,
-    rating: r.rating,
-    body: r.body,
-  }))
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 lg:pb-8">
       <Breadcrumbs
@@ -275,6 +247,16 @@ export default async function TourDetailPage({
               {t('duration')}: {tour.duration}{' '}
               {tour.duration === 1 ? tCommon('hour') : tCommon('hours')}
             </span>
+          </div>
+
+          {/* Share */}
+          <div className="mt-4 flex items-center gap-3">
+            <span className="text-xs text-navy/40">{locale === 'ru' ? 'Поделиться' : 'Share'}:</span>
+            <ShareButtons
+              url={`${process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'}/${locale}/${locale === 'ru' ? 'ekskursii' : 'tours'}/${slug}`}
+              title={tour.title}
+              locale={locale}
+            />
           </div>
 
           {/* Gallery */}

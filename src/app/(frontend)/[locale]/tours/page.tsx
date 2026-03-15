@@ -34,6 +34,7 @@ export default async function ToursPage({
 }) {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'categories' })
+  const tPages = await getTranslations({ locale, namespace: 'pages' })
 
   let tours: Array<{
     id: number
@@ -97,7 +98,7 @@ export default async function ToursPage({
       <Breadcrumbs
         items={[
           {
-            label: locale === 'ru' ? 'Экскурсии' : 'Tours',
+            label: tPages('toursBreadcrumb'),
           },
         ]}
         locale={locale}

@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.17.0] - 2026-03-15
+
+### Added
+- **Social share buttons** — new `ShareButtons` component (Facebook, Twitter/X, LinkedIn, copy link) on tour detail and blog post pages
+- **Print-friendly styles** — `@media print` CSS hides nav/footer/sticky elements, optimizes layout for A4 printing
+- **Redis rate limiting** — shared `src/lib/rate-limit.ts` using Redis sorted sets with sliding window; falls back to in-memory when `REDIS_URL` is unset
+- **i18n `pages` namespace** — 23 new translation keys (EN/RU) covering all remaining hardcoded locale ternaries across about, blog, contact, FAQ, reviews, and tours pages
+- **i18n `tour.perPerson` / `tour.perGroup`** — new keys for StickyBookButton price labels
+
+### Changed
+- **Blog detail ISR** — switched from `force-dynamic` to `revalidate=3600` (1-hour ISR) matching tour detail page caching strategy
+- **StickyBookButton i18n** — replaced 5 hardcoded locale ternaries with `useTranslations` calls
+- **ContactForm i18n** — replaced 4 hardcoded locale ternaries with `useTranslations('pages')` calls
+- **Loading spinners** — booking and contact form submit buttons now show animated spinner during submission
+- **WhatsApp button positioning** — increased mobile bottom offset (`bottom-24`) to prevent overlap with StickyBookButton
+
+### Removed
+- **Dead code cleanup** — removed unused `TourReviews` import, `getTourReviews` function, and `reviewCards` mapping from tour detail page
+- **Duplicate rate limiting** — replaced per-route in-memory rate limit maps with shared utility in both `/api/booking/request` and `/api/contact`
+
 ## [1.16.2] - 2026-03-15
 
 ### Added

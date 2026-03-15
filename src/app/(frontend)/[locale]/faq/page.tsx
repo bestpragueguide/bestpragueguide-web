@@ -51,6 +51,7 @@ export default async function FAQPage({
 }) {
   const { locale } = await params
   const faqItems = await getFAQItems(locale)
+  const tPages = await getTranslations({ locale, namespace: 'pages' })
 
   const labels = categoryLabels[locale] || categoryLabels.en
 
@@ -119,7 +120,7 @@ export default async function FAQPage({
     })),
   }
 
-  const heading = locale === 'ru' ? 'Часто задаваемые вопросы' : 'Frequently Asked Questions'
+  const heading = tPages('faqHeading')
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
