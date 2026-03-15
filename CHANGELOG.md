@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.19.0] - 2026-03-15
+
+### Fixed
+- **Dockerfile** — changed `NODE_ENV=development` to `NODE_ENV=production` in CMD, enabling production optimizations and CSP headers
+- **TourSchema/BlogPostSchema** — replaced hardcoded `bestpragueguide.com` domain with `NEXT_PUBLIC_SERVER_URL` for staging/preview compatibility
+- **Form accessibility** — added `aria-invalid` and `aria-describedby` on booking form fields (date, name, email) and contact form (message) for screen reader error association
+- **Blog image alt text** — blog listing cards now use `heroImage.alt` from Media collection, falling back to post title
+- **Nav accessibility** — hamburger button gets `aria-expanded`, `aria-controls="mobile-menu"`, and locale-aware `aria-label`; mobile menu panel gets `id="mobile-menu"`
+- **Filter accessibility** — tour filter buttons now have `aria-pressed` to announce active state to screen readers
+- **Image error fallback** — TourCard and Hero images hide gracefully on load failure via `onError` handler, revealing background placeholder
+
+### Added
+- **Blog ISR caching** — `revalidate = 3600` on blog listing page (was re-rendering every request)
+- **Empty states** — tours grid shows "No tours found for this category" when filter returns zero results; blog already had this
+- **Shared constants** — `src/lib/constants.ts` with `FALLBACK_IMAGES` replacing duplicated hardcoded photo URLs in Hero and GuideProfile
+- **i18n keys** — `tour.share`, `booking.perPersonAbbr` added to both EN/RU message files; replaces last hardcoded locale ternaries
+
 ## [1.18.0] - 2026-03-15
 
 ### Added

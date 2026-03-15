@@ -59,6 +59,7 @@ export function TourCard({
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               style={{ objectPosition }}
               loading="lazy"
+              onError={(e) => { e.currentTarget.style.display = 'none' }}
             />
           </picture>
         ) : (

@@ -1,8 +1,7 @@
 import { Button } from '@/components/shared/Button'
 import { resolveMediaUrl } from '@/lib/cms-data'
 import type { HomepageData } from '@/lib/cms-types'
-
-const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
+import { FALLBACK_IMAGES } from '@/lib/constants'
 
 interface HeroProps {
   data: HomepageData
@@ -12,7 +11,7 @@ interface HeroProps {
 export function Hero({ data, locale }: HeroProps) {
   const bgImage = typeof data.heroBackgroundImage === 'object' ? data.heroBackgroundImage : null
   const heroUrl = resolveMediaUrl(data.heroBackgroundImage, 'hero')
-    || `${SERVER_URL}/api/media/file/photo_2_2026-03-03_18-30-45.jpg`
+    || FALLBACK_IMAGES.hero
   const focalPosition = bgImage
     ? `${(bgImage as any)?.focalX ?? 50}% ${(bgImage as any)?.focalY ?? 50}%`
     : '50% 50%'
@@ -38,6 +37,7 @@ export function Hero({ data, locale }: HeroProps) {
           className="absolute inset-0 w-full h-full object-cover"
           style={{ objectPosition: focalPosition }}
           fetchPriority="high"
+          onError={(e) => { e.currentTarget.style.display = 'none' }}
         />
       </picture>
       <div className="absolute inset-0 bg-gradient-to-b from-navy/80 via-navy/60 to-navy/90" />

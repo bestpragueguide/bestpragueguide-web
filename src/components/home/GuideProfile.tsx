@@ -3,8 +3,7 @@ import { Button } from '@/components/shared/Button'
 import { SafeRichText } from '@/components/shared/SafeRichText'
 import { resolveMediaUrl } from '@/lib/cms-data'
 import type { HomepageData } from '@/lib/cms-types'
-
-const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
+import { FALLBACK_IMAGES } from '@/lib/constants'
 
 interface GuideProfileProps {
   data: HomepageData
@@ -13,7 +12,7 @@ interface GuideProfileProps {
 
 export function GuideProfile({ data, locale }: GuideProfileProps) {
   const photoUrl = resolveMediaUrl(data.guidePhoto)
-    || `${SERVER_URL}/api/media/file/photo_4_2026-03-03_18-30-45.jpg`
+    || FALLBACK_IMAGES.guide
 
   const learnMoreHref = data.guideLearnMoreHref.startsWith('/')
     ? `/${locale}${data.guideLearnMoreHref}`

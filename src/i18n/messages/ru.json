@@ -25,7 +25,8 @@
     "additionalServices": "Дополнительные услуги",
     "guestCategoriesDefault": "Категории гостей",
     "free": "бесплатно",
-    "perPerson": "чел"
+    "perPerson": "чел",
+    "perPersonAbbr": "чел"
   },
   "categories": {
     "pragueTours": "Экскурсии по Праге",
@@ -94,7 +95,8 @@
     "perGroup": "за группу",
     "trustNoPayment": "Оплата только после подтверждения",
     "trustFreeCancellation": "Бесплатная отмена за 24 часа",
-    "trustPrivate": "100% индивидуально — только ваша группа"
+    "trustPrivate": "100% индивидуально — только ваша группа",
+    "share": "Поделиться"
   },
   "pages": {
     "aboutBreadcrumb": "О нас",

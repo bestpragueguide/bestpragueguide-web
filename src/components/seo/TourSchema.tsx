@@ -25,7 +25,8 @@ export function TourSchema({
   locale,
   slug,
 }: TourSchemaProps) {
-  const url = `https://bestpragueguide.com/${locale}/tours/${slug}`
+  const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'
+  const url = `${baseUrl}/${locale}/tours/${slug}`
 
   const offers = price != null
     ? {
@@ -57,7 +58,7 @@ export function TourSchema({
     provider: {
       '@type': 'TravelAgency',
       name: 'Best Prague Guide',
-      url: 'https://bestpragueguide.com',
+      url: baseUrl,
     },
     offers,
     duration: `PT${duration}H`,

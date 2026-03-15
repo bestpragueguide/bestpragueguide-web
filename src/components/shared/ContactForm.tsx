@@ -120,6 +120,8 @@ export function ContactForm({ locale, phoneDisplay }: ContactFormProps) {
           required
           minLength={4}
           maxLength={1000}
+          aria-invalid={status === 'too_long'}
+          aria-describedby={status === 'too_long' ? 'error-message' : undefined}
           className="w-full px-4 py-3 rounded-lg border border-gray-light focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors text-sm resize-none"
         />
       </div>
@@ -139,7 +141,7 @@ export function ContactForm({ locale, phoneDisplay }: ContactFormProps) {
       </button>
 
       {status === 'too_long' && (
-        <p className="text-sm text-error text-center">
+        <p id="error-message" className="text-sm text-error text-center">
           {tPages('contactTooLong')}
         </p>
       )}

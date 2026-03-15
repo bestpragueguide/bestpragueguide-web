@@ -1,4 +1,5 @@
 export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 import type { Metadata } from 'next'
 import Image from 'next/image'
@@ -102,7 +103,7 @@ export default async function BlogPage({
                   {imageUrl ? (
                     <Image
                       src={fullImageUrl}
-                      alt={post.title}
+                      alt={heroImage?.alt || post.title}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

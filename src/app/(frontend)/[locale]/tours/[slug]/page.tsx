@@ -251,7 +251,7 @@ export default async function TourDetailPage({
 
           {/* Share */}
           <div className="mt-4 flex items-center gap-3">
-            <span className="text-xs text-navy/40">{locale === 'ru' ? 'Поделиться' : 'Share'}:</span>
+            <span className="text-xs text-navy/40">{t('share')}:</span>
             <ShareButtons
               url={`${process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'}/${locale}/${locale === 'ru' ? 'ekskursii' : 'tours'}/${slug}`}
               title={tour.title}

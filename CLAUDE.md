@@ -17,7 +17,7 @@ Bilingual (EN/RU) private tour portal for Prague.
 - `src/globals/` — Payload CMS global configs (SiteSettings, Navigation, Homepage, AboutPage, ReviewsPage, PaymentConfig)
 - `src/components/` — React components (shared, layout, home, tours, blog, booking, reviews, seo, analytics, admin)
 - `src/emails/` — React Email templates
-- `src/lib/` — Utilities (cms-data, cms-types, icon-map, email, telegram, whatsapp, slack, booking, blog, ip, currency, pricing, metadata, analytics, editors, plurals, n8n, stripe, chatwoot, mautic, formbricks, twenty-crm, richtext)
+- `src/lib/` — Utilities (cms-data, cms-types, constants, icon-map, email, email-validation, telegram, whatsapp, slack, booking, blog, ip, currency, pricing, metadata, analytics, editors, plurals, n8n, stripe, chatwoot, mautic, formbricks, twenty-crm, richtext, rate-limit)
 - `migrations/` — Fallback SQL scripts for schema changes when /api/init-db hangs
 - `src/i18n/` — next-intl routing, request config, message files (EN/RU)
 
@@ -192,6 +192,10 @@ All site content is editable from Payload admin panel:
 - Skip-to-content link in layout (`<a href="#main-content">`) with `sr-only` + focus-visible styling
 - Image gallery lightbox: `role="dialog"`, `aria-modal`, keyboard navigation (Escape to close, Arrow keys to navigate)
 - `error.tsx` client component for graceful runtime error recovery with bilingual UI
+- Form fields: `aria-invalid` + `aria-describedby` on booking (date, name, email) and contact (message) error states
+- Nav hamburger: `aria-expanded`, `aria-controls="mobile-menu"`, locale-aware `aria-label`
+- Tour filter buttons: `aria-pressed` for active state
+- Image `onError` fallback on TourCard and Hero (hides broken images, reveals background)
 
 ## Admin Tools
 - **Tour Order** (`/tour-order`) — standalone drag-and-drop page with EN/RU locale toggle; reorders tours by `sortOrder` field

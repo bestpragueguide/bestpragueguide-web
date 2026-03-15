@@ -179,7 +179,7 @@ export function BookingRequestForm({
       return `+${formatPrice(service.flatPrice, currency)}`
     if (service.pricingModel === 'PER_PERSON') {
       const cat = service.guestCategoryPricing?.find(c => !c.isFree && !c.onRequest && c.price != null)
-      if (cat?.price != null) return `+${formatPrice(cat.price, currency)}/${locale === 'ru' ? 'чел' : 'pp'}`
+      if (cat?.price != null) return `+${formatPrice(cat.price, currency)}/${t('perPersonAbbr')}`
     }
     if (service.pricingModel === 'ON_REQUEST')
       return locale === 'ru' ? 'по запросу' : 'on request'
@@ -236,10 +236,12 @@ export function BookingRequestForm({
           type="date"
           min={minDate}
           required
+          aria-invalid={!!errors.preferredDate}
+          aria-describedby={errors.preferredDate ? 'error-preferredDate' : undefined}
           className={inputClass}
         />
         {errors.preferredDate && (
-          <p className="text-xs text-error mt-1">{errors.preferredDate}</p>
+          <p id="error-preferredDate" className="text-xs text-error mt-1">{errors.preferredDate}</p>
         )}
       </div>
 
@@ -355,10 +357,12 @@ export function BookingRequestForm({
           name="customerName"
           type="text"
           required
+          aria-invalid={!!errors.customerName}
+          aria-describedby={errors.customerName ? 'error-customerName' : undefined}
           className={inputClass}
         />
         {errors.customerName && (
-          <p className="text-xs text-error mt-1">{errors.customerName}</p>
+          <p id="error-customerName" className="text-xs text-error mt-1">{errors.customerName}</p>
         )}
       </div>
 
@@ -372,10 +376,12 @@ export function BookingRequestForm({
           name="customerEmail"
           type="email"
           required
+          aria-invalid={!!errors.customerEmail}
+          aria-describedby={errors.customerEmail ? 'error-customerEmail' : undefined}
           className={inputClass}
         />
         {errors.customerEmail && (
-          <p className="text-xs text-error mt-1">{errors.customerEmail}</p>
+          <p id="error-customerEmail" className="text-xs text-error mt-1">{errors.customerEmail}</p>
         )}
       </div>
 

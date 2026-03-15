@@ -41,12 +41,17 @@ export function TourGrid({ tours, locale }: TourGridProps) {
   })
 
   if (filtered.length === 0) {
+    const hasFilter = (category && category !== 'all') || (subcategory && subcategory !== 'all')
     return (
       <div className="text-center py-16 text-gray">
         <p className="text-lg">
-          {locale === 'ru'
-            ? 'Экскурсии в этой категории скоро появятся!'
-            : 'Tours in this category coming soon!'}
+          {hasFilter
+            ? locale === 'ru'
+              ? 'Экскурсии в этой категории не найдены'
+              : 'No tours found for this category'
+            : locale === 'ru'
+              ? 'Экскурсии скоро появятся!'
+              : 'Tours coming soon!'}
         </p>
       </div>
     )

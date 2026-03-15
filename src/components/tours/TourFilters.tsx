@@ -111,6 +111,7 @@ function FilterPill({
   return (
     <button
       onClick={onClick}
+      aria-pressed={active}
       className={`${small ? 'px-3 py-1.5 text-xs' : 'px-4 py-2 text-sm'} font-medium rounded-full transition-colors ${
         active
           ? 'bg-navy text-white'

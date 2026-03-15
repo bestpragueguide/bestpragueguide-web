@@ -47,4 +47,4 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["sh", "-c", "NODE_ENV=development exec node server.js"]
+CMD ["sh", "-c", "NODE_ENV=production exec node server.js"]

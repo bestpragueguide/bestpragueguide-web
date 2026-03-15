@@ -63,7 +63,9 @@ export function Nav({ navigation, locale }: NavProps) {
             <button
               onClick={() => setMobileOpen(true)}
               className="p-2 text-navy"
-              aria-label="Open menu"
+              aria-label={locale === 'ru' ? 'Открыть меню' : 'Open menu'}
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-menu"
             >
             <svg
               width="24"

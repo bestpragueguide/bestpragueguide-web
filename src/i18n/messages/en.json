@@ -25,7 +25,8 @@
     "additionalServices": "Additional Services",
     "guestCategoriesDefault": "Guest Categories",
     "free": "free",
-    "perPerson": "pp"
+    "perPerson": "pp",
+    "perPersonAbbr": "pp"
   },
   "categories": {
     "pragueTours": "Prague Tours",
@@ -94,7 +95,8 @@
     "perGroup": "per group",
     "trustNoPayment": "No payment until we confirm",
     "trustFreeCancellation": "Free cancellation 24h before",
-    "trustPrivate": "100% private — just your group"
+    "trustPrivate": "100% private — just your group",
+    "share": "Share"
   },
   "pages": {
     "aboutBreadcrumb": "About Us",

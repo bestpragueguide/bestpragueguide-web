@@ -21,7 +21,8 @@ export function BlogPostSchema({
   locale,
   slug,
 }: BlogPostSchemaProps) {
-  const url = `https://bestpragueguide.com/${locale}/blog/${slug}`
+  const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'
+  const url = `${baseUrl}/${locale}/blog/${slug}`
 
   const data: Record<string, unknown> = {
     '@context': 'https://schema.org',
@@ -43,10 +44,10 @@ export function BlogPostSchema({
     publisher: {
       '@type': 'Organization',
       name: 'Best Prague Guide',
-      url: 'https://bestpragueguide.com',
+      url: baseUrl,
       logo: {
         '@type': 'ImageObject',
-        url: 'https://bestpragueguide.com/favicon.svg',
+        url: `${baseUrl}/favicon.svg`,
       },
     },
   }
