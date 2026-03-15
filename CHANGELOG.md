@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.20.6] - 2026-03-15
+
+### Fixed
+- **Media upload failing for images matching configured size ratios** — `position: 'focalpoint'` is not a valid Sharp resize position; when Payload's aspect-ratio-match path passes config directly to Sharp, it throws. Changed to `position: 'centre'`; Payload's focal point cropping is handled separately via `focalPoint: true` on the upload config
+
 ## [1.20.5] - 2026-03-15
 
 ### Fixed
