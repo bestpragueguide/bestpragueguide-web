@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.19.1] - 2026-03-15
+
+### Security
+- **Next.js 15.3.9 → 15.4.11** — fixes 3 CVEs: SSRF via middleware redirect (GHSA-4342), cache key confusion for Image Optimization (GHSA-g5qg), content injection for Image Optimization (GHSA-xv57)
+- **immutable 4.3.7 → 4.3.8** — fixes prototype pollution (GHSA-wf6x, High severity)
+- Remaining 11 alerts are transitive dependencies locked by Payload CMS ecosystem — will resolve with upstream Payload updates
+
 ## [1.19.0] - 2026-03-15
 
 ### Fixed
