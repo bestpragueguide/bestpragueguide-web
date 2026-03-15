@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.17.1] - 2026-03-15
+
+### Changed
+- **Universal share button** — on mobile devices, ShareButtons uses the native Web Share API (opens OS share sheet with WhatsApp, Telegram, Instagram, and all installed apps); on desktop, falls back to individual buttons (WhatsApp, Telegram, Facebook, Twitter/X, LinkedIn, copy link)
+
 ## [1.17.0] - 2026-03-15
 
 ### Added
