@@ -81,43 +81,74 @@ export async function POST(req: Request) {
       }
     }
 
-    // Fix review locales: move body/title from EN to correct locale for non-EN reviews
+    // Fix review locales: add missing translations for each review
+    const richBody = (text: string) => ({
+      root: { type: 'root', children: [{ type: 'paragraph', children: [{ type: 'text', text, version: 1 }], direction: null, format: '', indent: 0, version: 1 }], direction: null, format: '', indent: 0, version: 1 },
+    })
+
+    // Translation map: customerName -> { en: { title, body }, ru: { title, body } }
+    const reviewTranslations: Record<string, { en: { title: string; body: string }; ru: { title: string; body: string } }> = {
+      'James M.': {
+        en: { title: 'Absolutely wonderful!', body: "Uliana was an amazing guide. Her knowledge of Prague's history and hidden spots made this tour unforgettable. Highly recommend!" },
+        ru: { title: 'Просто замечательно!', body: 'Ульяна — потрясающий гид. Её знания истории Праги и скрытых уголков сделали эту экскурсию незабываемой. Очень рекомендую!' },
+      },
+      'Sarah K.': {
+        en: { title: 'Best tour in Prague', body: "We've done many tours in Europe, but this was by far the best. Private, personalized, and full of fascinating stories." },
+        ru: { title: 'Лучшая экскурсия в Праге', body: 'Мы были на многих экскурсиях в Европе, но эта — лучшая. Индивидуальная, персонализированная и полная увлекательных историй.' },
+      },
+      'Robert L.': {
+        en: { title: 'Perfect private tour', body: "The Prague Castle tour was perfectly organized. Our guide knew every corner and shared stories you won't find in any guidebook." },
+        ru: { title: 'Идеальная индивидуальная экскурсия', body: 'Экскурсия в Пражский Град была идеально организована. Наш гид знал каждый уголок и рассказывал истории, которых нет в путеводителях.' },
+      },
+      'Мария К.': {
+        en: { title: 'Amazing tour!', body: 'Uliana is an incredible guide! Three hours flew by. We learned so much about Prague that you won\'t find in any guidebook.' },
+        ru: { title: 'Потрясающая экскурсия!', body: 'Улиана — невероятный гид! Три часа пролетели незаметно. Узнали столько интересного о Праге, что в путеводителях не прочитаешь.' },
+      },
+      'Андрей В.': {
+        en: { title: 'Best guide in Prague', body: 'The Prague Castle tour exceeded all expectations. Uliana knows every stone and tells stories that make you never want to leave.' },
+        ru: { title: 'Лучший гид в Праге', body: 'Экскурсия в Пражский Град превзошла все ожидания. Улиана знает каждый камень и рассказывает так, что не хочется уходить.' },
+      },
+      'Елена С.': {
+        en: { title: 'Perfect city tour!', body: 'Wonderful car tour. In 4 hours we saw all of Prague, including places we\'d never find on our own. Highly recommend!' },
+        ru: { title: 'Идеальный сити-тур!', body: 'Замечательная экскурсия на автомобиле. За 4 часа увидели всю Прагу, включая места, куда бы сами не добрались. Очень рекомендую!' },
+      },
+      'David H.': {
+        en: { title: 'Great experience', body: 'Really enjoyed the walking tour through Old Town. Our guide was knowledgeable and friendly. Would have loved it to be a bit longer!' },
+        ru: { title: 'Отличный опыт', body: 'Очень понравилась пешая экскурсия по Старому городу. Гид был знающий и дружелюбный. Хотелось бы, чтобы длилось чуть дольше!' },
+      },
+      'Ольга П.': {
+        en: { title: 'All of Prague in one day', body: 'Took the city tour with kids — perfect format. We didn\'t get tired, saw everything important, and the guide was wonderful with the children.' },
+        ru: { title: 'Вся Прага за один день', body: 'Брали сити-тур с детьми — идеальный формат. Не устали, увидели всё самое важное, гид прекрасно ладит с детьми.' },
+      },
+    }
+
     const allReviews = await payload.find({ collection: 'reviews', limit: 100, locale: 'en' })
     for (const review of allReviews.docs) {
-      const lang = (review as any).language
-      if (lang && lang !== 'en') {
-        const enBody = (review as any).body
-        const enTitle = (review as any).title
-        if (enBody || enTitle) {
-          // Check if target locale already has body
-          const targetDoc = await payload.findByID({ collection: 'reviews', id: review.id, locale: lang })
-          const targetBody = (targetDoc as any).body
-          if (!targetBody) {
-            // Copy EN body/title to target locale
-            await payload.update({
-              collection: 'reviews',
-              id: review.id,
-              locale: lang,
-              data: {
-                ...(enBody ? { body: enBody } : {}),
-                ...(enTitle ? { title: enTitle } : {}),
-              },
-            })
-          }
-          // Clear EN body/title — set body to single space (required field) to remove duplicate RU text
-          const placeholderRoot = { root: { type: 'root', children: [{ type: 'paragraph', children: [{ type: 'text', text: ' ', version: 1 }], direction: null, format: '', indent: 0, version: 1 }], direction: null, format: '', indent: 0, version: 1 } }
-          await payload.update({
-            collection: 'reviews',
-            id: review.id,
-            locale: 'en',
-            data: {
-              body: placeholderRoot as any,
-              title: '',
-            },
-          })
-          results.push(`FIXED: review ${review.id} — cleared EN body/title (lang=${lang})`)
-        }
-      }
+      const name = (review as any).customerName
+      const translations = reviewTranslations[name]
+      if (!translations) continue
+
+      // Update EN locale
+      await payload.update({
+        collection: 'reviews',
+        id: review.id,
+        locale: 'en',
+        data: {
+          title: translations.en.title,
+          body: richBody(translations.en.body) as any,
+        },
+      })
+      // Update RU locale
+      await payload.update({
+        collection: 'reviews',
+        id: review.id,
+        locale: 'ru',
+        data: {
+          title: translations.ru.title,
+          body: richBody(translations.ru.body) as any,
+        },
+      })
+      results.push(`FIXED: review ${review.id} (${name}) — set EN + RU body/title`)
     }
 
     return NextResponse.json({ success: true, results })
