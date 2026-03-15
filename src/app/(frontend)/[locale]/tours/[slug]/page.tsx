@@ -347,7 +347,7 @@ export default async function TourDetailPage({
             {/* Group tiers pricing table */}
             {tourPricing.model === 'GROUP_TIERS' && tourPricing.groupTiers && tourPricing.groupTiers.length > 0 && (
               <div className="mb-5 pb-5 border-b border-gray-light/50">
-                <h3 className="text-sm font-medium text-navy mb-3">
+                <h3 className="text-sm font-medium text-navy mb-1">
                   {t('pricing')}
                 </h3>
                 <PriceDisplay pricing={tourPricing} locale={locale} variant="detail" />
@@ -366,7 +366,7 @@ export default async function TourDetailPage({
             {/* Additional services */}
             {tourPricing.additionalServices && tourPricing.additionalServices.length > 0 && (
               <div className="mb-5 pb-5 border-b border-gray-light/50">
-                <h3 className="text-sm font-medium text-navy mb-3">
+                <h3 className="text-sm font-medium text-navy mb-1">
                   {t('additionalServicesSidebar')}
                 </h3>
                 <div className="space-y-2">
