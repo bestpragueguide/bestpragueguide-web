@@ -103,21 +103,19 @@ export async function POST(req: Request) {
                 ...(enTitle ? { title: enTitle } : {}),
               },
             })
-            // Clear EN body/title (set to empty richText)
-            const emptyRoot = { root: { type: 'root', children: [{ type: 'paragraph', children: [], direction: null, format: '', indent: 0, version: 1 }], direction: null, format: '', indent: 0, version: 1 } }
-            await payload.update({
-              collection: 'reviews',
-              id: review.id,
-              locale: 'en',
-              data: {
-                body: emptyRoot as any,
-                title: '',
-              },
-            })
-            results.push(`FIXED: review ${review.id} — moved body/title from EN to ${lang}`)
-          } else {
-            results.push(`SKIP: review ${review.id} — ${lang} body already exists`)
           }
+          // Clear EN body/title (set to empty richText) — removes duplicate RU text from EN locale
+          const emptyRoot = { root: { type: 'root', children: [{ type: 'paragraph', children: [], direction: null, format: '', indent: 0, version: 1 }], direction: null, format: '', indent: 0, version: 1 } }
+          await payload.update({
+            collection: 'reviews',
+            id: review.id,
+            locale: 'en',
+            data: {
+              body: emptyRoot as any,
+              title: '',
+            },
+          })
+          results.push(`FIXED: review ${review.id} — cleared EN body/title (lang=${lang})`)
         }
       }
     }
