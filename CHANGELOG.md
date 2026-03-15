@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.20.5] - 2026-03-15
+
+### Fixed
+- **Media upload failing** — added `libc6-compat` and `vips-dev` Alpine packages to Docker runner stage + explicitly copy Sharp native binaries (`@img/sharp-*`); standalone output doesn't trace dynamically-loaded native modules, causing image resizing to fail
+
+### Changed
+- **Media alt text optional** — `alt` field no longer required; defaults to humanized filename (e.g., `photo_prague_castle.jpg` → `photo prague castle`) via `beforeChange` hook
+
 ## [1.20.4] - 2026-03-15
 
 ### Fixed

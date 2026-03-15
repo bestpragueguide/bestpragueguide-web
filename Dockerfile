@@ -29,6 +29,9 @@ FROM base AS runner
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# Sharp requires native libraries on Alpine (musl)
+RUN apk add --no-cache libc6-compat vips-dev
+
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 

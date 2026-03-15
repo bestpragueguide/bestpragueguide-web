@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import path from 'path'
 
 const mediaDir = process.env.MEDIA_DIR || undefined
 
@@ -9,6 +10,21 @@ export const Media: CollectionConfig = {
   },
   admin: {
     group: 'Content',
+  },
+  hooks: {
+    beforeChange: [
+      ({ data, req }) => {
+        // Default alt to filename without extension if empty
+        if (!data.alt && data.filename) {
+          const name = path.parse(data.filename).name
+            .replace(/[-_]/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim()
+          data.alt = name
+        }
+        return data
+      },
+    ],
   },
   upload: {
     ...(mediaDir ? { staticDir: mediaDir } : {}),
@@ -58,7 +74,6 @@ export const Media: CollectionConfig = {
     {
       name: 'alt',
       type: 'text',
-      required: true,
       localized: true,
     },
     {
