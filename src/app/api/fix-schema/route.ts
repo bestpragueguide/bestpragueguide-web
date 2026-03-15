@@ -17,6 +17,24 @@ export async function POST(req: Request) {
     const results: string[] = []
 
     const queries = [
+      // site_settings_booking_trust_badges array table
+      `CREATE TABLE IF NOT EXISTS site_settings_booking_trust_badges (
+        id varchar PRIMARY KEY,
+        parent_id integer REFERENCES site_settings(id) ON DELETE CASCADE,
+        "order" integer
+      )`,
+      `CREATE INDEX IF NOT EXISTS site_settings_booking_trust_badges_order_idx ON site_settings_booking_trust_badges ("order")`,
+      `CREATE INDEX IF NOT EXISTS site_settings_booking_trust_badges_parent_id_idx ON site_settings_booking_trust_badges (parent_id)`,
+
+      // site_settings_booking_trust_badges_locales table (text is localized)
+      `CREATE TABLE IF NOT EXISTS site_settings_booking_trust_badges_locales (
+        id serial PRIMARY KEY,
+        text varchar,
+        _locale varchar NOT NULL,
+        _parent_id varchar NOT NULL REFERENCES site_settings_booking_trust_badges(id) ON DELETE CASCADE,
+        UNIQUE(_parent_id, _locale)
+      )`,
+
       // tours_rels table for relatedTours hasMany relationship
       `CREATE TABLE IF NOT EXISTS tours_rels (
         id serial PRIMARY KEY,
