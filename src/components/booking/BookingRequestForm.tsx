@@ -211,6 +211,9 @@ export function BookingRequestForm({
             </button>
           ))}
         </div>
+        <p className="text-xs font-medium text-navy/60 mb-1">
+          {locale === 'ru' ? 'Итого' : 'Total Price'}
+        </p>
         {priceResult.isOnRequest && totalWithModifiers === null ? (
           <span className="text-xl font-bold text-gold">
             {locale === 'ru' ? 'По запросу' : 'On Request'}

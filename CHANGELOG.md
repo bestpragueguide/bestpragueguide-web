@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.16.1] - 2026-03-15
+
+### Changed
+- **Booking form "Total Price" label** — added "Total Price" / "Итого" title above the calculated price in the booking form
+- **Removed reviews from tour detail** — TourReviews section hidden on tour detail pages (all locales)
+
 ## [1.16.0] - 2026-03-14
 
 ### Added

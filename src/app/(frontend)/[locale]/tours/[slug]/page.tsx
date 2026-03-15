@@ -348,8 +348,7 @@ export default async function TourDetailPage({
             locale={locale}
           />
 
-          {/* Reviews */}
-          <TourReviews reviews={reviewCards} locale={locale} />
+          {/* Reviews hidden — kept for future use */}
 
           {/* Related */}
           <TourRelated tours={relatedTourCards} locale={locale} />
