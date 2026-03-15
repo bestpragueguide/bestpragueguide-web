@@ -1,0 +1,17 @@
+{
+  "name": "Best Prague Guide",
+  "short_name": "BPG",
+  "description": "Private tours in Prague from a guide with 17 years of experience",
+  "start_url": "/en",
+  "display": "standalone",
+  "background_color": "#FAF7F2",
+  "theme_color": "#C4975C",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

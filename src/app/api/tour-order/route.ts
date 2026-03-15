@@ -46,7 +46,9 @@ export async function GET(req: Request) {
       sortOrder: doc.sortOrder ?? 0,
     }))
 
-    return NextResponse.json({ tours })
+    const response = NextResponse.json({ tours })
+    response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120')
+    return response
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json({ error: message }, { status: 500 })

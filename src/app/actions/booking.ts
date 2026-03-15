@@ -1,18 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server'
+'use server'
+
+import { headers } from 'next/headers'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { bookingRequestSchema, generateRequestRef } from '@/lib/booking'
 import { sendEmail, sendAdminEmail } from '@/lib/email'
 import { RequestReceivedEmail } from '@/emails/request-received'
 import { NewRequestAdminEmail } from '@/emails/new-request-admin'
-import {
-  sendTelegramMessage,
-  formatBookingTelegramMessage,
-} from '@/lib/telegram'
-import {
-  sendWhatsAppMessage,
-  formatBookingWhatsAppMessage,
-} from '@/lib/whatsapp'
+import { sendTelegramMessage, formatBookingTelegramMessage } from '@/lib/telegram'
+import { sendWhatsAppMessage, formatBookingWhatsAppMessage } from '@/lib/whatsapp'
 import { getIpInfo, formatLocation } from '@/lib/ip'
 import { sendSlackMessage, formatBookingSlackMessage } from '@/lib/slack'
 import { n8n } from '@/lib/n8n'
@@ -20,35 +16,36 @@ import { isRateLimited } from '@/lib/rate-limit'
 import { isDisposableEmail } from '@/lib/email-validation'
 import { z } from 'zod'
 
-export async function POST(request: NextRequest) {
-  const ip =
-    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-    'unknown'
+export type BookingActionResult = {
+  success: boolean
+  requestRef?: string
+  error?: string
+  details?: Array<{ path: (string | number)[]; message: string }>
+  rateLimited?: boolean
+}
+
+export async function submitBookingRequest(formData: unknown): Promise<BookingActionResult> {
+  const headersList = await headers()
+  const ip = headersList.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
 
   if (await isRateLimited(ip, 'booking')) {
-    return NextResponse.json(
-      { error: 'Too many requests. Please try again later.' },
-      { status: 429 },
-    )
+    return { success: false, rateLimited: true, error: 'Too many requests' }
   }
 
   try {
-    const body = await request.json()
-    const data = bookingRequestSchema.parse(body)
+    const data = bookingRequestSchema.parse(formData)
 
     if (isDisposableEmail(data.customerEmail)) {
-      return NextResponse.json(
-        { error: 'Please use a valid email address', details: [{ path: ['customerEmail'], message: 'Disposable email addresses are not accepted' }] },
-        { status: 400 },
-      )
+      return {
+        success: false,
+        error: 'Please use a valid email address',
+        details: [{ path: ['customerEmail'], message: 'Disposable email addresses are not accepted' }],
+      }
     }
 
     const requestRef = await generateRequestRef()
-
-    // Fetch IP geolocation
     const ipInfo = await getIpInfo(ip)
     const location = formatLocation(ipInfo)
-
     const payload = await getPayload({ config })
 
     const savedBooking = await payload.create({
@@ -77,7 +74,6 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Send notifications (fire in parallel, don't block response)
     const notificationData = {
       requestRef,
       tourName: data.tourName,
@@ -98,13 +94,11 @@ export async function POST(request: NextRequest) {
       isp: ipInfo.org || '',
     }
 
-    const notificationPromises = [
+    // Fire and forget notifications
+    Promise.allSettled([
       sendEmail({
         to: data.customerEmail,
-        subject:
-          data.locale === 'ru'
-            ? `Запрос получен — ${requestRef}`
-            : `Request received — ${requestRef}`,
+        subject: data.locale === 'ru' ? `Запрос получен — ${requestRef}` : `Request received — ${requestRef}`,
         react: RequestReceivedEmail({
           customerName: data.customerName,
           tourName: data.tourName,
@@ -115,20 +109,11 @@ export async function POST(request: NextRequest) {
       }),
       sendAdminEmail({
         subject: `New booking: ${requestRef} — ${data.tourName}`,
-        react: NewRequestAdminEmail({
-          ...notificationData,
-          locale: data.locale,
-        }),
+        react: NewRequestAdminEmail({ ...notificationData, locale: data.locale }),
       }),
-      sendTelegramMessage(
-        formatBookingTelegramMessage(notificationData),
-      ),
-      sendWhatsAppMessage(
-        formatBookingWhatsAppMessage(notificationData),
-      ),
-      sendSlackMessage(
-        formatBookingSlackMessage(notificationData),
-      ),
+      sendTelegramMessage(formatBookingTelegramMessage(notificationData)),
+      sendWhatsAppMessage(formatBookingWhatsAppMessage(notificationData)),
+      sendSlackMessage(formatBookingSlackMessage(notificationData)),
       n8n.bookingNew({
         bookingId: String(savedBooking.id),
         requestRef,
@@ -148,36 +133,31 @@ export async function POST(request: NextRequest) {
         ipCountry: ipInfo?.country,
         submittedAt: new Date().toISOString(),
       }),
-    ]
-
-    // Fire and forget — don't block the response
-    Promise.allSettled(notificationPromises).then((results) => {
+    ]).then((results) => {
       for (const result of results) {
         if (result.status === 'rejected') {
-          console.error('[Booking] Notification failed:', result.reason)
+          console.error('[Booking Action] Notification failed:', result.reason)
         }
       }
     })
 
-    console.log('[Booking] New request created:', {
+    console.log('[Booking Action] New request created:', {
       requestRef,
       tour: data.tourName,
       date: data.preferredDate,
       customer: data.customerName,
     })
 
-    return NextResponse.json({ success: true, requestRef })
+    return { success: true, requestRef }
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid form data', details: error.issues },
-        { status: 400 },
-      )
+      return {
+        success: false,
+        error: 'Invalid form data',
+        details: error.issues.map(i => ({ path: i.path.map(p => String(p)), message: i.message })),
+      }
     }
-    console.error('[Booking] Error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 },
-    )
+    console.error('[Booking Action] Error:', error)
+    return { success: false, error: 'Internal server error' }
   }
 }

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
+import { submitContactForm, type ContactActionResult } from '@/app/actions/contact'
 
 interface ContactFormProps {
   locale: string
@@ -35,16 +36,12 @@ export function ContactForm({ locale, phoneDisplay }: ContactFormProps) {
     }
 
     try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
+      const result: ContactActionResult = await submitContactForm(data)
 
-      if (res.ok) {
+      if (result.success) {
         setStatus('success')
         form.reset()
-      } else if (res.status === 429) {
+      } else if (result.rateLimited) {
         setStatus('rate_limited')
       } else {
         setStatus('error')

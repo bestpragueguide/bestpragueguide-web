@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.18.0] - 2026-03-15
+
+### Added
+- **Security headers** — CSP, X-Frame-Options (`SAMEORIGIN`), X-Content-Type-Options (`nosniff`), Referrer-Policy (`strict-origin-when-cross-origin`), Permissions-Policy (camera/microphone/geolocation disabled) via `async headers()` in next.config.ts
+- **Loading skeletons** — `loading.tsx` with animate-pulse placeholders for tour detail and blog detail routes (Suspense-based streaming)
+- **PWA manifest** — `public/manifest.json` with theme-color `#C4975C`, background `#FAF7F2`, standalone display mode; layout metadata updated with manifest link, apple icon, and theme-color meta tags
+- **Disposable email blocking** — `src/lib/email-validation.ts` with ~50 known disposable domains; integrated into both `/api/booking/request` and `/api/contact` routes
+- **Server actions** — `src/app/actions/booking.ts` and `src/app/actions/contact.ts` replace client-side `fetch()` calls; BookingRequestForm and ContactForm now use server actions directly
+- **Testing infrastructure** — Vitest setup with `@` path aliases; 62 unit tests (51 pricing engine + 11 email validation), all passing
+
+### Changed
+- **CMS type safety** — added `LexicalRichText`, `TourData`, `TourGalleryItem`, `TourListItem`, `TourFaqItem` interfaces in `src/lib/cms-types.ts`; removed all 18 `(tour as any)` casts from tour detail page
+- **API caching headers** — `Cache-Control: public, s-maxage=60, stale-while-revalidate=120` on tour-order GET; `s-maxage=10, stale-while-revalidate=30` on health endpoint
+
 ## [1.17.1] - 2026-03-15
 
 ### Changed

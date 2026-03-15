@@ -113,8 +113,11 @@ All site content is editable from Payload admin panel:
 - Notifications: email (Resend), Telegram, WhatsApp, Slack, n8n — all fire in parallel on new booking
 - `src/emails/` — React Email templates: request-received (customer), new-request-admin, request-confirmed, request-declined, pre-tour-reminder, payment-received
 - `src/lib/booking.ts` — Zod validation schema, guest max dynamic from `getMaxGuests()`, request ref format: BPG-YYYY-NNNNN
-- `src/lib/rate-limit.ts` — shared rate limiter (Redis sorted sets with in-memory fallback), used by booking and contact API routes
-- `src/components/shared/ShareButtons.tsx` — social share buttons (Facebook, Twitter/X, LinkedIn, copy link) used on tour detail and blog post pages
+- `src/lib/rate-limit.ts` — shared rate limiter (Redis sorted sets with in-memory fallback), used by booking and contact API routes and server actions
+- `src/lib/email-validation.ts` — disposable email domain blocklist (~50 domains), used by booking/contact routes and server actions
+- `src/components/shared/ShareButtons.tsx` — Web Share API on mobile (native OS share sheet), desktop fallback with WhatsApp, Telegram, Facebook, Twitter/X, LinkedIn, copy link
+- `src/app/actions/booking.ts` — `submitBookingRequest()` server action (mirrors API route logic, used by BookingRequestForm)
+- `src/app/actions/contact.ts` — `submitContactForm()` server action (mirrors API route logic, used by ContactForm)
 
 ## OSS Integration (v1.15.2)
 - **n8n** (`src/lib/n8n.ts`) — fire-and-forget webhook hub; 4 methods: bookingNew, bookingConfirmed, tourCompleted, paymentReceived
@@ -219,6 +222,21 @@ All site content is editable from Payload admin panel:
 - All components no-op when env vars are unset (safe for dev)
 - Umami dashboard: https://analytics.bestpragueguide.com
 
+## Security
+- **HTTP headers** (next.config.ts `async headers()`) — CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
+- **Disposable email blocking** — domain-based validation on booking and contact form submissions
+- **Rate limiting** — 20 requests/hr per IP on booking and contact endpoints (Redis sorted sets, in-memory fallback)
+
+## PWA
+- `public/manifest.json` — standalone display, theme-color `#C4975C`, background `#FAF7F2`
+- Layout metadata includes manifest link, apple-touch-icon, and theme-color meta tags
+
+## Testing
+- **Vitest** with `@` path alias support (`vitest.config.ts`)
+- `src/lib/__tests__/pricing.test.ts` — 51 tests covering calculatePrice, getDisplayPrice, getMaxGuests, hasOpenEndedTier, validateGuestBreakdown, calculateServicePrice
+- `src/lib/__tests__/email-validation.test.ts` — 11 tests for disposable email detection
+- Run: `npm test` (single run) or `npm run test:watch` (watch mode)
+
 ## Deployment
 - **Dockerfile**: multi-stage (deps → builder → runner) with node:22-alpine
 - **Output**: `standalone` mode for minimal Docker image
@@ -233,4 +251,6 @@ docker compose up -d          # Start PostgreSQL + Redis
 npm run dev                   # Start dev server (localhost:3000)
 npm run build                 # Production build
 npm run lint                  # ESLint
+npm test                      # Run Vitest tests
+npm run test:watch            # Vitest watch mode
 ```

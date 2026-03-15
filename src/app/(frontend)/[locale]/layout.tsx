@@ -40,8 +40,15 @@ export const metadata: Metadata = {
   title: 'Best Prague Guide — Private Tours in Prague',
   description:
     'Private tours in Prague from a guide with 17 years of experience.',
+  manifest: '/manifest.json',
   icons: {
     icon: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
+  other: {
+    'theme-color': '#C4975C',
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'default',
   },
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com',

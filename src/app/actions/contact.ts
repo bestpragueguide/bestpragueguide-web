@@ -1,4 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
+'use server'
+
+import { headers } from 'next/headers'
 import { z } from 'zod'
 import { getPayload } from 'payload'
 import config from '@payload-config'
@@ -171,27 +173,31 @@ function ContactConfirmationEmail({
   )
 }
 
-export async function POST(request: NextRequest) {
-  const ip =
-    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-    'unknown'
+export type ContactActionResult = {
+  success: boolean
+  error?: string
+  rateLimited?: boolean
+}
+
+export async function submitContactForm(formData: unknown): Promise<ContactActionResult> {
+  const headersList = await headers()
+  const ip = headersList.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
 
   if (await isRateLimited(ip, 'contact')) {
-    // Still save the message marked as rate_limited
+    // Still save the message marked as rate_limited (same as API route)
     try {
-      const body = await request.json()
-      const data = contactSchema.safeParse(body)
-      if (data.success) {
+      const parsed = contactSchema.safeParse(formData)
+      if (parsed.success) {
         const ipInfo = await getIpInfo(ip)
         const payload = await getPayload({ config })
         await payload.create({
           collection: 'contact-messages',
           data: {
-            name: data.data.name,
-            email: data.data.email,
-            phone: data.data.phone,
-            message: data.data.message,
-            locale: data.data.locale,
+            name: parsed.data.name,
+            email: parsed.data.email,
+            phone: parsed.data.phone,
+            message: parsed.data.message,
+            locale: parsed.data.locale,
             status: 'error',
             ipInfo: {
               ip: ipInfo.ip,
@@ -204,39 +210,22 @@ export async function POST(request: NextRequest) {
         })
       }
     } catch {
-      // Best effort — don't fail the 429 response
+      // Best effort - don't fail the rate limit response
     }
-    return NextResponse.json(
-      { error: 'Too many requests. Please try again later.' },
-      { status: 429 }
-    )
+    return { success: false, rateLimited: true, error: 'Too many requests' }
   }
 
   try {
-    const body = await request.json()
-    const data = contactSchema.parse(body)
+    const data = contactSchema.parse(formData)
 
     if (isDisposableEmail(data.email)) {
-      return NextResponse.json(
-        { error: 'Please use a valid email address', details: [{ path: ['email'], message: 'Disposable email addresses are not accepted' }] },
-        { status: 400 },
-      )
+      return { success: false, error: 'Please use a valid email address' }
     }
 
-    console.log('[Contact Form]', {
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      message: data.message.slice(0, 100),
-      locale: data.locale,
-      ip,
-    })
-
-    // Fetch IP geolocation (non-blocking — won't fail the request)
     const ipInfo = await getIpInfo(ip)
     const location = formatLocation(ipInfo)
 
-    // Save to Payload CMS
+    // Save to CMS
     try {
       const payload = await getPayload({ config })
       await payload.create({
@@ -257,12 +246,11 @@ export async function POST(request: NextRequest) {
         },
       })
     } catch (err) {
-      console.error('[Contact] Failed to save to CMS:', err)
+      console.error('[Contact Action] Failed to save to CMS:', err)
     }
 
-    // Send notifications in parallel
-    await Promise.allSettled([
-      // Admin notification email
+    // Send notifications (fire and forget)
+    Promise.allSettled([
       sendAdminEmail({
         subject: `Contact form: ${data.name}`,
         react: React.createElement(ContactNotificationEmail, {
@@ -273,13 +261,11 @@ export async function POST(request: NextRequest) {
           ipInfo,
         }),
       }),
-      // Confirmation email to customer
       sendEmail({
         to: data.email,
-        subject:
-          data.locale === 'ru'
-            ? 'Мы получили ваше сообщение — Best Prague Guide'
-            : 'We received your message — Best Prague Guide',
+        subject: data.locale === 'ru'
+          ? 'Мы получили ваше сообщение — Best Prague Guide'
+          : 'We received your message — Best Prague Guide',
         react: React.createElement(ContactConfirmationEmail, {
           name: data.name,
           email: data.email,
@@ -289,11 +275,9 @@ export async function POST(request: NextRequest) {
         }),
         replyTo: 'info@bestpragueguide.com',
       }),
-      // Telegram notification
       sendTelegramMessage(
         `📩 <b>Contact Form</b>\n\n<b>Name:</b> ${data.name}\n<b>Email:</b> ${data.email}\n<b>Phone:</b> ${data.phone}\n<b>Message:</b> ${data.message}\n\n<b>IP:</b> ${ip}${location ? `\n<b>Location:</b> ${location}` : ''}${ipInfo.org ? `\n<b>ISP:</b> ${ipInfo.org}` : ''}`,
       ),
-      // Slack notification
       sendSlackMessage(
         formatContactSlackMessage({
           name: data.name,
@@ -306,19 +290,20 @@ export async function POST(request: NextRequest) {
           isp: ipInfo.org,
         }),
       ),
-    ])
+    ]).then((results) => {
+      for (const result of results) {
+        if (result.status === 'rejected') {
+          console.error('[Contact Action] Notification failed:', result.reason)
+        }
+      }
+    })
 
-    return NextResponse.json({ success: true })
+    return { success: true }
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid form data', details: error.issues },
-        { status: 400 }
-      )
+      return { success: false, error: 'Invalid form data' }
     }
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    console.error('[Contact Action] Error:', error)
+    return { success: false, error: 'Internal server error' }
   }
 }

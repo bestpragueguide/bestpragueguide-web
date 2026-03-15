@@ -10,6 +10,7 @@ import { ImageGallery } from '@/components/tours/ImageGallery'
 import { TourIncluded } from '@/components/tours/TourIncluded'
 import { TourFAQ } from '@/components/tours/TourFAQ'
 import { TourRelated } from '@/components/tours/TourRelated'
+import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import { RichText, defaultJSXConverters, LinkJSXConverter } from '@payloadcms/richtext-lexical/react'
 import { SafeRichText, extractPlainText } from '@/components/shared/SafeRichText'
 import { resolveRichTextLinks } from '@/lib/richtext'
@@ -20,9 +21,9 @@ import { TourViewTracker } from '@/components/analytics/TourViewTracker'
 import { getDisplayPrice } from '@/lib/pricing'
 import { PriceDisplay } from '@/components/tours/PriceDisplay'
 import { ShareButtons } from '@/components/shared/ShareButtons'
-import type { TourPricing } from '@/lib/cms-types'
+import type { TourData, TourPricing } from '@/lib/cms-types'
 
-async function getTour(slug: string, locale: string) {
+async function getTour(slug: string, locale: string): Promise<TourData | null> {
   try {
     const payload = await getPayload({ config })
     const result = await payload.find({
@@ -34,7 +35,7 @@ async function getTour(slug: string, locale: string) {
       locale: locale as 'en' | 'ru',
       limit: 1,
     })
-    return result.docs[0] || null
+    return (result.docs[0] as TourData) || null
   } catch {
     return null
   }
@@ -43,7 +44,7 @@ async function getTour(slug: string, locale: string) {
 async function getRelatedTours(
   locale: string,
   selectedIds?: number[],
-) {
+): Promise<TourData[]> {
   if (!selectedIds || selectedIds.length === 0) return []
 
   try {
@@ -57,7 +58,7 @@ async function getRelatedTours(
       limit: selectedIds.length,
       locale: locale as 'en' | 'ru',
     })
-    return result.docs
+    return result.docs as TourData[]
   } catch {
     return []
   }
@@ -76,9 +77,9 @@ export async function generateMetadata({
   }
 
   const title =
-    (tour as any).seo?.metaTitle || `${tour.title} — Best Prague Guide`
+    tour.seo?.metaTitle || `${tour.title} — Best Prague Guide`
   const description =
-    (tour as any).seo?.metaDescription || extractPlainText(tour.excerpt)
+    tour.seo?.metaDescription || extractPlainText(tour.excerpt)
 
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'
   const otherLocale = locale === 'en' ? 'ru' : 'en'
@@ -103,7 +104,7 @@ export async function generateMetadata({
   const enSlug = locale === 'en' ? slug : otherSlug
   const ruSlug = locale === 'ru' ? slug : otherSlug
 
-  const heroImage = typeof (tour as any).heroImage === 'object' ? (tour as any).heroImage : null
+  const heroImage = typeof tour.heroImage === 'object' ? tour.heroImage : null
   const ogImageUrl = heroImage?.sizes?.og?.url || heroImage?.sizes?.hero?.url || heroImage?.url || ''
   const ogImage = ogImageUrl ? (ogImageUrl.startsWith('http') ? ogImageUrl : `${baseUrl}${ogImageUrl}`) : `${baseUrl}/og-default.jpg`
 
@@ -151,7 +152,6 @@ export default async function TourDetailPage({
   }
 
   const t = await getTranslations({ locale, namespace: 'tour' })
-  const tBooking = await getTranslations({ locale, namespace: 'booking' })
   const tCommon = await getTranslations({ locale, namespace: 'common' })
 
   // Resolve internal links in richText description
@@ -160,27 +160,27 @@ export default async function TourDetailPage({
   }
 
   // Extract admin-selected related tour IDs
-  const selectedRelatedIds = ((tour as any).relatedTours || [])
-    .map((t: any) => (typeof t === 'object' ? t.id : t))
-    .filter((id: any): id is number => typeof id === 'number')
+  const selectedRelatedIds = (tour.relatedTours || [])
+    .map((t) => (typeof t === 'object' ? t.id : t))
+    .filter((id): id is number => typeof id === 'number')
 
   const relatedTours = await getRelatedTours(locale, selectedRelatedIds.length > 0 ? selectedRelatedIds : undefined)
 
-  const galleryImages = ((tour as any).gallery || []).map(
-    (item: any) => ({
+  const galleryImages = (tour.gallery || []).map(
+    (item) => ({
       url:
         typeof item.image === 'object'
           ? item.image?.sizes?.card?.url || item.image?.url || ''
           : '',
       mobileUrl:
         typeof item.mobileImage === 'object'
-          ? item.mobileImage?.sizes?.mobileCard?.url || item.mobileImage?.url || null
+          ? item.mobileImage?.sizes?.mobileCard?.url || item.mobileImage?.url || undefined
           : typeof item.image === 'object'
-            ? item.image?.sizes?.mobileCard?.url || null
-            : null,
+            ? item.image?.sizes?.mobileCard?.url || undefined
+            : undefined,
       alt: item.alt || (typeof item.image === 'object' ? item.image?.alt : null) || tour.title,
       caption: item.caption,
-      objectFit: item.objectFit || 'cover',
+      objectFit: (item.objectFit || 'cover') as 'cover' | 'contain' | 'fill',
       focalPoint:
         typeof item.image === 'object'
           ? `${item.image?.focalX ?? 50}% ${item.image?.focalY ?? 50}%`
@@ -188,24 +188,24 @@ export default async function TourDetailPage({
     }),
   )
 
-  const tourPricing: TourPricing = (tour as any).pricing?.model
-    ? (tour as any).pricing
+  const tourPricing: TourPricing = tour.pricing?.model
+    ? tour.pricing
     : {
         model: 'GROUP_TIERS' as const,
         groupTiers: tour.groupPrice
-          ? [{ minGuests: 1, maxGuests: (tour as any).maxGroupSize || undefined, price: tour.groupPrice }]
+          ? [{ minGuests: 1, maxGuests: tour.maxGroupSize || undefined, price: tour.groupPrice }]
           : [],
       }
 
   const displayPrice = getDisplayPrice(tourPricing)
 
-  const relatedTourCards = (relatedTours as any[]).map((t: any) => {
+  const relatedTourCards = relatedTours.map((t) => {
     const img = typeof t.heroImage === 'object' ? t.heroImage : null
     return {
       id: t.id,
       title: t.title,
       slug: t.slug,
-      excerpt: t.excerpt,
+      excerpt: typeof t.excerpt === 'string' ? t.excerpt : extractPlainText(t.excerpt),
       category: t.category,
       subcategory: t.subcategory,
       groupPrice: t.groupPrice,
@@ -270,7 +270,7 @@ export default async function TourDetailPage({
           <div className="mt-6 prose max-w-none prose-headings:font-heading prose-headings:text-navy prose-p:text-navy/80">
             {tour.description && (
               <RichText
-                data={tour.description}
+                data={tour.description as SerializedEditorState}
                 converters={{
                   ...defaultJSXConverters,
                   ...LinkJSXConverter({
@@ -297,28 +297,28 @@ export default async function TourDetailPage({
 
           {/* Included/Excluded */}
           <TourIncluded
-            included={(tour as any).included || []}
-            excluded={(tour as any).excluded || []}
+            included={tour.included || []}
+            excluded={tour.excluded || []}
             locale={locale}
           />
 
           {/* Meeting Point */}
-          {(tour as any).meetingPoint?.address && (
+          {tour.meetingPoint?.address && (
             <div className="mt-10">
               <h2 className="text-2xl font-heading font-bold text-navy mb-4">
                 {t('meetingPoint')}
               </h2>
               <p className="text-sm text-navy/70 mb-3">
-                {(tour as any).meetingPoint.address}
+                {tour.meetingPoint.address}
               </p>
-              {(tour as any).meetingPoint.instructions && (
-                <SafeRichText data={(tour as any).meetingPoint.instructions} className="text-sm text-gray mb-4" />
+              {tour.meetingPoint.instructions && (
+                <SafeRichText data={tour.meetingPoint.instructions} className="text-sm text-gray mb-4" />
               )}
-              {(tour as any).meetingPoint.lat &&
-                (tour as any).meetingPoint.lng && (
+              {tour.meetingPoint.lat &&
+                tour.meetingPoint.lng && (
                   <iframe
                     title="Meeting Point Map"
-                    src={`https://maps.google.com/maps?q=${(tour as any).meetingPoint.lat},${(tour as any).meetingPoint.lng}&z=15&output=embed`}
+                    src={`https://maps.google.com/maps?q=${tour.meetingPoint.lat},${tour.meetingPoint.lng}&z=15&output=embed`}
                     className="w-full h-64 rounded-lg border border-gray-light"
                     loading="lazy"
                     allowFullScreen
@@ -329,7 +329,7 @@ export default async function TourDetailPage({
 
           {/* FAQ */}
           <TourFAQ
-            items={((tour as any).faq || []) as any[]}
+            items={tour.faq || []}
             locale={locale}
           />
 
@@ -393,9 +393,9 @@ export default async function TourDetailPage({
               tourId={tour.id as number}
               tourName={tour.title}
               pricing={tourPricing}
-              maxGroupSize={(tour as any).maxGroupSize}
+              maxGroupSize={tour.maxGroupSize}
               locale={locale}
-              preferredTimes={(tour as any).preferredTimes}
+              preferredTimes={tour.preferredTimes}
             />
 
             {/* Trust badges */}
@@ -429,8 +429,8 @@ export default async function TourDetailPage({
         title={tour.title}
         description={extractPlainText(tour.excerpt)}
         image={
-          typeof (tour as any).heroImage === 'object'
-            ? (tour as any).heroImage?.sizes?.hero?.url || (tour as any).heroImage?.url || undefined
+          typeof tour.heroImage === 'object'
+            ? tour.heroImage?.sizes?.hero?.url || tour.heroImage?.url || undefined
             : undefined
         }
         price={displayPrice.fromPrice ?? undefined}
@@ -449,9 +449,9 @@ export default async function TourDetailPage({
         tourId={tour.id as number}
         tourName={tour.title}
         pricing={tourPricing}
-        maxGroupSize={(tour as any).maxGroupSize}
+        maxGroupSize={tour.maxGroupSize}
         locale={locale}
-        preferredTimes={(tour as any).preferredTimes}
+        preferredTimes={tour.preferredTimes}
       />
     </div>
   )

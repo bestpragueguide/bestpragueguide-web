@@ -14,6 +14,31 @@ export interface MediaImage {
   }
 }
 
+/** Lexical richText JSON structure — used instead of `any` for richText fields */
+export interface LexicalRichText {
+  root: {
+    children: LexicalNode[]
+    direction: string | null
+    format: string
+    indent: number
+    type: string
+    version: number
+  }
+}
+
+interface LexicalNode {
+  type: string
+  version: number
+  children?: LexicalNode[]
+  text?: string
+  format?: number | string
+  direction?: string | null
+  indent?: number
+  tag?: string
+  listType?: string
+  [key: string]: unknown
+}
+
 export interface NavigationLink {
   label: string
   href: string
@@ -87,7 +112,7 @@ export interface HomepageData {
   mobileHeroImage?: MediaImage | number
   trustBarItems: TrustBarItem[]
   guideHeading: string
-  guideBio: any
+  guideBio: LexicalRichText | string
   guideLearnMore: string
   guideLearnMoreHref: string
   guidePhoto?: MediaImage | number
@@ -122,11 +147,11 @@ export interface AboutValue {
 export interface AboutPageData {
   founderPhoto?: MediaImage | number
   founderHeading: string
-  founderBio: any
+  founderBio: LexicalRichText | string
   founderQuote: string
   stats: AboutStat[]
   teamHeading: string
-  teamDescription: any
+  teamDescription: LexicalRichText | string
   teamPhotos: Array<{ image: MediaImage | number }>
   teamBadges: Array<{ text: string }>
   valuesHeading: string
@@ -236,7 +261,7 @@ export type GuestBreakdown = Record<string, number>
 export interface FAQItem {
   id: number
   question: string
-  answer: any // Lexical richText
+  answer: LexicalRichText | string
   category: 'booking' | 'tours' | 'logistics' | 'payment'
   sortOrder: number
   showOnHomepage: boolean
@@ -246,7 +271,7 @@ export interface PageData {
   id: number
   title: string
   slug: string
-  content: any // Lexical richText
+  content: LexicalRichText | string
   template?: string
   lastUpdated?: string
   seo?: {
@@ -254,4 +279,60 @@ export interface PageData {
     metaDescription?: string
     ogImage?: MediaImage | number
   }
+}
+
+/** Tour document from Payload CMS */
+export interface TourData {
+  id: number
+  title: string
+  slug: string
+  excerpt: LexicalRichText | string
+  description?: LexicalRichText | string
+  category: string
+  subcategory?: string | null
+  duration: number
+  groupPrice?: number
+  maxGroupSize?: number
+  rating?: number | null
+  reviewCount?: number | null
+  sortOrder?: number
+  status: 'published' | 'draft'
+  heroImage?: MediaImage | number
+  mobileHeroImage?: MediaImage | number
+  gallery?: TourGalleryItem[]
+  included?: TourListItem[]
+  excluded?: TourListItem[]
+  meetingPoint?: {
+    address?: string
+    instructions?: LexicalRichText | string
+    lat?: number
+    lng?: number
+  }
+  faq?: TourFaqItem[]
+  pricing?: TourPricing
+  relatedTours?: (TourData | number)[]
+  preferredTimes?: string[]
+  publishedLocales?: ('en' | 'ru')[]
+  seo?: {
+    metaTitle?: string
+    metaDescription?: string
+    ogImage?: MediaImage | number
+  }
+}
+
+export interface TourGalleryItem {
+  image: MediaImage | number
+  mobileImage?: MediaImage | number
+  alt?: string
+  caption?: string
+  objectFit?: string
+}
+
+export interface TourListItem {
+  text: string
+}
+
+export interface TourFaqItem {
+  question: string
+  answer: LexicalRichText | string
 }
