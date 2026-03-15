@@ -15,7 +15,17 @@
     "successTitle": "Request Received!",
     "successMessage": "Thank you! We received your request and will confirm within 2 hours.",
     "referenceNumber": "Reference number",
-    "errorGeneric": "Something went wrong. Please try again or contact us directly."
+    "errorGeneric": "Something went wrong. Please try again or contact us directly.",
+    "totalPrice": "Total Price",
+    "sending": "Sending...",
+    "rateLimitTitle": "Too many requests. Please try again later or contact us directly:",
+    "errorSend": "Failed to send. Please try again.",
+    "onRequest": "On Request",
+    "exactPriceOnRequest": "Exact price on request",
+    "additionalServices": "Additional Services",
+    "guestCategoriesDefault": "Guest Categories",
+    "free": "free",
+    "perPerson": "pp"
   },
   "categories": {
     "pragueTours": "Prague Tours",
@@ -71,6 +81,18 @@
     "message": "Sorry, we couldn't find the page you're looking for.",
     "homeLink": "Go to Homepage",
     "toursLink": "Browse Tours"
+  },
+  "tour": {
+    "breadcrumbTours": "Tours",
+    "duration": "Duration",
+    "meetingPoint": "Meeting Point",
+    "pricing": "Pricing",
+    "additionalServicesSidebar": "Additional Services",
+    "onRequestSidebar": "On request",
+    "perPersonShort": "pp",
+    "trustNoPayment": "No payment until we confirm",
+    "trustFreeCancellation": "Free cancellation 24h before",
+    "trustPrivate": "100% private — just your group"
   },
   "common": {
     "perGroup": "per group up to 4",

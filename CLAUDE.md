@@ -177,10 +177,16 @@ All site content is editable from Payload admin panel:
 
 ## SEO
 - `src/components/seo/` — JSON-LD schema components: OrganizationSchema, TourSchema, BlogPostSchema, WebSiteSchema, JsonLd
+- OrganizationSchema (`TravelAgency`) rendered on all pages — includes geo coordinates, priceRange, areaServed, contact, social links
 - `src/lib/metadata.ts` — `buildPageMetadata()` and `buildImageMetadata()` helpers for Next.js Metadata API
 - Open Graph + Twitter Card meta tags on all pages
 - Canonical URLs with hreflang alternates (en/ru)
 - `sitemap.xml` generated dynamically (`force-dynamic`)
+
+## Accessibility
+- Skip-to-content link in layout (`<a href="#main-content">`) with `sr-only` + focus-visible styling
+- Image gallery lightbox: `role="dialog"`, `aria-modal`, keyboard navigation (Escape to close, Arrow keys to navigate)
+- `error.tsx` client component for graceful runtime error recovery with bilingual UI
 
 ## Admin Tools
 - **Tour Order** (`/tour-order`) — standalone drag-and-drop page with EN/RU locale toggle; reorders tours by `sortOrder` field
@@ -198,7 +204,7 @@ All site content is editable from Payload admin panel:
 - Payload Local API for data fetching in Server Components
 - ISR for tour pages (revalidate on change)
 - All commits must update CHANGELOG.md, VERSION, and affected docs
-- EN/RU localization: next-intl for UI strings (booking, contact, common), Payload for all CMS content
+- EN/RU localization: next-intl for UI strings (booking, contact, common, tour, notFound, meta, legal), Payload for all CMS content
 - Design palette: navy (#1A1A1A), gold (#C4975C), cream (#FAF7F2)
 - Fonts: Cormorant Garamond (headings), DM Sans (body)
 

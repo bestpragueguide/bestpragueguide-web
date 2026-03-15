@@ -55,8 +55,16 @@ export function ImageGallery({ images }: ImageGalleryProps) {
       {/* Lightbox */}
       {lightboxIndex !== null && (
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Image gallery"
           className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center"
           onClick={() => setLightboxIndex(null)}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setLightboxIndex(null)
+            if (e.key === 'ArrowLeft') setLightboxIndex((lightboxIndex - 1 + images.length) % images.length)
+            if (e.key === 'ArrowRight') setLightboxIndex((lightboxIndex + 1) % images.length)
+          }}
         >
           <button
             className="absolute top-4 right-4 text-white/70 hover:text-white p-2"

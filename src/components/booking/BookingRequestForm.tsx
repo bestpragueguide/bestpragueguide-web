@@ -212,11 +212,11 @@ export function BookingRequestForm({
           ))}
         </div>
         <p className="text-xs font-medium text-navy/60 mb-1">
-          {locale === 'ru' ? 'Итого' : 'Total Price'}
+          {t('totalPrice')}
         </p>
         {priceResult.isOnRequest && totalWithModifiers === null ? (
           <span className="text-xl font-bold text-gold">
-            {locale === 'ru' ? 'По запросу' : 'On Request'}
+            {t('onRequest')}
           </span>
         ) : (
           <>
@@ -290,7 +290,7 @@ export function BookingRequestForm({
         </select>
         {priceResult.isOnRequest && priceResult.total !== null && (
           <p className="text-xs text-gold mt-1">
-            {locale === 'ru' ? 'Точная цена по запросу' : 'Exact price on request'}
+            {t('exactPriceOnRequest')}
           </p>
         )}
       </div>
@@ -299,7 +299,7 @@ export function BookingRequestForm({
       {pricing.guestCategories && pricing.guestCategories.length > 0 && (
         <div>
           <p className="text-sm font-medium text-navy mb-2">
-            {pricing.guestCategoriesHeading || (locale === 'ru' ? 'Категории гостей' : 'Guest Categories')}
+            {pricing.guestCategoriesHeading || t('guestCategoriesDefault')}
           </p>
           <div className="space-y-2">
             {pricing.guestCategories.map((cat) => (
@@ -307,7 +307,7 @@ export function BookingRequestForm({
                 <span className="text-sm text-navy/70">
                   {cat.label}
                   {cat.isFree
-                    ? ` (${locale === 'ru' ? 'бесплатно' : 'free'})`
+                    ? ` (${t('free')})`
                     : cat.priceModifier
                       ? ` (+${formatPrice(cat.priceModifier, currency)})`
                       : ''}
@@ -331,7 +331,7 @@ export function BookingRequestForm({
       {availableServices.length > 0 && (
         <div>
           <p className="text-sm font-medium text-navy mb-2">
-            {locale === 'ru' ? 'Дополнительные услуги' : 'Additional Services'}
+            {t('additionalServices')}
           </p>
           <div className="space-y-2">
             {availableServices.map((service) => (
@@ -418,19 +418,13 @@ export function BookingRequestForm({
         disabled={status === 'loading'}
         className="w-full px-6 py-3 bg-gold text-white font-medium rounded-lg hover:bg-gold-dark transition-colors disabled:opacity-50 min-h-[44px]"
       >
-        {status === 'loading'
-          ? locale === 'ru'
-            ? 'Отправка...'
-            : 'Sending...'
-          : t('submit')}
+        {status === 'loading' ? t('sending') : t('submit')}
       </button>
 
       {status === 'rate-limited' && (
         <div className="text-sm text-center p-3 bg-gold/5 border border-gold/20 rounded-lg">
           <p className="text-navy">
-            {locale === 'ru'
-              ? 'Слишком много запросов. Пожалуйста, попробуйте позже или свяжитесь с нами:'
-              : 'Too many requests. Please try again later or contact us directly:'}
+            {t('rateLimitTitle')}
           </p>
           <a href="tel:+420776306858" className="text-gold font-medium">
             +420 776 306 858
@@ -440,9 +434,7 @@ export function BookingRequestForm({
 
       {status === 'error' && !Object.keys(errors).length && (
         <p className="text-sm text-error text-center">
-          {locale === 'ru'
-            ? 'Ошибка отправки. Попробуйте ещё раз.'
-            : 'Failed to send. Please try again.'}
+          {t('errorSend')}
         </p>
       )}
     </form>

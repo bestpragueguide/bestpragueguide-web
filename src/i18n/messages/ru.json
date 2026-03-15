@@ -15,7 +15,17 @@
     "successTitle": "Запрос получен!",
     "successMessage": "Спасибо! Мы получили ваш запрос и подтвердим в течение 2 часов.",
     "referenceNumber": "Номер заявки",
-    "errorGeneric": "Что-то пошло не так. Попробуйте ещё раз или свяжитесь с нами напрямую."
+    "errorGeneric": "Что-то пошло не так. Попробуйте ещё раз или свяжитесь с нами напрямую.",
+    "totalPrice": "Итого",
+    "sending": "Отправка...",
+    "rateLimitTitle": "Слишком много запросов. Пожалуйста, попробуйте позже или свяжитесь с нами:",
+    "errorSend": "Ошибка отправки. Попробуйте ещё раз.",
+    "onRequest": "По запросу",
+    "exactPriceOnRequest": "Точная цена по запросу",
+    "additionalServices": "Дополнительные услуги",
+    "guestCategoriesDefault": "Категории гостей",
+    "free": "бесплатно",
+    "perPerson": "чел"
   },
   "categories": {
     "pragueTours": "Экскурсии по Праге",
@@ -71,6 +81,18 @@
     "message": "Извините, мы не смогли найти запрашиваемую страницу.",
     "homeLink": "На главную",
     "toursLink": "Каталог экскурсий"
+  },
+  "tour": {
+    "breadcrumbTours": "Экскурсии",
+    "duration": "Длительность",
+    "meetingPoint": "Место встречи",
+    "pricing": "Стоимость",
+    "additionalServicesSidebar": "Дополнительные услуги",
+    "onRequestSidebar": "По запросу",
+    "perPersonShort": "чел",
+    "trustNoPayment": "Оплата только после подтверждения",
+    "trustFreeCancellation": "Бесплатная отмена за 24 часа",
+    "trustPrivate": "100% индивидуально — только ваша группа"
   },
   "common": {
     "perGroup": "за группу до 4 человек",

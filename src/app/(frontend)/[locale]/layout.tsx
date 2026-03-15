@@ -81,8 +81,11 @@ export default async function FrontendLayout({
       <body className={`${cormorant.variable} ${dmSans.variable}`}>
         <GoogleTagManagerBody />
         <NextIntlClientProvider messages={messages}>
+          <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[200] focus:px-4 focus:py-2 focus:bg-gold focus:text-white focus:rounded-lg">
+            {locale === 'ru' ? 'Перейти к содержимому' : 'Skip to content'}
+          </a>
           <Nav navigation={navigation} locale={locale} />
-          <main className="pt-16">{children}</main>
+          <main id="main-content" className="pt-16">{children}</main>
           <Footer navigation={navigation} siteSettings={siteSettings} locale={locale} />
           <WhatsAppButton
             phone={siteSettings.whatsappNumber}

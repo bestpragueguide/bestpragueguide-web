@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic'
 
+import { getTranslations } from 'next-intl/server'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
@@ -167,6 +168,10 @@ export default async function TourDetailPage({
     notFound()
   }
 
+  const t = await getTranslations({ locale, namespace: 'tour' })
+  const tBooking = await getTranslations({ locale, namespace: 'booking' })
+  const tCommon = await getTranslations({ locale, namespace: 'common' })
+
   // Resolve internal links in richText description
   if (tour.description) {
     tour.description = await resolveRichTextLinks(tour.description, locale)
@@ -245,7 +250,7 @@ export default async function TourDetailPage({
       <Breadcrumbs
         items={[
           {
-            label: locale === 'ru' ? 'Экскурсии' : 'Tours',
+            label: t('breadcrumbTours'),
             href: `/${locale}/tours`,
           },
           { label: tour.title },
@@ -267,10 +272,8 @@ export default async function TourDetailPage({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span className="text-sm">
-              {locale === 'ru' ? 'Длительность' : 'Duration'}: {tour.duration}{' '}
-              {locale === 'ru'
-                ? tour.duration === 1 ? 'час' : tour.duration < 5 ? 'часа' : 'часов'
-                : tour.duration === 1 ? 'hour' : 'hours'}
+              {t('duration')}: {tour.duration}{' '}
+              {tour.duration === 1 ? tCommon('hour') : tCommon('hours')}
             </span>
           </div>
 
@@ -321,7 +324,7 @@ export default async function TourDetailPage({
           {(tour as any).meetingPoint?.address && (
             <div className="mt-10">
               <h2 className="text-2xl font-heading font-bold text-navy mb-4">
-                {locale === 'ru' ? 'Место встречи' : 'Meeting Point'}
+                {t('meetingPoint')}
               </h2>
               <p className="text-sm text-navy/70 mb-3">
                 {(tour as any).meetingPoint.address}
@@ -361,7 +364,7 @@ export default async function TourDetailPage({
             {tourPricing.model === 'GROUP_TIERS' && tourPricing.groupTiers && tourPricing.groupTiers.length > 0 && (
               <div className="mb-5 pb-5 border-b border-gray-light/50">
                 <h3 className="text-sm font-medium text-navy mb-3">
-                  {locale === 'ru' ? 'Стоимость' : 'Pricing'}
+                  {t('pricing')}
                 </h3>
                 <PriceDisplay pricing={tourPricing} locale={locale} variant="detail" />
               </div>
@@ -371,7 +374,7 @@ export default async function TourDetailPage({
             {tourPricing.additionalServices && tourPricing.additionalServices.length > 0 && (
               <div className="mb-5 pb-5 border-b border-gray-light/50">
                 <h3 className="text-sm font-medium text-navy mb-3">
-                  {locale === 'ru' ? 'Дополнительные услуги' : 'Additional Services'}
+                  {t('additionalServicesSidebar')}
                 </h3>
                 <div className="space-y-2">
                   {tourPricing.additionalServices.map((attachment, i) => {
@@ -384,7 +387,7 @@ export default async function TourDetailPage({
                           {attachment.customPricingNote
                             ? attachment.customPricingNote
                             : service.pricingModel === 'ON_REQUEST'
-                              ? (locale === 'ru' ? 'По запросу' : 'On request')
+                              ? t('onRequestSidebar')
                               : service.pricingModel === 'FLAT' && service.flatPrice != null
                                 ? `€${service.flatPrice}`
                                 : service.pricingModel === 'PER_PERSON' && service.guestCategoryPricing?.length
@@ -392,9 +395,9 @@ export default async function TourDetailPage({
                                       const adultCat = service.guestCategoryPricing.find(
                                         (c: any) => !c.isFree && !c.onRequest && c.price != null,
                                       )
-                                      return adultCat ? `€${adultCat.price}/${locale === 'ru' ? 'чел' : 'pp'}` : (locale === 'ru' ? 'По запросу' : 'On request')
+                                      return adultCat ? `€${adultCat.price}/${t('perPersonShort')}` : t('onRequestSidebar')
                                     })()
-                                  : (locale === 'ru' ? 'По запросу' : 'On request')}
+                                  : t('onRequestSidebar')}
                         </span>
                       </div>
                     )
@@ -418,24 +421,15 @@ export default async function TourDetailPage({
               {[
                 {
                   icon: '✓',
-                  text:
-                    locale === 'ru'
-                      ? 'Оплата только после подтверждения'
-                      : 'No payment until we confirm',
+                  text: t('trustNoPayment'),
                 },
                 {
                   icon: '✓',
-                  text:
-                    locale === 'ru'
-                      ? 'Бесплатная отмена за 24 часа'
-                      : 'Free cancellation 24h before',
+                  text: t('trustFreeCancellation'),
                 },
                 {
                   icon: '✓',
-                  text:
-                    locale === 'ru'
-                      ? '100% индивидуально — только ваша группа'
-                      : '100% private — just your group',
+                  text: t('trustPrivate'),
                 },
               ].map((badge, i) => (
                 <div key={i} className="flex items-center gap-2 text-sm">

@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.16.2] - 2026-03-15
+
+### Added
+- **Error boundary** — new `error.tsx` client component with bilingual error message and reset button for graceful runtime error handling
+- **i18n `tour` namespace** — 10 new translation keys (EN/RU) for tour detail page: breadcrumb, duration, meeting point, pricing, services sidebar, trust badges
+- **i18n `booking` additions** — 10 new keys (EN/RU) for booking form: totalPrice, sending, rateLimitTitle, errorSend, onRequest, exactPriceOnRequest, additionalServices, guestCategoriesDefault, free, perPerson
+
+### Changed
+- **Tour detail i18n cleanup** — replaced all hardcoded `locale === 'ru' ? ... : ...` ternaries with `getTranslations()` calls using `tour`, `booking`, and `common` namespaces
+- **Booking form i18n cleanup** — replaced 9 hardcoded locale ternaries with `useTranslations('booking')` calls
+- **404 page locale-aware** — rewritten as client component using `useTranslations('notFound')` for proper bilingual 404 messages
+- **robots.txt dynamic domain** — uses `NEXT_PUBLIC_SERVER_URL` env var instead of hardcoded `bestpragueguide.com`
+- **OrganizationSchema enhanced** — added `geo` coordinates (Prague), `priceRange`, `image`, and `areaServed` for richer structured data
+
+### Fixed
+- **Accessibility: skip-to-content** — added skip navigation link in layout, `id="main-content"` on `<main>` element
+- **Accessibility: lightbox keyboard navigation** — added `role="dialog"`, `aria-modal`, `aria-label`, and `onKeyDown` handler for Escape/Arrow keys on ImageGallery
+
 ## [1.16.1] - 2026-03-15
 
 ### Changed

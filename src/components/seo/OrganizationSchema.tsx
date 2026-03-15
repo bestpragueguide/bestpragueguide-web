@@ -8,10 +8,21 @@ export function OrganizationSchema() {
     url: 'https://bestpragueguide.com',
     description:
       'Private tours in Prague from a guide with 17 years of experience.',
+    image: 'https://bestpragueguide.com/og-default.jpg',
+    priceRange: '€€',
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Prague',
       addressCountry: 'CZ',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: 50.0755,
+      longitude: 14.4378,
+    },
+    areaServed: {
+      '@type': 'City',
+      name: 'Prague',
     },
     contactPoint: {
       '@type': 'ContactPoint',
