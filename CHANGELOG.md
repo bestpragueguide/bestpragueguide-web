@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.20.4] - 2026-03-15
+
+### Fixed
+- **Media upload failing** — Sharp native binaries (`@img/sharp-*`) were not included in the Docker runner stage; Next.js standalone output doesn't trace dynamically-loaded native modules, so images >= 400x300 that trigger Sharp resizing would fail with "There was a problem while uploading the file"
+
 ## [1.20.3] - 2026-03-15
 
 ### Fixed
