@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { submitContactForm, type ContactActionResult } from '@/app/actions/contact'
 
@@ -14,6 +14,13 @@ export function ContactForm({ locale, phoneDisplay }: ContactFormProps) {
   const t = useTranslations('contact')
   const tPages = useTranslations('pages')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error' | 'rate_limited' | 'too_long'>('idle')
+
+  useEffect(() => {
+    if (status === 'success') {
+      const timer = setTimeout(() => setStatus('idle'), 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [status])
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -65,6 +72,13 @@ export function ContactForm({ locale, phoneDisplay }: ContactFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <noscript>
+        <p className="bg-gold/10 text-navy p-4 rounded-lg text-sm">
+          {locale === 'ru'
+            ? 'Для использования этой формы необходимо включить JavaScript в браузере.'
+            : 'Please enable JavaScript in your browser to use this form.'}
+        </p>
+      </noscript>
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-navy mb-1">
           {t('formName')}
@@ -76,6 +90,7 @@ export function ContactForm({ locale, phoneDisplay }: ContactFormProps) {
           required
           minLength={2}
           maxLength={100}
+          autoComplete="name"
           className="w-full px-4 py-3 rounded-lg border border-gray-light focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors text-sm"
         />
       </div>
@@ -89,6 +104,7 @@ export function ContactForm({ locale, phoneDisplay }: ContactFormProps) {
           name="email"
           type="email"
           required
+          autoComplete="email"
           className="w-full px-4 py-3 rounded-lg border border-gray-light focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors text-sm"
         />
       </div>
@@ -105,6 +121,7 @@ export function ContactForm({ locale, phoneDisplay }: ContactFormProps) {
           minLength={3}
           maxLength={30}
           placeholder="+1..."
+          autoComplete="tel"
           className="w-full px-4 py-3 rounded-lg border border-gray-light focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors text-sm"
         />
       </div>
@@ -120,6 +137,7 @@ export function ContactForm({ locale, phoneDisplay }: ContactFormProps) {
           required
           minLength={4}
           maxLength={1000}
+          autoComplete="off"
           aria-invalid={status === 'too_long'}
           aria-describedby={status === 'too_long' ? 'error-message' : undefined}
           className="w-full px-4 py-3 rounded-lg border border-gray-light focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors text-sm resize-none"

@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.20.0] - 2026-03-15
+
+### Added
+- **Viewport metadata** — `export const viewport` with `device-width`, `initialScale: 1`, `maximumScale: 5` for proper mobile scaling
+- **Back-to-top button** — `BackToTop` component appears after 400px scroll, fixed at bottom-left, smooth-scrolls to top
+- **Homepage FAQ schema** — FAQPage JSON-LD structured data on homepage FAQ section (was only on /faq page)
+- **Noscript fallbacks** — bilingual "enable JavaScript" messages on booking and contact forms for progressive enhancement
+- **Form autocomplete** — `autoComplete` hints (name, email, tel) on booking and contact form inputs for browser autofill
+
+### Changed
+- **Image priority optimization** — `priority` prop on GuideProfile photo and first 2 FeaturedTours category cards for faster LCP
+- **Analytics lazy loading** — Umami and Yandex Metrika scripts changed from `afterInteractive` to `lazyOnload` to reduce FID blocking
+- **Sitemap lastmod** — static pages use fixed date (`2026-03-15`) instead of `new Date()` for consistent crawl signals
+- **Success auto-dismiss** — booking and contact form success messages auto-reset after 5 seconds
+
 ## [1.19.1] - 2026-03-15
 
 ### Security

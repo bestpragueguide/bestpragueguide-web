@@ -1,5 +1,5 @@
 import React from 'react'
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Cormorant_Garamond, DM_Sans } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
@@ -8,6 +8,7 @@ import { routing } from '@/i18n/routing'
 import { Nav } from '@/components/layout/Nav'
 import { Footer } from '@/components/layout/Footer'
 import { WhatsAppButton } from '@/components/shared/WhatsAppButton'
+import { BackToTop } from '@/components/shared/BackToTop'
 import { OrganizationSchema } from '@/components/seo/OrganizationSchema'
 import { RefreshOnSave } from '@/components/shared/RefreshOnSave'
 import { CookieConsent } from '@/components/shared/CookieConsent'
@@ -35,6 +36,12 @@ const dmSans = DM_Sans({
   variable: '--font-dm-sans',
   display: 'swap',
 })
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+}
 
 export const metadata: Metadata = {
   title: 'Best Prague Guide — Private Tours in Prague',
@@ -100,6 +107,7 @@ export default async function FrontendLayout({
             tourMessageTemplate={siteSettings.whatsappTourMessageTemplate}
             locale={locale}
           />
+          <BackToTop />
           <CookieConsent locale={locale} />
           <OrganizationSchema />
           <RefreshOnSave />

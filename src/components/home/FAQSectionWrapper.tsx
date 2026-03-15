@@ -1,4 +1,5 @@
 import { FAQSection } from './FAQSection'
+import { JsonLd } from '@/components/seo/JsonLd'
 import type { FAQItem } from '@/lib/cms-types'
 
 interface FAQSectionWrapperProps {
@@ -13,7 +14,25 @@ export function FAQSectionWrapper({ heading, items }: FAQSectionWrapperProps) {
     answer: extractPlainText(item.answer),
   }))
 
-  return <FAQSection heading={heading} items={faqItems} />
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  }
+
+  return (
+    <>
+      <FAQSection heading={heading} items={faqItems} />
+      <JsonLd data={faqSchema} />
+    </>
+  )
 }
 
 function extractPlainText(richText: any): string {

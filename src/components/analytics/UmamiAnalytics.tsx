@@ -8,7 +8,7 @@ export function UmamiAnalytics() {
   return (
     <Script
       id="umami-script"
-      strategy="afterInteractive"
+      strategy="lazyOnload"
       src={src}
       data-website-id={websiteId}
     />

@@ -84,6 +84,7 @@ export async function FeaturedTours({ data, locale }: FeaturedToursProps) {
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 640px) 100vw, 50vw"
+                  priority={i < 2}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/30 to-transparent" />
                 <h3 className="relative text-2xl font-heading font-bold text-white group-hover:text-gold transition-colors">

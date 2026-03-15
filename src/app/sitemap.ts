@@ -27,10 +27,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = []
 
   // Static pages — both locales
+  // Use a fixed date so crawlers see a stable lastmod (update when content changes)
+  const staticLastModified = new Date('2026-03-15')
+
   for (const page of staticPages) {
     entries.push({
       url: `${BASE_URL}/en/${page.en}`,
-      lastModified: new Date(),
+      lastModified: staticLastModified,
       alternates: {
         languages: {
           en: `${BASE_URL}/en/${page.en}`,
@@ -40,7 +43,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
     entries.push({
       url: `${BASE_URL}/ru/${page.ru}`,
-      lastModified: new Date(),
+      lastModified: staticLastModified,
       alternates: {
         languages: {
           en: `${BASE_URL}/en/${page.en}`,

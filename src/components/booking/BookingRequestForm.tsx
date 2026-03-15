@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useTranslations } from 'next-intl'
 import { TIME_SLOTS } from '@/lib/booking'
 import { trackBookingSubmit } from '@/lib/analytics'
@@ -41,6 +41,13 @@ export function BookingRequestForm({
   const [currency, setCurrency] = useState<Currency>('EUR')
   const [selectedServiceIds, setSelectedServiceIds] = useState<Set<number>>(new Set())
   const [categoryBreakdown, setCategoryBreakdown] = useState<Record<string, number>>({})
+
+  useEffect(() => {
+    if (status === 'success') {
+      const timer = setTimeout(() => setStatus('idle'), 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [status])
 
   const tomorrow = new Date()
   tomorrow.setDate(tomorrow.getDate() + 1)
@@ -188,6 +195,13 @@ export function BookingRequestForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <noscript>
+        <p className="bg-gold/10 text-navy p-4 rounded-lg text-sm">
+          {locale === 'ru'
+            ? 'Для использования этой формы необходимо включить JavaScript в браузере.'
+            : 'Please enable JavaScript in your browser to use this form.'}
+        </p>
+      </noscript>
       {/* Total price + currency selector */}
       <div className="bg-cream/50 rounded-lg p-3 text-center">
         <div className="flex justify-center gap-1 mb-2">
@@ -357,6 +371,7 @@ export function BookingRequestForm({
           name="customerName"
           type="text"
           required
+          autoComplete="name"
           aria-invalid={!!errors.customerName}
           aria-describedby={errors.customerName ? 'error-customerName' : undefined}
           className={inputClass}
@@ -376,6 +391,7 @@ export function BookingRequestForm({
           name="customerEmail"
           type="email"
           required
+          autoComplete="email"
           aria-invalid={!!errors.customerEmail}
           aria-describedby={errors.customerEmail ? 'error-customerEmail' : undefined}
           className={inputClass}
@@ -395,6 +411,7 @@ export function BookingRequestForm({
           name="customerPhone"
           type="tel"
           placeholder="+1..."
+          autoComplete="tel"
           className={inputClass}
         />
       </div>

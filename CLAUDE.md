@@ -196,6 +196,15 @@ All site content is editable from Payload admin panel:
 - Nav hamburger: `aria-expanded`, `aria-controls="mobile-menu"`, locale-aware `aria-label`
 - Tour filter buttons: `aria-pressed` for active state
 - Image `onError` fallback on TourCard and Hero (hides broken images, reveals background)
+- `<noscript>` fallback messages on booking and contact forms
+- Form `autoComplete` hints (name, email, tel) for browser autofill
+- Back-to-top button (`BackToTop` component, bottom-left, appears after 400px scroll)
+
+## Performance
+- `export const viewport` in layout for proper mobile scaling
+- Image `priority` on Hero, GuideProfile photo, first 2 FeaturedTours category cards
+- Analytics: Umami/Yandex use `lazyOnload` strategy; GA4/GTM use `afterInteractive`
+- Success auto-dismiss: booking and contact form success messages reset after 5s
 
 ## Admin Tools
 - **Tour Order** (`/tour-order`) — standalone drag-and-drop page with EN/RU locale toggle; reorders tours by `sortOrder` field
