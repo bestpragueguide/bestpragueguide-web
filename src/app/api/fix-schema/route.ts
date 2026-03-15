@@ -104,14 +104,14 @@ export async function POST(req: Request) {
               },
             })
           }
-          // Clear EN body/title (set to empty richText) — removes duplicate RU text from EN locale
-          const emptyRoot = { root: { type: 'root', children: [{ type: 'paragraph', children: [], direction: null, format: '', indent: 0, version: 1 }], direction: null, format: '', indent: 0, version: 1 } }
+          // Clear EN body/title — set body to single space (required field) to remove duplicate RU text
+          const placeholderRoot = { root: { type: 'root', children: [{ type: 'paragraph', children: [{ type: 'text', text: ' ', version: 1 }], direction: null, format: '', indent: 0, version: 1 }], direction: null, format: '', indent: 0, version: 1 } }
           await payload.update({
             collection: 'reviews',
             id: review.id,
             locale: 'en',
             data: {
-              body: emptyRoot as any,
+              body: placeholderRoot as any,
               title: '',
             },
           })
