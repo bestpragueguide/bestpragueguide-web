@@ -3,6 +3,7 @@
 import { useEffect, useCallback, useMemo } from 'react'
 import { formatPrice, secondaryPrices } from '@/lib/currency'
 import { getDisplayPrice } from '@/lib/pricing'
+import { guestsLabel } from '@/lib/plurals'
 import type { TourPricing } from '@/lib/cms-types'
 
 interface BookingModalProps {
@@ -15,6 +16,7 @@ interface BookingModalProps {
   defaultDate?: string
   defaultTime?: string
   trustBadges?: Array<{ text: string }>
+  bookingPricingDescription?: string
 }
 
 export function BookingModal({
@@ -27,6 +29,7 @@ export function BookingModal({
   defaultDate,
   defaultTime,
   trustBadges,
+  bookingPricingDescription,
 }: BookingModalProps) {
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {
@@ -114,6 +117,69 @@ export function BookingModal({
 
         {/* Content */}
         <div className="p-4 pb-8">
+          {/* Pricing table */}
+          {pricing.model === 'GROUP_TIERS' && pricing.groupTiers && pricing.groupTiers.length > 0 && (
+            <div className="mb-4 pb-4 border-b border-gray-light/50">
+              <span className="block text-sm font-medium text-navy mb-1">
+                {locale === 'ru' ? 'Стоимость' : 'Pricing'}
+              </span>
+              <div className="space-y-1">
+                {pricing.groupTiers.map((tier, i) => (
+                  <div key={i} className="flex justify-between text-sm">
+                    <span className="text-navy/70">
+                      {tier.maxGuests
+                        ? `${tier.minGuests}–${tier.maxGuests} ${guestsLabel(tier.maxGuests, locale)}`
+                        : `${tier.minGuests}+ ${guestsLabel(tier.minGuests, locale)}`}
+                    </span>
+                    <span className="font-medium text-navy">
+                      {tier.onRequest || tier.price == null
+                        ? (locale === 'ru' ? 'По запросу' : 'Contact us')
+                        : formatPrice(tier.price, 'EUR')}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Pricing description */}
+          {bookingPricingDescription && (
+            <div className="mb-4 pb-4 border-b border-gray-light/50">
+              <p className="text-sm text-navy/70 leading-relaxed">
+                {bookingPricingDescription}
+              </p>
+            </div>
+          )}
+
+          {/* Additional services */}
+          {pricing.additionalServices && pricing.additionalServices.length > 0 && (
+            <div className="mb-4 pb-4 border-b border-gray-light/50">
+              <span className="block text-sm font-medium text-navy mb-1">
+                {locale === 'ru' ? 'Дополнительные услуги' : 'Additional Services'}
+              </span>
+              <div className="space-y-2">
+                {pricing.additionalServices.map((attachment, i) => {
+                  const service = typeof attachment.service === 'object' ? attachment.service : null
+                  if (!service) return null
+                  return (
+                    <div key={i} className="flex justify-between text-sm">
+                      <span className="text-navy/70">{service.name}</span>
+                      <span className="font-medium text-navy">
+                        {attachment.customPricingNote
+                          ? attachment.customPricingNote
+                          : service.pricingModel === 'ON_REQUEST'
+                            ? (locale === 'ru' ? 'По запросу' : 'On request')
+                            : service.pricingModel === 'FLAT' && service.flatPrice != null
+                              ? `€${service.flatPrice}`
+                              : (locale === 'ru' ? 'По запросу' : 'On request')}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
           {children || (
             <div className="text-center py-12 text-sm text-gray border-2 border-dashed border-gray-light rounded-lg">
               {locale === 'ru'

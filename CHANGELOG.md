@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.23.0] - 2026-03-16
+
+### Added
+- **Mobile booking modal parity with desktop** — mobile booking modal now shows pricing table (group tiers), pricing description, and additional services before the booking form, matching the desktop sidebar layout
+
 ## [1.22.9] - 2026-03-16
 
 ### Fixed

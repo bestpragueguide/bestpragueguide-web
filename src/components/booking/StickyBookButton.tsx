@@ -18,6 +18,7 @@ interface StickyBookButtonProps {
   preferredTimes?: string[]
   trustBadges?: Array<{ text: string }>
   contactPhoneDisplay?: string
+  bookingPricingDescription?: string
 }
 
 export function StickyBookButton({
@@ -29,6 +30,7 @@ export function StickyBookButton({
   preferredTimes,
   trustBadges,
   contactPhoneDisplay,
+  bookingPricingDescription,
 }: StickyBookButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -83,6 +85,7 @@ export function StickyBookButton({
         pricing={pricing}
         locale={locale}
         trustBadges={trustBadges}
+        bookingPricingDescription={bookingPricingDescription}
       >
         <BookingRequestForm
           tourId={tourId}

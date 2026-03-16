@@ -455,6 +455,7 @@ export default async function TourDetailPage({
         preferredTimes={tour.preferredTimes}
         trustBadges={siteSettings.bookingTrustBadges}
         contactPhoneDisplay={siteSettings.contactPhoneDisplay}
+        bookingPricingDescription={siteSettings.bookingPricingDescription}
       />
     </div>
   )
