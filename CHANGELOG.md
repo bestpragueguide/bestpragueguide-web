@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.24.4] - 2026-03-16
+
+### Added
+- **FAQPage structured data on tour detail pages** — `FAQSchema` component renders JSON-LD for tour FAQ sections, enabling Google FAQ rich snippets in search results
+
 ## [1.24.3] - 2026-03-16
 
 ### Security

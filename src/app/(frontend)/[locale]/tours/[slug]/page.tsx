@@ -19,6 +19,7 @@ import { getSiteSettings } from '@/lib/cms-data'
 import { StickyBookButton } from '@/components/booking/StickyBookButton'
 import { BookingRequestForm } from '@/components/booking/BookingRequestForm'
 import { TourSchema } from '@/components/seo/TourSchema'
+import { FAQSchema } from '@/components/seo/FAQSchema'
 import { TourViewTracker } from '@/components/analytics/TourViewTracker'
 import { getDisplayPrice } from '@/lib/pricing'
 import { PriceDisplay } from '@/components/tours/PriceDisplay'
@@ -450,6 +451,16 @@ export default async function TourDetailPage({
         locale={locale}
         slug={slug}
       />
+
+      {/* FAQ Schema.org JSON-LD */}
+      {tour.faq && tour.faq.length > 0 && (
+        <FAQSchema
+          items={tour.faq.map((item: any) => ({
+            question: item.question,
+            answer: extractPlainText(item.answer),
+          }))}
+        />
+      )}
 
       {/* Analytics: track tour view */}
       <TourViewTracker tourName={tour.title} tourId={tour.id as number} />
