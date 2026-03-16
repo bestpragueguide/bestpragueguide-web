@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.24.2] - 2026-03-16
+
+### Added
+- **Google Tag Manager** — container `GTM-MQ9BGMJ3` enabled via `NEXT_PUBLIC_GTM_ID` env var
+
 ## [1.24.1] - 2026-03-16
 
 ### Added
