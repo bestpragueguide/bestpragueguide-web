@@ -40,7 +40,6 @@ export async function POST(req: Request) {
     const errors: any[] = []
 
     for (const locale of locales) {
-      // Fetch tours published in this locale
       const allTours = await payload.find({
         collection: 'tours',
         where: { publishedLocales: { in: [locale] } },
@@ -62,8 +61,20 @@ export async function POST(req: Request) {
             const suffix = ' — Best Prague Guide'
             const maxTitleLen = 60 - suffix.length
             const metaTitle = truncate(tour.title as string, maxTitleLen) + suffix
+
+            // Update main table
             await db.execute(
-              sql`UPDATE tours_locales SET seo_meta_title = ${metaTitle} WHERE _parent_id = ${tour.id} AND _locale = ${locale} AND (seo_meta_title IS NULL OR seo_meta_title = '')`
+              sql`UPDATE tours_locales SET seo_meta_title = ${metaTitle}
+                  WHERE _parent_id = ${tour.id} AND _locale = ${locale}
+                  AND (seo_meta_title IS NULL OR seo_meta_title = '')`
+            )
+            // Update version table (latest version)
+            await db.execute(
+              sql`UPDATE _tours_v_locales SET version_seo_meta_title = ${metaTitle}
+                  WHERE _parent_id IN (
+                    SELECT id FROM _tours_v WHERE parent_id = ${tour.id} ORDER BY id DESC LIMIT 1
+                  ) AND _locale = ${locale}
+                  AND (version_seo_meta_title IS NULL OR version_seo_meta_title = '')`
             )
             changes.push(`metaTitle: "${metaTitle}"`)
           }
@@ -73,17 +84,38 @@ export async function POST(req: Request) {
             const excerptText = extractPlainText(tour.excerpt)
             if (excerptText) {
               const metaDescription = truncate(excerptText, 160)
+
+              // Update main table
               await db.execute(
-                sql`UPDATE tours_locales SET seo_meta_description = ${metaDescription} WHERE _parent_id = ${tour.id} AND _locale = ${locale} AND (seo_meta_description IS NULL OR seo_meta_description = '')`
+                sql`UPDATE tours_locales SET seo_meta_description = ${metaDescription}
+                    WHERE _parent_id = ${tour.id} AND _locale = ${locale}
+                    AND (seo_meta_description IS NULL OR seo_meta_description = '')`
+              )
+              // Update version table
+              await db.execute(
+                sql`UPDATE _tours_v_locales SET version_seo_meta_description = ${metaDescription}
+                    WHERE _parent_id IN (
+                      SELECT id FROM _tours_v WHERE parent_id = ${tour.id} ORDER BY id DESC LIMIT 1
+                    ) AND _locale = ${locale}
+                    AND (version_seo_meta_description IS NULL OR version_seo_meta_description = '')`
               )
               changes.push(`metaDescription: "${metaDescription.slice(0, 50)}..."`)
             }
           }
 
-          // Set ogImage from heroImage if missing (not localized — on main table)
+          // Set ogImage from heroImage if missing (not localized)
           if (!ogImageId && heroImageId) {
+            // Update main table
             await db.execute(
-              sql`UPDATE tours SET seo_og_image_id = ${heroImageId} WHERE id = ${tour.id} AND seo_og_image_id IS NULL`
+              sql`UPDATE tours SET seo_og_image_id = ${heroImageId}
+                  WHERE id = ${tour.id} AND seo_og_image_id IS NULL`
+            )
+            // Update version table
+            await db.execute(
+              sql`UPDATE _tours_v SET version_seo_og_image_id = ${heroImageId}
+                  WHERE parent_id = ${tour.id}
+                  AND id = (SELECT id FROM _tours_v WHERE parent_id = ${tour.id} ORDER BY id DESC LIMIT 1)
+                  AND version_seo_og_image_id IS NULL`
             )
             changes.push(`ogImage: heroImage #${heroImageId}`)
           }
