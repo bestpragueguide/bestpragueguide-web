@@ -82,7 +82,7 @@ export default async function AboutPage({
           <h1 className="text-3xl sm:text-4xl font-heading font-bold text-navy">
             {data.founderHeading}
           </h1>
-          <SafeRichText data={data.founderBio} className="mt-6 text-lg text-navy/70 leading-relaxed prose prose-lg max-w-none" />
+          <SafeRichText data={data.founderBio} className="mt-6 text-lg text-navy/70 leading-relaxed prose prose-lg max-w-none text-justify" />
           {data.founderQuote && (
             <blockquote className="mt-6 border-l-4 border-gold pl-4 italic text-navy/60">
               &ldquo;{data.founderQuote}&rdquo;

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.22.7] - 2026-03-16
+
+### Changed
+- **About page text-justify** — added `text-justify` to founder bio section for consistent paragraph alignment
+
 ## [1.22.6] - 2026-03-16
 
 ### Changed
