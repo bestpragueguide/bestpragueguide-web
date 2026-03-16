@@ -345,15 +345,13 @@ export default async function TourDetailPage({
         {/* Right column: booking sidebar */}
         <div className="hidden lg:block">
           <div className="sticky top-24 bg-white rounded-xl border border-gray-light/50 p-6 shadow-sm">
-            {/* Group tiers pricing table */}
-            {tourPricing.model === 'GROUP_TIERS' && tourPricing.groupTiers && tourPricing.groupTiers.length > 0 && (
-              <div className="mb-5 pb-5 border-b border-gray-light/50">
-                <span className="block text-sm font-medium text-navy mb-1">
-                  {t('pricing')}
-                </span>
-                <PriceDisplay pricing={tourPricing} locale={locale} variant="detail" />
-              </div>
-            )}
+            {/* Pricing info */}
+            <div className="mb-5 pb-5 border-b border-gray-light/50">
+              <span className="block text-sm font-medium text-navy mb-1">
+                {t('pricing')}
+              </span>
+              <PriceDisplay pricing={tourPricing} locale={locale} variant="detail" />
+            </div>
 
             {/* Pricing description (only for group tiers) */}
             {tourPricing.model === 'GROUP_TIERS' && siteSettings.bookingPricingDescription && (

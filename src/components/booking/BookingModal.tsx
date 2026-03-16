@@ -117,7 +117,7 @@ export function BookingModal({
 
         {/* Content */}
         <div className="p-4 pb-8">
-          {/* Pricing table */}
+          {/* Pricing info */}
           {pricing.model === 'GROUP_TIERS' && pricing.groupTiers && pricing.groupTiers.length > 0 && (
             <div className="mb-4 pb-4 border-b border-gray-light/50">
               <span className="block text-sm font-medium text-navy mb-1">
@@ -139,6 +139,41 @@ export function BookingModal({
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+          {pricing.model === 'PER_PERSON' && pricing.perPersonPrice != null && (
+            <div className="mb-4 pb-4 border-b border-gray-light/50">
+              <span className="block text-sm font-medium text-navy mb-1">
+                {locale === 'ru' ? 'Стоимость' : 'Pricing'}
+              </span>
+              <div className="text-sm">
+                <span className="text-2xl font-bold text-gold">{formatPrice(pricing.perPersonPrice, 'EUR')}</span>
+                <span className="text-xs text-gray ml-1">{locale === 'ru' ? 'за человека' : 'per person'}</span>
+              </div>
+            </div>
+          )}
+          {pricing.model === 'FLAT_RATE' && pricing.flatRatePrice != null && (
+            <div className="mb-4 pb-4 border-b border-gray-light/50">
+              <span className="block text-sm font-medium text-navy mb-1">
+                {locale === 'ru' ? 'Стоимость' : 'Pricing'}
+              </span>
+              <div className="text-sm">
+                <span className="text-2xl font-bold text-gold">{formatPrice(pricing.flatRatePrice, 'EUR')}</span>
+                <span className="text-xs text-gray ml-1">{locale === 'ru' ? 'за группу' : 'per group'}</span>
+              </div>
+            </div>
+          )}
+          {pricing.model === 'ON_REQUEST' && (
+            <div className="mb-4 pb-4 border-b border-gray-light/50">
+              <span className="block text-sm font-medium text-navy mb-1">
+                {locale === 'ru' ? 'Стоимость' : 'Pricing'}
+              </span>
+              <span className="text-2xl font-bold text-gold">
+                {locale === 'ru' ? 'По запросу' : 'On Request'}
+              </span>
+              {pricing.onRequestNote && (
+                <p className="text-xs text-gray mt-1">{pricing.onRequestNote}</p>
+              )}
             </div>
           )}
 

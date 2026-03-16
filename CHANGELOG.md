@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.23.3] - 2026-03-16
+
+### Fixed
+- **Pricing info visible for all pricing models** — desktop sidebar and mobile booking modal now show pricing for PER_PERSON (€X per person), FLAT_RATE (€X per group), and ON_REQUEST tours, not only GROUP_TIERS
+
 ## [1.23.2] - 2026-03-16
 
 ### Fixed
