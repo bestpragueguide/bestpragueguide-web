@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.23.6] - 2026-03-16
+
+### Changed
+- **robots.txt improvements** — explicit rules for Googlebot, Yandex, Bingbot; added `/tour-order/` to disallow list; added `host` directive for Yandex
+
 ## [1.23.5] - 2026-03-16
 
 ### Added
