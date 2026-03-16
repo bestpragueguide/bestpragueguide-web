@@ -1,5 +1,27 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, CollectionAfterChangeHook } from 'payload'
 import { simplifiedEditor, fullEditor } from '../lib/editors'
+
+const indexNowAfterChange: CollectionAfterChangeHook = async ({ doc, previousDoc, operation }) => {
+  // Only ping when a tour is published (or updated while published)
+  if (doc.status !== 'published') return doc
+  if (operation === 'update' && previousDoc?.status === doc.status && previousDoc?.slug === doc.slug) {
+    // No status or slug change on update — skip to avoid noise
+    return doc
+  }
+  try {
+    const { pingTour } = await import('../lib/indexnow')
+    const publishedLocales = doc.publishedLocales || []
+    // Build slug map — doc has the current locale's slug, fetch other if needed
+    const slugs: Record<string, string> = {}
+    for (const loc of publishedLocales) {
+      slugs[loc] = doc.slug // Payload returns the locale-specific slug based on request locale
+    }
+    pingTour(doc.id, publishedLocales, slugs).catch(console.error)
+  } catch (err) {
+    console.error('[IndexNow] Tour hook error:', err)
+  }
+  return doc
+}
 
 export const Tours: CollectionConfig = {
   slug: 'tours',
@@ -10,6 +32,9 @@ export const Tours: CollectionConfig = {
   },
   versions: {
     drafts: true,
+  },
+  hooks: {
+    afterChange: [indexNowAfterChange],
   },
   fields: [
     {

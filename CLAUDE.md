@@ -97,6 +97,7 @@ All site content is editable from Payload admin panel:
 | `/api/fix-preferred-times` | GET/POST | Secret | GET: list tours table names + columns. POST: create `tours_preferred_times` + version table |
 | `/api/fix-richtext` | POST | Secret | Convert plain-text richText fields to Lexical JSON in tours + about-page tables |
 | `/api/fix-seo` | POST | Secret | Generate missing metaTitle, metaDescription (from excerpt), set ogImage from heroImage for all tours (both locales) |
+| `/api/indexnow` | POST | Secret | Submit all published URLs (static pages, tours, blog posts) to IndexNow for instant Bing/Yandex indexing |
 | `/api/migrate-richtext` | POST | No | Convert plain text to Lexical richText |
 | `/api/import-tours` | POST | No | Import tours from JSON |
 | `/api/assign-photos` | POST | No | Associate photos to tours |

@@ -1,5 +1,24 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, CollectionAfterChangeHook } from 'payload'
 import { simplifiedEditor } from '../lib/editors'
+
+const indexNowAfterChange: CollectionAfterChangeHook = async ({ doc, previousDoc, operation }) => {
+  if (doc.status !== 'published') return doc
+  if (operation === 'update' && previousDoc?.status === doc.status && previousDoc?.slug === doc.slug) {
+    return doc
+  }
+  try {
+    const { pingBlogPost } = await import('../lib/indexnow')
+    const publishedLocales = doc.publishedLocales || []
+    const slugs: Record<string, string> = {}
+    for (const loc of publishedLocales) {
+      slugs[loc] = doc.slug
+    }
+    pingBlogPost(doc.id, publishedLocales, slugs).catch(console.error)
+  } catch (err) {
+    console.error('[IndexNow] Blog hook error:', err)
+  }
+  return doc
+}
 
 export const BlogPosts: CollectionConfig = {
   slug: 'blog-posts',
@@ -10,6 +29,9 @@ export const BlogPosts: CollectionConfig = {
   },
   versions: {
     drafts: true,
+  },
+  hooks: {
+    afterChange: [indexNowAfterChange],
   },
   fields: [
     {

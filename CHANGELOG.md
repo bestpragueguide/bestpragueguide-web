@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.24.0] - 2026-03-16
+
+### Added
+- **IndexNow integration** — instant search engine indexing for Bing, Yandex, Naver, Seznam
+  - Key file at `/7f0d2ac37b974b7e83c334c5bdbf6a1a.txt`
+  - `src/lib/indexnow.ts` — fire-and-forget client with batch URL submission
+  - `afterChange` hooks on Tours and BlogPosts — auto-ping IndexNow when content is published or slug changes
+  - `POST /api/indexnow` — batch endpoint to submit all published URLs (auth: x-init-secret)
+
 ## [1.23.6] - 2026-03-16
 
 ### Changed
