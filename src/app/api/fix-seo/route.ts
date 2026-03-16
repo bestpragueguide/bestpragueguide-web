@@ -39,6 +39,7 @@ export async function POST(req: Request) {
     for (const locale of locales) {
       const allTours = await payload.find({
         collection: 'tours',
+        where: { publishedLocales: { in: [locale] } },
         limit: 200,
         locale,
         depth: 1,
