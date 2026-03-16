@@ -14,3 +14,12 @@ export function guestsLabel(n: number, locale: string): string {
   if (locale === 'ru') return ruPlural(n, 'гость', 'гостя', 'гостей')
   return n === 1 ? 'guest' : 'guests'
 }
+
+export function hoursLabel(n: number, locale: string): string {
+  if (locale === 'ru') {
+    // Fractional numbers (1.5, 3.5) always take genitive singular in Russian
+    if (n % 1 !== 0) return 'часа'
+    return ruPlural(n, 'час', 'часа', 'часов')
+  }
+  return n === 1 ? 'hour' : 'hours'
+}

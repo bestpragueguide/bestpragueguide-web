@@ -162,7 +162,7 @@ export function TourOrderView() {
       const res = await fetch('/api/tour-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ order }),
+        body: JSON.stringify({ order, locale }),
       })
       const data = await res.json()
       if (data.success) {

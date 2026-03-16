@@ -63,16 +63,19 @@ export async function POST(req: Request) {
     }
 
     const payload = await getPayload({ config })
-    const { order } = await req.json()
+    const { order, locale } = await req.json()
     if (!Array.isArray(order)) {
       return NextResponse.json({ error: 'Invalid order data' }, { status: 400 })
     }
+
+    const validLocale = locale === 'ru' ? 'ru' : 'en'
 
     for (const item of order) {
       await payload.update({
         collection: 'tours',
         id: item.id,
         data: { sortOrder: item.sortOrder },
+        locale: validLocale,
         depth: 0,
       })
     }

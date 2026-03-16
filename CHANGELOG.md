@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.23.1] - 2026-03-16
+
+### Fixed
+- **Tour order save fails in RU locale** — POST `/api/tour-order` now sends the active locale to `payload.update()`, preventing validation errors on RU-only tours that lack EN values for required fields (title, slug, excerpt, description)
+- **Russian duration plural forms** — added `hoursLabel()` to `src/lib/plurals.ts` with correct 3-form Russian pluralization (1 час, 2–4 часа, 5+ часов) and fractional duration support (3.5 часа); tour detail page now uses it instead of a simple singular/plural check
+
 ## [1.23.0] - 2026-03-16
 
 ### Added

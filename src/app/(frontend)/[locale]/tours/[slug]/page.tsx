@@ -13,6 +13,7 @@ import { TourRelated } from '@/components/tours/TourRelated'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import { RichText, defaultJSXConverters, LinkJSXConverter } from '@payloadcms/richtext-lexical/react'
 import { SafeRichText, extractPlainText } from '@/components/shared/SafeRichText'
+import { hoursLabel } from '@/lib/plurals'
 import { resolveRichTextLinks } from '@/lib/richtext'
 import { getSiteSettings } from '@/lib/cms-data'
 import { StickyBookButton } from '@/components/booking/StickyBookButton'
@@ -247,7 +248,7 @@ export default async function TourDetailPage({
             </svg>
             <span className="text-sm">
               {t('duration')}: {tour.duration}{' '}
-              {tour.duration === 1 ? tCommon('hour') : tCommon('hours')}
+              {hoursLabel(tour.duration, locale)}
             </span>
           </div>
 
