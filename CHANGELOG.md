@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.24.1] - 2026-03-16
+
+### Added
+- **Yandex Metrika** — counter `107726868` with SSR, webvisor, clickmap, ecommerce dataLayer, accurate bounce tracking; noscript fallback pixel included
+
 ## [1.24.0] - 2026-03-16
 
 ### Added
