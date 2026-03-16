@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.23.2] - 2026-03-16
+
+### Fixed
+- **Booking pricing description visibility** — pricing description text in desktop sidebar and mobile booking modal now only displays for tours with GROUP_TIERS pricing model, hidden for PER_PERSON, FLAT_RATE, and ON_REQUEST tours
+
 ## [1.23.1] - 2026-03-16
 
 ### Fixed

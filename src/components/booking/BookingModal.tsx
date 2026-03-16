@@ -142,8 +142,8 @@ export function BookingModal({
             </div>
           )}
 
-          {/* Pricing description */}
-          {bookingPricingDescription && (
+          {/* Pricing description (only for group tiers) */}
+          {pricing.model === 'GROUP_TIERS' && bookingPricingDescription && (
             <div className="mb-4 pb-4 border-b border-gray-light/50">
               <p className="text-sm text-navy/70 leading-relaxed">
                 {bookingPricingDescription}

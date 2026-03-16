@@ -355,8 +355,8 @@ export default async function TourDetailPage({
               </div>
             )}
 
-            {/* Pricing description */}
-            {siteSettings.bookingPricingDescription && (
+            {/* Pricing description (only for group tiers) */}
+            {tourPricing.model === 'GROUP_TIERS' && siteSettings.bookingPricingDescription && (
               <div className="mb-5 pb-5 border-b border-gray-light/50">
                 <p className="text-sm text-navy/70 leading-relaxed">
                   {siteSettings.bookingPricingDescription}
