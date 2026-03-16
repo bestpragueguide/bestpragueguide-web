@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { fullEditor } from '../lib/editors'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -28,6 +29,7 @@ export const Pages: CollectionConfig = {
       name: 'content',
       type: 'richText',
       localized: true,
+      editor: fullEditor,
     },
     {
       name: 'seo',

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.22.5] - 2026-03-16
+
+### Fixed
+- **Pages richText toolbar missing** — added `fullEditor` to the `content` field in Pages collection; was using default Lexical editor with no formatting toolbar (headings, lists, blockquotes, etc.)
+
 ## [1.22.4] - 2026-03-15
 
 ### Fixed
