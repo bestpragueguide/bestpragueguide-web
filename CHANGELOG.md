@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.22.8] - 2026-03-16
+
+### Fixed
+- **RichText fixed toolbar missing in admin** — `FixedToolbarFeatureClient` was not in `importMap.js`, so the formatting toolbar never rendered for fields using `fullEditor`; added manually to importMap and set global default editor in `payload.config.ts` to use `FixedToolbarFeature` with full feature set (bold, italic, underline, link, lists, headings, blockquote, horizontal rule)
+
 ## [1.22.7] - 2026-03-16
 
 ### Changed

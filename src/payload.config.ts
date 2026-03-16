@@ -2,7 +2,19 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import { buildConfig } from 'payload'
 import { postgresAdapter } from '@payloadcms/db-postgres'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import {
+  lexicalEditor,
+  BoldFeature,
+  ItalicFeature,
+  UnderlineFeature,
+  LinkFeature,
+  UnorderedListFeature,
+  OrderedListFeature,
+  HeadingFeature,
+  BlockquoteFeature,
+  HorizontalRuleFeature,
+  FixedToolbarFeature,
+} from '@payloadcms/richtext-lexical'
 import sharp from 'sharp'
 import { Tours } from './collections/Tours'
 import { BookingRequests } from './collections/BookingRequests'
@@ -79,7 +91,20 @@ export default buildConfig({
     },
   },
 
-  editor: lexicalEditor(),
+  editor: lexicalEditor({
+    features: () => [
+      BoldFeature(),
+      ItalicFeature(),
+      UnderlineFeature(),
+      LinkFeature(),
+      UnorderedListFeature(),
+      OrderedListFeature(),
+      HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
+      BlockquoteFeature(),
+      HorizontalRuleFeature(),
+      FixedToolbarFeature(),
+    ],
+  }),
 
   db: postgresAdapter({
     pool: {
