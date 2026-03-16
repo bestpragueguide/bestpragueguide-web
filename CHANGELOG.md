@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.23.5] - 2026-03-16
+
+### Added
+- **`/api/fix-seo` endpoint** — generates missing metaTitle (from tour title), metaDescription (from excerpt, truncated to 160 chars), and sets ogImage from heroImage for all tours in both EN and RU locales
+
 ## [1.23.4] - 2026-03-16
 
 ### Fixed
