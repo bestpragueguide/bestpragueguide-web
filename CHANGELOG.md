@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.22.9] - 2026-03-16
+
+### Fixed
+- **Restored booking trust badges** — re-seeded 3 EN trust badges via API, added RU locale fix to `/api/fix-richtext` endpoint to insert missing RU translations for trust badges without triggering Payload's localized array overwrite bug
+
 ## [1.22.8] - 2026-03-16
 
 ### Fixed

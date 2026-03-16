@@ -237,7 +237,36 @@ export async function POST(req: Request) {
       results.push(`about_page_locales:SKIP:${e.message?.substring(0, 80)}`)
     }
 
-    // 9. List relevant tables for diagnostics
+    // 9. Fix missing RU locales for trust badges
+    try {
+      const badgeRows = await drizzle.execute(sql.raw(
+        `SELECT b.id, b._order, bl.text as en_text, bl._locale
+         FROM site_settings_booking_trust_badges b
+         JOIN site_settings_booking_trust_badges_locales bl ON bl._parent_id = b.id AND bl._locale = 'en'
+         WHERE NOT EXISTS (
+           SELECT 1 FROM site_settings_booking_trust_badges_locales bl2
+           WHERE bl2._parent_id = b.id AND bl2._locale = 'ru'
+         )
+         ORDER BY b._order`
+      ))
+      const ruTexts: Record<string, string> = {
+        'No payment until we confirm': 'Оплата только после подтверждения',
+        'Free cancellation 24h before': 'Бесплатная отмена за 24 часа',
+        '100% private — just your group': '100% индивидуально — только ваша группа',
+      }
+      for (const row of (badgeRows.rows || badgeRows) as any[]) {
+        const ruText = ruTexts[row.en_text] || row.en_text
+        await drizzle.execute(sql`
+          INSERT INTO site_settings_booking_trust_badges_locales (text, _locale, _parent_id)
+          VALUES (${ruText}, 'ru', ${row.id})
+        `)
+        results.push(`trust_badge:${row.id}:ru:${ruText}`)
+      }
+    } catch (e: any) {
+      results.push(`trust_badges:SKIP:${e.message?.substring(0, 80)}`)
+    }
+
+    // 10. List relevant tables for diagnostics
     try {
       const tables = await drizzle.execute(sql.raw(
         `SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND (tablename LIKE 'tours%' OR tablename LIKE 'about_page%') ORDER BY tablename`
