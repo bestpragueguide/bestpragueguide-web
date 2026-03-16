@@ -74,7 +74,7 @@ export function TourCard({
           {title}
         </h3>
 
-        <p className="mt-2 text-sm text-gray">{extractPlainText(excerpt)}</p>
+        <p className="mt-2 text-sm text-gray text-justify">{extractPlainText(excerpt)}</p>
 
         <div className="mt-4">
           <PriceDisplay pricing={tourPricing} locale={locale} variant="card" />

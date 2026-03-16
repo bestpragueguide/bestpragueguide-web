@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.22.6] - 2026-03-16
+
+### Changed
+- **Justify text alignment** — tour description, tour card excerpts, and legal pages (privacy, terms, cancellation) now use `text-justify` for cleaner paragraph alignment
+
 ## [1.22.5] - 2026-03-16
 
 ### Fixed

@@ -48,7 +48,7 @@ export default async function TermsPage({
         {page.lastUpdated && (
           <p className="text-sm text-gray mb-8">{page.lastUpdated}</p>
         )}
-        <div className="prose prose-sm max-w-none text-gray">
+        <div className="prose prose-sm max-w-none text-gray text-justify">
           <RichText content={typeof page.content === 'string' ? undefined : page.content as import('@payloadcms/richtext-lexical/lexical').SerializedEditorState} />
         </div>
       </div>

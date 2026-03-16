@@ -269,7 +269,7 @@ export default async function TourDetailPage({
           )}
 
           {/* Description */}
-          <div className="mt-6 prose max-w-none prose-headings:font-heading prose-headings:text-navy prose-p:text-navy/80">
+          <div className="mt-6 prose max-w-none prose-headings:font-heading prose-headings:text-navy prose-p:text-navy/80 text-justify">
             {tour.description && (
               <RichText
                 data={tour.description as SerializedEditorState}
