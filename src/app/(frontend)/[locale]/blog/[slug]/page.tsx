@@ -40,25 +40,38 @@ export async function generateMetadata({
 
     const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'
     const otherLocale = locale === 'en' ? 'ru' : 'en'
+    const publishedLocales = (post as any).publishedLocales || []
+    const hasOtherLocale = publishedLocales.includes(otherLocale)
 
-    // Fetch slug in other locale
+    // Fetch slug in other locale only if post is published there
     let otherSlug = slug
-    try {
-      const altResult = await payload.find({
-        collection: 'blog-posts',
-        where: { id: { equals: post.id } },
-        limit: 1,
-        locale: otherLocale as 'en' | 'ru',
-      })
-      if (altResult.docs[0]?.slug) {
-        otherSlug = altResult.docs[0].slug as string
+    if (hasOtherLocale) {
+      try {
+        const altResult = await payload.find({
+          collection: 'blog-posts',
+          where: { id: { equals: post.id } },
+          limit: 1,
+          locale: otherLocale as 'en' | 'ru',
+        })
+        if (altResult.docs[0]?.slug) {
+          otherSlug = altResult.docs[0].slug as string
+        }
+      } catch {
+        // Use same slug as fallback
       }
-    } catch {
-      // Use same slug as fallback
     }
 
     const enSlug = locale === 'en' ? slug : otherSlug
     const ruSlug = locale === 'ru' ? slug : otherSlug
+
+    // Only include hreflang alternate if post is published in the other locale
+    const languages: Record<string, string> = {
+      [locale]: `${baseUrl}/${locale}/blog/${slug}`,
+    }
+    if (hasOtherLocale) {
+      languages.en = `${baseUrl}/en/blog/${enSlug}`
+      languages.ru = `${baseUrl}/ru/blog/${ruSlug}`
+    }
 
     const fullOgImage = ogImageUrl
       ? (ogImageUrl.startsWith('http') ? ogImageUrl : `${baseUrl}${ogImageUrl}`)
@@ -69,10 +82,7 @@ export async function generateMetadata({
       description: seo?.metaDescription || extractPlainText(post.excerpt),
       alternates: {
         canonical: `${baseUrl}/${locale}/blog/${slug}`,
-        languages: {
-          en: `${baseUrl}/en/blog/${enSlug}`,
-          ru: `${baseUrl}/ru/blog/${ruSlug}`,
-        },
+        languages,
       },
       openGraph: {
         title: seo?.metaTitle || post.title,

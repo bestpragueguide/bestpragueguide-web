@@ -85,26 +85,39 @@ export async function generateMetadata({
 
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'
   const otherLocale = locale === 'en' ? 'ru' : 'en'
+  const publishedLocales = tour.publishedLocales || []
+  const hasOtherLocale = publishedLocales.includes(otherLocale)
 
-  // Fetch slug in the other locale
+  // Fetch slug in the other locale only if tour is published there
   let otherSlug = slug
-  try {
-    const payload = await getPayload({ config })
-    const altResult = await payload.find({
-      collection: 'tours',
-      where: { id: { equals: tour.id } },
-      limit: 1,
-      locale: otherLocale as 'en' | 'ru',
-    })
-    if (altResult.docs[0]?.slug) {
-      otherSlug = altResult.docs[0].slug
+  if (hasOtherLocale) {
+    try {
+      const payload = await getPayload({ config })
+      const altResult = await payload.find({
+        collection: 'tours',
+        where: { id: { equals: tour.id } },
+        limit: 1,
+        locale: otherLocale as 'en' | 'ru',
+      })
+      if (altResult.docs[0]?.slug) {
+        otherSlug = altResult.docs[0].slug
+      }
+    } catch {
+      // Use same slug as fallback
     }
-  } catch {
-    // Use same slug as fallback
   }
 
   const enSlug = locale === 'en' ? slug : otherSlug
   const ruSlug = locale === 'ru' ? slug : otherSlug
+
+  // Only include hreflang alternate if tour is published in the other locale
+  const languages: Record<string, string> = {
+    [locale]: `${baseUrl}/${locale}/${locale === 'ru' ? 'ekskursii' : 'tours'}/${slug}`,
+  }
+  if (hasOtherLocale) {
+    languages.en = `${baseUrl}/en/tours/${enSlug}`
+    languages.ru = `${baseUrl}/ru/ekskursii/${ruSlug}`
+  }
 
   const heroImage = typeof tour.heroImage === 'object' ? tour.heroImage : null
   const ogImageUrl = heroImage?.sizes?.og?.url || heroImage?.sizes?.hero?.url || heroImage?.url || ''
@@ -115,10 +128,7 @@ export async function generateMetadata({
     description,
     alternates: {
       canonical: `${baseUrl}/${locale}/${locale === 'ru' ? 'ekskursii' : 'tours'}/${slug}`,
-      languages: {
-        en: `${baseUrl}/en/tours/${enSlug}`,
-        ru: `${baseUrl}/ru/ekskursii/${ruSlug}`,
-      },
+      languages,
     },
     openGraph: {
       title,

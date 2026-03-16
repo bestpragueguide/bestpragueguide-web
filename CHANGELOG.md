@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.23.4] - 2026-03-16
+
+### Fixed
+- **Language switcher 404 on single-locale tours/blogs** — hreflang alternates are now only emitted when the content is published in the other locale; language switcher redirects to homepage instead of 404 when no translation exists
+
 ## [1.23.3] - 2026-03-16
 
 ### Fixed

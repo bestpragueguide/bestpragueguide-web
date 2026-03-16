@@ -40,7 +40,15 @@ export function LanguageSwitcher({ className = '' }: { className?: string }) {
 
     // 2. Fallback: manually map known path segments
     const segments = pathname.split('/')
-    // segments: ['', 'en', 'tours', ...]
+    // segments: ['', 'en', 'tours', 'slug'] or ['', 'ru', 'ekskursii', 'slug']
+
+    // If on a detail page (has slug segment) and no hreflang exists,
+    // the content isn't available in the other locale — go to homepage
+    if (segments.length >= 4 && segments[3]) {
+      window.location.href = `/${otherLocale}`
+      return
+    }
+
     segments[1] = otherLocale
     if (segments[2] && pathMap[segments[2]]?.[otherLocale]) {
       segments[2] = pathMap[segments[2]][otherLocale]
