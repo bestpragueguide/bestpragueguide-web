@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.24.3] - 2026-03-16
+
+### Security
+- **Fixed undici high vulnerabilities** — overridden `undici` from 7.18.2 to 7.24.4 (resolves WebSocket parser crash, HTTP smuggling, memory DoS, CRLF injection — 6 CVEs)
+- Remaining 16 moderate `next` vulnerabilities blocked by Payload 3.79 peer dep constraint (`<15.5.0`)
+
 ## [1.24.2] - 2026-03-16
 
 ### Added
