@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.25.0] - 2026-03-17
+
+### Changed
+- **Email sending via Google SMTP** — transactional emails now sent via Gmail (info@bestpragueguide.com) as primary, with Resend as fallback; uses nodemailer with App Password auth
+
 ## [1.24.4] - 2026-03-16
 
 ### Added
