@@ -5,6 +5,7 @@ import {
   Container,
   Section,
   Text,
+  Img,
   Hr,
   Preview,
 } from '@react-email/components'
@@ -51,7 +52,13 @@ export function NewRequestAdminEmail({
       <Preview>New booking request {requestRef} — {tourName}</Preview>
       <Body style={body}>
         <Container style={container}>
-          <Text style={logo}>Best Prague Guide — Admin</Text>
+          <Img
+            src="https://bestpragueguide.com/logo-email-en.png"
+            alt="Best Prague Guide"
+            width="340"
+            height="50"
+            style={logoImg}
+          />
           <Hr style={hr} />
 
           <Text style={heading}>New Booking Request</Text>
@@ -140,12 +147,9 @@ const container = {
   maxWidth: '560px',
 }
 
-const logo = {
-  fontSize: '20px',
-  fontWeight: '700' as const,
-  color: '#1A1A1A',
-  textAlign: 'center' as const,
-  margin: '0 0 20px',
+const logoImg = {
+  display: 'block' as const,
+  margin: '0 auto 20px',
 }
 
 const hr = { borderColor: '#E5E5E5', margin: '20px 0' }

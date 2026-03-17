@@ -5,6 +5,7 @@ import {
   Container,
   Section,
   Text,
+  Img,
   Hr,
   Preview,
 } from '@react-email/components'
@@ -40,7 +41,13 @@ export function PaymentReceivedEmail({
       </Preview>
       <Body style={body}>
         <Container style={container}>
-          <Text style={logo}>Best Prague Guide</Text>
+          <Img
+            src={`https://bestpragueguide.com/logo-email-${locale}.png`}
+            alt="Best Prague Guide"
+            width="340"
+            height="50"
+            style={logo}
+          />
           <Hr style={hr} />
 
           <Text style={heading}>
@@ -105,11 +112,8 @@ const container = {
 }
 
 const logo = {
-  fontSize: '24px',
-  fontWeight: '700' as const,
-  color: '#1A1A1A',
-  textAlign: 'center' as const,
-  margin: '0 0 20px',
+  display: 'block' as const,
+  margin: '0 auto 20px',
 }
 
 const hr = { borderColor: '#E5E5E5', margin: '20px 0' }

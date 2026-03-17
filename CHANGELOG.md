@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.25.1] - 2026-03-17
+
+### Changed
+- **Email logo as image** — replaced font-based "Best Prague Guide" text in all 6 email templates with locale-aware logo images (`logo-email-en.png` / `logo-email-ru.png`), ensuring consistent brand rendering across email clients
+
 ## [1.25.0] - 2026-03-17
 
 ### Changed
