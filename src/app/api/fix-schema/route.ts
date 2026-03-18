@@ -17,6 +17,59 @@ export async function POST(req: Request) {
     const results: string[] = []
 
     const queries = [
+      // Email Templates global
+      `CREATE TABLE IF NOT EXISTS email_templates (
+        id serial PRIMARY KEY,
+        received_subject varchar,
+        received_body varchar,
+        received_note varchar,
+        admin_subject varchar,
+        confirmed_subject varchar,
+        confirmed_heading varchar,
+        confirmed_body varchar,
+        confirmed_note varchar,
+        declined_subject varchar,
+        declined_body varchar,
+        declined_note varchar,
+        payment_subject varchar,
+        payment_heading varchar,
+        payment_body varchar,
+        payment_note varchar,
+        reminder_subject varchar,
+        reminder_heading varchar,
+        reminder_body varchar,
+        reminder_note varchar,
+        footer varchar,
+        updated_at timestamp(3) with time zone DEFAULT now() NOT NULL,
+        created_at timestamp(3) with time zone DEFAULT now() NOT NULL
+      )`,
+      `CREATE TABLE IF NOT EXISTS email_templates_locales (
+        received_subject varchar,
+        received_body varchar,
+        received_note varchar,
+        confirmed_subject varchar,
+        confirmed_heading varchar,
+        confirmed_body varchar,
+        confirmed_note varchar,
+        declined_subject varchar,
+        declined_body varchar,
+        declined_note varchar,
+        payment_subject varchar,
+        payment_heading varchar,
+        payment_body varchar,
+        payment_note varchar,
+        reminder_subject varchar,
+        reminder_heading varchar,
+        reminder_body varchar,
+        reminder_note varchar,
+        footer varchar,
+        id serial PRIMARY KEY,
+        _parent_id integer NOT NULL REFERENCES email_templates(id) ON DELETE CASCADE,
+        _locale _locales NOT NULL,
+        UNIQUE(_parent_id, _locale)
+      )`,
+      `CREATE INDEX IF NOT EXISTS email_templates_locales_locale_idx ON email_templates_locales (_locale)`,
+
       // Add bookingPricingDescription column to site_settings_locales (textarea, localized)
       `ALTER TABLE site_settings_locales ADD COLUMN IF NOT EXISTS booking_pricing_description varchar`,
 
