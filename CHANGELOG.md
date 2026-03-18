@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.26.1] - 2026-03-18
+
+### Added
+- **Reply-To on admin emails** — booking and contact admin notification emails now set Reply-To as the customer's email for direct reply from email client
+
+### Fixed
+- **Payment Settings save error** — `payment_config` table was missing in production; added correct Payload-native schema (main table + enum + cash_currencies sub-table) to fix-schema endpoint
+- **Email Templates save error** — `email_templates` schema had localized columns on main table instead of `_locales` table; recreated with exact Payload-native schema (non-localized `admin_subject` on main, all localized fields on `_locales`)
+- **Repository visibility** — bestpragueguide-web set to private; Coolify GitHub App retains deploy access
+
 ## [1.26.0] - 2026-03-18
 
 ### Added

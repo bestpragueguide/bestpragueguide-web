@@ -14,7 +14,7 @@ Bilingual (EN/RU) private tour portal for Prague.
 - `src/app/(frontend)/[locale]/` — Public-facing pages with i18n
 - `src/app/tour-order/` — Standalone admin page (tour drag-and-drop reordering)
 - `src/collections/` — Payload CMS collection configs (Tours, Reviews, Pages, FAQs, BlogPosts, BookingRequests, ContactMessages, Media, Services, TourDates)
-- `src/globals/` — Payload CMS global configs (SiteSettings, Navigation, Homepage, AboutPage, ReviewsPage, PaymentConfig)
+- `src/globals/` — Payload CMS global configs (SiteSettings, Navigation, Homepage, AboutPage, ReviewsPage, PaymentConfig, EmailTemplates)
 - `src/components/` — React components (shared, layout, home, tours, blog, booking, reviews, seo, analytics, admin)
 - `src/emails/` — React Email templates
 - `src/lib/` — Utilities (cms-data, cms-types, constants, icon-map, email, email-validation, telegram, whatsapp, slack, booking, blog, ip, currency, pricing, metadata, analytics, editors, plurals, n8n, stripe, chatwoot, mautic, formbricks, twenty-crm, richtext, rate-limit)
@@ -30,6 +30,7 @@ All site content is editable from Payload admin panel:
 - **Homepage** — hero (tagline, subtitle, CTA, background image, mobile image), trust bar items, guide profile, categories grid, process steps, testimonials heading, FAQ heading, CTA section, SEO
 - **AboutPage** — founder profile (photo, bio, quote), stats, team section, values, gallery, dual CTAs, SEO
 - **ReviewsPage** — page heading, photo gallery, SEO
+- **EmailTemplates** — editable subject, body, and note for all 6 email templates (EN/RU localized); supports {name}, {tour}, {date}, {ref} placeholders; templates fall back to hardcoded defaults when CMS data is empty
 
 ### Collections
 - **Tours** — tour listings organized in tabs (Content, Images, Pricing, SEO) with `relatedTours` relationship for admin-selectable "You May Also Like" section; pricing, gallery, included/excluded items, FAQ, meeting point, difficulty, tags; `publishedLocales` (select hasMany: en/ru) controls visibility per locale; `sortOrder` controls display order; `baseFilter` filters admin list by current locale; `preferredTimes` (select hasMany, 00:00–23:30) — optional custom booking time slots, falls back to default 9:00–18:00
@@ -112,7 +113,9 @@ All site content is editable from Payload admin panel:
 - `src/components/booking/BookingRequestForm.tsx` — form with date, time, guests, guest categories, additional services, customer info; uses `calculatePrice()` for dynamic pricing; accepts optional `preferredTimes` prop (falls back to `TIME_SLOTS` from `booking.ts`)
 - `src/components/booking/StickyBookButton.tsx` — sticky CTA on tour detail pages
 - `src/app/api/booking/request/route.ts` — POST endpoint: validates, saves to BookingRequests, sends notifications
-- Notifications: email (Resend), Telegram, WhatsApp, Slack, n8n — all fire in parallel on new booking
+- Notifications: email (Gmail SMTP primary, Resend fallback), Telegram, WhatsApp, Slack, n8n — all fire in parallel on new booking
+- Admin notification emails set `Reply-To` as customer email for direct reply
+- Email template text (subject, body, note) is CMS-editable via `EmailTemplates` global with hardcoded fallbacks
 - `src/emails/` — React Email templates: request-received (customer), new-request-admin, request-confirmed, request-declined, pre-tour-reminder, payment-received
 - `src/lib/booking.ts` — Zod validation schema, guest max dynamic from `getMaxGuests()`, request ref format: BPG-YYYY-NNNNN
 - `src/lib/rate-limit.ts` — shared rate limiter (Redis sorted sets with in-memory fallback), used by booking and contact API routes and server actions
