@@ -78,11 +78,13 @@ export async function sendEmail({
 export async function sendAdminEmail({
   subject,
   react,
+  replyTo,
 }: {
   subject: string
   react: ReactElement
+  replyTo?: string
 }) {
   const adminEmail =
     process.env.ADMIN_EMAIL || 'uliana@bestpragueguide.com'
-  return sendEmail({ to: adminEmail, subject, react })
+  return sendEmail({ to: adminEmail, subject, react, replyTo })
 }

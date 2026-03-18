@@ -118,6 +118,7 @@ export async function submitBookingRequest(formData: unknown): Promise<BookingAc
       sendAdminEmail({
         subject: resolveTemplate(tpl.adminSubject || 'New booking: {ref} — {tour}', vars),
         react: NewRequestAdminEmail({ ...notificationData, locale: data.locale }),
+        replyTo: data.customerEmail,
       }),
       sendTelegramMessage(formatBookingTelegramMessage(notificationData)),
       sendWhatsAppMessage(formatBookingWhatsAppMessage(notificationData)),

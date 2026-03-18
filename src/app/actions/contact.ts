@@ -260,6 +260,7 @@ export async function submitContactForm(formData: unknown): Promise<ContactActio
           message: data.message,
           ipInfo,
         }),
+        replyTo: data.email,
       }),
       sendEmail({
         to: data.email,

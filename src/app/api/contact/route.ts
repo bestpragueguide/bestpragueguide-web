@@ -272,6 +272,7 @@ export async function POST(request: NextRequest) {
           message: data.message,
           ipInfo,
         }),
+        replyTo: data.email,
       }),
       // Confirmation email to customer
       sendEmail({

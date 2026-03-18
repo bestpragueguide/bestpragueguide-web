@@ -124,6 +124,7 @@ export async function POST(request: NextRequest) {
           ...notificationData,
           locale: data.locale,
         }),
+        replyTo: data.customerEmail,
       }),
       sendTelegramMessage(
         formatBookingTelegramMessage(notificationData),
