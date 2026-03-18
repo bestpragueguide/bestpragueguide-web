@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - **Payment Settings save error** — `payment_config` table was missing in production; added correct Payload-native schema (main table + enum + cash_currencies sub-table) to fix-schema endpoint
 - **Email Templates save error** — `email_templates` schema had localized columns on main table instead of `_locales` table; recreated with exact Payload-native schema (non-localized `admin_subject` on main, all localized fields on `_locales`)
-- **Repository visibility** — bestpragueguide-web set to private; Coolify GitHub App retains deploy access
+- **CSP blocks Umami script** — added `https://analytics.bestpragueguide.com` to Content-Security-Policy `script-src` directive; was present in `connect-src` but missing from `script-src`
 
 ## [1.26.0] - 2026-03-18
 
