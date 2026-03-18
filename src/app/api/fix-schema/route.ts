@@ -70,6 +70,27 @@ export async function POST(req: Request) {
       )`,
       `CREATE INDEX IF NOT EXISTS email_templates_locales_locale_idx ON email_templates_locales (_locale)`,
 
+      // Payment Config global
+      `CREATE TABLE IF NOT EXISTS payment_config (
+        id serial PRIMARY KEY,
+        deposit_enabled boolean DEFAULT false,
+        deposit_percent numeric DEFAULT 30,
+        payment_deadline_days numeric DEFAULT 3,
+        exchange_rates_usd numeric DEFAULT 1.08,
+        exchange_rates_czk numeric DEFAULT 25.2,
+        updated_at timestamp(3) with time zone DEFAULT now() NOT NULL,
+        created_at timestamp(3) with time zone DEFAULT now() NOT NULL
+      )`,
+      `DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'enum_payment_config_cash_currencies') THEN CREATE TYPE enum_payment_config_cash_currencies AS ENUM ('EUR', 'USD', 'CZK'); END IF; END $$`,
+      `CREATE TABLE IF NOT EXISTS payment_config_cash_currencies (
+        "order" integer NOT NULL,
+        parent_id integer NOT NULL REFERENCES payment_config(id) ON DELETE CASCADE,
+        value enum_payment_config_cash_currencies,
+        id serial PRIMARY KEY
+      )`,
+      `CREATE INDEX IF NOT EXISTS payment_config_cash_currencies_order_idx ON payment_config_cash_currencies ("order")`,
+      `CREATE INDEX IF NOT EXISTS payment_config_cash_currencies_parent_idx ON payment_config_cash_currencies (parent_id)`,
+
       // Add bookingPricingDescription column to site_settings_locales (textarea, localized)
       `ALTER TABLE site_settings_locales ADD COLUMN IF NOT EXISTS booking_pricing_description varchar`,
 
