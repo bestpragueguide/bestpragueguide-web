@@ -129,7 +129,7 @@ function homepageFallback(locale: string): HomepageData {
     processHeading: locale === 'ru' ? 'Как это работает' : 'How It Works',
     processSteps: [
       { icon: 'form', title: locale === 'ru' ? 'Отправьте запрос' : 'Submit a Request', description: locale === 'ru' ? 'Выберите экскурсию и укажите дату и размер группы.' : 'Choose a tour and tell us your preferred date and group size.' },
-      { icon: 'check', title: locale === 'ru' ? 'Мы подтвердим' : 'We Confirm', description: locale === 'ru' ? 'Проверим доступность и подтвердим в течение 2 часов.' : 'We check availability and confirm within 2 hours.' },
+      { icon: 'check', title: locale === 'ru' ? 'Мы подтвердим' : 'We Confirm', description: locale === 'ru' ? 'Проверим доступность и подтвердим в ближайшее время.' : 'We check availability and confirm shortly.' },
       { icon: 'card', title: locale === 'ru' ? 'Оплатите онлайн' : 'Pay Securely', description: locale === 'ru' ? 'После подтверждения оплатите по безопасной ссылке.' : 'After confirmation, pay online via a secure payment link.' },
       { icon: 'pin', title: locale === 'ru' ? 'Наслаждайтесь экскурсией' : 'Enjoy Your Tour', description: locale === 'ru' ? 'Встретьтесь с гидом и откройте Прагу как местный житель.' : 'Meet your guide and discover Prague like a local.' },
     ],
@@ -415,4 +415,49 @@ export function getFocalPointStyle(media: any): string {
   const x = media.focalX ?? 50
   const y = media.focalY ?? 50
   return `${x}% ${y}%`
+}
+
+// ─── Email Templates ────────────────────────────────────────────
+
+export interface EmailTemplatesData {
+  receivedSubject?: string
+  receivedBody?: string
+  receivedNote?: string
+  adminSubject?: string
+  confirmedSubject?: string
+  confirmedHeading?: string
+  confirmedBody?: string
+  confirmedNote?: string
+  declinedSubject?: string
+  declinedBody?: string
+  declinedNote?: string
+  paymentSubject?: string
+  paymentHeading?: string
+  paymentBody?: string
+  paymentNote?: string
+  reminderSubject?: string
+  reminderHeading?: string
+  reminderBody?: string
+  reminderNote?: string
+  footer?: string
+}
+
+const emailTemplatesFallback: EmailTemplatesData = {}
+
+export async function getEmailTemplates(locale: string): Promise<EmailTemplatesData> {
+  try {
+    const payload = await getPayload({ config })
+    const data = await payload.findGlobal({
+      slug: 'email-templates',
+      locale: locale as 'en' | 'ru',
+    })
+    return data as unknown as EmailTemplatesData
+  } catch {
+    return emailTemplatesFallback
+  }
+}
+
+/** Replace {placeholder} tokens in a template string */
+export function resolveTemplate(template: string, vars: Record<string, string>): string {
+  return template.replace(/\{(\w+)\}/g, (match, key) => vars[key] ?? match)
 }

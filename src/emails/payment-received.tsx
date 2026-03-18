@@ -17,6 +17,10 @@ interface PaymentReceivedEmailProps {
   meetingPoint?: string
   requestRef: string
   locale: 'en' | 'ru'
+  cmsHeading?: string
+  cmsBody?: string
+  cmsNote?: string
+  cmsFooter?: string
 }
 
 export function PaymentReceivedEmail({
@@ -27,6 +31,10 @@ export function PaymentReceivedEmail({
   meetingPoint,
   requestRef,
   locale,
+  cmsHeading,
+  cmsBody,
+  cmsNote,
+  cmsFooter,
 }: PaymentReceivedEmailProps) {
   const isRu = locale === 'ru'
 
@@ -44,15 +52,15 @@ export function PaymentReceivedEmail({
           <Hr style={hr} />
 
           <Text style={heading}>
-            {isRu
+            {cmsHeading || (isRu
               ? `Оплата получена, ${customerName}!`
-              : `Payment received, ${customerName}!`}
+              : `Payment received, ${customerName}!`)}
           </Text>
 
           <Text style={text}>
-            {isRu
+            {cmsBody || (isRu
               ? 'Всё готово! Вот детали вашей экскурсии:'
-              : "You're all set! Here are your tour details:"}
+              : "You're all set! Here are your tour details:")}
           </Text>
 
           <Section style={infoBox}>
@@ -78,14 +86,14 @@ export function PaymentReceivedEmail({
           </Section>
 
           <Text style={text}>
-            {isRu
+            {cmsNote || (isRu
               ? 'Ваш гид свяжется с вами за день до экскурсии с финальными деталями.'
-              : 'Your guide will contact you the day before the tour with final details.'}
+              : 'Your guide will contact you the day before the tour with final details.')}
           </Text>
 
           <Hr style={hr} />
-          <Text style={footer}>
-            Best Prague Guide | info@bestpragueguide.com
+          <Text style={footerStyle}>
+            {cmsFooter || 'Best Prague Guide | info@bestpragueguide.com'}
           </Text>
         </Container>
       </Body>
@@ -142,7 +150,7 @@ const infoText = {
   margin: '0 0 8px',
 }
 
-const footer = {
+const footerStyle = {
   fontSize: '12px',
   color: '#777777',
   textAlign: 'center' as const,

@@ -14,6 +14,9 @@ interface RequestDeclinedEmailProps {
   preferredDate: string
   requestRef: string
   locale: 'en' | 'ru'
+  cmsBody?: string
+  cmsNote?: string
+  cmsFooter?: string
 }
 
 export function RequestDeclinedEmail({
@@ -22,6 +25,9 @@ export function RequestDeclinedEmail({
   preferredDate,
   requestRef,
   locale,
+  cmsBody,
+  cmsNote,
+  cmsFooter,
 }: RequestDeclinedEmailProps) {
   const isRu = locale === 'ru'
 
@@ -45,20 +51,20 @@ export function RequestDeclinedEmail({
           </Text>
 
           <Text style={text}>
-            {isRu
+            {cmsBody || (isRu
               ? `К сожалению, выбранная вами дата (${preferredDate}) для экскурсии "${tourName}" недоступна.`
-              : `Unfortunately, your requested date (${preferredDate}) for the "${tourName}" tour is not available.`}
+              : `Unfortunately, your requested date (${preferredDate}) for the "${tourName}" tour is not available.`)}
           </Text>
 
           <Text style={text}>
-            {isRu
+            {cmsNote || (isRu
               ? 'Мы будем рады предложить альтернативную дату. Пожалуйста, свяжитесь с нами через WhatsApp, Telegram или email, чтобы обсудить варианты.'
-              : "We'd be happy to suggest an alternative date. Please contact us via WhatsApp, Telegram, or email to discuss options."}
+              : "We'd be happy to suggest an alternative date. Please contact us via WhatsApp, Telegram, or email to discuss options.")}
           </Text>
 
           <Hr style={hr} />
-          <Text style={footer}>
-            Best Prague Guide | info@bestpragueguide.com
+          <Text style={footerStyle}>
+            {cmsFooter || 'Best Prague Guide | info@bestpragueguide.com'}
           </Text>
         </Container>
       </Body>
@@ -101,7 +107,7 @@ const text = {
   margin: '0 0 16px',
 }
 
-const footer = {
+const footerStyle = {
   fontSize: '12px',
   color: '#777777',
   textAlign: 'center' as const,

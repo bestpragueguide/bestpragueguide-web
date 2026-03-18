@@ -18,6 +18,10 @@ interface RequestConfirmedEmailProps {
   requestRef: string
   paymentLink?: string
   locale: 'en' | 'ru'
+  cmsHeading?: string
+  cmsBody?: string
+  cmsNote?: string
+  cmsFooter?: string
 }
 
 export function RequestConfirmedEmail({
@@ -28,6 +32,10 @@ export function RequestConfirmedEmail({
   requestRef,
   paymentLink,
   locale,
+  cmsHeading,
+  cmsBody,
+  cmsNote,
+  cmsFooter,
 }: RequestConfirmedEmailProps) {
   const isRu = locale === 'ru'
 
@@ -43,15 +51,15 @@ export function RequestConfirmedEmail({
           <Hr style={hr} />
 
           <Text style={heading}>
-            {isRu
+            {cmsHeading || (isRu
               ? `Подтверждено, ${customerName}!`
-              : `Confirmed, ${customerName}!`}
+              : `Confirmed, ${customerName}!`)}
           </Text>
 
           <Text style={text}>
-            {isRu
+            {cmsBody || (isRu
               ? `Ваш запрос на экскурсию "${tourName}" подтверждён.`
-              : `Your request for the "${tourName}" tour has been confirmed.`}
+              : `Your request for the "${tourName}" tour has been confirmed.`)}
           </Text>
 
           <Section style={infoBox}>
@@ -79,14 +87,14 @@ export function RequestConfirmedEmail({
           )}
 
           <Text style={text}>
-            {isRu
+            {cmsNote || (isRu
               ? 'Детали места встречи и контакт гида будут отправлены после оплаты.'
-              : 'Meeting point details and guide contact will be sent after payment.'}
+              : 'Meeting point details and guide contact will be sent after payment.')}
           </Text>
 
           <Hr style={hr} />
-          <Text style={footer}>
-            Best Prague Guide | info@bestpragueguide.com
+          <Text style={footerStyle}>
+            {cmsFooter || 'Best Prague Guide | info@bestpragueguide.com'}
           </Text>
         </Container>
       </Body>
@@ -153,7 +161,7 @@ const payButton = {
   textDecoration: 'none',
 }
 
-const footer = {
+const footerStyle = {
   fontSize: '12px',
   color: '#777777',
   textAlign: 'center' as const,

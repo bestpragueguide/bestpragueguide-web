@@ -18,6 +18,7 @@ import { sendSlackMessage, formatBookingSlackMessage } from '@/lib/slack'
 import { n8n } from '@/lib/n8n'
 import { isRateLimited } from '@/lib/rate-limit'
 import { isDisposableEmail } from '@/lib/email-validation'
+import { getEmailTemplates, resolveTemplate } from '@/lib/cms-data'
 import { z } from 'zod'
 
 export async function POST(request: NextRequest) {
@@ -98,23 +99,27 @@ export async function POST(request: NextRequest) {
       isp: ipInfo.org || '',
     }
 
+    // Fetch CMS email templates
+    const tpl = await getEmailTemplates(data.locale)
+    const vars = { name: data.customerName, tour: data.tourName, date: data.preferredDate, ref: requestRef }
+
     const notificationPromises = [
       sendEmail({
         to: data.customerEmail,
-        subject:
-          data.locale === 'ru'
-            ? `Запрос получен — ${requestRef}`
-            : `Request received — ${requestRef}`,
+        subject: resolveTemplate(tpl.receivedSubject || (data.locale === 'ru' ? 'Запрос получен — {ref}' : 'Request received — {ref}'), vars),
         react: RequestReceivedEmail({
           customerName: data.customerName,
           tourName: data.tourName,
           preferredDate: data.preferredDate,
           requestRef,
           locale: data.locale,
+          cmsBody: tpl.receivedBody ? resolveTemplate(tpl.receivedBody, vars) : undefined,
+          cmsNote: tpl.receivedNote ? resolveTemplate(tpl.receivedNote, vars) : undefined,
+          cmsFooter: tpl.footer || undefined,
         }),
       }),
       sendAdminEmail({
-        subject: `New booking: ${requestRef} — ${data.tourName}`,
+        subject: resolveTemplate(tpl.adminSubject || 'New booking: {ref} — {tour}', vars),
         react: NewRequestAdminEmail({
           ...notificationData,
           locale: data.locale,

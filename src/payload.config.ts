@@ -32,6 +32,7 @@ import { Homepage } from './globals/Homepage'
 import { AboutPage } from './globals/AboutPage'
 import { ReviewsPage } from './globals/ReviewsPage'
 import { PaymentConfig } from './globals/PaymentConfig'
+import { EmailTemplates } from './globals/EmailTemplates'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -141,7 +142,7 @@ export default buildConfig({
     TourDates,
   ],
 
-  globals: [SiteSettings, Navigation, Homepage, AboutPage, ReviewsPage, PaymentConfig],
+  globals: [SiteSettings, Navigation, Homepage, AboutPage, ReviewsPage, PaymentConfig, EmailTemplates],
 
   plugins: [],
 

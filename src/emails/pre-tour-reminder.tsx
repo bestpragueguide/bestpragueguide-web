@@ -17,6 +17,10 @@ interface PreTourReminderEmailProps {
   meetingPoint?: string
   requestRef: string
   locale: 'en' | 'ru'
+  cmsHeading?: string
+  cmsBody?: string
+  cmsNote?: string
+  cmsFooter?: string
 }
 
 export function PreTourReminderEmail({
@@ -27,6 +31,10 @@ export function PreTourReminderEmail({
   meetingPoint,
   requestRef,
   locale,
+  cmsHeading,
+  cmsBody,
+  cmsNote,
+  cmsFooter,
 }: PreTourReminderEmailProps) {
   const isRu = locale === 'ru'
 
@@ -44,15 +52,15 @@ export function PreTourReminderEmail({
           <Hr style={hr} />
 
           <Text style={heading}>
-            {isRu
+            {cmsHeading || (isRu
               ? `Напоминание, ${customerName}!`
-              : `Reminder, ${customerName}!`}
+              : `Reminder, ${customerName}!`)}
           </Text>
 
           <Text style={text}>
-            {isRu
+            {cmsBody || (isRu
               ? `Ваша экскурсия "${tourName}" запланирована на завтра!`
-              : `Your "${tourName}" tour is scheduled for tomorrow!`}
+              : `Your "${tourName}" tour is scheduled for tomorrow!`)}
           </Text>
 
           <Section style={infoBox}>
@@ -77,14 +85,14 @@ export function PreTourReminderEmail({
           </Section>
 
           <Text style={text}>
-            {isRu
+            {cmsNote || (isRu
               ? 'Советы: наденьте удобную обувь и возьмите воду. При вопросах — свяжитесь с нами.'
-              : 'Tips: wear comfortable shoes and bring water. Contact us if you have any questions.'}
+              : 'Tips: wear comfortable shoes and bring water. Contact us if you have any questions.')}
           </Text>
 
           <Hr style={hr} />
-          <Text style={footer}>
-            Best Prague Guide | info@bestpragueguide.com
+          <Text style={footerStyle}>
+            {cmsFooter || 'Best Prague Guide | info@bestpragueguide.com'}
           </Text>
         </Container>
       </Body>
@@ -141,7 +149,7 @@ const infoText = {
   margin: '0 0 8px',
 }
 
-const footer = {
+const footerStyle = {
   fontSize: '12px',
   color: '#777777',
   textAlign: 'center' as const,

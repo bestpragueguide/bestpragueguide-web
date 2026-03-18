@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.26.0] - 2026-03-18
+
+### Added
+- **CMS-managed email templates** — new `EmailTemplates` global in Payload admin (Settings group) with 7 tabs: Booking Received, Admin Notification, Booking Confirmed, Booking Declined, Payment Received, Pre-Tour Reminder, Footer. Each template has editable subject, body, and note fields with EN/RU localization and {name}, {tour}, {date}, {ref} placeholder support. All 6 email templates accept CMS overrides with hardcoded fallbacks
+
+### Changed
+- **Remove "2 hours" commitment** — replaced "within 2 hours" with "shortly" / "в ближайшее время" in booking success message, FAQ answer, email template, and process steps
+
 ## [1.25.2] - 2026-03-18
 
 ### Changed

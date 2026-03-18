@@ -1,6 +1,7 @@
 import type { CollectionBeforeChangeHook, CollectionAfterChangeHook } from 'payload'
 import { generateRequestRef } from '@/lib/booking'
 import { sendEmail } from '@/lib/email'
+import { getEmailTemplates, resolveTemplate } from '@/lib/cms-data'
 import { RequestConfirmedEmail } from '@/emails/request-confirmed'
 import { RequestDeclinedEmail } from '@/emails/request-declined'
 import { PaymentReceivedEmail } from '@/emails/payment-received'
@@ -62,14 +63,15 @@ export const afterChangeHook: CollectionAfterChangeHook = async ({
     // Skip
   }
 
+  // Fetch CMS email templates
+  const tpl = await getEmailTemplates(locale)
+  const vars = { name: doc.customerName, tour: tourName, date: doc.preferredDate, ref: doc.requestRef, time: doc.preferredTime }
+
   // Status transitions → send emails
   if (oldStatus === 'new' && newStatus === 'confirmed') {
     await sendEmail({
       to: doc.customerEmail,
-      subject:
-        locale === 'ru'
-          ? `Подтверждено — ${tourName}`
-          : `Confirmed — ${tourName}`,
+      subject: resolveTemplate(tpl.confirmedSubject || (locale === 'ru' ? 'Подтверждено — {tour}' : 'Confirmed — {tour}'), vars),
       react: RequestConfirmedEmail({
         customerName: doc.customerName,
         tourName,
@@ -78,6 +80,10 @@ export const afterChangeHook: CollectionAfterChangeHook = async ({
         requestRef: doc.requestRef,
         paymentLink: doc.stripePaymentLink || undefined,
         locale,
+        cmsHeading: tpl.confirmedHeading ? resolveTemplate(tpl.confirmedHeading, vars) : undefined,
+        cmsBody: tpl.confirmedBody ? resolveTemplate(tpl.confirmedBody, vars) : undefined,
+        cmsNote: tpl.confirmedNote ? resolveTemplate(tpl.confirmedNote, vars) : undefined,
+        cmsFooter: tpl.footer || undefined,
       }),
     })
   }
@@ -85,16 +91,16 @@ export const afterChangeHook: CollectionAfterChangeHook = async ({
   if (oldStatus === 'new' && newStatus === 'declined') {
     await sendEmail({
       to: doc.customerEmail,
-      subject:
-        locale === 'ru'
-          ? `Обновление запроса — ${doc.requestRef}`
-          : `Request update — ${doc.requestRef}`,
+      subject: resolveTemplate(tpl.declinedSubject || (locale === 'ru' ? 'Обновление запроса — {ref}' : 'Request update — {ref}'), vars),
       react: RequestDeclinedEmail({
         customerName: doc.customerName,
         tourName,
         preferredDate: doc.preferredDate,
         requestRef: doc.requestRef,
         locale,
+        cmsBody: tpl.declinedBody ? resolveTemplate(tpl.declinedBody, vars) : undefined,
+        cmsNote: tpl.declinedNote ? resolveTemplate(tpl.declinedNote, vars) : undefined,
+        cmsFooter: tpl.footer || undefined,
       }),
     })
   }
@@ -105,10 +111,7 @@ export const afterChangeHook: CollectionAfterChangeHook = async ({
   ) {
     await sendEmail({
       to: doc.customerEmail,
-      subject:
-        locale === 'ru'
-          ? `Оплата получена — ${tourName}`
-          : `Payment received — ${tourName}`,
+      subject: resolveTemplate(tpl.paymentSubject || (locale === 'ru' ? 'Оплата получена — {tour}' : 'Payment received — {tour}'), vars),
       react: PaymentReceivedEmail({
         customerName: doc.customerName,
         tourName,
@@ -117,6 +120,10 @@ export const afterChangeHook: CollectionAfterChangeHook = async ({
         meetingPoint,
         requestRef: doc.requestRef,
         locale,
+        cmsHeading: tpl.paymentHeading ? resolveTemplate(tpl.paymentHeading, vars) : undefined,
+        cmsBody: tpl.paymentBody ? resolveTemplate(tpl.paymentBody, vars) : undefined,
+        cmsNote: tpl.paymentNote ? resolveTemplate(tpl.paymentNote, vars) : undefined,
+        cmsFooter: tpl.footer || undefined,
       }),
     })
   }

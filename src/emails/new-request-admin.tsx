@@ -26,6 +26,7 @@ interface NewRequestAdminEmailProps {
   ip?: string
   location?: string
   isp?: string
+  cmsFooter?: string
 }
 
 export function NewRequestAdminEmail({
@@ -44,6 +45,7 @@ export function NewRequestAdminEmail({
   ip,
   location,
   isp,
+  cmsFooter,
 }: NewRequestAdminEmailProps) {
   return (
     <Html lang="en">

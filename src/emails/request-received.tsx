@@ -15,6 +15,9 @@ interface RequestReceivedEmailProps {
   preferredDate: string
   requestRef: string
   locale: 'en' | 'ru'
+  cmsBody?: string
+  cmsNote?: string
+  cmsFooter?: string
 }
 
 export function RequestReceivedEmail({
@@ -23,6 +26,9 @@ export function RequestReceivedEmail({
   preferredDate,
   requestRef,
   locale,
+  cmsBody,
+  cmsNote,
+  cmsFooter,
 }: RequestReceivedEmailProps) {
   const isRu = locale === 'ru'
 
@@ -46,9 +52,10 @@ export function RequestReceivedEmail({
           </Text>
 
           <Text style={text}>
-            {isRu
-              ? `Спасибо за ваш запрос на экскурсию "${tourName}" на ${preferredDate}. Мы получили ваш запрос и подтвердим его в течение 2 часов.`
-              : `Thank you for your request for the "${tourName}" tour on ${preferredDate}. We received your request and will confirm within 2 hours.`}
+            {cmsBody
+              || (isRu
+                ? `Спасибо за ваш запрос на экскурсию "${tourName}" на ${preferredDate}. Мы получили ваш запрос и свяжемся с вами в ближайшее время.`
+                : `Thank you for your request for the "${tourName}" tour on ${preferredDate}. We received your request and will get back to you shortly.`)}
           </Text>
 
           <Section style={infoBox}>
@@ -59,14 +66,15 @@ export function RequestReceivedEmail({
           </Section>
 
           <Text style={text}>
-            {isRu
-              ? 'Если у вас есть вопросы, свяжитесь с нами через WhatsApp, Telegram или email.'
-              : 'If you have any questions, contact us via WhatsApp, Telegram, or email.'}
+            {cmsNote
+              || (isRu
+                ? 'Если у вас есть вопросы, свяжитесь с нами через WhatsApp, Telegram или email.'
+                : 'If you have any questions, contact us via WhatsApp, Telegram, or email.')}
           </Text>
 
           <Hr style={hr} />
-          <Text style={footer}>
-            Best Prague Guide | info@bestpragueguide.com
+          <Text style={footerStyle}>
+            {cmsFooter || 'Best Prague Guide | info@bestpragueguide.com'}
           </Text>
         </Container>
       </Body>
@@ -126,7 +134,7 @@ const infoText = {
   margin: '0',
 }
 
-const footer = {
+const footerStyle = {
   fontSize: '12px',
   color: '#777777',
   textAlign: 'center' as const,
