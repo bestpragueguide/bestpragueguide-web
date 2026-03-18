@@ -5,7 +5,6 @@ import {
   Container,
   Section,
   Text,
-  Img,
   Button,
   Hr,
   Preview,
@@ -40,13 +39,7 @@ export function RequestConfirmedEmail({
       </Preview>
       <Body style={body}>
         <Container style={container}>
-          <Img
-            src={`https://bestpragueguide.com/logo-email-${locale}.png`}
-            alt="Best Prague Guide"
-            width="340"
-            height="50"
-            style={logo}
-          />
+          <Text style={logo}>Best Prague Guide</Text>
           <Hr style={hr} />
 
           <Text style={heading}>
@@ -113,8 +106,11 @@ const container = {
 }
 
 const logo = {
-  display: 'block' as const,
-  margin: '0 auto 20px',
+  fontSize: '24px',
+  fontWeight: '700' as const,
+  color: '#1A1A1A',
+  textAlign: 'center' as const,
+  margin: '0 0 20px',
 }
 
 const hr = { borderColor: '#E5E5E5', margin: '20px 0' }

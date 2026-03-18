@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.25.2] - 2026-03-18
+
+### Changed
+- **Revert email logo to fonts** — reverted image-based logos back to web-safe font rendering (Georgia/Times New Roman) in all 6 email templates; images (external URL or base64) get blocked by Outlook until sender is trusted, fonts render immediately
+
 ## [1.25.1] - 2026-03-17
 
 ### Changed
