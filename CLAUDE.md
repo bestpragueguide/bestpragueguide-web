@@ -97,6 +97,7 @@ All site content is editable from Payload admin panel:
 | `/api/fix-tier-maxguests` | POST | Secret | Fix pricing tier maxGuests using SQL LEAD() window function |
 | `/api/fix-preferred-times` | GET/POST | Secret | GET: list tours table names + columns. POST: create `tours_preferred_times` + version table |
 | `/api/fix-richtext` | POST | Secret | Convert plain-text richText fields to Lexical JSON in tours + about-page tables |
+| `/api/fix-links` | POST | Secret | Set `newTab: true` on all existing link nodes in richText columns across all collections |
 | `/api/fix-seo` | POST | Secret | Generate missing metaTitle, metaDescription (from excerpt), set ogImage from heroImage for all tours (both locales) |
 | `/api/indexnow` | POST | Secret | Submit all published URLs (static pages, tours, blog posts) to IndexNow for instant Bing/Yandex indexing |
 | `/api/migrate-richtext` | POST | No | Convert plain text to Lexical richText |
@@ -170,7 +171,8 @@ All site content is editable from Payload admin panel:
 - All `<img>` tags use localized alt text from Media collection
 
 ## Rich Text
-- Two editor configs in `src/lib/editors.ts`: `simplifiedEditor` and `fullEditor`
+- Two editor configs in `src/lib/editors.ts`: `simplifiedEditor` and `fullEditor`; both use `newTabLinkFeature()` helper that defaults "Open in new tab" to checked
+- Global editor in `payload.config.ts` also defaults links to open in new tab
 - Most content fields use richText (Lexical) — see design doc for full field list
 - `SafeRichText` component handles both plain strings (legacy, split by newlines into `<p>` tags) and Lexical JSON (custom renderer, not Payload's); resolves internal links for tours, blog-posts, and pages collections
 - `extractPlainText(data)` helper extracts plain text from richText fields (for meta tags, listings, schema.org)

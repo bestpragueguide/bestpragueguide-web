@@ -1,3 +1,4 @@
+import type { Field } from 'payload'
 import {
   lexicalEditor,
   BoldFeature,
@@ -12,12 +13,22 @@ import {
   FixedToolbarFeature,
 } from '@payloadcms/richtext-lexical'
 
+const newTabLinkFeature = () =>
+  LinkFeature({
+    fields: ({ defaultFields }) =>
+      defaultFields.map((field) =>
+        'name' in field && field.name === 'newTab'
+          ? ({ ...field, defaultValue: true } as Field)
+          : field,
+      ),
+  })
+
 export const simplifiedEditor = lexicalEditor({
   features: () => [
     BoldFeature(),
     ItalicFeature(),
     UnderlineFeature(),
-    LinkFeature(),
+    newTabLinkFeature(),
     UnorderedListFeature(),
     FixedToolbarFeature(),
   ],
@@ -28,7 +39,7 @@ export const fullEditor = lexicalEditor({
     BoldFeature(),
     ItalicFeature(),
     UnderlineFeature(),
-    LinkFeature(),
+    newTabLinkFeature(),
     UnorderedListFeature(),
     OrderedListFeature(),
     HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),

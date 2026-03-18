@@ -1,5 +1,6 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
+import type { Field } from 'payload'
 import { buildConfig } from 'payload'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import {
@@ -97,7 +98,14 @@ export default buildConfig({
       BoldFeature(),
       ItalicFeature(),
       UnderlineFeature(),
-      LinkFeature(),
+      LinkFeature({
+        fields: ({ defaultFields }) =>
+          defaultFields.map((field) =>
+            'name' in field && field.name === 'newTab'
+              ? ({ ...field, defaultValue: true } as Field)
+              : field,
+          ),
+      }),
       UnorderedListFeature(),
       OrderedListFeature(),
       HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),

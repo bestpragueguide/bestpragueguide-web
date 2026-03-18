@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.26.2] - 2026-03-18
+
+### Changed
+- **Links open in new tab by default** — all Lexical richText editors (simplified, full, global) now pre-check "Open in new tab" when adding links; applies to blog posts, tours, pages, FAQs, and all CMS content
+
+### Added
+- **Fix links endpoint** — `POST /api/fix-links` (auth: `x-init-secret`) walks all richText columns across all collections and sets `newTab: true` on existing link nodes that were missing it
+
 ## [1.26.1] - 2026-03-18
 
 ### Added
