@@ -17,76 +17,62 @@ export async function POST(req: Request) {
     const results: string[] = []
 
     const queries = [
-      // Email Templates global
-      `CREATE TABLE IF NOT EXISTS email_templates (
+      // Email Templates global — drop old (wrong schema) and recreate
+      `DROP TABLE IF EXISTS email_templates_locales CASCADE`,
+      `DROP TABLE IF EXISTS email_templates CASCADE`,
+      `CREATE TABLE email_templates (
         id serial PRIMARY KEY,
-        received_subject varchar,
-        received_body varchar,
-        received_note varchar,
-        admin_subject varchar,
-        confirmed_subject varchar,
-        confirmed_heading varchar,
-        confirmed_body varchar,
-        confirmed_note varchar,
-        declined_subject varchar,
-        declined_body varchar,
-        declined_note varchar,
-        payment_subject varchar,
-        payment_heading varchar,
-        payment_body varchar,
-        payment_note varchar,
-        reminder_subject varchar,
-        reminder_heading varchar,
-        reminder_body varchar,
-        reminder_note varchar,
-        footer varchar,
-        updated_at timestamp(3) with time zone DEFAULT now() NOT NULL,
-        created_at timestamp(3) with time zone DEFAULT now() NOT NULL
+        admin_subject varchar DEFAULT 'New booking: {ref} — {tour}',
+        updated_at timestamp(3) with time zone,
+        created_at timestamp(3) with time zone
       )`,
-      `CREATE TABLE IF NOT EXISTS email_templates_locales (
-        received_subject varchar,
-        received_body varchar,
-        received_note varchar,
-        confirmed_subject varchar,
-        confirmed_heading varchar,
-        confirmed_body varchar,
-        confirmed_note varchar,
-        declined_subject varchar,
-        declined_body varchar,
-        declined_note varchar,
-        payment_subject varchar,
-        payment_heading varchar,
-        payment_body varchar,
-        payment_note varchar,
-        reminder_subject varchar,
-        reminder_heading varchar,
-        reminder_body varchar,
-        reminder_note varchar,
-        footer varchar,
+      `CREATE TABLE email_templates_locales (
+        received_subject varchar DEFAULT 'Request received — {ref}',
+        received_body varchar DEFAULT 'Thank you for your request for the "{tour}" tour on {date}. We received your request and will get back to you shortly.',
+        received_note varchar DEFAULT 'If you have any questions, contact us via WhatsApp, Telegram, or email.',
+        confirmed_subject varchar DEFAULT 'Confirmed — {tour}',
+        confirmed_heading varchar DEFAULT 'Confirmed, {name}!',
+        confirmed_body varchar DEFAULT 'Your request for the "{tour}" tour has been confirmed.',
+        confirmed_note varchar DEFAULT 'Meeting point details and guide contact will be sent after payment.',
+        declined_subject varchar DEFAULT 'Request update — {ref}',
+        declined_body varchar DEFAULT 'Unfortunately, your requested date ({date}) for the "{tour}" tour is not available.',
+        declined_note varchar DEFAULT $$We'd be happy to suggest an alternative date. Please contact us via WhatsApp, Telegram, or email to discuss options.$$,
+        payment_subject varchar DEFAULT 'Payment received — {tour}',
+        payment_heading varchar DEFAULT 'Payment received, {name}!',
+        payment_body varchar DEFAULT $$You're all set! Here are your tour details:$$,
+        payment_note varchar DEFAULT 'Your guide will contact you the day before the tour with final details.',
+        reminder_subject varchar DEFAULT 'Reminder: tour tomorrow — {tour}',
+        reminder_heading varchar DEFAULT 'Reminder, {name}!',
+        reminder_body varchar DEFAULT 'Your "{tour}" tour is scheduled for tomorrow!',
+        reminder_note varchar DEFAULT 'Tips: wear comfortable shoes and bring water. Contact us if you have any questions.',
+        footer varchar DEFAULT 'Best Prague Guide | info@bestpragueguide.com',
         id serial PRIMARY KEY,
-        _parent_id integer NOT NULL REFERENCES email_templates(id) ON DELETE CASCADE,
         _locale _locales NOT NULL,
-        UNIQUE(_parent_id, _locale)
+        _parent_id integer NOT NULL,
+        CONSTRAINT email_templates_locales_parent_id_fk FOREIGN KEY (_parent_id) REFERENCES email_templates(id) ON DELETE CASCADE,
+        CONSTRAINT email_templates_locales_locale_parent_id_unique UNIQUE (_locale, _parent_id)
       )`,
-      `CREATE INDEX IF NOT EXISTS email_templates_locales_locale_idx ON email_templates_locales (_locale)`,
 
-      // Payment Config global
-      `CREATE TABLE IF NOT EXISTS payment_config (
+      // Payment Config global — drop old (wrong schema) and recreate
+      `DROP TABLE IF EXISTS payment_config_cash_currencies CASCADE`,
+      `DROP TABLE IF EXISTS payment_config CASCADE`,
+      `DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'enum_payment_config_cash_currencies') THEN CREATE TYPE enum_payment_config_cash_currencies AS ENUM ('EUR', 'USD', 'CZK'); END IF; END $$`,
+      `CREATE TABLE payment_config (
         id serial PRIMARY KEY,
         deposit_enabled boolean DEFAULT false,
         deposit_percent numeric DEFAULT 30,
         payment_deadline_days numeric DEFAULT 3,
         exchange_rates_usd numeric DEFAULT 1.08,
         exchange_rates_czk numeric DEFAULT 25.2,
-        updated_at timestamp(3) with time zone DEFAULT now() NOT NULL,
-        created_at timestamp(3) with time zone DEFAULT now() NOT NULL
+        updated_at timestamp(3) with time zone,
+        created_at timestamp(3) with time zone
       )`,
-      `DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'enum_payment_config_cash_currencies') THEN CREATE TYPE enum_payment_config_cash_currencies AS ENUM ('EUR', 'USD', 'CZK'); END IF; END $$`,
-      `CREATE TABLE IF NOT EXISTS payment_config_cash_currencies (
+      `CREATE TABLE payment_config_cash_currencies (
         "order" integer NOT NULL,
-        parent_id integer NOT NULL REFERENCES payment_config(id) ON DELETE CASCADE,
+        parent_id integer NOT NULL,
         value enum_payment_config_cash_currencies,
-        id serial PRIMARY KEY
+        id serial PRIMARY KEY,
+        CONSTRAINT payment_config_cash_currencies_parent_fk FOREIGN KEY (parent_id) REFERENCES payment_config(id) ON DELETE CASCADE
       )`,
       `CREATE INDEX IF NOT EXISTS payment_config_cash_currencies_order_idx ON payment_config_cash_currencies ("order")`,
       `CREATE INDEX IF NOT EXISTS payment_config_cash_currencies_parent_idx ON payment_config_cash_currencies (parent_id)`,
