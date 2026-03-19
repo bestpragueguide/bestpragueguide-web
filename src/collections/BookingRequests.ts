@@ -213,6 +213,56 @@ export const BookingRequests: CollectionConfig = {
                 { label: 'Declined', value: 'declined' },
               ],
             },
+            {
+              name: 'paymentMethod',
+              type: 'select',
+              defaultValue: 'cash_only',
+              options: [
+                { label: 'Stripe Deposit', value: 'stripe_deposit' },
+                { label: 'Stripe Full Payment', value: 'stripe_full' },
+                { label: 'Cash Only', value: 'cash_only' },
+                { label: 'No Payment Required', value: 'none' },
+              ],
+              admin: { description: 'How the customer should pay' },
+            },
+            {
+              name: 'customDepositAmount',
+              type: 'number',
+              admin: { description: 'Custom deposit in EUR. Leave empty for default %.' },
+            },
+          ],
+        },
+        {
+          label: 'Tour Info',
+          fields: [
+            {
+              name: 'guideName',
+              type: 'text',
+              admin: { description: 'Assigned guide name' },
+            },
+            {
+              name: 'guidePhone',
+              type: 'text',
+              admin: { description: 'Guide phone (shown to customer after payment)' },
+            },
+            {
+              name: 'meetingPointAddress',
+              type: 'text',
+              localized: true,
+              admin: { description: 'Custom meeting point. Leave empty to use tour default.' },
+            },
+            {
+              name: 'meetingPointInstructions',
+              type: 'richText',
+              editor: simplifiedEditor,
+              localized: true,
+              admin: { description: 'Custom meeting instructions for this booking' },
+            },
+            {
+              name: 'meetingPointMapUrl',
+              type: 'text',
+              admin: { description: 'Google Maps link. Leave empty to use tour default.' },
+            },
           ],
         },
         {
@@ -245,18 +295,6 @@ export const BookingRequests: CollectionConfig = {
               admin: { description: 'Final confirmed time (HH:MM)' },
             },
             {
-              name: 'paymentMethod',
-              type: 'select',
-              defaultValue: 'cash_only',
-              options: [
-                { label: 'Stripe Deposit', value: 'stripe_deposit' },
-                { label: 'Stripe Full Payment', value: 'stripe_full' },
-                { label: 'Cash Only', value: 'cash_only' },
-                { label: 'No Payment Required', value: 'none' },
-              ],
-              admin: { description: 'How the customer should pay' },
-            },
-            {
               name: 'confirmedPrice',
               type: 'number',
               admin: { description: 'Final confirmed price in EUR' },
@@ -267,44 +305,11 @@ export const BookingRequests: CollectionConfig = {
               admin: { description: 'Final confirmed guest count' },
             },
             {
-              name: 'guideName',
-              type: 'text',
-              admin: { description: 'Assigned guide name' },
-            },
-            {
-              name: 'guidePhone',
-              type: 'text',
-              admin: { description: 'Guide phone (shown to customer after payment)' },
-            },
-            {
-              name: 'meetingPointAddress',
-              type: 'text',
-              localized: true,
-              admin: { description: 'Custom meeting point. Leave empty to use tour default.' },
-            },
-            {
-              name: 'meetingPointInstructions',
-              type: 'richText',
-              editor: simplifiedEditor,
-              localized: true,
-              admin: { description: 'Custom meeting instructions for this booking' },
-            },
-            {
-              name: 'meetingPointMapUrl',
-              type: 'text',
-              admin: { description: 'Google Maps link. Leave empty to use tour default.' },
-            },
-            {
               name: 'customerNotes',
               type: 'richText',
               editor: simplifiedEditor,
               localized: true,
               admin: { description: 'Notes visible to the customer on the booking page' },
-            },
-            {
-              name: 'customDepositAmount',
-              type: 'number',
-              admin: { description: 'Custom deposit in EUR. Leave empty for default %.' },
             },
           ],
         },
