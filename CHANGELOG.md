@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.32.0] - 2026-03-19
+
+### Added
+- **Payment method in booking form** — radio buttons for "Cash on the day of the tour" (default) and "Credit card online (prepayment)"; saved to paymentMethod field
+- **Booking Offer email on confirm** — sends BookingOfferEmail (with "View Your Booking" CTA) instead of old confirmation email; admin copy with Reply-To
+
+### Changed
+- **No auto-email on confirmed** — admin sends offer manually via "Send Offer" button
+- **Default payment method** — changed from stripe_deposit to cash_only
+- **Default guide** — auto-populated: Uliana / +420 776 306 858
+- **Short offer tokens** — 8-char alphanumeric (0-9, a-z) for SMS-friendly URLs
+- **Tab reorganization** — Tour Info tab (guide, meeting point, customer notes); Payment Method + Custom Deposit in Booking tab; Offer Details simplified
+- **RichText email templates** — all body/note fields converted from textarea to richText with Lexical editor; existing plain text auto-converted
+- **Booking Summary fields** — new receivedSummaryTitle/Body in Booking Received email template
+
+### Fixed
+- **Lexical conversion** — existing plain text email templates auto-converted to Lexical JSON via fix-trust-badges endpoint
+- **Missing DB columns** — received_summary_title/body added to email_templates_locales
+
 ## [1.31.0] - 2026-03-19
 
 ### Added
