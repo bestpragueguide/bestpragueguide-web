@@ -96,6 +96,7 @@ export function StickyBookButton({
         locale={locale}
         trustBadges={trustBadges}
         bookingPricingDescription={bookingPricingDescription}
+        formTitle={formTitle}
       >
         <BookingRequestForm
           tourId={tourId}

@@ -17,6 +17,7 @@ interface BookingModalProps {
   defaultTime?: string
   trustBadges?: Array<{ text: string }>
   bookingPricingDescription?: string
+  formTitle?: string
 }
 
 export function BookingModal({
@@ -30,6 +31,7 @@ export function BookingModal({
   defaultTime,
   trustBadges,
   bookingPricingDescription,
+  formTitle,
 }: BookingModalProps) {
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {
@@ -117,6 +119,11 @@ export function BookingModal({
 
         {/* Content */}
         <div className="p-4 pb-8">
+          {/* Form title */}
+          {formTitle && (
+            <h3 className="text-base font-semibold text-navy text-center mb-4">{formTitle}</h3>
+          )}
+
           {/* Pricing info */}
           {pricing.model === 'GROUP_TIERS' && pricing.groupTiers && pricing.groupTiers.length > 0 && (
             <div className="mb-4 pb-4 border-b border-gray-light/50">

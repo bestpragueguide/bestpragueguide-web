@@ -206,9 +206,6 @@ export function BookingRequestForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {formTitle && (
-        <h3 className="text-base font-semibold text-navy text-center">{formTitle}</h3>
-      )}
       <noscript>
         <p className="bg-gold/10 text-navy p-4 rounded-lg text-sm">
           {locale === 'ru'
