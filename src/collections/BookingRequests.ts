@@ -16,7 +16,6 @@ export const BookingRequests: CollectionConfig = {
       edit: {
         beforeDocumentControls: [
           '@/components/admin/BookingStatusBar#BookingStatusBar',
-          '@/components/admin/BookingAuditTimeline#BookingAuditTimeline',
         ],
       },
     },
