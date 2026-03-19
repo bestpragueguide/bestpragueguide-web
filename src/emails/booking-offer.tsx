@@ -54,7 +54,7 @@ export function BookingOfferEmail({
   cmsFooter,
 }: BookingOfferEmailProps) {
   const isRu = locale === 'ru'
-  const currencySymbol = currency === 'CZK' ? 'Kc' : currency === 'USD' ? '$' : 'EUR'
+  const currencySymbol = currency === 'CZK' ? 'Kč' : currency === 'USD' ? '$' : '€'
 
   const summaryRows: Array<{ label: string; value: string }> = [
     { label: isRu ? 'Экскурсия' : 'Tour', value: tourName },

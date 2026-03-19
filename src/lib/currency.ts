@@ -12,6 +12,15 @@ export function formatPrice(eurPrice: number, currency: Currency = 'EUR'): strin
   return `${currencySymbols[currency]}${converted}`
 }
 
+/** Format an amount already in the target currency (no conversion) */
+export function formatAmount(amount: number, currency: Currency = 'EUR'): string {
+  const rounded = Math.round(amount)
+  if (currency === 'CZK') {
+    return `${rounded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u00A0')} Kč`
+  }
+  return `${currencySymbols[currency]}${rounded}`
+}
+
 export function secondaryPrices(eurPrice: number): string {
   return `≈ ${formatPrice(eurPrice, 'USD')} / ${formatPrice(eurPrice, 'CZK')}`
 }

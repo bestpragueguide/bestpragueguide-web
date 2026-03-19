@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { formatPrice, type Currency } from '@/lib/currency'
+import { formatAmount, type Currency } from '@/lib/currency'
 
 interface BookingPaymentButtonProps {
   offerToken: string
@@ -70,7 +70,7 @@ export function BookingPaymentButton({
             {t('processing')}
           </span>
         ) : (
-          `${label} ${formatPrice(amount, currency as Currency)}`
+          `${label} ${formatAmount(amount, currency as Currency)}`
         )}
       </button>
       {error && (

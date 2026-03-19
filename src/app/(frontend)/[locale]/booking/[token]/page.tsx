@@ -7,7 +7,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { getSiteSettings } from '@/lib/cms-data'
 import { SafeRichText } from '@/components/shared/SafeRichText'
-import { formatPrice, type Currency } from '@/lib/currency'
+import { formatAmount, type Currency } from '@/lib/currency'
 import { hoursLabel, guestsLabel } from '@/lib/plurals'
 import { BookingPaymentButton } from '@/components/booking/BookingPaymentButton'
 import { BookingPageTracker } from '@/components/booking/BookingPageTracker'
@@ -416,7 +416,7 @@ export default async function BookingOfferPage({
               <div className="flex justify-between text-sm">
                 <span className="text-navy/70">{t('total')}</span>
                 <span className="font-semibold text-navy">
-                  {formatPrice(displayPrice, (booking.currency || 'EUR') as Currency)}
+                  {formatAmount(displayPrice, (booking.currency || 'EUR') as Currency)}
                 </span>
               </div>
               {paymentMethod === 'stripe_deposit' && depositAmount > 0 && (
@@ -424,13 +424,13 @@ export default async function BookingOfferPage({
                   <div className="flex justify-between text-sm">
                     <span className="text-navy/70">{t('deposit')}</span>
                     <span className="font-medium text-navy">
-                      {formatPrice(depositAmount, (booking.currency || 'EUR') as Currency)}
+                      {formatAmount(depositAmount, (booking.currency || 'EUR') as Currency)}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-navy/70">{t('cashBalance')}</span>
                     <span className="font-medium text-navy">
-                      {formatPrice(cashBalance, (booking.currency || 'EUR') as Currency)}
+                      {formatAmount(cashBalance, (booking.currency || 'EUR') as Currency)}
                     </span>
                   </div>
                 </>
