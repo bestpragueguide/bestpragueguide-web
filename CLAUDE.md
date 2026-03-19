@@ -117,7 +117,7 @@ All site content is editable from Payload admin panel:
 - Notifications: email (Gmail SMTP primary, Resend fallback), Telegram, WhatsApp, Slack, n8n — all fire in parallel on new booking
 - Admin receives the same `RequestReceivedEmail` as the customer (not a separate template); `Reply-To` set to customer email for direct reply
 - Email template text (subject, body, note) is CMS-editable via `EmailTemplates` global with hardcoded fallbacks
-- `src/emails/` — React Email templates: request-received (customer), new-request-admin, request-confirmed, request-declined, pre-tour-reminder, payment-received
+- `src/emails/` — React Email templates: request-received (customer + admin, includes full booking summary table), request-confirmed, request-declined, pre-tour-reminder, payment-received. `NewRequestAdminEmail` is no longer used — admin receives the same `RequestReceivedEmail` as customer
 - `src/lib/booking.ts` — Zod validation schema, guest max dynamic from `getMaxGuests()`, request ref format: BPG-YYYY-NNNNN
 - `src/lib/rate-limit.ts` — shared rate limiter (Redis sorted sets with in-memory fallback), used by booking and contact API routes and server actions
 - `src/lib/email-validation.ts` — disposable email domain blocklist (~50 domains), used by booking/contact routes and server actions

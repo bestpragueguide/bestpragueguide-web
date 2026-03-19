@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.28.0] - 2026-03-19
+
+### Added
+- **Full booking summary in request email** — `RequestReceivedEmail` now includes a summary table with all booking details (tour, date, time, guests, price, email, phone, special requests, reference). Same email sent to both customer and admin
+- **Expanded email template placeholders** — `{name}`, `{tour}`, `{date}`, `{time}`, `{guests}`, `{price}`, `{currency}`, `{phone}`, `{email}`, `{requests}`, `{ref}` available in Booking Received subject, body, and note
+
+### Fixed
+- **Non-destructive fix-schema** — removed `DROP TABLE` for trust badges tables; uses `CREATE IF NOT EXISTS` only; existing CMS data survives redeployments
+- **Non-destructive seed endpoint** — `fix-trust-badges` only seeds fields that are empty/null; existing CMS-edited values are preserved
+- **No fallback texts in booking success** — success title/message only render when set in CMS; empty = not shown
+
+### Changed
+- **Admin email uses customer template** — admin notification uses `RequestReceivedEmail` (same as customer) instead of separate `NewRequestAdminEmail`; Reply-To set to customer email
+
 ## [1.27.2] - 2026-03-19
 
 ### Added
