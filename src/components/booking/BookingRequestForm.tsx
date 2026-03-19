@@ -178,10 +178,12 @@ export function BookingRequestForm({
           <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
           <polyline points="22 4 12 14.01 9 11.01" />
         </svg>
-        <p className="text-lg font-medium text-navy mb-2">{successTitle || t('successTitle')}</p>
-        <p className="text-sm text-gray">
-          {successMessage || t('successMessage')}
-        </p>
+        {successTitle && <p className="text-lg font-medium text-navy mb-2">{successTitle}</p>}
+        {successMessage && (
+          <p className="text-sm text-gray">
+            {successMessage}
+          </p>
+        )}
         {requestRef && (
           <p className="text-xs text-gray mt-2">
             {t('referenceNumber')}: {requestRef}
@@ -475,6 +477,7 @@ export function BookingRequestForm({
           </svg>
         )}
         {status === 'loading' ? t('sending') : (submitLabel || t('submit'))}
+
       </button>
 
       {disclaimerText && (
