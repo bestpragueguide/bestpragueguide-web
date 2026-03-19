@@ -123,6 +123,7 @@ function formatShortDate(dateStr: string, locale: string): string {
 type OfferStatus =
   | 'expired'
   | 'declined'
+  | 'cancelled'
   | 'pending'
   | 'confirmed_payment_required'
   | 'confirmed_no_prepayment'
@@ -139,6 +140,7 @@ function getOfferStatus(booking: BookingDoc): OfferStatus {
   }
 
   if (booking.status === 'declined') return 'declined'
+  if (booking.status === 'cancelled') return 'cancelled'
   if (booking.status === 'completed') return 'completed'
 
   if (booking.paymentStatus === 'fully_paid') return 'fully_paid'
@@ -215,6 +217,12 @@ function getStatusBanner(
         text: 'text-red-700',
         message: t('statusDeclined'),
       }
+    case 'cancelled':
+      return {
+        bg: 'bg-red-50 border-red-200',
+        text: 'text-red-700',
+        message: t('statusCancelled') || 'This booking has been cancelled.',
+      }
     case 'expired':
       return {
         bg: 'bg-gray-100 border-gray-300',
@@ -283,6 +291,7 @@ export default async function BookingOfferPage({
     !isPaid &&
     offerStatus !== 'pending' &&
     offerStatus !== 'declined' &&
+    offerStatus !== 'cancelled' &&
     offerStatus !== 'expired' &&
     offerStatus !== 'completed'
 

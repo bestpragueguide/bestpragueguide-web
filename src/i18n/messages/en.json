@@ -214,6 +214,7 @@
     "statusFullyPaid": "Payment complete — see you in Prague!",
     "statusCompleted": "Tour completed — thank you!",
     "statusDeclined": "Unfortunately this booking could not be confirmed",
+    "statusCancelled": "This booking has been cancelled.",
     "statusExpired": "This offer has expired",
     "tourDetails": "Tour Details",
     "bookingRef": "Booking Reference",

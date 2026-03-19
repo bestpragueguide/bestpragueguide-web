@@ -210,6 +210,7 @@ export const BookingRequests: CollectionConfig = {
                 { label: 'Payment Sent', value: 'payment-sent' },
                 { label: 'Paid', value: 'paid' },
                 { label: 'Completed', value: 'completed' },
+                { label: 'Cancelled', value: 'cancelled' },
                 { label: 'Declined', value: 'declined' },
               ],
             },

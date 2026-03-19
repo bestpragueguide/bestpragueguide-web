@@ -151,6 +151,12 @@ export function BookingOfferEmail({
               ))
           }
 
+          <Section style={{ textAlign: 'center' as const, margin: '24px 0' }}>
+            <Button href={offerUrl} style={ctaButton}>
+              {cmsCtaLabel || (isRu ? 'Посмотреть бронирование' : 'View Your Booking')}
+            </Button>
+          </Section>
+
           <Section style={summaryBox}>
             <Text style={summaryTitle}>
               {isRu ? 'Детали бронирования' : 'Booking Summary'}
@@ -165,12 +171,6 @@ export function BookingOfferEmail({
                 ))}
               </tbody>
             </table>
-          </Section>
-
-          <Section style={{ textAlign: 'center' as const, margin: '24px 0' }}>
-            <Button href={offerUrl} style={ctaButton}>
-              {cmsCtaLabel || (isRu ? 'Посмотреть бронирование' : 'View Your Booking')}
-            </Button>
           </Section>
 
           {/* CMS note — admin-authored trusted content */}

@@ -214,6 +214,41 @@ export const EmailTemplates: GlobalConfig = {
           ],
         },
         {
+          label: 'Booking Cancelled',
+          fields: [
+            {
+              name: 'cancelledSubject',
+              label: 'Subject',
+              type: 'text',
+              localized: true,
+              defaultValue: 'Booking cancelled — {ref}',
+              admin: {
+                description: 'Placeholders: {name}, {tour}, {date}, {ref}',
+              },
+            },
+            {
+              name: 'cancelledBody',
+              label: 'Body',
+              type: 'richText',
+              editor: simplifiedEditor,
+              localized: true,
+              admin: {
+                description: 'Placeholders in text: {name}, {tour}, {date}, {ref}',
+              },
+            },
+            {
+              name: 'cancelledNote',
+              label: 'Note',
+              type: 'richText',
+              editor: simplifiedEditor,
+              localized: true,
+              admin: {
+                description: 'Shown after cancelled message',
+              },
+            },
+          ],
+        },
+        {
           label: 'Payment Received',
           fields: [
             {

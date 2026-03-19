@@ -459,6 +459,9 @@ export interface EmailTemplatesData {
   declinedSubject?: string
   declinedBody?: string
   declinedNote?: string
+  cancelledSubject?: string
+  cancelledBody?: string
+  cancelledNote?: string
   paymentSubject?: string
   paymentHeading?: string
   paymentBody?: string
@@ -574,6 +577,9 @@ export async function getEmailTemplates(locale: string): Promise<EmailTemplatesD
       declinedSubject: data.declinedSubject || undefined,
       declinedBody: toEmailHtml(data.declinedBody),
       declinedNote: toEmailHtml(data.declinedNote),
+      cancelledSubject: data.cancelledSubject || undefined,
+      cancelledBody: toEmailHtml(data.cancelledBody),
+      cancelledNote: toEmailHtml(data.cancelledNote),
       paymentSubject: data.paymentSubject || undefined,
       paymentHeading: data.paymentHeading || undefined,
       paymentBody: toEmailHtml(data.paymentBody),

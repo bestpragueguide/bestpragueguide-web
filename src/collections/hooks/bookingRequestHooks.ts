@@ -3,6 +3,7 @@ import { generateRequestRef } from '@/lib/booking'
 import { sendEmail } from '@/lib/email'
 import { getEmailTemplates, resolveTemplate } from '@/lib/cms-data'
 import { RequestDeclinedEmail } from '@/emails/request-declined'
+import { BookingCancelledEmail } from '@/emails/booking-cancelled'
 import { PaymentReceivedEmail } from '@/emails/payment-received'
 import { logBookingEvent, computeFieldDiffs } from '@/lib/audit'
 
@@ -167,6 +168,42 @@ export const afterChangeHook: CollectionAfterChangeHook = async ({
         actor: { type: 'system' },
         description: `Failed to send declined email to ${doc.customerEmail}`,
         metadata: { template: 'request-declined', to: doc.customerEmail, error: String(err) },
+      }, req.payload)
+    }
+  }
+
+  if (newStatus === 'cancelled' && oldStatus !== 'cancelled') {
+    try {
+      await sendEmail({
+        to: doc.customerEmail,
+        subject: resolveTemplate((tpl as any).cancelledSubject || (locale === 'ru' ? 'Бронирование отменено — {ref}' : 'Booking cancelled — {ref}'), vars),
+        react: BookingCancelledEmail({
+          customerName: doc.customerName,
+          tourName,
+          preferredDate: doc.confirmedDate || doc.preferredDate,
+          requestRef: doc.requestRef,
+          locale,
+          cmsHeaderTitle: tpl.headerTitle || undefined,
+          cmsGreeting: tpl.greeting ? resolveTemplate(tpl.greeting, vars) : undefined,
+          cmsBody: (tpl as any).cancelledBody ? resolveTemplate((tpl as any).cancelledBody, vars) : undefined,
+          cmsNote: (tpl as any).cancelledNote ? resolveTemplate((tpl as any).cancelledNote, vars) : undefined,
+          cmsFooter: tpl.footer || undefined,
+        }),
+      })
+      logBookingEvent({
+        bookingId: doc.id,
+        eventType: 'email_sent',
+        actor: { type: 'system' },
+        description: `Cancelled email sent to ${doc.customerEmail}`,
+        metadata: { template: 'booking-cancelled', to: doc.customerEmail },
+      }, req.payload)
+    } catch (err) {
+      logBookingEvent({
+        bookingId: doc.id,
+        eventType: 'email_failed',
+        actor: { type: 'system' },
+        description: `Failed to send cancelled email to ${doc.customerEmail}`,
+        metadata: { template: 'booking-cancelled', to: doc.customerEmail, error: String(err) },
       }, req.payload)
     }
   }
