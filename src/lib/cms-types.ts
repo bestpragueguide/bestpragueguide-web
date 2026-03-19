@@ -80,6 +80,8 @@ export interface SiteSettingsData {
   licenseText: string
   copyrightText: string
   bookingPricingDescription?: string
+  bookingFormTitle?: string
+  bookingSubmitLabel?: string
   bookingSuccessTitle?: string
   bookingSuccessMessage?: string
   bookingConsentText?: string

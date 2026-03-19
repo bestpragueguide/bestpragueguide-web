@@ -216,6 +216,8 @@ export async function getSiteSettings(locale: string): Promise<SiteSettingsData>
       licenseText: data.licenseText || siteSettingsFallback(locale).licenseText,
       copyrightText: data.copyrightText || siteSettingsFallback(locale).copyrightText,
       bookingPricingDescription: (data as any).bookingPricingDescription || undefined,
+      bookingFormTitle: (data as any).bookingFormTitle || undefined,
+      bookingSubmitLabel: (data as any).bookingSubmitLabel || undefined,
       bookingSuccessTitle: (data as any).bookingSuccessTitle || undefined,
       bookingSuccessMessage: (data as any).bookingSuccessMessage || undefined,
       bookingConsentText: (data as any).bookingConsentText || undefined,

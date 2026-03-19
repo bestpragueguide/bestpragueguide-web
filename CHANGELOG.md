@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.27.1] - 2026-03-19
+
+### Added
+- **CMS-editable booking form title** — new `bookingFormTitle` field in SiteSettings (Booking tab, localized); shown as heading above the form; hidden when empty
+- **CMS-editable submit button label** — new `bookingSubmitLabel` field in SiteSettings (Booking tab, localized); falls back to i18n "Submit Request" when empty
+
 ## [1.27.0] - 2026-03-19
 
 ### Added

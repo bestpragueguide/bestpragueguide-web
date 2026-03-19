@@ -19,6 +19,8 @@ interface StickyBookButtonProps {
   trustBadges?: Array<{ text: string }>
   contactPhoneDisplay?: string
   bookingPricingDescription?: string
+  formTitle?: string
+  submitLabel?: string
   successTitle?: string
   successMessage?: string
   consentText?: string
@@ -34,6 +36,8 @@ export function StickyBookButton({
   trustBadges,
   contactPhoneDisplay,
   bookingPricingDescription,
+  formTitle,
+  submitLabel,
   successTitle,
   successMessage,
   consentText,
@@ -101,6 +105,8 @@ export function StickyBookButton({
           locale={locale}
           preferredTimes={preferredTimes}
           contactPhoneDisplay={contactPhoneDisplay}
+          formTitle={formTitle}
+          submitLabel={submitLabel}
           successTitle={successTitle}
           successMessage={successMessage}
           consentText={consentText}

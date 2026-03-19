@@ -19,6 +19,8 @@ interface BookingRequestFormProps {
   defaultTime?: string
   preferredTimes?: string[]
   contactPhoneDisplay?: string
+  formTitle?: string
+  submitLabel?: string
   successTitle?: string
   successMessage?: string
   consentText?: string
@@ -34,6 +36,8 @@ export function BookingRequestForm({
   defaultTime,
   preferredTimes,
   contactPhoneDisplay,
+  formTitle,
+  submitLabel,
   successTitle,
   successMessage,
   consentText,
@@ -202,6 +206,9 @@ export function BookingRequestForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {formTitle && (
+        <h3 className="text-base font-semibold text-navy text-center">{formTitle}</h3>
+      )}
       <noscript>
         <p className="bg-gold/10 text-navy p-4 rounded-lg text-sm">
           {locale === 'ru'
@@ -468,7 +475,7 @@ export function BookingRequestForm({
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
         )}
-        {status === 'loading' ? t('sending') : t('submit')}
+        {status === 'loading' ? t('sending') : (submitLabel || t('submit'))}
       </button>
 
       {status === 'rate-limited' && (

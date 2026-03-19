@@ -162,6 +162,22 @@ export const SiteSettings: GlobalConfig = {
               },
             },
             {
+              name: 'bookingFormTitle',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Heading above the booking form (e.g. "Book This Tour")',
+              },
+            },
+            {
+              name: 'bookingSubmitLabel',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Submit button text (e.g. "Submit Request")',
+              },
+            },
+            {
               name: 'bookingSuccessTitle',
               type: 'text',
               localized: true,

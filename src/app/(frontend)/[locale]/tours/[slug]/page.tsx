@@ -418,6 +418,8 @@ export default async function TourDetailPage({
               locale={locale}
               preferredTimes={tour.preferredTimes}
               contactPhoneDisplay={siteSettings.contactPhoneDisplay}
+              formTitle={siteSettings.bookingFormTitle}
+              submitLabel={siteSettings.bookingSubmitLabel}
               successTitle={siteSettings.bookingSuccessTitle}
               successMessage={siteSettings.bookingSuccessMessage}
               consentText={siteSettings.bookingConsentText}
@@ -479,6 +481,8 @@ export default async function TourDetailPage({
         trustBadges={siteSettings.bookingTrustBadges}
         contactPhoneDisplay={siteSettings.contactPhoneDisplay}
         bookingPricingDescription={siteSettings.bookingPricingDescription}
+        formTitle={siteSettings.bookingFormTitle}
+        submitLabel={siteSettings.bookingSubmitLabel}
         successTitle={siteSettings.bookingSuccessTitle}
         successMessage={siteSettings.bookingSuccessMessage}
         consentText={siteSettings.bookingConsentText}
