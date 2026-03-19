@@ -16,6 +16,12 @@ export const beforeChangeHook: CollectionBeforeChangeHook = async ({
     data.requestRef = await generateRequestRef()
   }
 
+  // Auto-generate offer token on create
+  if (operation === 'create' && !data.offerToken) {
+    const { randomBytes } = await import('crypto')
+    data.offerToken = randomBytes(32).toString('hex')
+  }
+
   // Auto-populate offer fields from booking request when status changes to 'confirmed'
   if (operation === 'update' && data.status === 'confirmed') {
     const doc = originalDoc || {}
