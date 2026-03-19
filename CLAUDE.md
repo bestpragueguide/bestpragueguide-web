@@ -39,7 +39,8 @@ All site content is editable from Payload admin panel:
 - **BlogPosts** — blog articles with richText content, categories (prague-guide, food-and-drink, day-trips, tips, history), heroImage, SEO fields, `publishedLocales`
 - **FAQs** — question/answer (richText), category, sortOrder, showOnHomepage flag
 - **Pages** — legal pages (privacy, terms, cancellation) with richText content, template selector
-- **BookingRequests** — booking submissions (tour, date, time, guests, customer info, price, currency, status, IP geolocation, internal notes)
+- **BookingRequests** — booking submissions organized in 6 tabs: Booking (request fields, status, booking page URL), Offer Details (confirmed details, guide, meeting point, payment method, customer notes, send offer), Payment (payment status, Stripe fields, deposit/cash balance), CRM (npsScore, chatwoot, mautic, twenty), Metadata (IP geolocation), Internal (admin notes)
+- **BookingAuditLog** — immutable append-only audit trail for bookings; 15 event types (booking_created, status_change, field_update, email_sent/failed, offer_sent, checkout_created, payment_success/failed, webhook_received, page_view/return, rate_limited, n8n_webhook, note); tracks actor (admin/system/customer/stripe), IP, user agent, IP geo, field diffs (previousValue/newValue), and event metadata as JSON
 - **ContactMessages** — contact form submissions (name, email, phone, message, locale, IP info, status)
 - **Media** — images with focal point, 6 sizes, localized alt text and caption
 
@@ -110,6 +111,7 @@ All site content is editable from Payload admin panel:
 | `/api/booking/send-offer` | POST | JWT | Send booking offer email to customer, update status, fire n8n webhook |
 | `/api/booking/create-checkout` | POST | Token | Create Stripe Checkout from offer page (token-authenticated, no admin auth) |
 | `/api/booking/lookup` | POST | No | Find booking by ref + email, return offer page URL. Rate-limited |
+| `/api/booking/track-view` | POST | No | Log customer page view with return-visit detection and IP geo. Rate-limited |
 | `/api/stripe/webhook` | POST | Stripe sig | Handle checkout.session.completed, update booking payment status |
 | `/api/availability/[tourSlug]` | GET | No | Return available tour dates for a month (YYYY-MM) |
 | `/api/health` | GET | No | Lightweight DB check for Uptime Kuma monitoring |
