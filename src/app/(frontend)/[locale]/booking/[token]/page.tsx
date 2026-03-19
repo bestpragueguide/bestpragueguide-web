@@ -123,6 +123,7 @@ function formatShortDate(dateStr: string, locale: string): string {
 type OfferStatus =
   | 'expired'
   | 'declined'
+  | 'pending'
   | 'confirmed_payment_required'
   | 'confirmed_no_prepayment'
   | 'payment_pending'
@@ -156,7 +157,8 @@ function getOfferStatus(booking: BookingDoc): OfferStatus {
     return 'confirmed_payment_required'
   }
 
-  return 'confirmed_payment_required'
+  // Status is 'new' or other — booking not yet confirmed
+  return 'pending'
 }
 
 function getStatusBanner(
@@ -165,6 +167,12 @@ function getStatusBanner(
   cmsConfirmedMessage?: string,
 ): { bg: string; text: string; message: string } {
   switch (status) {
+    case 'pending':
+      return {
+        bg: 'bg-blue-50 border-blue-200',
+        text: 'text-blue-700',
+        message: t('statusPending') || 'We received your request and will get back to you shortly.',
+      }
     case 'confirmed_payment_required':
       return {
         bg: 'bg-gold/10 border-gold/30',
@@ -273,6 +281,7 @@ export default async function BookingOfferPage({
     paymentMethod !== 'none' &&
     paymentMethod !== 'cash_only' &&
     !isPaid &&
+    offerStatus !== 'pending' &&
     offerStatus !== 'declined' &&
     offerStatus !== 'expired' &&
     offerStatus !== 'completed'

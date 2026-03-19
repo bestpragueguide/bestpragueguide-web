@@ -207,6 +207,7 @@
     }
   },
   "bookingOffer": {
+    "statusPending": "We received your request and will get back to you shortly.",
     "statusConfirmed": "Your booking is confirmed!",
     "statusPaymentPending": "Complete payment to secure your spot",
     "statusDepositPaid": "Deposit received — see you in Prague!",
