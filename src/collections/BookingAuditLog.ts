@@ -1,0 +1,73 @@
+import type { CollectionConfig } from 'payload'
+
+export const BookingAuditLog: CollectionConfig = {
+  slug: 'booking-audit-log',
+  admin: {
+    useAsTitle: 'description',
+    defaultColumns: ['booking', 'eventType', 'description', 'actorType', 'createdAt'],
+    group: 'Bookings',
+    listSearchableFields: ['description', 'ipAddress'],
+  },
+  timestamps: true,
+  access: {
+    create: () => true,
+    read: ({ req }) => !!req.user,
+    update: () => false,
+    delete: () => false,
+  },
+  fields: [
+    { name: 'booking', type: 'relationship', relationTo: 'booking-requests', required: true, index: true },
+    {
+      name: 'eventType',
+      type: 'select',
+      required: true,
+      index: true,
+      options: [
+        { label: 'Booking Created', value: 'booking_created' },
+        { label: 'Status Change', value: 'status_change' },
+        { label: 'Field Update', value: 'field_update' },
+        { label: 'Email Sent', value: 'email_sent' },
+        { label: 'Email Failed', value: 'email_failed' },
+        { label: 'Offer Sent', value: 'offer_sent' },
+        { label: 'Checkout Created', value: 'checkout_created' },
+        { label: 'Payment Success', value: 'payment_success' },
+        { label: 'Payment Failed', value: 'payment_failed' },
+        { label: 'Webhook Received', value: 'webhook_received' },
+        { label: 'Page View', value: 'page_view' },
+        { label: 'Page View (Return)', value: 'page_view_return' },
+        { label: 'Rate Limited', value: 'rate_limited' },
+        { label: 'N8N Webhook', value: 'n8n_webhook' },
+        { label: 'Note', value: 'note' },
+      ],
+    },
+    {
+      name: 'actorType',
+      type: 'select',
+      required: true,
+      options: [
+        { label: 'Admin', value: 'admin' },
+        { label: 'System', value: 'system' },
+        { label: 'Customer', value: 'customer' },
+        { label: 'Stripe', value: 'stripe' },
+      ],
+    },
+    { name: 'actorId', type: 'text' },
+    { name: 'actorName', type: 'text' },
+    { name: 'description', type: 'text', required: true },
+    { name: 'ipAddress', type: 'text', index: true },
+    { name: 'userAgent', type: 'text' },
+    {
+      name: 'ipGeo',
+      type: 'group',
+      fields: [
+        { name: 'city', type: 'text' },
+        { name: 'region', type: 'text' },
+        { name: 'country', type: 'text' },
+        { name: 'isp', type: 'text' },
+      ],
+    },
+    { name: 'previousValue', type: 'json' },
+    { name: 'newValue', type: 'json' },
+    { name: 'metadata', type: 'json' },
+  ],
+}

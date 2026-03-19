@@ -21,6 +21,7 @@ import { isDisposableEmail } from '@/lib/email-validation'
 import { getEmailTemplates, resolveTemplate, getNotificationEmail } from '@/lib/cms-data'
 import { z } from 'zod'
 import { textToLexicalJson } from '@/lib/lexical-helpers'
+import { logBookingEvent, extractRequestMeta } from '@/lib/audit'
 
 export async function POST(request: NextRequest) {
   const ip =
@@ -78,6 +79,19 @@ export async function POST(request: NextRequest) {
         },
       },
     })
+
+    // Log booking creation audit event
+    const reqMeta = extractRequestMeta(request)
+    logBookingEvent({
+      bookingId: savedBooking.id,
+      eventType: 'booking_created',
+      actor: { type: 'customer', id: data.customerEmail, name: data.customerName },
+      description: `Booking ${requestRef} created for ${data.tourName}`,
+      ip: reqMeta.ip,
+      userAgent: reqMeta.userAgent,
+      ipGeo: { city: ipInfo.city, region: ipInfo.region, country: ipInfo.country, isp: ipInfo.org },
+      metadata: { tourName: data.tourName, guests: data.guests, totalPrice: data.totalPrice, currency: data.currency },
+    }, payload)
 
     // Send notifications (fire in parallel, don't block response)
     const notificationData = {

@@ -10,6 +10,7 @@ import { SafeRichText } from '@/components/shared/SafeRichText'
 import { formatPrice, type Currency } from '@/lib/currency'
 import { hoursLabel, guestsLabel } from '@/lib/plurals'
 import { BookingPaymentButton } from '@/components/booking/BookingPaymentButton'
+import { BookingPageTracker } from '@/components/booking/BookingPageTracker'
 
 export async function generateMetadata({
   params,
@@ -293,6 +294,7 @@ export default async function BookingOfferPage({
   if (offerStatus === 'expired') {
     return (
       <div className="min-h-screen bg-cream">
+        <BookingPageTracker offerToken={token} />
         <div className="max-w-2xl mx-auto px-4 py-16 text-center">
           <div className="text-6xl mb-6">
             <svg className="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -322,6 +324,7 @@ export default async function BookingOfferPage({
 
   return (
     <div className="min-h-screen bg-cream">
+      <BookingPageTracker offerToken={token} />
       {/* Status Banner */}
       <div className={`border-b ${banner.bg}`}>
         <div className="max-w-3xl mx-auto px-4 py-4 text-center">

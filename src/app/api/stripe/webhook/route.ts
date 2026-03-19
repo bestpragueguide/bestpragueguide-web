@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
+import { logBookingEvent } from '@/lib/audit'
 
 export const dynamic = 'force-dynamic'
 
@@ -57,6 +58,15 @@ export async function POST(req: NextRequest) {
         paidAt: new Date().toISOString(),
       },
     })
+
+    // Log payment success audit event
+    logBookingEvent({
+      bookingId: bookingId,
+      eventType: 'payment_success',
+      actor: { type: 'stripe', id: event.id },
+      description: `Payment received: ${session.amount_total} ${session.currency}`,
+      metadata: { stripeEventId: event.id, sessionId: session.id, amountTotal: session.amount_total, currency: session.currency },
+    }, payload)
 
     // Notify n8n payment-received (n8n handles customer email + Chatwoot update)
     const { n8n } = await import('@/lib/n8n')

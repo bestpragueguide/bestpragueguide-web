@@ -24,6 +24,7 @@ import { Pages } from './collections/Pages'
 import { Media } from './collections/Media'
 import { BlogPosts } from './collections/BlogPosts'
 import { ContactMessages } from './collections/ContactMessages'
+import { BookingAuditLog } from './collections/BookingAuditLog'
 import { FAQs } from './collections/FAQs'
 import { Services } from './collections/Services'
 import { TourDates } from './collections/TourDates'
@@ -145,6 +146,7 @@ export default buildConfig({
     Media,
     BlogPosts,
     ContactMessages,
+    BookingAuditLog,
     FAQs,
     Services,
     TourDates,

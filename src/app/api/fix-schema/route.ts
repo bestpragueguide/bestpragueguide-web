@@ -125,6 +125,33 @@ export async function POST(req: Request) {
       `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS payment_method varchar DEFAULT 'stripe_deposit'`,
       `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS custom_deposit_amount numeric`,
 
+      // Booking Audit Log table
+      `CREATE TABLE IF NOT EXISTS booking_audit_log (
+        id serial PRIMARY KEY,
+        booking_id integer NOT NULL REFERENCES booking_requests(id) ON DELETE CASCADE,
+        event_type varchar NOT NULL,
+        actor_type varchar NOT NULL,
+        actor_id varchar,
+        actor_name varchar,
+        description varchar NOT NULL,
+        ip_address varchar,
+        user_agent varchar,
+        ip_geo_city varchar,
+        ip_geo_region varchar,
+        ip_geo_country varchar,
+        ip_geo_isp varchar,
+        previous_value jsonb DEFAULT '{}'::jsonb,
+        new_value jsonb DEFAULT '{}'::jsonb,
+        metadata jsonb DEFAULT '{}'::jsonb,
+        updated_at timestamp(3) with time zone DEFAULT now(),
+        created_at timestamp(3) with time zone DEFAULT now()
+      )`,
+      `CREATE INDEX IF NOT EXISTS booking_audit_log_booking_id_idx ON booking_audit_log (booking_id)`,
+      `CREATE INDEX IF NOT EXISTS booking_audit_log_event_type_idx ON booking_audit_log (event_type)`,
+      `CREATE INDEX IF NOT EXISTS booking_audit_log_ip_address_idx ON booking_audit_log (ip_address)`,
+      `CREATE INDEX IF NOT EXISTS booking_audit_log_created_at_idx ON booking_audit_log (created_at)`,
+      `ALTER TABLE payload_locked_documents_rels ADD COLUMN IF NOT EXISTS "booking_audit_log_id" integer REFERENCES booking_audit_log(id) ON DELETE CASCADE`,
+
       // Booking offer localized fields (first localized fields on BookingRequests)
       `CREATE TABLE IF NOT EXISTS booking_requests_locales (
         meeting_point_address varchar,

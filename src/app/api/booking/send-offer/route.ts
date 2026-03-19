@@ -5,6 +5,7 @@ import { sendEmail, sendAdminEmail } from '@/lib/email'
 import { getEmailTemplates, resolveTemplate, getNotificationEmail } from '@/lib/cms-data'
 import { BookingOfferEmail } from '@/emails/booking-offer'
 import { n8n } from '@/lib/n8n'
+import { logBookingEvent } from '@/lib/audit'
 
 export const dynamic = 'force-dynamic'
 
@@ -171,6 +172,15 @@ export async function POST(req: NextRequest) {
     }),
     replyTo: booking.customerEmail,
   })
+
+  // Log offer sent audit event
+  logBookingEvent({
+    bookingId: bookingId,
+    eventType: 'offer_sent',
+    actor: { type: 'admin', id: String(user.id), name: (user as any).email },
+    description: `Offer sent to ${booking.customerEmail}`,
+    metadata: { offerUrl, template: 'booking-offer', to: booking.customerEmail },
+  }, payload)
 
   // Update booking
   const updateData: Record<string, unknown> = {

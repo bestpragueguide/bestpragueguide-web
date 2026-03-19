@@ -14,7 +14,10 @@ export const BookingRequests: CollectionConfig = {
     listSearchableFields: ['requestRef', 'customerName', 'customerEmail'],
     components: {
       edit: {
-        beforeDocumentControls: ['@/components/admin/BookingStatusBar#BookingStatusBar'],
+        beforeDocumentControls: [
+          '@/components/admin/BookingStatusBar#BookingStatusBar',
+          '@/components/admin/BookingAuditTimeline#BookingAuditTimeline',
+        ],
       },
     },
   },

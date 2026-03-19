@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.30.0] - 2026-03-19
+
+### Added
+- **Booking Audit Log** — new `BookingAuditLog` collection (immutable, append-only) tracking every booking lifecycle event with full IP/user-agent metadata
+- **Audit utility** — `src/lib/audit.ts` with `logBookingEvent()` (fire-and-forget), `computeFieldDiffs()`, `extractRequestMeta()`
+- **19 audit integration points** — booking creation, field changes, status transitions, email sent/failed, offer sent, checkout created, payment success, webhook received, page views
+- **Page view tracking** — `POST /api/booking/track-view` logs customer visits with return-visit detection, IP geolocation, rate limiting
+- **Admin Audit Timeline** — collapsible timeline component in booking edit view showing last 50 events with icons, timestamps, actor, IP; "View All" link to full log
+- **Event types:** booking_created, status_change, field_update, email_sent, email_failed, offer_sent, checkout_created, payment_success, payment_failed, webhook_received, page_view, page_view_return, rate_limited, n8n_webhook, note
+
 ## [1.29.1] - 2026-03-19
 
 ### Changed

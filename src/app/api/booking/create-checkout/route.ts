@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { createDepositSession } from '@/lib/stripe'
+import { logBookingEvent, extractRequestMeta } from '@/lib/audit'
 
 export const dynamic = 'force-dynamic'
 
@@ -113,6 +114,18 @@ export async function POST(req: NextRequest) {
       { status: 503 }
     )
   }
+
+  // Log checkout created audit event
+  const reqMeta = extractRequestMeta(req)
+  logBookingEvent({
+    bookingId: booking.id,
+    eventType: 'checkout_created',
+    actor: { type: 'customer', id: String(booking.customerEmail), name: String(booking.customerName) },
+    description: `Checkout created: ${amount} ${bookingCurrency.toUpperCase()}`,
+    ip: reqMeta.ip,
+    userAgent: reqMeta.userAgent,
+    metadata: { amount, currency: bookingCurrency, sessionUrl: session.url },
+  }, payload)
 
   // Update booking
   const cashBalance = confirmedPrice - amount
