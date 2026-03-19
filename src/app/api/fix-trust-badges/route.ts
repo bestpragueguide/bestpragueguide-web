@@ -11,11 +11,17 @@ export async function POST(request: NextRequest) {
   try {
     const payload = await getPayload({ config })
 
-    // Seed EN trust badges first (default locale)
+    // Seed EN booking fields + trust badges
     await payload.updateGlobal({
       slug: 'site-settings',
       locale: 'en',
       data: {
+        bookingFormTitle: 'Book This Tour',
+        bookingSubmitLabel: 'Submit Request',
+        bookingSuccessTitle: 'Request Received!',
+        bookingSuccessMessage: 'Thank you! We received your request and will get back to you shortly.',
+        bookingConsentText: 'I agree to the [terms] and [privacy]',
+        bookingPricingDescription: 'All prices are per your individual group, not per person.',
         bookingTrustBadges: [
           { text: 'No payment until we confirm' },
           { text: 'Free cancellation 24h before' },
@@ -37,11 +43,17 @@ export async function POST(request: NextRequest) {
       '100% индивидуально — только ваша группа',
     ]
 
-    // Update RU with matching IDs to preserve EN text
+    // Seed RU with matching IDs to preserve EN text
     await payload.updateGlobal({
       slug: 'site-settings',
       locale: 'ru',
       data: {
+        bookingFormTitle: 'Забронировать экскурсию',
+        bookingSubmitLabel: 'Отправить запрос',
+        bookingSuccessTitle: 'Запрос получен!',
+        bookingSuccessMessage: 'Спасибо! Мы получили ваш запрос и свяжемся с вами в ближайшее время.',
+        bookingConsentText: 'Я принимаю [terms] и [privacy]',
+        bookingPricingDescription: 'Все цены указаны за вашу индивидуальную группу, а не за человека.',
         bookingTrustBadges: badges.map((badge: any, i: number) => ({
           id: badge.id,
           text: ruTexts[i],
@@ -55,8 +67,24 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      en: enResult.bookingTrustBadges,
-      ru: ruResult.bookingTrustBadges,
+      en: {
+        bookingFormTitle: enResult.bookingFormTitle,
+        bookingSubmitLabel: enResult.bookingSubmitLabel,
+        bookingSuccessTitle: enResult.bookingSuccessTitle,
+        bookingSuccessMessage: enResult.bookingSuccessMessage,
+        bookingConsentText: enResult.bookingConsentText,
+        bookingPricingDescription: enResult.bookingPricingDescription,
+        bookingTrustBadges: enResult.bookingTrustBadges,
+      },
+      ru: {
+        bookingFormTitle: ruResult.bookingFormTitle,
+        bookingSubmitLabel: ruResult.bookingSubmitLabel,
+        bookingSuccessTitle: ruResult.bookingSuccessTitle,
+        bookingSuccessMessage: ruResult.bookingSuccessMessage,
+        bookingConsentText: ruResult.bookingConsentText,
+        bookingPricingDescription: ruResult.bookingPricingDescription,
+        bookingTrustBadges: ruResult.bookingTrustBadges,
+      },
     })
   } catch (error) {
     console.error('[fix-trust-badges] Error:', error)
