@@ -25,7 +25,7 @@ Bilingual (EN/RU) private tour portal for Prague.
 All site content is editable from Payload admin panel:
 
 ### Globals
-- **SiteSettings** — contact info (also used as notification email recipient), social links (Instagram, YouTube, TripAdvisor, Google Business), map coordinates, WhatsApp templates, license/copyright, booking form title, booking submit label, booking pricing description, booking success title/message (CMS-editable with i18n fallback), booking consent text (with `[terms]`/`[privacy]` link placeholders), booking trust badges (no fallback — empty unless configured in admin), announcement banner
+- **SiteSettings** — contact info (also used as notification email recipient), social links (Instagram, YouTube, TripAdvisor, Google Business), Google Maps URL, WhatsApp templates, license/copyright, booking form title, booking submit label, booking pricing description, booking success title/message (CMS-editable with i18n fallback), booking disclaimer text, booking consent text (with `[terms]`/`[privacy]` link placeholders), booking trust badges (no fallback — empty unless configured in admin), booking page settings (payment note, cash note, expired heading/message), announcement banner
 - **Navigation** — header links, CTA button, footer columns with links
 - **Homepage** — hero (tagline, subtitle, CTA, background image, mobile image), trust bar items, guide profile, categories grid, process steps, testimonials heading, FAQ heading, CTA section, SEO
 - **AboutPage** — founder profile (photo, bio, quote), stats, team section, values, gallery, dual CTAs, SEO
