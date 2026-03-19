@@ -17,10 +17,14 @@ export const beforeChangeHook: CollectionBeforeChangeHook = async ({
     data.requestRef = await generateRequestRef()
   }
 
-  // Auto-generate offer token on create
-  if (operation === 'create' && !data.offerToken) {
-    const { randomBytes } = await import('crypto')
-    data.offerToken = randomBytes(32).toString('hex')
+  // Auto-generate offer token and set defaults on create
+  if (operation === 'create') {
+    if (!data.offerToken) {
+      const { randomBytes } = await import('crypto')
+      data.offerToken = randomBytes(32).toString('hex')
+    }
+    if (!data.guideName) data.guideName = 'Uliana'
+    if (!data.guidePhone) data.guidePhone = '+420 776 306 858'
   }
 
   // Auto-populate offer fields from booking request when status changes to 'confirmed'

@@ -247,7 +247,7 @@ export const BookingRequests: CollectionConfig = {
             {
               name: 'paymentMethod',
               type: 'select',
-              defaultValue: 'stripe_deposit',
+              defaultValue: 'cash_only',
               options: [
                 { label: 'Stripe Deposit', value: 'stripe_deposit' },
                 { label: 'Stripe Full Payment', value: 'stripe_full' },
