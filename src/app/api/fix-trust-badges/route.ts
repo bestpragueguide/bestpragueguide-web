@@ -134,6 +134,42 @@ export async function POST(request: NextRequest) {
       seeded.push('RU email receivedBody')
     }
 
+    // Seed offer email template (non-destructive)
+    if (!(enTpl as any).offerBody) {
+      await payload.updateGlobal({
+        slug: 'email-templates',
+        locale: 'en',
+        data: {
+          offerSubject: 'Your booking is confirmed — {tour}',
+          offerHeading: 'Your tour is confirmed, {name}!',
+          offerBody: 'Great news! Your "{tour}" tour has been confirmed.\n\nHere are the details:\n\nTour: {tour}\nDate: {date}\nTime: {time}\nGuests: {guests}\nPrice: {price} {currency}\nDeposit: {deposit} {currency}\n\nPlease click the button below to view your booking and complete the payment.',
+          offerCtaLabel: 'View Your Booking',
+          offerNote: 'If you have any questions, contact us via WhatsApp, email, or phone.',
+          headerTitle: enTpl.headerTitle || 'Best Prague Guide',
+          greeting: enTpl.greeting || 'Hello, {name}!',
+          footer: enTpl.footer || 'Best Prague Guide | info@bestpragueguide.com',
+        } as any,
+      })
+      seeded.push('EN email offer template')
+    }
+    if (!(ruTpl as any).offerBody) {
+      await payload.updateGlobal({
+        slug: 'email-templates',
+        locale: 'ru',
+        data: {
+          offerSubject: 'Ваше бронирование подтверждено — {tour}',
+          offerHeading: 'Экскурсия подтверждена, {name}!',
+          offerBody: 'Отличные новости! Ваша экскурсия "{tour}" подтверждена.\n\nДетали:\n\nЭкскурсия: {tour}\nДата: {date}\nВремя: {time}\nГостей: {guests}\nСтоимость: {price} {currency}\nДепозит: {deposit} {currency}\n\nНажмите кнопку ниже, чтобы просмотреть бронирование и завершить оплату.',
+          offerCtaLabel: 'Посмотреть бронирование',
+          offerNote: 'Если у вас есть вопросы, свяжитесь с нами через WhatsApp, email или по телефону.',
+          headerTitle: ruTpl.headerTitle || 'Best Prague Guide',
+          greeting: ruTpl.greeting || 'Здравствуйте, {name}!',
+          footer: ruTpl.footer || 'Best Prague Guide | info@bestpragueguide.com',
+        } as any,
+      })
+      seeded.push('RU email offer template')
+    }
+
     // Verify
     const enResult = await payload.findGlobal({ slug: 'site-settings', locale: 'en' }) as any
     const ruResult = await payload.findGlobal({ slug: 'site-settings', locale: 'ru' }) as any
