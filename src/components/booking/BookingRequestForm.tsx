@@ -4,7 +4,6 @@ import { useState, useEffect, useMemo } from 'react'
 import { useTranslations } from 'next-intl'
 import { TIME_SLOTS } from '@/lib/booking'
 import { trackBookingSubmit } from '@/lib/analytics'
-import { submitBookingRequest, type BookingActionResult } from '@/app/actions/booking'
 import { currencies, formatPrice, type Currency } from '@/lib/currency'
 import { calculatePrice, getMaxGuests, getDisplayPrice, hasOpenEndedTier } from '@/lib/pricing'
 import type { TourPricing, ServiceData } from '@/lib/cms-types'
@@ -127,13 +126,18 @@ export function BookingRequestForm({
     }
 
     try {
-      const result: BookingActionResult = await submitBookingRequest(data)
+      const res = await fetch('/api/booking/request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      const result = await res.json()
 
       if (result.success) {
         setStatus('success')
         setRequestRef(result.requestRef || '')
         trackBookingSubmit(tourName, tourId)
-      } else if (result.rateLimited) {
+      } else if (res.status === 429) {
         setStatus('rate-limited')
       } else if (result.details) {
         const fieldErrors: Record<string, string> = {}
