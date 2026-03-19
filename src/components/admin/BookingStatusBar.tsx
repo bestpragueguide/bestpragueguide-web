@@ -67,17 +67,33 @@ export function BookingStatusBar() {
   }
 
   const handleSend = async () => {
-    if (!window.confirm(`${offerSentAt ? 'Resend' : 'Send'} booking offer email to customer?`)) return
+    const action = offerSentAt ? 'Resend (Booking Update)' : 'Send'
+    if (!window.confirm(`Save and ${action} email to customer?`)) return
     setSending(true)
     setSendMsg(null)
     try {
+      // Save the document first by clicking the save button
+      const saveBtn = document.querySelector('button[type="button"]') as HTMLButtonElement | null
+      const saveBtns = document.querySelectorAll('button')
+      let saved = false
+      for (const b of saveBtns) {
+        if (b.textContent?.trim() === 'Save' && !b.disabled) {
+          b.click()
+          // Wait for save to complete
+          await new Promise(resolve => setTimeout(resolve, 2000))
+          saved = true
+          break
+        }
+      }
+
+      // Send offer email
       const res = await fetch('/api/booking/send-offer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ bookingId: id }),
       })
       const data = (await res.json()) as { success?: boolean; error?: string }
-      setSendMsg(data.success ? 'Sent!' : `Error: ${data.error}`)
+      setSendMsg(data.success ? (saved ? 'Saved & Sent!' : 'Sent!') : `Error: ${data.error}`)
     } catch {
       setSendMsg('Failed')
     }
@@ -135,7 +151,7 @@ export function BookingStatusBar() {
           {btn(copied ? 'Copied!' : 'Copy', handleCopy)}
           {btn('Open', () => {}, { href: offerUrl })}
           {btn(
-            sending ? 'Sending...' : offerSentAt ? 'Resend Email' : 'Send Offer',
+            sending ? 'Saving & Sending...' : offerSentAt ? 'Send Update' : 'Send Offer',
             handleSend,
             { bg: '#C4975C', fg: '#fff', disabled: sending },
           )}

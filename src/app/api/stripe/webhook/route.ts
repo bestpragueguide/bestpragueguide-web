@@ -3,6 +3,9 @@ import Stripe from 'stripe'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { logBookingEvent } from '@/lib/audit'
+import { sendEmail } from '@/lib/email'
+import { getEmailTemplates, resolveTemplate, getNotificationEmail } from '@/lib/cms-data'
+import { PaymentReceivedEmail } from '@/emails/payment-received'
 
 export const dynamic = 'force-dynamic'
 
@@ -67,6 +70,77 @@ export async function POST(req: NextRequest) {
       description: `Payment received: ${session.amount_total} ${session.currency}`,
       metadata: { stripeEventId: event.id, sessionId: session.id, amountTotal: session.amount_total, currency: session.currency },
     }, payload)
+
+    // Send payment confirmation email to customer
+    try {
+      const locale = (booking.customerLanguage || 'en') as 'en' | 'ru'
+      const tourObj = booking.tour && typeof booking.tour === 'object' ? (booking.tour as { title?: string }) : null
+      const tourTitle = tourObj?.title || 'Tour'
+      const tpl = await getEmailTemplates(locale)
+      const vars = { name: booking.customerName, tour: tourTitle, date: booking.preferredDate, ref: booking.requestRef, time: booking.preferredTime }
+
+      // Resolve meeting point
+      let meetingPoint: string | undefined
+      if (typeof booking.tour === 'object' && booking.tour) {
+        meetingPoint = (booking.tour as any).meetingPoint?.address
+      }
+
+      await sendEmail({
+        to: booking.customerEmail,
+        subject: resolveTemplate(tpl.paymentSubject || (locale === 'ru' ? 'Оплата получена — {tour}' : 'Payment received — {tour}'), vars),
+        react: PaymentReceivedEmail({
+          customerName: booking.customerName,
+          tourName: tourTitle,
+          preferredDate: booking.confirmedDate || booking.preferredDate,
+          preferredTime: booking.confirmedTime || booking.preferredTime,
+          meetingPoint,
+          requestRef: booking.requestRef,
+          locale,
+          cmsHeading: tpl.paymentHeading ? resolveTemplate(tpl.paymentHeading, vars) : undefined,
+          cmsBody: tpl.paymentBody ? resolveTemplate(tpl.paymentBody, vars) : undefined,
+          cmsNote: tpl.paymentNote ? resolveTemplate(tpl.paymentNote, vars) : undefined,
+          cmsFooter: tpl.footer || undefined,
+        }),
+      })
+
+      // Admin copy
+      const adminEmail = await getNotificationEmail()
+      await sendEmail({
+        to: adminEmail,
+        subject: `[Payment] ${booking.requestRef} — ${tourTitle}`,
+        react: PaymentReceivedEmail({
+          customerName: booking.customerName,
+          tourName: tourTitle,
+          preferredDate: booking.confirmedDate || booking.preferredDate,
+          preferredTime: booking.confirmedTime || booking.preferredTime,
+          meetingPoint,
+          requestRef: booking.requestRef,
+          locale,
+          cmsHeading: tpl.paymentHeading ? resolveTemplate(tpl.paymentHeading, vars) : undefined,
+          cmsBody: tpl.paymentBody ? resolveTemplate(tpl.paymentBody, vars) : undefined,
+          cmsNote: tpl.paymentNote ? resolveTemplate(tpl.paymentNote, vars) : undefined,
+          cmsFooter: tpl.footer || undefined,
+        }),
+        replyTo: booking.customerEmail,
+      })
+
+      logBookingEvent({
+        bookingId,
+        eventType: 'email_sent',
+        actor: { type: 'system' },
+        description: `Payment confirmation email sent to ${booking.customerEmail}`,
+        metadata: { template: 'payment-received', to: booking.customerEmail },
+      }, payload)
+    } catch (emailErr) {
+      console.error('[stripe/webhook] Payment email failed:', emailErr)
+      logBookingEvent({
+        bookingId,
+        eventType: 'email_failed',
+        actor: { type: 'system' },
+        description: `Failed to send payment email to ${booking.customerEmail}`,
+        metadata: { error: String(emailErr) },
+      }, payload)
+    }
 
     // Notify n8n payment-received (n8n handles customer email + Chatwoot update)
     const { n8n } = await import('@/lib/n8n')

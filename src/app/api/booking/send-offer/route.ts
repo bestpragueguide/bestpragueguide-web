@@ -109,11 +109,13 @@ export async function POST(req: NextRequest) {
     ref: booking.requestRef,
   }
 
-  // Build subject
+  // Build subject — use "Update" for resends
+  const isResend = !!booking.offerSentAt
+  const defaultSubject = isResend
+    ? (locale === 'ru' ? 'Обновление бронирования -- {tour}' : 'Booking update -- {tour}')
+    : (locale === 'ru' ? 'Ваше бронирование подтверждено -- {tour}' : 'Your booking is confirmed -- {tour}')
   const subject = resolveTemplate(
-    (tpl as any).offerSubject || (locale === 'ru'
-      ? 'Ваше бронирование подтверждено -- {tour}'
-      : 'Your booking is confirmed -- {tour}'),
+    isResend ? defaultSubject : ((tpl as any).offerSubject || defaultSubject),
     vars
   )
 
