@@ -76,15 +76,17 @@ export async function sendEmail({
 }
 
 export async function sendAdminEmail({
+  to,
   subject,
   react,
   replyTo,
 }: {
+  to?: string
   subject: string
   react: ReactElement
   replyTo?: string
 }) {
   const adminEmail =
-    process.env.ADMIN_EMAIL || 'uliana@bestpragueguide.com'
+    to || process.env.ADMIN_EMAIL || 'info@bestpragueguide.com'
   return sendEmail({ to: adminEmail, subject, react, replyTo })
 }

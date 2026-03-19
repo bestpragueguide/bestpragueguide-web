@@ -419,6 +419,18 @@ export function getFocalPointStyle(media: any): string {
   return `${x}% ${y}%`
 }
 
+// ─── Notification Email ─────────────────────────────────────────
+
+export async function getNotificationEmail(): Promise<string> {
+  try {
+    const payload = await getPayload({ config })
+    const data = await payload.findGlobal({ slug: 'site-settings' })
+    return data.contactEmail || process.env.ADMIN_EMAIL || 'info@bestpragueguide.com'
+  } catch {
+    return process.env.ADMIN_EMAIL || 'info@bestpragueguide.com'
+  }
+}
+
 // ─── Email Templates ────────────────────────────────────────────
 
 export interface EmailTemplatesData {

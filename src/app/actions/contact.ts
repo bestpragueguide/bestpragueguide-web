@@ -10,6 +10,7 @@ import { getIpInfo, formatLocation, type IpInfo } from '@/lib/ip'
 import { sendSlackMessage, formatContactSlackMessage } from '@/lib/slack'
 import { isRateLimited } from '@/lib/rate-limit'
 import { isDisposableEmail } from '@/lib/email-validation'
+import { getNotificationEmail } from '@/lib/cms-data'
 import React from 'react'
 
 const contactSchema = z.object({
@@ -251,9 +252,13 @@ export async function submitContactForm(formData: unknown): Promise<ContactActio
       console.error('[Contact Action] Failed to save to CMS:', err)
     }
 
+    // Fetch CMS notification email
+    const notificationEmail = await getNotificationEmail()
+
     // Send notifications (fire and forget)
     Promise.allSettled([
       sendAdminEmail({
+        to: notificationEmail,
         subject: `Contact form: ${data.name}`,
         react: React.createElement(ContactNotificationEmail, {
           name: data.name,

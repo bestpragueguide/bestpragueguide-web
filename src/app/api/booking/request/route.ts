@@ -18,7 +18,7 @@ import { sendSlackMessage, formatBookingSlackMessage } from '@/lib/slack'
 import { n8n } from '@/lib/n8n'
 import { isRateLimited } from '@/lib/rate-limit'
 import { isDisposableEmail } from '@/lib/email-validation'
-import { getEmailTemplates, resolveTemplate } from '@/lib/cms-data'
+import { getEmailTemplates, resolveTemplate, getNotificationEmail } from '@/lib/cms-data'
 import { z } from 'zod'
 import { textToLexicalJson } from '@/lib/lexical-helpers'
 
@@ -100,8 +100,11 @@ export async function POST(request: NextRequest) {
       isp: ipInfo.org || '',
     }
 
-    // Fetch CMS email templates
-    const tpl = await getEmailTemplates(data.locale)
+    // Fetch CMS email templates + notification email
+    const [tpl, notificationEmail] = await Promise.all([
+      getEmailTemplates(data.locale),
+      getNotificationEmail(),
+    ])
     const vars = { name: data.customerName, tour: data.tourName, date: data.preferredDate, ref: requestRef }
 
     const notificationPromises = [
@@ -120,6 +123,7 @@ export async function POST(request: NextRequest) {
         }),
       }),
       sendAdminEmail({
+        to: notificationEmail,
         subject: resolveTemplate(tpl.adminSubject || 'New booking: {ref} — {tour}', vars),
         react: NewRequestAdminEmail({
           ...notificationData,
