@@ -115,7 +115,7 @@ All site content is editable from Payload admin panel:
 - `src/components/booking/StickyBookButton.tsx` — sticky CTA on tour detail pages
 - `src/app/api/booking/request/route.ts` — POST endpoint: validates, saves to BookingRequests, sends notifications
 - Notifications: email (Gmail SMTP primary, Resend fallback), Telegram, WhatsApp, Slack, n8n — all fire in parallel on new booking
-- Admin notification emails set `Reply-To` as customer email for direct reply
+- Admin receives the same `RequestReceivedEmail` as the customer (not a separate template); `Reply-To` set to customer email for direct reply
 - Email template text (subject, body, note) is CMS-editable via `EmailTemplates` global with hardcoded fallbacks
 - `src/emails/` — React Email templates: request-received (customer), new-request-admin, request-confirmed, request-declined, pre-tour-reminder, payment-received
 - `src/lib/booking.ts` — Zod validation schema, guest max dynamic from `getMaxGuests()`, request ref format: BPG-YYYY-NNNNN

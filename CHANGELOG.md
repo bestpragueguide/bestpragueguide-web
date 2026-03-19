@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.27.2] - 2026-03-19
+
+### Added
+- **CMS-editable disclaimer text** — new `bookingDisclaimerText` field in SiteSettings (Booking tab, localized); small text shown below submit button (e.g. "By submitting you agree to be contacted about your request."); hidden when empty
+- **Booking fields seeder** — `POST /api/fix-trust-badges` now seeds all booking CMS fields (form title, submit label, success title/message, disclaimer, consent, pricing description, trust badges) in both EN and RU
+
+### Changed
+- **Booking form title at top** — moved from inside form to top of booking sidebar (desktop) and modal (mobile), above pricing section
+- **Admin receives same email as customer** — admin notification now uses `RequestReceivedEmail` template (same as customer) instead of separate `NewRequestAdminEmail`; Reply-To set to customer email for direct reply
+
 ## [1.27.1] - 2026-03-19
 
 ### Added
