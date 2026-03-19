@@ -4,9 +4,7 @@ import { sendEmail } from '@/lib/email'
 import { getEmailTemplates, resolveTemplate } from '@/lib/cms-data'
 import { RequestDeclinedEmail } from '@/emails/request-declined'
 import { PaymentReceivedEmail } from '@/emails/payment-received'
-import { BookingOfferEmail } from '@/emails/booking-offer'
 import { logBookingEvent, computeFieldDiffs } from '@/lib/audit'
-import { getNotificationEmail } from '@/lib/cms-data'
 
 export const beforeChangeHook: CollectionBeforeChangeHook = async ({
   data,
@@ -137,100 +135,7 @@ export const afterChangeHook: CollectionAfterChangeHook = async ({
   const vars = { name: doc.customerName, tour: tourName, date: doc.preferredDate, ref: doc.requestRef, time: doc.preferredTime }
 
   // Status transitions → send emails
-  if (oldStatus === 'new' && newStatus === 'confirmed') {
-    try {
-      const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'
-      const offerUrl = doc.offerToken ? `${baseUrl}/${locale}/booking/${doc.offerToken}` : ''
-      const confirmedPrice = doc.confirmedPrice || doc.totalPrice || 0
-      const defaultDepositPercent = 30
-      const depositAmount = doc.customDepositAmount || Math.round(confirmedPrice * defaultDepositPercent / 100)
-      const cashBalance = confirmedPrice - depositAmount
-
-      const offerVars = {
-        ...vars,
-        guests: String(doc.confirmedGuests || doc.guests || ''),
-        price: String(confirmedPrice),
-        deposit: String(depositAmount),
-        currency: doc.currency || 'EUR',
-      }
-
-      const subject = resolveTemplate(
-        (tpl as any).offerSubject || (locale === 'ru' ? 'Ваше бронирование подтверждено — {tour}' : 'Your booking is confirmed — {tour}'),
-        offerVars,
-      )
-
-      await sendEmail({
-        to: doc.customerEmail,
-        subject,
-        react: BookingOfferEmail({
-          customerName: doc.customerName,
-          tourName,
-          confirmedDate: doc.confirmedDate || doc.preferredDate,
-          confirmedTime: doc.confirmedTime || doc.preferredTime,
-          guests: doc.confirmedGuests || doc.guests || 2,
-          confirmedPrice,
-          depositAmount,
-          cashBalance,
-          currency: doc.currency || 'EUR',
-          requestRef: doc.requestRef,
-          offerUrl,
-          locale,
-          cmsHeaderTitle: tpl.headerTitle || undefined,
-          cmsGreeting: tpl.greeting ? resolveTemplate(tpl.greeting, offerVars) : undefined,
-          cmsHeading: (tpl as any).offerHeading ? resolveTemplate((tpl as any).offerHeading, offerVars) : undefined,
-          cmsBody: (tpl as any).offerBody ? resolveTemplate((tpl as any).offerBody, offerVars) : undefined,
-          cmsCtaLabel: (tpl as any).offerCtaLabel || undefined,
-          cmsNote: (tpl as any).offerNote ? resolveTemplate((tpl as any).offerNote, offerVars) : undefined,
-          cmsFooter: tpl.footer || undefined,
-        }),
-      })
-
-      // Send admin copy
-      const adminEmail = await getNotificationEmail()
-      await sendEmail({
-        to: adminEmail,
-        subject: `[Admin Copy] ${subject}`,
-        react: BookingOfferEmail({
-          customerName: doc.customerName,
-          tourName,
-          confirmedDate: doc.confirmedDate || doc.preferredDate,
-          confirmedTime: doc.confirmedTime || doc.preferredTime,
-          guests: doc.confirmedGuests || doc.guests || 2,
-          confirmedPrice,
-          depositAmount,
-          cashBalance,
-          currency: doc.currency || 'EUR',
-          requestRef: doc.requestRef,
-          offerUrl,
-          locale,
-          cmsHeaderTitle: tpl.headerTitle || undefined,
-          cmsGreeting: tpl.greeting ? resolveTemplate(tpl.greeting, offerVars) : undefined,
-          cmsHeading: (tpl as any).offerHeading ? resolveTemplate((tpl as any).offerHeading, offerVars) : undefined,
-          cmsBody: (tpl as any).offerBody ? resolveTemplate((tpl as any).offerBody, offerVars) : undefined,
-          cmsCtaLabel: (tpl as any).offerCtaLabel || undefined,
-          cmsNote: (tpl as any).offerNote ? resolveTemplate((tpl as any).offerNote, offerVars) : undefined,
-          cmsFooter: tpl.footer || undefined,
-        }),
-        replyTo: doc.customerEmail,
-      })
-
-      logBookingEvent({
-        bookingId: doc.id,
-        eventType: 'offer_sent',
-        actor: { type: 'system' },
-        description: `Booking offer email sent to ${doc.customerEmail}`,
-        metadata: { template: 'booking-offer', to: doc.customerEmail, offerUrl },
-      }, req.payload)
-    } catch (err) {
-      logBookingEvent({
-        bookingId: doc.id,
-        eventType: 'email_failed',
-        actor: { type: 'system' },
-        description: `Failed to send booking offer email to ${doc.customerEmail}`,
-        metadata: { template: 'booking-offer', to: doc.customerEmail, error: String(err) },
-      }, req.payload)
-    }
-  }
+  // NOTE: confirmed status does NOT auto-send email. Admin uses "Send Offer" button manually.
 
   if (oldStatus === 'new' && newStatus === 'declined') {
     try {
