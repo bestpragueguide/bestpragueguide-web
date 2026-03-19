@@ -25,7 +25,7 @@ Bilingual (EN/RU) private tour portal for Prague.
 All site content is editable from Payload admin panel:
 
 ### Globals
-- **SiteSettings** — contact info, social links (Instagram, YouTube, TripAdvisor, Google Business), map coordinates, WhatsApp templates, license/copyright, booking pricing description, booking trust badges (no fallback — empty unless configured in admin), announcement banner
+- **SiteSettings** — contact info (also used as notification email recipient), social links (Instagram, YouTube, TripAdvisor, Google Business), map coordinates, WhatsApp templates, license/copyright, booking pricing description, booking success title/message (CMS-editable with i18n fallback), booking consent text (with `[terms]`/`[privacy]` link placeholders), booking trust badges (no fallback — empty unless configured in admin), announcement banner
 - **Navigation** — header links, CTA button, footer columns with links
 - **Homepage** — hero (tagline, subtitle, CTA, background image, mobile image), trust bar items, guide profile, categories grid, process steps, testimonials heading, FAQ heading, CTA section, SEO
 - **AboutPage** — founder profile (photo, bio, quote), stats, team section, values, gallery, dual CTAs, SEO
@@ -111,7 +111,7 @@ All site content is editable from Payload admin panel:
 
 ## Booking System
 - `src/components/booking/BookingModal.tsx` — modal wrapper with price header
-- `src/components/booking/BookingRequestForm.tsx` — form with date, time, guests, guest categories, additional services, customer info; uses `calculatePrice()` for dynamic pricing; accepts optional `preferredTimes` prop (falls back to `TIME_SLOTS` from `booking.ts`)
+- `src/components/booking/BookingRequestForm.tsx` — form with date, time, guests, guest categories, additional services, customer info, consent checkbox; uses `calculatePrice()` for dynamic pricing; accepts optional `preferredTimes` prop (falls back to `TIME_SLOTS` from `booking.ts`); success title/message CMS-editable with i18n fallback; consent checkbox shown only when `consentText` is configured in SiteSettings
 - `src/components/booking/StickyBookButton.tsx` — sticky CTA on tour detail pages
 - `src/app/api/booking/request/route.ts` — POST endpoint: validates, saves to BookingRequests, sends notifications
 - Notifications: email (Gmail SMTP primary, Resend fallback), Telegram, WhatsApp, Slack, n8n — all fire in parallel on new booking
@@ -122,9 +122,11 @@ All site content is editable from Payload admin panel:
 - `src/lib/rate-limit.ts` — shared rate limiter (Redis sorted sets with in-memory fallback), used by booking and contact API routes and server actions
 - `src/lib/email-validation.ts` — disposable email domain blocklist (~50 domains), used by booking/contact routes and server actions
 - `src/components/shared/ShareButtons.tsx` — Web Share API on mobile (native OS share sheet), desktop fallback with WhatsApp, Telegram, Facebook, Twitter/X, LinkedIn, copy link
-- `src/app/actions/booking.ts` — `submitBookingRequest()` server action (mirrors API route logic, used by BookingRequestForm); converts `specialRequests` plain text to Lexical JSON via `textToLexicalJson()` before `payload.create()`
-- `src/app/actions/contact.ts` — `submitContactForm()` server action (mirrors API route logic, used by ContactForm); converts `message` plain text to Lexical JSON via `textToLexicalJson()` before `payload.create()`
-- Form submissions to richText fields (specialRequests, message) MUST convert plain text to Lexical JSON — passing plain strings to `payload.create()` causes validation errors
+- `src/app/actions/booking.ts` — `submitBookingRequest()` server action (NOT used by forms due to webpack bundling bug; kept for potential future use)
+- `src/app/actions/contact.ts` — `submitContactForm()` server action (NOT used by forms; same bundling issue)
+- **Forms use API routes, not server actions** — `BookingRequestForm` calls `fetch('/api/booking/request')`, `ContactForm` calls `fetch('/api/contact')`. Server actions have a `ReferenceError: Cannot access 'l' before initialization` webpack bundling bug in production builds
+- Form submissions to richText fields (specialRequests, message) MUST convert plain text to Lexical JSON via `textToLexicalJson()` from `src/lib/lexical-helpers.ts` — passing plain strings to `payload.create()` causes validation errors
+- **Notification email** — `sendAdminEmail()` accepts optional `to` param; API routes fetch recipient from SiteSettings `contactEmail` via `getNotificationEmail()` with env var fallback
 
 ## OSS Integration (v1.15.2)
 - **n8n** (`src/lib/n8n.ts`) — fire-and-forget webhook hub; 4 methods: bookingNew, bookingConfirmed, tourCompleted, paymentReceived
@@ -182,7 +184,7 @@ All site content is editable from Payload admin panel:
 - SEO metaDescription fields remain textarea (must be plain text for meta tags)
 - When rendering richText in listings/cards, always use `extractPlainText()` — never render richText objects directly as JSX children
 - `/api/migrate-richtext` endpoint converts existing plain text to Lexical format
-- `textToLexicalJson(text)` helper (defined in booking/contact actions and API routes) converts plain form text to Lexical JSON for `payload.create()` — required because richText fields reject plain strings
+- `textToLexicalJson(text)` in `src/lib/lexical-helpers.ts` converts plain form text to Lexical JSON for `payload.create()` — required because richText fields reject plain strings
 
 ## Live Preview
 - Payload Live Preview configured in `payload.config.ts` with Mobile/Tablet/Desktop breakpoints

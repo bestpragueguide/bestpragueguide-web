@@ -2,7 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.26.3] - 2026-03-19
+## [1.27.0] - 2026-03-19
+
+### Added
+- **CMS-editable booking success message** — new `bookingSuccessTitle` and `bookingSuccessMessage` fields in SiteSettings (Booking tab, localized); falls back to i18n defaults when empty
+- **CMS-editable consent checkbox** — new `bookingConsentText` field in SiteSettings (Booking tab, localized); use `[terms]` and `[privacy]` as link placeholders; submit button disabled until consent given; hidden when field is empty
+- **CMS-configurable notification email** — admin notifications now read from SiteSettings `contactEmail` (editable in admin) with fallback to `ADMIN_EMAIL` env var; `getNotificationEmail()` helper in `cms-data.ts`
+- **Shared Lexical helper** — `textToLexicalJson()` extracted to `src/lib/lexical-helpers.ts` for reuse across booking/contact API routes and server actions
+- **Fix trust badges endpoint** — `POST /api/fix-trust-badges` seeds EN/RU trust badges with proper localized array handling
+
+### Fixed
+- **Booking form "Failed to send"** — `specialRequests` richText field received plain string from form, causing Payload validation error. Now converts to Lexical JSON before saving
+- **Contact form same issue** — `message` richText field had the same plain-text-to-richText mismatch. Fixed in all code paths
+- **Server action bundling error** — `ReferenceError: Cannot access 'l' before initialization` in webpack chunk. Switched booking and contact forms from server actions to direct `fetch()` calls to API routes
+- **Trust badges show fallback when not configured** — now returns empty array so badges are hidden unless configured in admin
+- **Duplicate ADMIN_EMAIL env var** — removed `uliana@` duplicate, kept `info@bestpragueguide.com`
+
+### Changed
+- **Booking success message persists** — removed 5-second auto-dismiss timer; success message stays visible until modal is closed
+
+## [1.26.3] - 2026-03-19 [superseded by 1.27.0]
 
 ### Fixed
 - **Booking form "Failed to send"** — `specialRequests` richText field in BookingRequests received plain string from form submission, causing Payload validation error. Now converts plain text to Lexical JSON before saving (both server action and API route)
