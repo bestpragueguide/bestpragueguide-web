@@ -9,6 +9,7 @@ import { PaymentReceivedEmail } from '@/emails/payment-received'
 export const beforeChangeHook: CollectionBeforeChangeHook = async ({
   data,
   operation,
+  originalDoc,
 }) => {
   if (operation === 'create' && !data.requestRef) {
     data.requestRef = await generateRequestRef()
@@ -16,10 +17,11 @@ export const beforeChangeHook: CollectionBeforeChangeHook = async ({
 
   // Auto-populate offer fields from booking request when status changes to 'confirmed'
   if (operation === 'update' && data.status === 'confirmed') {
-    if (!data.confirmedDate && data.preferredDate) data.confirmedDate = data.preferredDate
-    if (!data.confirmedTime && data.preferredTime) data.confirmedTime = data.preferredTime
-    if (!data.confirmedPrice && data.totalPrice) data.confirmedPrice = data.totalPrice
-    if (!data.confirmedGuests && data.guests) data.confirmedGuests = data.guests
+    const doc = originalDoc || {}
+    if (!data.confirmedDate) data.confirmedDate = data.preferredDate || doc.preferredDate
+    if (!data.confirmedTime) data.confirmedTime = data.preferredTime || doc.preferredTime
+    if (!data.confirmedPrice) data.confirmedPrice = data.totalPrice || doc.totalPrice
+    if (!data.confirmedGuests) data.confirmedGuests = data.guests || doc.guests
   }
 
   // Auto-generate offer token when status changes to 'confirmed'

@@ -14,11 +14,8 @@ export function SendOfferButton() {
   const [message, setMessage] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
 
-  // Only show when booking is confirmed and has offer token
-  if (status !== 'confirmed' && status !== 'payment-sent') return null
+  // Show when booking has an offer token (generated on confirm)
   if (!offerToken) return null
-  // Don't show if payment is complete
-  if (paymentStatus === 'deposit_paid' || paymentStatus === 'fully_paid') return null
 
   const locale = customerLanguage || 'en'
   const baseUrl = typeof window !== 'undefined'
@@ -118,8 +115,8 @@ export function SendOfferButton() {
         </p>
       )}
 
-      {/* Send/Resend button */}
-      <button
+      {/* Send/Resend button — hide after full payment */}
+      {paymentStatus !== 'fully_paid' && <button
         type="button"
         onClick={handleSend}
         disabled={loading}
@@ -140,7 +137,7 @@ export function SendOfferButton() {
           : offerSentAt
             ? 'Resend Offer Email'
             : 'Send Offer Email'}
-      </button>
+      </button>}
 
       {message && (
         <p style={{ marginTop: 8, fontSize: 13, color: '#374151' }}>{message}</p>
