@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { useTranslations } from 'next-intl'
 import { TIME_SLOTS } from '@/lib/booking'
 import { trackBookingSubmit } from '@/lib/analytics'
@@ -19,6 +19,8 @@ interface BookingRequestFormProps {
   defaultTime?: string
   preferredTimes?: string[]
   contactPhoneDisplay?: string
+  successTitle?: string
+  successMessage?: string
 }
 
 export function BookingRequestForm({
@@ -31,6 +33,8 @@ export function BookingRequestForm({
   defaultTime,
   preferredTimes,
   contactPhoneDisplay,
+  successTitle,
+  successMessage,
 }: BookingRequestFormProps) {
   const t = useTranslations('booking')
   const [status, setStatus] = useState<
@@ -43,12 +47,6 @@ export function BookingRequestForm({
   const [selectedServiceIds, setSelectedServiceIds] = useState<Set<number>>(new Set())
   const [categoryBreakdown, setCategoryBreakdown] = useState<Record<string, number>>({})
 
-  useEffect(() => {
-    if (status === 'success') {
-      const timer = setTimeout(() => setStatus('idle'), 5000)
-      return () => clearTimeout(timer)
-    }
-  }, [status])
 
   const tomorrow = new Date()
   tomorrow.setDate(tomorrow.getDate() + 1)
@@ -171,9 +169,9 @@ export function BookingRequestForm({
           <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
           <polyline points="22 4 12 14.01 9 11.01" />
         </svg>
-        <p className="text-lg font-medium text-navy mb-2">{t('successTitle')}</p>
+        <p className="text-lg font-medium text-navy mb-2">{successTitle || t('successTitle')}</p>
         <p className="text-sm text-gray">
-          {t('successMessage')}
+          {successMessage || t('successMessage')}
         </p>
         {requestRef && (
           <p className="text-xs text-gray mt-2">

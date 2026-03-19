@@ -162,6 +162,22 @@ export const SiteSettings: GlobalConfig = {
               },
             },
             {
+              name: 'bookingSuccessTitle',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Heading shown after successful booking (e.g. "Request Received!")',
+              },
+            },
+            {
+              name: 'bookingSuccessMessage',
+              type: 'textarea',
+              localized: true,
+              admin: {
+                description: 'Message shown after successful booking (e.g. "Thank you! We received your request...")',
+              },
+            },
+            {
               name: 'bookingTrustBadges',
               type: 'array',
               labels: {

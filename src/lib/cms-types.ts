@@ -80,6 +80,8 @@ export interface SiteSettingsData {
   licenseText: string
   copyrightText: string
   bookingPricingDescription?: string
+  bookingSuccessTitle?: string
+  bookingSuccessMessage?: string
   bookingTrustBadges?: Array<{ text: string }>
   announcement?: {
     enabled?: boolean

@@ -19,6 +19,8 @@ interface StickyBookButtonProps {
   trustBadges?: Array<{ text: string }>
   contactPhoneDisplay?: string
   bookingPricingDescription?: string
+  successTitle?: string
+  successMessage?: string
 }
 
 export function StickyBookButton({
@@ -31,6 +33,8 @@ export function StickyBookButton({
   trustBadges,
   contactPhoneDisplay,
   bookingPricingDescription,
+  successTitle,
+  successMessage,
 }: StickyBookButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -95,6 +99,8 @@ export function StickyBookButton({
           locale={locale}
           preferredTimes={preferredTimes}
           contactPhoneDisplay={contactPhoneDisplay}
+          successTitle={successTitle}
+          successMessage={successMessage}
         />
       </BookingModal>
     </>
