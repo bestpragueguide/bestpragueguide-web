@@ -87,6 +87,26 @@ export async function POST(req: Request) {
       // Add showOnHomepage column to reviews (checkbox, not localized)
       `ALTER TABLE reviews ADD COLUMN IF NOT EXISTS show_on_homepage boolean DEFAULT false`,
 
+      // Tours: replace lat/lng with mapUrl on main and version tables
+      `ALTER TABLE tours ADD COLUMN IF NOT EXISTS meeting_point_map_url varchar`,
+      `ALTER TABLE _tours_v ADD COLUMN IF NOT EXISTS version_meeting_point_map_url varchar`,
+
+      // SiteSettings: replace mapCoordinates group with mapUrl
+      `ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS map_url varchar`,
+
+      // SiteSettings: booking page fields on locales table
+      `ALTER TABLE site_settings_locales ADD COLUMN IF NOT EXISTS booking_page_payment_note varchar`,
+      `ALTER TABLE site_settings_locales ADD COLUMN IF NOT EXISTS booking_page_cash_note varchar`,
+      `ALTER TABLE site_settings_locales ADD COLUMN IF NOT EXISTS booking_page_expired_heading varchar`,
+      `ALTER TABLE site_settings_locales ADD COLUMN IF NOT EXISTS booking_page_expired_message varchar`,
+
+      // EmailTemplates: offer fields on locales table
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS offer_subject varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS offer_heading varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS offer_body varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS offer_cta_label varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS offer_note varchar`,
+
       // Booking offer fields on booking_requests table
       `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS offer_token varchar UNIQUE`,
       `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS offer_sent_at timestamp(3) with time zone`,
