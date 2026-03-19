@@ -23,5 +23,7 @@ export const routing = defineRouting({
     },
     '/booking/payment-success': '/booking/payment-success',
     '/booking/payment-cancelled': '/booking/payment-cancelled',
+    '/booking/[token]': '/booking/[token]',
+    '/booking': '/booking',
   },
 })

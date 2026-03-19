@@ -87,6 +87,10 @@ export interface SiteSettingsData {
   bookingDisclaimerText?: string
   bookingConsentText?: string
   bookingTrustBadges?: Array<{ text: string }>
+  bookingPagePaymentNote?: string
+  bookingPageCashNote?: string
+  bookingPageExpiredHeading?: string
+  bookingPageExpiredMessage?: string
   announcement?: {
     enabled?: boolean
     text?: string

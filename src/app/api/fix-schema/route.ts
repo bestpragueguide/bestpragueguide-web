@@ -87,6 +87,32 @@ export async function POST(req: Request) {
       // Add showOnHomepage column to reviews (checkbox, not localized)
       `ALTER TABLE reviews ADD COLUMN IF NOT EXISTS show_on_homepage boolean DEFAULT false`,
 
+      // Booking offer fields on booking_requests table
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS offer_token varchar UNIQUE`,
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS offer_sent_at timestamp(3) with time zone`,
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS offer_expires_at timestamp(3) with time zone`,
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS confirmed_date date`,
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS confirmed_time varchar`,
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS confirmed_price numeric`,
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS confirmed_guests integer`,
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS guide_name varchar`,
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS guide_phone varchar`,
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS meeting_point_lat numeric`,
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS meeting_point_lng numeric`,
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS payment_method varchar DEFAULT 'stripe_deposit'`,
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS custom_deposit_amount numeric`,
+
+      // Booking offer localized fields (first localized fields on BookingRequests)
+      `CREATE TABLE IF NOT EXISTS booking_requests_locales (
+        meeting_point_address varchar,
+        meeting_point_instructions varchar,
+        customer_notes varchar,
+        id serial PRIMARY KEY,
+        _locale _locales NOT NULL,
+        _parent_id integer NOT NULL REFERENCES booking_requests(id) ON DELETE CASCADE,
+        UNIQUE(_locale, _parent_id)
+      )`,
+
       // site_settings_booking_trust_badges array table (non-destructive — CREATE IF NOT EXISTS only)
       `CREATE TABLE IF NOT EXISTS site_settings_booking_trust_badges (
         _order integer NOT NULL,

@@ -225,6 +225,10 @@ export async function getSiteSettings(locale: string): Promise<SiteSettingsData>
       bookingTrustBadges: (data as any).bookingTrustBadges?.length
         ? (data as any).bookingTrustBadges.map((b: any) => ({ text: b.text }))
         : [],
+      bookingPagePaymentNote: (data as any).bookingPagePaymentNote || undefined,
+      bookingPageCashNote: (data as any).bookingPageCashNote || undefined,
+      bookingPageExpiredHeading: (data as any).bookingPageExpiredHeading || undefined,
+      bookingPageExpiredMessage: (data as any).bookingPageExpiredMessage || undefined,
       announcement: data.announcement,
     } as SiteSettingsData
   } catch {
@@ -457,6 +461,11 @@ export interface EmailTemplatesData {
   reminderHeading?: string
   reminderBody?: string
   reminderNote?: string
+  offerSubject?: string
+  offerHeading?: string
+  offerBody?: string
+  offerCtaLabel?: string
+  offerNote?: string
   footer?: string
 }
 

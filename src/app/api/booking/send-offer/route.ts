@@ -1,0 +1,207 @@
+import { type NextRequest, NextResponse } from 'next/server'
+import { getPayload } from 'payload'
+import configPromise from '@payload-config'
+import { sendEmail, sendAdminEmail } from '@/lib/email'
+import { getEmailTemplates, resolveTemplate, getNotificationEmail } from '@/lib/cms-data'
+import { BookingOfferEmail } from '@/emails/booking-offer'
+import { n8n } from '@/lib/n8n'
+
+export const dynamic = 'force-dynamic'
+
+export async function POST(req: NextRequest) {
+  const payload = await getPayload({ config: configPromise })
+
+  // Require Payload admin auth
+  const { user } = await payload.auth({ headers: req.headers })
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const { bookingId } = (await req.json()) as { bookingId: string }
+  if (!bookingId) {
+    return NextResponse.json({ error: 'bookingId required' }, { status: 400 })
+  }
+
+  const booking = await payload.findByID({
+    collection: 'booking-requests',
+    id: bookingId,
+    depth: 2,
+  })
+
+  if (!booking) {
+    return NextResponse.json({ error: 'Booking not found' }, { status: 404 })
+  }
+
+  if (!(booking as any).offerToken) {
+    return NextResponse.json(
+      { error: 'Booking must be confirmed first (no offer token)' },
+      { status: 400 }
+    )
+  }
+
+  const locale = (booking.customerLanguage || 'en') as 'en' | 'ru'
+  const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? 'https://bestpragueguide.com'
+  const offerToken = (booking as any).offerToken as string
+  const offerUrl = `${baseUrl}/${locale}/booking/${offerToken}`
+
+  // Resolve tour title
+  let tourTitle = 'Tour'
+  let tourSlug = ''
+  if (typeof booking.tour === 'object' && booking.tour !== null) {
+    tourTitle = String((booking.tour as { title?: unknown }).title ?? 'Tour')
+    tourSlug = String((booking.tour as { slug?: unknown }).slug ?? '')
+  } else if (typeof booking.tour === 'number') {
+    try {
+      const tour = await payload.findByID({
+        collection: 'tours',
+        id: booking.tour,
+        locale,
+      })
+      tourTitle = tour.title || tourTitle
+      tourSlug = tour.slug || tourSlug
+    } catch {
+      // Use defaults
+    }
+  }
+
+  // Fetch CMS email templates
+  const tpl = await getEmailTemplates(locale)
+
+  // Determine pricing values
+  const confirmedPrice = (booking as any).confirmedPrice ?? booking.totalPrice ?? 0
+  const paymentMethod = (booking as any).paymentMethod || 'stripe_deposit'
+  const confirmedDate = (booking as any).confirmedDate || booking.preferredDate
+  const confirmedTime = (booking as any).confirmedTime || booking.preferredTime
+  const confirmedGuests = (booking as any).confirmedGuests || booking.guests
+
+  // Calculate deposit if applicable
+  let depositAmount: number | undefined
+  let cashBalance: number | undefined
+  if (paymentMethod === 'stripe_deposit') {
+    const customDeposit = (booking as any).customDepositAmount
+    if (customDeposit && customDeposit > 0) {
+      depositAmount = customDeposit
+    } else {
+      try {
+        const config = await payload.findGlobal({ slug: 'payment-config' })
+        const depositPercent = config.depositPercent ?? 30
+        depositAmount = Math.round(confirmedPrice * depositPercent) / 100
+      } catch {
+        depositAmount = Math.round(confirmedPrice * 30) / 100
+      }
+    }
+    cashBalance = confirmedPrice - (depositAmount ?? 0)
+  } else if (paymentMethod === 'stripe_full') {
+    depositAmount = confirmedPrice
+    cashBalance = 0
+  }
+
+  // Template variables
+  const vars: Record<string, string> = {
+    name: booking.customerName,
+    tour: tourTitle,
+    date: confirmedDate,
+    time: confirmedTime,
+    guests: String(confirmedGuests),
+    price: `${confirmedPrice}`,
+    deposit: depositAmount != null ? `${depositAmount}` : '',
+    ref: booking.requestRef,
+  }
+
+  // Build subject
+  const subject = resolveTemplate(
+    (tpl as any).offerSubject || (locale === 'ru'
+      ? 'Ваше бронирование подтверждено -- {tour}'
+      : 'Your booking is confirmed -- {tour}'),
+    vars
+  )
+
+  // Send customer email
+  await sendEmail({
+    to: booking.customerEmail,
+    subject,
+    react: BookingOfferEmail({
+      customerName: booking.customerName,
+      tourName: tourTitle,
+      confirmedDate,
+      confirmedTime,
+      guests: confirmedGuests,
+      confirmedPrice,
+      depositAmount,
+      cashBalance,
+      currency: booking.currency || 'EUR',
+      requestRef: booking.requestRef,
+      offerUrl,
+      locale,
+      cmsHeading: (tpl as any).offerHeading ? resolveTemplate((tpl as any).offerHeading, vars) : undefined,
+      cmsBody: (tpl as any).offerBody ? resolveTemplate((tpl as any).offerBody, vars) : undefined,
+      cmsCtaLabel: (tpl as any).offerCtaLabel || undefined,
+      cmsNote: (tpl as any).offerNote ? resolveTemplate((tpl as any).offerNote, vars) : undefined,
+      cmsFooter: tpl.footer || undefined,
+    }),
+  })
+
+  // Send admin copy
+  const adminEmail = await getNotificationEmail()
+  await sendAdminEmail({
+    to: adminEmail,
+    subject: `[Admin Copy] ${subject}`,
+    react: BookingOfferEmail({
+      customerName: booking.customerName,
+      tourName: tourTitle,
+      confirmedDate,
+      confirmedTime,
+      guests: confirmedGuests,
+      confirmedPrice,
+      depositAmount,
+      cashBalance,
+      currency: booking.currency || 'EUR',
+      requestRef: booking.requestRef,
+      offerUrl,
+      locale,
+      cmsHeading: (tpl as any).offerHeading ? resolveTemplate((tpl as any).offerHeading, vars) : undefined,
+      cmsBody: (tpl as any).offerBody ? resolveTemplate((tpl as any).offerBody, vars) : undefined,
+      cmsCtaLabel: (tpl as any).offerCtaLabel || undefined,
+      cmsNote: (tpl as any).offerNote ? resolveTemplate((tpl as any).offerNote, vars) : undefined,
+      cmsFooter: tpl.footer || undefined,
+    }),
+    replyTo: booking.customerEmail,
+  })
+
+  // Update booking
+  const updateData: Record<string, unknown> = {
+    offerSentAt: new Date().toISOString(),
+  }
+  if (paymentMethod === 'stripe_deposit' || paymentMethod === 'stripe_full') {
+    updateData.status = 'payment-sent'
+  }
+  await payload.update({
+    collection: 'booking-requests',
+    id: bookingId,
+    data: updateData,
+  })
+
+  // Fire n8n webhook
+  await n8n.bookingConfirmed({
+    bookingId,
+    requestRef: booking.requestRef,
+    customerName: booking.customerName,
+    customerEmail: booking.customerEmail,
+    customerLanguage: locale,
+    tourTitle,
+    tourSlug,
+    confirmedDate,
+    confirmedTime,
+    guests: confirmedGuests,
+    totalPrice: confirmedPrice,
+    prepaymentRequired: paymentMethod !== 'cash_only' && paymentMethod !== 'none',
+    depositAmountEur: depositAmount,
+    stripeCheckoutUrl: undefined,
+    paymentDeadlineDays: 3,
+  }).catch(console.error)
+
+  return NextResponse.json({
+    success: true,
+    offerUrl,
+  })
+}

@@ -13,6 +13,13 @@ export const beforeChangeHook: CollectionBeforeChangeHook = async ({
   if (operation === 'create' && !data.requestRef) {
     data.requestRef = await generateRequestRef()
   }
+
+  // Auto-generate offer token when status changes to 'confirmed'
+  if (operation === 'update' && data.status === 'confirmed' && !data.offerToken) {
+    const { randomBytes } = await import('crypto')
+    data.offerToken = randomBytes(32).toString('hex')
+  }
+
   return data
 }
 

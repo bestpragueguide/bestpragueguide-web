@@ -49,6 +49,66 @@ export const EmailTemplates: GlobalConfig = {
           ],
         },
         {
+          label: 'Booking Offer',
+          fields: [
+            {
+              name: 'offerSubject',
+              label: 'Subject',
+              type: 'text',
+              localized: true,
+              defaultValue: 'Your booking is confirmed — {tour}',
+              admin: {
+                description: 'Placeholders: {name}, {tour}, {date}, {time}, {ref}',
+              },
+            },
+            {
+              name: 'offerHeading',
+              label: 'Heading',
+              type: 'text',
+              localized: true,
+              defaultValue: 'Your tour is confirmed, {name}!',
+              admin: {
+                description: 'Placeholders: {name}',
+              },
+            },
+            {
+              name: 'offerBody',
+              label: 'Body',
+              type: 'textarea',
+              localized: true,
+              defaultValue:
+                'Great news! Your "{tour}" tour has been confirmed for {date} at {time}.\n\nPlease review the details below and complete your payment to secure the date.',
+              admin: {
+                description:
+                  'Placeholders: {name}, {tour}, {date}, {time}, {guests}, {price}, {deposit}, {ref}',
+                rows: 5,
+              },
+            },
+            {
+              name: 'offerCtaLabel',
+              label: 'Button Label',
+              type: 'text',
+              localized: true,
+              defaultValue: 'View Your Booking',
+              admin: {
+                description: 'Text on the CTA button',
+              },
+            },
+            {
+              name: 'offerNote',
+              label: 'Note',
+              type: 'textarea',
+              localized: true,
+              defaultValue:
+                'Click the button above to view all details and complete your payment.',
+              admin: {
+                description: 'Shown below the CTA button',
+                rows: 3,
+              },
+            },
+          ],
+        },
+        {
           label: 'Admin Notification',
           fields: [
             {

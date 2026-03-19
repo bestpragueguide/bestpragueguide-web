@@ -14,7 +14,7 @@ export const BookingRequests: CollectionConfig = {
     listSearchableFields: ['requestRef', 'customerName', 'customerEmail'],
     components: {
       edit: {
-        beforeDocumentControls: ['@/components/admin/PaymentLinkButton#PaymentLinkButton'],
+        beforeDocumentControls: ['@/components/admin/SendOfferButton#SendOfferButton'],
       },
     },
   },
@@ -102,211 +102,329 @@ export const BookingRequests: CollectionConfig = {
   },
   fields: [
     {
-      name: 'requestRef',
-      type: 'text',
-      required: true,
-      unique: true,
-      admin: {
-        readOnly: true,
-        description: 'Auto-generated reference (BPG-YYYY-NNNNN)',
-      },
-    },
-    {
-      name: 'tour',
-      type: 'relationship',
-      relationTo: 'tours',
-      required: true,
-    },
-    {
-      name: 'preferredDate',
-      type: 'date',
-      required: true,
-      admin: {
-        date: {
-          pickerAppearance: 'dayOnly',
-          displayFormat: 'yyyy-MM-dd',
+      type: 'tabs',
+      tabs: [
+        {
+          label: 'Booking',
+          fields: [
+            {
+              name: 'requestRef',
+              type: 'text',
+              required: true,
+              unique: true,
+              admin: {
+                readOnly: true,
+                description: 'Auto-generated reference (BPG-YYYY-NNNNN)',
+              },
+            },
+            {
+              name: 'tour',
+              type: 'relationship',
+              relationTo: 'tours',
+              required: true,
+            },
+            {
+              name: 'preferredDate',
+              type: 'date',
+              required: true,
+              admin: {
+                date: {
+                  pickerAppearance: 'dayOnly',
+                  displayFormat: 'yyyy-MM-dd',
+                },
+              },
+            },
+            {
+              name: 'preferredTime',
+              type: 'text',
+              required: true,
+            },
+            {
+              name: 'guests',
+              type: 'number',
+              required: true,
+              min: 1,
+              max: 8,
+            },
+            {
+              name: 'customerName',
+              type: 'text',
+              required: true,
+            },
+            {
+              name: 'customerEmail',
+              type: 'email',
+              required: true,
+            },
+            {
+              name: 'customerPhone',
+              type: 'text',
+            },
+            {
+              name: 'customerLanguage',
+              type: 'select',
+              required: true,
+              options: [
+                { label: 'English', value: 'en' },
+                { label: 'Русский', value: 'ru' },
+              ],
+            },
+            {
+              name: 'specialRequests',
+              type: 'richText',
+              editor: simplifiedEditor,
+            },
+            {
+              name: 'totalPrice',
+              type: 'number',
+              admin: {
+                description: 'Calculated total price in EUR (including surcharge)',
+              },
+            },
+            {
+              name: 'currency',
+              type: 'select',
+              defaultValue: 'EUR',
+              options: [
+                { label: 'EUR (€)', value: 'EUR' },
+                { label: 'CZK (Kč)', value: 'CZK' },
+                { label: 'USD ($)', value: 'USD' },
+              ],
+              admin: {
+                description: 'Currency selected by customer at booking time',
+              },
+            },
+            {
+              name: 'status',
+              type: 'select',
+              required: true,
+              defaultValue: 'new',
+              options: [
+                { label: 'New', value: 'new' },
+                { label: 'Confirmed', value: 'confirmed' },
+                { label: 'Payment Sent', value: 'payment-sent' },
+                { label: 'Paid', value: 'paid' },
+                { label: 'Completed', value: 'completed' },
+                { label: 'Declined', value: 'declined' },
+              ],
+            },
+          ],
         },
-      },
-    },
-    {
-      name: 'preferredTime',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'guests',
-      type: 'number',
-      required: true,
-      min: 1,
-      max: 8,
-    },
-    {
-      name: 'customerName',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'customerEmail',
-      type: 'email',
-      required: true,
-    },
-    {
-      name: 'customerPhone',
-      type: 'text',
-    },
-    {
-      name: 'customerLanguage',
-      type: 'select',
-      required: true,
-      options: [
-        { label: 'English', value: 'en' },
-        { label: 'Русский', value: 'ru' },
+        {
+          label: 'Offer Details',
+          fields: [
+            {
+              name: 'offerToken',
+              type: 'text',
+              unique: true,
+              admin: { readOnly: true, description: 'Auto-generated secure token for booking page URL' },
+            },
+            {
+              name: 'offerSentAt',
+              type: 'date',
+              admin: { readOnly: true },
+            },
+            {
+              name: 'offerExpiresAt',
+              type: 'date',
+              admin: { description: 'Optional offer expiry date', date: { pickerAppearance: 'dayAndTime' } },
+            },
+            {
+              name: 'confirmedDate',
+              type: 'date',
+              admin: { description: 'Final confirmed date (may differ from preferred)', date: { pickerAppearance: 'dayOnly', displayFormat: 'yyyy-MM-dd' } },
+            },
+            {
+              name: 'confirmedTime',
+              type: 'text',
+              admin: { description: 'Final confirmed time (HH:MM)' },
+            },
+            {
+              name: 'confirmedPrice',
+              type: 'number',
+              admin: { description: 'Final confirmed price in EUR' },
+            },
+            {
+              name: 'confirmedGuests',
+              type: 'number',
+              admin: { description: 'Final confirmed guest count' },
+            },
+            {
+              name: 'guideName',
+              type: 'text',
+              admin: { description: 'Assigned guide name' },
+            },
+            {
+              name: 'guidePhone',
+              type: 'text',
+              admin: { description: 'Guide phone (shown to customer after payment)' },
+            },
+            {
+              name: 'meetingPointAddress',
+              type: 'text',
+              localized: true,
+              admin: { description: 'Custom meeting point. Leave empty to use tour default.' },
+            },
+            {
+              name: 'meetingPointInstructions',
+              type: 'richText',
+              editor: simplifiedEditor,
+              localized: true,
+              admin: { description: 'Custom meeting instructions for this booking' },
+            },
+            {
+              name: 'meetingPointLat',
+              type: 'number',
+              admin: { description: 'Meeting point latitude' },
+            },
+            {
+              name: 'meetingPointLng',
+              type: 'number',
+              admin: { description: 'Meeting point longitude' },
+            },
+            {
+              name: 'customerNotes',
+              type: 'richText',
+              editor: simplifiedEditor,
+              localized: true,
+              admin: { description: 'Notes visible to the customer on the booking page' },
+            },
+            {
+              name: 'paymentMethod',
+              type: 'select',
+              defaultValue: 'stripe_deposit',
+              options: [
+                { label: 'Stripe Deposit', value: 'stripe_deposit' },
+                { label: 'Stripe Full Payment', value: 'stripe_full' },
+                { label: 'Cash Only', value: 'cash_only' },
+                { label: 'No Payment Required', value: 'none' },
+              ],
+              admin: { description: 'How the customer should pay' },
+            },
+            {
+              name: 'customDepositAmount',
+              type: 'number',
+              admin: { description: 'Custom deposit in EUR. Leave empty for default %.' },
+            },
+          ],
+        },
+        {
+          label: 'Payment & CRM',
+          fields: [
+            {
+              name: 'stripePaymentLink',
+              type: 'text',
+              admin: {
+                description: 'Manually added Stripe Payment Link',
+              },
+            },
+            {
+              name: 'paymentStatus',
+              type: 'select',
+              label: 'Payment Status',
+              defaultValue: 'not_required',
+              options: [
+                { label: 'Not Required',   value: 'not_required' },
+                { label: 'Awaiting',       value: 'awaiting' },
+                { label: 'Link Sent',      value: 'link_sent' },
+                { label: 'Deposit Paid',   value: 'deposit_paid' },
+                { label: 'Fully Paid',     value: 'fully_paid' },
+                { label: 'Refund Pending', value: 'refund_pending' },
+                { label: 'Refunded',       value: 'refunded' },
+              ],
+              admin: { position: 'sidebar' },
+            },
+            {
+              name: 'depositAmountEur',
+              type: 'number',
+              label: 'Deposit (EUR)',
+              admin: { readOnly: true },
+            },
+            {
+              name: 'cashBalanceEur',
+              type: 'number',
+              label: 'Cash Balance (EUR)',
+              admin: {
+                readOnly: true,
+                description: 'Amount guide collects on tour day',
+              },
+            },
+            {
+              name: 'stripePaymentIntentId',
+              type: 'text',
+              admin: { readOnly: true },
+            },
+            {
+              name: 'stripeChargedCents',
+              type: 'number',
+              admin: {
+                readOnly: true,
+                description: 'Amount charged in smallest currency unit',
+              },
+            },
+            {
+              name: 'stripeChargeCurrency',
+              type: 'text',
+              admin: { readOnly: true },
+            },
+            {
+              name: 'paidAt',
+              type: 'date',
+              admin: { readOnly: true },
+            },
+            {
+              name: 'npsScore',
+              type: 'number',
+              label: 'NPS Score (0–10)',
+              min: 0,
+              max: 10,
+              admin: { readOnly: true },
+            },
+            {
+              name: 'chatwootConversationId',
+              type: 'number',
+              admin: { readOnly: true, description: 'Chatwoot conversation ID' },
+            },
+            {
+              name: 'mauticContactId',
+              type: 'number',
+              admin: { readOnly: true },
+            },
+            {
+              name: 'twentyContactId',
+              type: 'text',
+              admin: { readOnly: true, description: 'Twenty CRM person ID' },
+            },
+          ],
+        },
+        {
+          label: 'Internal',
+          fields: [
+            {
+              name: 'ipInfo',
+              type: 'group',
+              admin: {
+                description: 'IP geolocation data',
+              },
+              fields: [
+                { name: 'ip', type: 'text' },
+                { name: 'city', type: 'text' },
+                { name: 'region', type: 'text' },
+                { name: 'country', type: 'text' },
+                { name: 'isp', type: 'text' },
+              ],
+            },
+            {
+              name: 'internalNotes',
+              type: 'richText',
+              editor: fullEditor,
+              admin: {
+                description: 'Internal notes (not visible to customer)',
+              },
+            },
+          ],
+        },
       ],
-    },
-    {
-      name: 'specialRequests',
-      type: 'richText',
-      editor: simplifiedEditor,
-    },
-    {
-      name: 'totalPrice',
-      type: 'number',
-      admin: {
-        description: 'Calculated total price in EUR (including surcharge)',
-      },
-    },
-    {
-      name: 'currency',
-      type: 'select',
-      defaultValue: 'EUR',
-      options: [
-        { label: 'EUR (€)', value: 'EUR' },
-        { label: 'CZK (Kč)', value: 'CZK' },
-        { label: 'USD ($)', value: 'USD' },
-      ],
-      admin: {
-        description: 'Currency selected by customer at booking time',
-      },
-    },
-    {
-      name: 'status',
-      type: 'select',
-      required: true,
-      defaultValue: 'new',
-      options: [
-        { label: 'New', value: 'new' },
-        { label: 'Confirmed', value: 'confirmed' },
-        { label: 'Payment Sent', value: 'payment-sent' },
-        { label: 'Paid', value: 'paid' },
-        { label: 'Completed', value: 'completed' },
-        { label: 'Declined', value: 'declined' },
-      ],
-    },
-    {
-      name: 'stripePaymentLink',
-      type: 'text',
-      admin: {
-        description: 'Manually added Stripe Payment Link',
-      },
-    },
-    {
-      name: 'ipInfo',
-      type: 'group',
-      admin: {
-        description: 'IP geolocation data',
-      },
-      fields: [
-        { name: 'ip', type: 'text' },
-        { name: 'city', type: 'text' },
-        { name: 'region', type: 'text' },
-        { name: 'country', type: 'text' },
-        { name: 'isp', type: 'text' },
-      ],
-    },
-    {
-      name: 'internalNotes',
-      type: 'richText',
-      editor: fullEditor,
-      admin: {
-        description: 'Internal notes (not visible to customer)',
-      },
-    },
-    {
-      name: 'paymentStatus',
-      type: 'select',
-      label: 'Payment Status',
-      defaultValue: 'not_required',
-      options: [
-        { label: 'Not Required',   value: 'not_required' },
-        { label: 'Awaiting',       value: 'awaiting' },
-        { label: 'Link Sent',      value: 'link_sent' },
-        { label: 'Deposit Paid',   value: 'deposit_paid' },
-        { label: 'Fully Paid',     value: 'fully_paid' },
-        { label: 'Refund Pending', value: 'refund_pending' },
-        { label: 'Refunded',       value: 'refunded' },
-      ],
-      admin: { position: 'sidebar' },
-    },
-    {
-      name: 'depositAmountEur',
-      type: 'number',
-      label: 'Deposit (EUR)',
-      admin: { readOnly: true },
-    },
-    {
-      name: 'cashBalanceEur',
-      type: 'number',
-      label: 'Cash Balance (EUR)',
-      admin: {
-        readOnly: true,
-        description: 'Amount guide collects on tour day',
-      },
-    },
-    {
-      name: 'npsScore',
-      type: 'number',
-      label: 'NPS Score (0–10)',
-      min: 0,
-      max: 10,
-      admin: { readOnly: true },
-    },
-    {
-      name: 'stripePaymentIntentId',
-      type: 'text',
-      admin: { readOnly: true },
-    },
-    {
-      name: 'stripeChargedCents',
-      type: 'number',
-      admin: {
-        readOnly: true,
-        description: 'Amount charged in smallest currency unit',
-      },
-    },
-    {
-      name: 'stripeChargeCurrency',
-      type: 'text',
-      admin: { readOnly: true },
-    },
-    {
-      name: 'paidAt',
-      type: 'date',
-      admin: { readOnly: true },
-    },
-    {
-      name: 'chatwootConversationId',
-      type: 'number',
-      admin: { readOnly: true, description: 'Chatwoot conversation ID' },
-    },
-    {
-      name: 'mauticContactId',
-      type: 'number',
-      admin: { readOnly: true },
-    },
-    {
-      name: 'twentyContactId',
-      type: 'text',
-      admin: { readOnly: true, description: 'Twenty CRM person ID' },
     },
   ],
 }

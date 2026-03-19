@@ -69,6 +69,8 @@ All site content is editable from Payload admin panel:
 | `/privacy` | Privacy Policy | Legal page from CMS |
 | `/terms` | Terms | Legal page from CMS |
 | `/cancellation-policy` | Cancellation | Legal page from CMS |
+| `/booking/[token]` | Booking Offer | Customer-facing booking page: status banner, tour summary, price breakdown, Stripe payment, meeting point, guide contact, admin notes |
+| `/booking` | Booking Lookup | Ref + email form to find booking and redirect to offer page |
 
 ### Standalone Routes
 | Route | Page | Description |
@@ -104,7 +106,10 @@ All site content is editable from Payload admin panel:
 | `/api/import-tours` | POST | No | Import tours from JSON |
 | `/api/assign-photos` | POST | No | Associate photos to tours |
 | `/api/upload-photos` | POST | No | Upload photos to Media |
-| `/api/booking/send-payment-link` | POST | JWT | Create Stripe Checkout session for confirmed booking deposit |
+| `/api/booking/send-payment-link` | POST | JWT | Create Stripe Checkout session for confirmed booking deposit (legacy) |
+| `/api/booking/send-offer` | POST | JWT | Send booking offer email to customer, update status, fire n8n webhook |
+| `/api/booking/create-checkout` | POST | Token | Create Stripe Checkout from offer page (token-authenticated, no admin auth) |
+| `/api/booking/lookup` | POST | No | Find booking by ref + email, return offer page URL. Rate-limited |
 | `/api/stripe/webhook` | POST | Stripe sig | Handle checkout.session.completed, update booking payment status |
 | `/api/availability/[tourSlug]` | GET | No | Return available tour dates for a month (YYYY-MM) |
 | `/api/health` | GET | No | Lightweight DB check for Uptime Kuma monitoring |

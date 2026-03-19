@@ -231,6 +231,43 @@ export const SiteSettings: GlobalConfig = {
           ],
         },
         {
+          label: 'Booking Page',
+          fields: [
+            {
+              name: 'bookingPagePaymentNote',
+              type: 'textarea',
+              localized: true,
+              admin: {
+                description: 'Note in payment section (e.g., "Your deposit secures the date.")',
+              },
+            },
+            {
+              name: 'bookingPageCashNote',
+              type: 'textarea',
+              localized: true,
+              admin: {
+                description: 'Note for cash-only payment',
+              },
+            },
+            {
+              name: 'bookingPageExpiredHeading',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Heading when offer expired',
+              },
+            },
+            {
+              name: 'bookingPageExpiredMessage',
+              type: 'textarea',
+              localized: true,
+              admin: {
+                description: 'Message when offer expired',
+              },
+            },
+          ],
+        },
+        {
           label: 'Announcement',
           fields: [
             {

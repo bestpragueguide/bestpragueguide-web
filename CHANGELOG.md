@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.29.0] - 2026-03-19
+
+### Added
+- **Booking Offer Page** — customer-facing page at `/[locale]/booking/[token]` showing booking status, tour details, price breakdown, payment button, meeting point, guide contact, and admin notes
+- **Booking Offer data model** — new "Offer Details" tab on BookingRequests with 17 fields: offerToken, confirmed date/time/price/guests, guide name/phone, meeting point (localized), customer notes (localized richText), payment method, custom deposit amount
+- **Secure token access** — auto-generated 256-bit hex token when booking is confirmed; URL-safe, unguessable
+- **Booking lookup page** — `/[locale]/booking` with ref + email form for customers who lost their link
+- **Stripe Checkout from offer page** — `POST /api/booking/create-checkout` (token-authenticated) creates fresh Checkout session; supports deposit and full payment modes
+- **Send Offer admin workflow** — `SendOfferButton` admin component (replaces PaymentLinkButton) with copyable offer URL and "Send Offer Email" button
+- **Send Offer API** — `POST /api/booking/send-offer` (JWT auth) sends offer email, updates status, fires n8n webhook
+- **Booking Offer email** — new `booking-offer.tsx` template with tour summary table, price breakdown, and CTA button linking to offer page
+- **Email Templates "Booking Offer" tab** — CMS-editable subject, heading, body, CTA label, note with placeholders
+- **SiteSettings "Booking Page" tab** — CMS-editable payment note, cash note, expired heading/message
+- **Booking lookup API** — `POST /api/booking/lookup` with rate limiting
+- **BookingPaymentButton** — client component for Stripe Checkout redirect from offer page
+- **i18n messages** — `bookingOffer` namespace with 30+ keys in EN and RU
+- **Migration SQL** — 13 new columns on booking_requests + booking_requests_locales table (non-destructive)
+
 ## [1.28.0] - 2026-03-19
 
 ### Added
