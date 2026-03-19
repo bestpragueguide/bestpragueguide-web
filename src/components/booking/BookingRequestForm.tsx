@@ -51,6 +51,7 @@ export function BookingRequestForm({
   const [requestRef, setRequestRef] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [consented, setConsented] = useState(false)
+  const [selectedPayment, setSelectedPayment] = useState<'stripe_deposit' | 'cash_only'>('cash_only')
   const [guests, setGuests] = useState(2)
   const [currency, setCurrency] = useState<Currency>('EUR')
   const [selectedServiceIds, setSelectedServiceIds] = useState<Set<number>>(new Set())
@@ -128,6 +129,7 @@ export function BookingRequestForm({
       isOnRequest: priceResult.isOnRequest,
       currency,
       locale,
+      paymentMethod: selectedPayment,
       selectedServices: selectedServices.map(s => ({ id: s.id, name: s.name })),
       guestCategories: Object.keys(categoryBreakdown).length > 0 ? categoryBreakdown : undefined,
     }
@@ -429,6 +431,45 @@ export function BookingRequestForm({
           autoComplete="tel"
           className={inputClass}
         />
+      </div>
+
+      {/* Payment Method */}
+      <div>
+        <p className="text-sm font-medium text-navy mb-2">
+          {locale === 'ru' ? 'Способ оплаты' : 'Payment Method'}
+        </p>
+        <div className="space-y-2">
+          <label className="flex items-center gap-3 cursor-pointer p-2.5 rounded-lg border border-gray-light hover:border-gold/50 transition-colors">
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="cash_only"
+              checked={selectedPayment === 'cash_only'}
+              onChange={() => setSelectedPayment('cash_only')}
+              className="h-4 w-4 text-gold accent-[#C4975C]"
+            />
+            <div>
+              <span className="text-sm text-navy">
+                {locale === 'ru' ? 'Наличными в день экскурсии' : 'Cash on the day of the tour'}
+              </span>
+            </div>
+          </label>
+          <label className="flex items-center gap-3 cursor-pointer p-2.5 rounded-lg border border-gray-light hover:border-gold/50 transition-colors">
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="stripe_deposit"
+              checked={selectedPayment === 'stripe_deposit'}
+              onChange={() => setSelectedPayment('stripe_deposit')}
+              className="h-4 w-4 text-gold accent-[#C4975C]"
+            />
+            <div>
+              <span className="text-sm text-navy">
+                {locale === 'ru' ? 'Картой онлайн (предоплата)' : 'Credit card online (prepayment)'}
+              </span>
+            </div>
+          </label>
+        </div>
       </div>
 
       {/* Special Requests */}

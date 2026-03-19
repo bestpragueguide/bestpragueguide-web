@@ -23,6 +23,7 @@ export const bookingRequestSchema = z.object({
   pricingModel: z.enum(['GROUP_TIERS', 'PER_PERSON', 'FLAT_RATE', 'ON_REQUEST']).optional(),
   isOnRequest: z.boolean().optional(),
   currency: z.enum(['EUR', 'CZK', 'USD']).optional().default('EUR'),
+  paymentMethod: z.enum(['stripe_deposit', 'stripe_full', 'cash_only', 'none']).optional().default('cash_only'),
   locale: z.enum(['en', 'ru']),
 })
 

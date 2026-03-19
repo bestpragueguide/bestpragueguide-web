@@ -69,6 +69,7 @@ export async function POST(request: NextRequest) {
         specialRequests: textToLexicalJson(data.specialRequests || '') as any,
         totalPrice: data.totalPrice ?? 0,
         currency: data.currency || 'EUR',
+        paymentMethod: data.paymentMethod || 'cash_only',
         status: 'new',
         ipInfo: {
           ip: ipInfo.ip,

@@ -263,6 +263,13 @@ export const BookingRequests: CollectionConfig = {
               type: 'text',
               admin: { description: 'Google Maps link. Leave empty to use tour default.' },
             },
+            {
+              name: 'customerNotes',
+              type: 'richText',
+              editor: simplifiedEditor,
+              localized: true,
+              admin: { description: 'Notes visible to the customer on the booking page' },
+            },
           ],
         },
         {
@@ -303,13 +310,6 @@ export const BookingRequests: CollectionConfig = {
               name: 'confirmedGuests',
               type: 'number',
               admin: { description: 'Final confirmed guest count' },
-            },
-            {
-              name: 'customerNotes',
-              type: 'richText',
-              editor: simplifiedEditor,
-              localized: true,
-              admin: { description: 'Notes visible to the customer on the booking page' },
             },
           ],
         },
