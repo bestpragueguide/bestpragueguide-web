@@ -125,9 +125,15 @@ export async function POST(request: NextRequest) {
       sendAdminEmail({
         to: notificationEmail,
         subject: resolveTemplate(tpl.adminSubject || 'New booking: {ref} — {tour}', vars),
-        react: NewRequestAdminEmail({
-          ...notificationData,
+        react: RequestReceivedEmail({
+          customerName: data.customerName,
+          tourName: data.tourName,
+          preferredDate: data.preferredDate,
+          requestRef,
           locale: data.locale,
+          cmsBody: tpl.receivedBody ? resolveTemplate(tpl.receivedBody, vars) : undefined,
+          cmsNote: tpl.receivedNote ? resolveTemplate(tpl.receivedNote, vars) : undefined,
+          cmsFooter: tpl.footer || undefined,
         }),
         replyTo: data.customerEmail,
       }),
