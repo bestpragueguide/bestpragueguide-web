@@ -98,7 +98,8 @@ export function BookingOfferEmail({
     ? 'Нажмите кнопку выше, чтобы просмотреть все детали и завершить оплату.'
     : 'Click the button above to view all details and complete your payment.'
 
-  const bodyText = cmsBody || defaultBody
+  const bodyHtml = cmsBody || defaultBody
+  const isHtml = bodyHtml.includes('<')
 
   return (
     <Html lang={locale}>
@@ -119,11 +120,13 @@ export function BookingOfferEmail({
               : cmsHeading || defaultHeading}
           </Text>
 
-          {bodyText.split('\n').map((line, i) => (
-            <Text key={i} style={line.trim() ? text : textSpacer}>
-              {line || '\u00A0'}
-            </Text>
-          ))}
+          {/* CMS body is admin-authored from Lexical richText editor — trusted content */}
+          {isHtml
+            ? <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
+            : bodyHtml.split('\n').map((line, i) => (
+                <Text key={i} style={line.trim() ? text : textSpacer}>{line || '\u00A0'}</Text>
+              ))
+          }
 
           <Section style={summaryBox}>
             <Text style={summaryTitle}>
@@ -147,9 +150,11 @@ export function BookingOfferEmail({
             </Button>
           </Section>
 
-          <Text style={text}>
-            {cmsNote || defaultNote}
-          </Text>
+          {/* CMS note — admin-authored trusted content */}
+          {(cmsNote || defaultNote).includes('<')
+            ? <div dangerouslySetInnerHTML={{ __html: cmsNote || defaultNote }} />
+            : <Text style={text}>{cmsNote || defaultNote}</Text>
+          }
 
           <Hr style={hr} />
           {(cmsFooter || 'Best Prague Guide | info@bestpragueguide.com').split('\n').map((line, i) => (

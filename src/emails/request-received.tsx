@@ -113,21 +113,19 @@ export function RequestReceivedEmail({
               : (isRu ? `Здравствуйте, ${customerName}!` : `Hello, ${customerName}!`)}
           </Text>
 
-          {cmsBody && cmsBody.split('\n').map((line, i) => (
-            <Text key={i} style={line.trim() ? text : textSpacer}>
-              {line || '\u00A0'}
-            </Text>
-          ))}
+          {/* CMS body is admin-authored HTML from Lexical richText — trusted content */}
+          {cmsBody && (
+            <div dangerouslySetInnerHTML={{ __html: cmsBody }} />
+          )}
 
           <Section style={summaryBox}>
             <Text style={summaryTitle}>
               {cmsSummaryTitle || (isRu ? 'Детали запроса' : 'Booking Summary')}
             </Text>
-            {cmsSummaryBody && cmsSummaryBody.split('\n').map((line, i) => (
-              <Text key={`sb${i}`} style={line.trim() ? text : textSpacer}>
-                {line || '\u00A0'}
-              </Text>
-            ))}
+            {/* Admin-authored HTML from CMS richText — trusted */}
+            {cmsSummaryBody && (
+              <div dangerouslySetInnerHTML={{ __html: cmsSummaryBody }} />
+            )}
             <table style={summaryTable} cellPadding="0" cellSpacing="0">
               <tbody>
                 {summaryRows.map((row, i) => (
@@ -140,11 +138,10 @@ export function RequestReceivedEmail({
             </table>
           </Section>
 
-          {cmsNote && cmsNote.split('\n').map((line, i) => (
-            <Text key={i} style={line.trim() ? text : textSpacer}>
-              {line || '\u00A0'}
-            </Text>
-          ))}
+          {/* Admin-authored HTML from CMS richText — trusted */}
+          {cmsNote && (
+            <div dangerouslySetInnerHTML={{ __html: cmsNote }} />
+          )}
 
           <Hr style={hr} />
           {cmsFooter && cmsFooter.split('\n').map((line, i) => (

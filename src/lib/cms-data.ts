@@ -477,23 +477,77 @@ export interface EmailTemplatesData {
 
 const emailTemplatesFallback: EmailTemplatesData = {}
 
-/** Extract plain text from a value that may be a string or Lexical JSON */
-function toPlainText(value: unknown): string | undefined {
+/** Convert a value (string or Lexical JSON) to email-safe HTML */
+function toEmailHtml(value: unknown): string | undefined {
   if (!value) return undefined
   if (typeof value === 'string') return value
-  // Lexical JSON — extract text from nodes
   if (typeof value === 'object' && value !== null) {
     const root = (value as any).root
     if (!root?.children) return undefined
-    const lines: string[] = []
-    for (const node of root.children) {
-      if (node.children) {
-        lines.push(node.children.map((c: any) => c.text || '').join(''))
-      }
-    }
-    return lines.join('\n') || undefined
+    return root.children.map((node: any) => renderNode(node)).join('') || undefined
   }
   return undefined
+}
+
+function renderNode(node: any): string {
+  if (!node) return ''
+
+  // List nodes
+  if (node.type === 'list') {
+    const tag = node.listType === 'number' ? 'ol' : 'ul'
+    const items = (node.children || []).map((li: any) => {
+      const content = (li.children || []).map((c: any) => renderNode(c)).join('')
+      return `<li>${content}</li>`
+    }).join('')
+    return `<${tag} style="margin:8px 0;padding-left:24px">${items}</${tag}>`
+  }
+
+  // Heading
+  if (node.type === 'heading') {
+    const inner = (node.children || []).map((c: any) => renderInline(c)).join('')
+    return `<p style="font-size:16px;font-weight:600;margin:12px 0 4px">${inner}</p>`
+  }
+
+  // Paragraph
+  if (node.type === 'paragraph') {
+    const inner = (node.children || []).map((c: any) => renderInline(c)).join('')
+    if (!inner) return '<p style="margin:0;line-height:8px">&nbsp;</p>'
+    return `<p style="font-size:14px;line-height:22px;color:#333;margin:0 0 8px">${inner}</p>`
+  }
+
+  // Fallback — render children
+  if (node.children) {
+    return node.children.map((c: any) => renderInline(c)).join('')
+  }
+  return ''
+}
+
+function renderInline(node: any): string {
+  if (!node) return ''
+  if (node.type === 'linebreak') return '<br/>'
+
+  let text = node.text || ''
+  if (!text && node.children) {
+    return node.children.map((c: any) => renderInline(c)).join('')
+  }
+
+  // Escape HTML
+  text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+  // Apply formatting (Lexical uses bitmask: 1=bold, 2=italic, 4=strikethrough, 8=underline)
+  const format = node.format || 0
+  if (format & 1) text = `<strong>${text}</strong>`
+  if (format & 2) text = `<em>${text}</em>`
+  if (format & 8) text = `<u>${text}</u>`
+
+  // Link node
+  if (node.type === 'link' && node.fields?.url) {
+    const href = node.fields.url
+    const inner = (node.children || []).map((c: any) => renderInline(c)).join('')
+    return `<a href="${href}" style="color:#C4975C">${inner || href}</a>`
+  }
+
+  return text
 }
 
 export async function getEmailTemplates(locale: string): Promise<EmailTemplatesData> {
@@ -508,31 +562,31 @@ export async function getEmailTemplates(locale: string): Promise<EmailTemplatesD
       headerTitle: data.headerTitle || undefined,
       greeting: data.greeting || undefined,
       receivedSubject: data.receivedSubject || undefined,
-      receivedBody: toPlainText(data.receivedBody),
+      receivedBody: toEmailHtml(data.receivedBody),
       receivedSummaryTitle: data.receivedSummaryTitle || undefined,
-      receivedSummaryBody: toPlainText(data.receivedSummaryBody),
-      receivedNote: toPlainText(data.receivedNote),
+      receivedSummaryBody: toEmailHtml(data.receivedSummaryBody),
+      receivedNote: toEmailHtml(data.receivedNote),
       adminSubject: data.adminSubject || undefined,
       confirmedSubject: data.confirmedSubject || undefined,
       confirmedHeading: data.confirmedHeading || undefined,
-      confirmedBody: toPlainText(data.confirmedBody),
-      confirmedNote: toPlainText(data.confirmedNote),
+      confirmedBody: toEmailHtml(data.confirmedBody),
+      confirmedNote: toEmailHtml(data.confirmedNote),
       declinedSubject: data.declinedSubject || undefined,
-      declinedBody: toPlainText(data.declinedBody),
-      declinedNote: toPlainText(data.declinedNote),
+      declinedBody: toEmailHtml(data.declinedBody),
+      declinedNote: toEmailHtml(data.declinedNote),
       paymentSubject: data.paymentSubject || undefined,
       paymentHeading: data.paymentHeading || undefined,
-      paymentBody: toPlainText(data.paymentBody),
-      paymentNote: toPlainText(data.paymentNote),
+      paymentBody: toEmailHtml(data.paymentBody),
+      paymentNote: toEmailHtml(data.paymentNote),
       reminderSubject: data.reminderSubject || undefined,
       reminderHeading: data.reminderHeading || undefined,
-      reminderBody: toPlainText(data.reminderBody),
-      reminderNote: toPlainText(data.reminderNote),
+      reminderBody: toEmailHtml(data.reminderBody),
+      reminderNote: toEmailHtml(data.reminderNote),
       offerSubject: data.offerSubject || undefined,
       offerHeading: data.offerHeading || undefined,
-      offerBody: toPlainText(data.offerBody),
+      offerBody: toEmailHtml(data.offerBody),
       offerCtaLabel: data.offerCtaLabel || undefined,
-      offerNote: toPlainText(data.offerNote),
+      offerNote: toEmailHtml(data.offerNote),
       footer: data.footer || undefined,
     }
   } catch {
