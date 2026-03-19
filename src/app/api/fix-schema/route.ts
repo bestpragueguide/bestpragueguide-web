@@ -110,6 +110,8 @@ export async function POST(req: Request) {
       `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS offer_body varchar`,
       `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS offer_cta_label varchar`,
       `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS offer_note varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS received_summary_title varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS received_summary_body varchar`,
 
       // Booking offer fields on booking_requests table
       `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS offer_token varchar UNIQUE`,
