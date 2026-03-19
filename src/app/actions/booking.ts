@@ -16,6 +16,7 @@ import { isRateLimited } from '@/lib/rate-limit'
 import { isDisposableEmail } from '@/lib/email-validation'
 import { getEmailTemplates, resolveTemplate } from '@/lib/cms-data'
 import { z } from 'zod'
+import { textToLexicalJson } from '@/lib/lexical-helpers'
 
 export type BookingActionResult = {
   success: boolean
@@ -23,30 +24,6 @@ export type BookingActionResult = {
   error?: string
   details?: Array<{ path: (string | number)[]; message: string }>
   rateLimited?: boolean
-}
-
-function textToLexicalJson(text: string) {
-  if (!text) return undefined
-  return {
-    root: {
-      type: 'root',
-      children: text
-        .split('\n')
-        .filter(Boolean)
-        .map((paragraph) => ({
-          type: 'paragraph',
-          children: [{ type: 'text', text: paragraph, version: 1 }],
-          direction: 'ltr' as const,
-          format: '' as const,
-          indent: 0,
-          version: 1,
-        })),
-      direction: 'ltr' as const,
-      format: '' as const,
-      indent: 0,
-      version: 1,
-    },
-  }
 }
 
 export async function submitBookingRequest(formData: unknown): Promise<BookingActionResult> {

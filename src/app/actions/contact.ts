@@ -173,29 +173,7 @@ function ContactConfirmationEmail({
   )
 }
 
-function textToLexicalJson(text: string) {
-  if (!text) return undefined
-  return {
-    root: {
-      type: 'root',
-      children: text
-        .split('\n')
-        .filter(Boolean)
-        .map((paragraph) => ({
-          type: 'paragraph',
-          children: [{ type: 'text', text: paragraph, version: 1 }],
-          direction: 'ltr' as const,
-          format: '' as const,
-          indent: 0,
-          version: 1,
-        })),
-      direction: 'ltr' as const,
-      format: '' as const,
-      indent: 0,
-      version: 1,
-    },
-  }
-}
+import { textToLexicalJson } from '@/lib/lexical-helpers'
 
 export type ContactActionResult = {
   success: boolean
