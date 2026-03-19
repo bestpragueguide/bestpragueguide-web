@@ -223,6 +223,12 @@ export const SiteSettings: GlobalConfig = {
           label: 'Booking Page',
           fields: [
             {
+              name: 'bookingPageConfirmedMessage',
+              type: 'text',
+              localized: true,
+              admin: { description: 'Banner message when payment required (e.g., "Your booking is confirmed! Complete payment to secure your spot.")' },
+            },
+            {
               name: 'bookingPagePaymentNote',
               type: 'textarea',
               localized: true,
@@ -237,6 +243,12 @@ export const SiteSettings: GlobalConfig = {
               admin: {
                 description: 'Note for cash-only payment',
               },
+            },
+            {
+              name: 'bookingPageContactNote',
+              type: 'text',
+              localized: true,
+              admin: { description: 'Text in contact section (e.g., "Contact us via WhatsApp, email, or phone")' },
             },
             {
               name: 'bookingPageExpiredHeading',

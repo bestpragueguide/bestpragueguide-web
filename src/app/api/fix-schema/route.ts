@@ -97,6 +97,8 @@ export async function POST(req: Request) {
       // SiteSettings: booking page fields on locales table
       `ALTER TABLE site_settings_locales ADD COLUMN IF NOT EXISTS booking_page_payment_note varchar`,
       `ALTER TABLE site_settings_locales ADD COLUMN IF NOT EXISTS booking_page_cash_note varchar`,
+      `ALTER TABLE site_settings_locales ADD COLUMN IF NOT EXISTS booking_page_confirmed_message varchar`,
+      `ALTER TABLE site_settings_locales ADD COLUMN IF NOT EXISTS booking_page_contact_note varchar`,
       `ALTER TABLE site_settings_locales ADD COLUMN IF NOT EXISTS booking_page_expired_heading varchar`,
       `ALTER TABLE site_settings_locales ADD COLUMN IF NOT EXISTS booking_page_expired_message varchar`,
 

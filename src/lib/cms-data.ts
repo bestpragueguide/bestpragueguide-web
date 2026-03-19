@@ -225,8 +225,10 @@ export async function getSiteSettings(locale: string): Promise<SiteSettingsData>
       bookingTrustBadges: (data as any).bookingTrustBadges?.length
         ? (data as any).bookingTrustBadges.map((b: any) => ({ text: b.text }))
         : [],
+      bookingPageConfirmedMessage: (data as any).bookingPageConfirmedMessage || undefined,
       bookingPagePaymentNote: (data as any).bookingPagePaymentNote || undefined,
       bookingPageCashNote: (data as any).bookingPageCashNote || undefined,
+      bookingPageContactNote: (data as any).bookingPageContactNote || undefined,
       bookingPageExpiredHeading: (data as any).bookingPageExpiredHeading || undefined,
       bookingPageExpiredMessage: (data as any).bookingPageExpiredMessage || undefined,
       announcement: data.announcement,

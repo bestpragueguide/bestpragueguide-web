@@ -123,6 +123,7 @@ type OfferStatus =
   | 'expired'
   | 'declined'
   | 'confirmed_payment_required'
+  | 'confirmed_no_prepayment'
   | 'payment_pending'
   | 'deposit_paid'
   | 'fully_paid'
@@ -148,7 +149,11 @@ function getOfferStatus(booking: BookingDoc): OfferStatus {
     return 'payment_pending'
   }
 
-  if (booking.status === 'confirmed') return 'confirmed_payment_required'
+  if (booking.status === 'confirmed') {
+    const pm = String(booking.paymentMethod || 'stripe_deposit')
+    if (pm === 'cash_only' || pm === 'none') return 'confirmed_no_prepayment'
+    return 'confirmed_payment_required'
+  }
 
   return 'confirmed_payment_required'
 }
@@ -156,13 +161,20 @@ function getOfferStatus(booking: BookingDoc): OfferStatus {
 function getStatusBanner(
   status: OfferStatus,
   t: (key: string) => string,
+  cmsConfirmedMessage?: string,
 ): { bg: string; text: string; message: string } {
   switch (status) {
     case 'confirmed_payment_required':
       return {
         bg: 'bg-gold/10 border-gold/30',
         text: 'text-gold',
-        message: `${t('statusConfirmed')} ${t('statusPaymentPending')}`,
+        message: cmsConfirmedMessage || `${t('statusConfirmed')} ${t('statusPaymentPending')}`,
+      }
+    case 'confirmed_no_prepayment':
+      return {
+        bg: 'bg-trust/10 border-trust/30',
+        text: 'text-trust',
+        message: t('statusConfirmed'),
       }
     case 'payment_pending':
       return {
@@ -219,7 +231,7 @@ export default async function BookingOfferPage({
   const siteSettings = await getSiteSettings(locale)
 
   const offerStatus = getOfferStatus(booking)
-  const banner = getStatusBanner(offerStatus, t)
+  const banner = getStatusBanner(offerStatus, t, siteSettings.bookingPageConfirmedMessage)
 
   // Resolve tour data
   const tour = typeof booking.tour === 'object' ? booking.tour : null
@@ -454,7 +466,7 @@ export default async function BookingOfferPage({
               <svg className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <p className="text-sm text-navy/80">{t('cashPaymentNote')}</p>
+              <p className="text-sm text-navy/80">{siteSettings.bookingPageCashNote || t('cashPaymentNote')}</p>
             </div>
           </div>
         )}
@@ -540,7 +552,7 @@ export default async function BookingOfferPage({
           <h2 className="text-lg font-heading font-bold text-navy mb-2">
             {t('needHelp')}
           </h2>
-          <p className="text-sm text-navy/60 mb-4">{t('contactNote')}</p>
+          <p className="text-sm text-navy/60 mb-4">{siteSettings.bookingPageContactNote || t('contactNote')}</p>
           <div className="flex flex-wrap gap-3">
             <a
               href={`https://wa.me/${siteSettings.whatsappNumber}`}
