@@ -149,7 +149,7 @@ export const BookingRequests: CollectionConfig = {
               type: 'number',
               required: true,
               min: 1,
-              max: 50,
+              max: 1000,
             },
             {
               name: 'customerName',

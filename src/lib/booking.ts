@@ -14,7 +14,7 @@ export const bookingRequestSchema = z.object({
     { message: 'Date must be tomorrow or later' },
   ),
   preferredTime: z.string().regex(/^\d{2}:\d{2}$/, 'Invalid time format'),
-  guests: z.number().min(1).max(50),
+  guests: z.number().min(1).max(1000),
   customerName: z.string().min(2).max(100),
   customerEmail: z.string().email(),
   customerPhone: z.string().max(20).optional().default(''),

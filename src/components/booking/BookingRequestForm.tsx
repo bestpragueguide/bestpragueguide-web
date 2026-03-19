@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react'
 import { useTranslations } from 'next-intl'
 import { TIME_SLOTS } from '@/lib/booking'
 import { trackBookingSubmit } from '@/lib/analytics'
-import { currencies, formatPrice, type Currency } from '@/lib/currency'
+import { currencies, currencyRates, formatPrice, type Currency } from '@/lib/currency'
 import { calculatePrice, getMaxGuests, getDisplayPrice, hasOpenEndedTier } from '@/lib/pricing'
 import type { TourPricing, ServiceData } from '@/lib/cms-types'
 import { guestsLabel } from '@/lib/plurals'
@@ -124,7 +124,9 @@ export function BookingRequestForm({
       customerEmail: (form.elements.namedItem('customerEmail') as HTMLInputElement).value,
       customerPhone: (form.elements.namedItem('customerPhone') as HTMLInputElement).value || '',
       specialRequests: (form.elements.namedItem('specialRequests') as HTMLTextAreaElement).value || '',
-      totalPrice: totalWithModifiers,
+      totalPrice: totalWithModifiers !== null
+        ? Math.round(totalWithModifiers * currencyRates[currency])
+        : null,
       pricingModel: pricing.model,
       isOnRequest: priceResult.isOnRequest,
       currency,
