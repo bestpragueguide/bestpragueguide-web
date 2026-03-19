@@ -218,7 +218,7 @@ export async function getSiteSettings(locale: string): Promise<SiteSettingsData>
       bookingPricingDescription: (data as any).bookingPricingDescription || undefined,
       bookingTrustBadges: (data as any).bookingTrustBadges?.length
         ? (data as any).bookingTrustBadges.map((b: any) => ({ text: b.text }))
-        : siteSettingsFallback(locale).bookingTrustBadges,
+        : [],
       announcement: data.announcement,
     } as SiteSettingsData
   } catch {

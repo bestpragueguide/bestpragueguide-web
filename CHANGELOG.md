@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.26.3] - 2026-03-19
+
+### Fixed
+- **Booking form "Failed to send"** — `specialRequests` richText field in BookingRequests received plain string from form submission, causing Payload validation error. Now converts plain text to Lexical JSON before saving (both server action and API route)
+- **Contact form same issue** — `message` richText field in ContactMessages had the same plain-text-to-richText mismatch. Fixed in all 4 code paths (server action + API route, normal + rate-limited saves)
+- **Trust badges show fallback when not configured** — booking trust badges displayed hardcoded defaults when no badges were set in admin. Now returns empty array so badges section is hidden unless explicitly configured in Site Settings
+
 ## [1.26.2] - 2026-03-18
 
 ### Changed

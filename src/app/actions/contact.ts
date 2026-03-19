@@ -173,6 +173,30 @@ function ContactConfirmationEmail({
   )
 }
 
+function textToLexicalJson(text: string) {
+  if (!text) return undefined
+  return {
+    root: {
+      type: 'root',
+      children: text
+        .split('\n')
+        .filter(Boolean)
+        .map((paragraph) => ({
+          type: 'paragraph',
+          children: [{ type: 'text', text: paragraph, version: 1 }],
+          direction: 'ltr' as const,
+          format: '' as const,
+          indent: 0,
+          version: 1,
+        })),
+      direction: 'ltr' as const,
+      format: '' as const,
+      indent: 0,
+      version: 1,
+    },
+  }
+}
+
 export type ContactActionResult = {
   success: boolean
   error?: string
@@ -196,7 +220,7 @@ export async function submitContactForm(formData: unknown): Promise<ContactActio
             name: parsed.data.name,
             email: parsed.data.email,
             phone: parsed.data.phone,
-            message: parsed.data.message,
+            message: textToLexicalJson(parsed.data.message) as any,
             locale: parsed.data.locale,
             status: 'error',
             ipInfo: {
@@ -234,7 +258,7 @@ export async function submitContactForm(formData: unknown): Promise<ContactActio
           name: data.name,
           email: data.email,
           phone: data.phone,
-          message: data.message,
+          message: textToLexicalJson(data.message) as any,
           locale: data.locale,
           ipInfo: {
             ip: ipInfo.ip,

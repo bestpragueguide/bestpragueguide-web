@@ -21,6 +21,30 @@ import { isDisposableEmail } from '@/lib/email-validation'
 import { getEmailTemplates, resolveTemplate } from '@/lib/cms-data'
 import { z } from 'zod'
 
+function textToLexicalJson(text: string) {
+  if (!text) return undefined
+  return {
+    root: {
+      type: 'root',
+      children: text
+        .split('\n')
+        .filter(Boolean)
+        .map((paragraph: string) => ({
+          type: 'paragraph',
+          children: [{ type: 'text', text: paragraph, version: 1 }],
+          direction: 'ltr' as const,
+          format: '' as const,
+          indent: 0,
+          version: 1,
+        })),
+      direction: 'ltr' as const,
+      format: '' as const,
+      indent: 0,
+      version: 1,
+    },
+  }
+}
+
 export async function POST(request: NextRequest) {
   const ip =
     request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
@@ -64,7 +88,7 @@ export async function POST(request: NextRequest) {
         customerEmail: data.customerEmail,
         customerPhone: data.customerPhone || '',
         customerLanguage: data.locale,
-        specialRequests: data.specialRequests || '',
+        specialRequests: textToLexicalJson(data.specialRequests || '') as any,
         totalPrice: data.totalPrice ?? 0,
         currency: data.currency || 'EUR',
         status: 'new',

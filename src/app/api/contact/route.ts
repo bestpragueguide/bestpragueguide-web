@@ -171,6 +171,30 @@ function ContactConfirmationEmail({
   )
 }
 
+function textToLexicalJson(text: string) {
+  if (!text) return undefined
+  return {
+    root: {
+      type: 'root',
+      children: text
+        .split('\n')
+        .filter(Boolean)
+        .map((paragraph: string) => ({
+          type: 'paragraph',
+          children: [{ type: 'text', text: paragraph, version: 1 }],
+          direction: 'ltr' as const,
+          format: '' as const,
+          indent: 0,
+          version: 1,
+        })),
+      direction: 'ltr' as const,
+      format: '' as const,
+      indent: 0,
+      version: 1,
+    },
+  }
+}
+
 export async function POST(request: NextRequest) {
   const ip =
     request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
@@ -190,7 +214,7 @@ export async function POST(request: NextRequest) {
             name: data.data.name,
             email: data.data.email,
             phone: data.data.phone,
-            message: data.data.message,
+            message: textToLexicalJson(data.data.message) as any,
             locale: data.data.locale,
             status: 'error',
             ipInfo: {
@@ -245,7 +269,7 @@ export async function POST(request: NextRequest) {
           name: data.name,
           email: data.email,
           phone: data.phone,
-          message: data.message,
+          message: textToLexicalJson(data.message) as any,
           locale: data.locale,
           ipInfo: {
             ip: ipInfo.ip,
