@@ -12,13 +12,7 @@ export const BookingRequests: CollectionConfig = {
     defaultColumns: ['requestRef', 'customerName', 'tour', 'preferredDate', 'status', 'createdAt'],
     group: 'Bookings',
     listSearchableFields: ['requestRef', 'customerName', 'customerEmail'],
-    components: {
-      edit: {
-        beforeDocumentControls: [
-          '@/components/admin/BookingStatusBar#BookingStatusBar',
-        ],
-      },
-    },
+    components: {},
   },
   timestamps: true,
   hooks: {
@@ -109,6 +103,15 @@ export const BookingRequests: CollectionConfig = {
         {
           label: 'Booking',
           fields: [
+            {
+              type: 'ui',
+              name: 'bookingStatusBarUI',
+              admin: {
+                components: {
+                  Field: '@/components/admin/BookingStatusBar#BookingStatusBar',
+                },
+              },
+            },
             {
               name: 'requestRef',
               type: 'text',
