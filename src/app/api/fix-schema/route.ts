@@ -91,11 +91,7 @@ export async function POST(req: Request) {
       // Add showOnHomepage column to reviews (checkbox, not localized)
       `ALTER TABLE reviews ADD COLUMN IF NOT EXISTS show_on_homepage boolean DEFAULT false`,
 
-      // Drop old incorrectly-created tables (wrong column names)
-      `DROP TABLE IF EXISTS site_settings_booking_trust_badges_locales`,
-      `DROP TABLE IF EXISTS site_settings_booking_trust_badges`,
-
-      // site_settings_booking_trust_badges array table
+      // site_settings_booking_trust_badges array table (non-destructive — CREATE IF NOT EXISTS only)
       `CREATE TABLE IF NOT EXISTS site_settings_booking_trust_badges (
         _order integer NOT NULL,
         _parent_id integer NOT NULL REFERENCES site_settings(id) ON DELETE CASCADE,
