@@ -30,6 +30,14 @@ export const beforeChangeHook: CollectionBeforeChangeHook = async ({
     data.offerToken = randomBytes(32).toString('hex')
   }
 
+  // Sync deposit and cash balance when customDepositAmount changes
+  if (operation === 'update' && data.customDepositAmount != null) {
+    const doc = originalDoc || {}
+    const confirmedPrice = data.confirmedPrice || doc.confirmedPrice || data.totalPrice || doc.totalPrice || 0
+    data.depositAmountEur = data.customDepositAmount
+    data.cashBalanceEur = confirmedPrice - data.customDepositAmount
+  }
+
   return data
 }
 

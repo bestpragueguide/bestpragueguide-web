@@ -26,6 +26,8 @@ import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 import { TourOrderLink as TourOrderLink_custom } from '../../../components/admin/TourOrderLink'
 import { PaymentLinkButton as PaymentLinkButton_custom } from '../../../components/admin/PaymentLinkButton'
 import { SendOfferButton as SendOfferButton_custom } from '../../../components/admin/SendOfferButton'
+import { BookingPageUrlField as BookingPageUrlField_custom } from '../../../components/admin/BookingPageUrlField'
+import { SendOfferEmailField as SendOfferEmailField_custom } from '../../../components/admin/SendOfferEmailField'
 export const importMap = {
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalField": RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -54,5 +56,7 @@ export const importMap = {
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
   "./components/admin/TourOrderLink#TourOrderLink": TourOrderLink_custom,
   "@/components/admin/PaymentLinkButton#PaymentLinkButton": PaymentLinkButton_custom,
-  "@/components/admin/SendOfferButton#SendOfferButton": SendOfferButton_custom
+  "@/components/admin/SendOfferButton#SendOfferButton": SendOfferButton_custom,
+  "@/components/admin/BookingPageUrlField#BookingPageUrlField": BookingPageUrlField_custom,
+  "@/components/admin/SendOfferEmailField#SendOfferEmailField": SendOfferEmailField_custom
 }

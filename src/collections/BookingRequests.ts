@@ -12,11 +12,7 @@ export const BookingRequests: CollectionConfig = {
     defaultColumns: ['requestRef', 'customerName', 'tour', 'preferredDate', 'status', 'createdAt'],
     group: 'Bookings',
     listSearchableFields: ['requestRef', 'customerName', 'customerEmail'],
-    components: {
-      edit: {
-        beforeDocumentControls: ['@/components/admin/SendOfferButton#SendOfferButton'],
-      },
-    },
+    components: {},
   },
   timestamps: true,
   hooks: {
@@ -208,6 +204,15 @@ export const BookingRequests: CollectionConfig = {
                 { label: 'Declined', value: 'declined' },
               ],
             },
+            {
+              type: 'ui',
+              name: 'bookingPageUrlUI',
+              admin: {
+                components: {
+                  Field: '@/components/admin/BookingPageUrlField#BookingPageUrlField',
+                },
+              },
+            },
           ],
         },
         {
@@ -238,6 +243,18 @@ export const BookingRequests: CollectionConfig = {
               name: 'confirmedTime',
               type: 'text',
               admin: { description: 'Final confirmed time (HH:MM)' },
+            },
+            {
+              name: 'paymentMethod',
+              type: 'select',
+              defaultValue: 'stripe_deposit',
+              options: [
+                { label: 'Stripe Deposit', value: 'stripe_deposit' },
+                { label: 'Stripe Full Payment', value: 'stripe_full' },
+                { label: 'Cash Only', value: 'cash_only' },
+                { label: 'No Payment Required', value: 'none' },
+              ],
+              admin: { description: 'How the customer should pay' },
             },
             {
               name: 'confirmedPrice',
@@ -284,28 +301,25 @@ export const BookingRequests: CollectionConfig = {
               localized: true,
               admin: { description: 'Notes visible to the customer on the booking page' },
             },
-          ],
-        },
-        {
-          label: 'Payment',
-          fields: [
-            {
-              name: 'paymentMethod',
-              type: 'select',
-              defaultValue: 'stripe_deposit',
-              options: [
-                { label: 'Stripe Deposit', value: 'stripe_deposit' },
-                { label: 'Stripe Full Payment', value: 'stripe_full' },
-                { label: 'Cash Only', value: 'cash_only' },
-                { label: 'No Payment Required', value: 'none' },
-              ],
-              admin: { description: 'How the customer should pay' },
-            },
             {
               name: 'customDepositAmount',
               type: 'number',
               admin: { description: 'Custom deposit in EUR. Leave empty for default %.' },
             },
+            {
+              type: 'ui',
+              name: 'sendOfferEmailUI',
+              admin: {
+                components: {
+                  Field: '@/components/admin/SendOfferEmailField#SendOfferEmailField',
+                },
+              },
+            },
+          ],
+        },
+        {
+          label: 'Payment',
+          fields: [
             {
               name: 'paymentStatus',
               type: 'select',
