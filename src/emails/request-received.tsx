@@ -92,9 +92,11 @@ export function RequestReceivedEmail({
               : `Hello, ${customerName}!`}
           </Text>
 
-          {cmsBody && (
-            <Text style={text}>{cmsBody}</Text>
-          )}
+          {cmsBody && cmsBody.split('\n').map((line, i) => (
+            <Text key={i} style={line.trim() ? text : textSpacer}>
+              {line || '\u00A0'}
+            </Text>
+          ))}
 
           <Section style={summaryBox}>
             <Text style={summaryTitle}>
@@ -112,9 +114,11 @@ export function RequestReceivedEmail({
             </table>
           </Section>
 
-          {cmsNote && (
-            <Text style={text}>{cmsNote}</Text>
-          )}
+          {cmsNote && cmsNote.split('\n').map((line, i) => (
+            <Text key={i} style={line.trim() ? text : textSpacer}>
+              {line || '\u00A0'}
+            </Text>
+          ))}
 
           <Hr style={hr} />
           {cmsFooter && (
@@ -162,6 +166,13 @@ const text = {
   lineHeight: '24px',
   color: '#333333',
   margin: '0 0 16px',
+}
+
+const textSpacer = {
+  fontSize: '14px',
+  lineHeight: '8px',
+  color: '#333333',
+  margin: '0',
 }
 
 const summaryBox = {

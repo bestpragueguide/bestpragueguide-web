@@ -28,10 +28,10 @@ export const EmailTemplates: GlobalConfig = {
               type: 'textarea',
               localized: true,
               defaultValue:
-                'Thank you for your request for the "{tour}" tour on {date}. We received your request and will get back to you shortly.',
+                'Thank you for your booking request! Here are the details:\n\nTour: {tour}\nDate: {date}\nTime: {time}\nGuests: {guests}\nPrice: {price} {currency}\n\nWe received your request and will get back to you shortly.',
               admin: {
-                description: 'Shown above the booking summary table. Placeholders: {name}, {tour}, {date}, {time}, {guests}, {price}, {currency}, {phone}, {email}, {requests}, {ref}',
-                rows: 3,
+                description: 'Shown above the booking summary table. Placeholders: {name}, {tour}, {date}, {time}, {guests}, {price}, {currency}, {phone}, {email}, {requests}, {ref}. Use line breaks for formatting.',
+                rows: 8,
               },
             },
             {

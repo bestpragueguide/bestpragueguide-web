@@ -110,6 +110,30 @@ export async function POST(request: NextRequest) {
       })
     }
 
+    // Seed email templates (non-destructive)
+    const enTpl = await payload.findGlobal({ slug: 'email-templates', locale: 'en' }) as any
+    if (!enTpl.receivedBody || enTpl.receivedBody === 'Thank you for your request for the "{tour}" tour on {date}. We received your request and will get back to you shortly.') {
+      await payload.updateGlobal({
+        slug: 'email-templates',
+        locale: 'en',
+        data: {
+          receivedBody: 'Thank you for your booking request! Here are the details:\n\nTour: {tour}\nDate: {date}\nTime: {time}\nGuests: {guests}\nPrice: {price} {currency}\nEmail: {email}\nPhone: {phone}\nRequests: {requests}\n\nYour reference number is {ref}. We will get back to you shortly.',
+        } as any,
+      })
+      seeded.push('EN email receivedBody')
+    }
+    const ruTpl = await payload.findGlobal({ slug: 'email-templates', locale: 'ru' }) as any
+    if (!ruTpl.receivedBody || ruTpl.receivedBody === enTpl.receivedBody) {
+      await payload.updateGlobal({
+        slug: 'email-templates',
+        locale: 'ru',
+        data: {
+          receivedBody: 'Спасибо за ваш запрос на бронирование! Вот детали:\n\nЭкскурсия: {tour}\nДата: {date}\nВремя: {time}\nГостей: {guests}\nСтоимость: {price} {currency}\nEmail: {email}\nТелефон: {phone}\nПожелания: {requests}\n\nНомер вашей заявки: {ref}. Мы свяжемся с вами в ближайшее время.',
+        } as any,
+      })
+      seeded.push('RU email receivedBody')
+    }
+
     // Verify
     const enResult = await payload.findGlobal({ slug: 'site-settings', locale: 'en' }) as any
     const ruResult = await payload.findGlobal({ slug: 'site-settings', locale: 'ru' }) as any
