@@ -117,20 +117,9 @@ export const SiteSettings: GlobalConfig = {
           label: 'Location',
           fields: [
             {
-              name: 'mapCoordinates',
-              type: 'group',
-              fields: [
-                {
-                  name: 'lat',
-                  type: 'number',
-                  admin: { description: 'Latitude (e.g. 50.0875)' },
-                },
-                {
-                  name: 'lng',
-                  type: 'number',
-                  admin: { description: 'Longitude (e.g. 14.4213)' },
-                },
-              ],
+              name: 'mapUrl',
+              type: 'text',
+              admin: { description: 'Google Maps link to the business location' },
             },
             {
               name: 'licenseText',

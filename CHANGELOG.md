@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.29.1] - 2026-03-19
+
+### Changed
+- **Replace lat/lng with Google Maps URL** — all coordinate fields (Tours.meetingPoint, BookingRequests.meetingPoint, SiteSettings.mapCoordinates) replaced with a single `mapUrl` text field for Google Maps link. Affects collections, globals, types, frontend pages, seed data, fix-schema. Schema.org keeps hardcoded coordinates for structured data.
+- **Multi-currency deposit** — Stripe Checkout now uses the booking's currency (EUR/CZK/USD) instead of hardcoded EUR. `createDepositSession` accepts optional `currency` parameter.
+- **Auto-copy booking data to offer** — when status changes to `confirmed`, offer fields auto-populate from booking request (preferredDate→confirmedDate, preferredTime→confirmedTime, totalPrice→confirmedPrice, guests→confirmedGuests) unless already set by admin.
+
 ## [1.29.0] - 2026-03-19
 
 ### Added

@@ -76,7 +76,7 @@ export interface SiteSettingsData {
     tripAdvisorUrl?: string
     googleBusinessUrl?: string
   }
-  mapCoordinates: { lat: number; lng: number }
+  mapUrl?: string
   licenseText: string
   copyrightText: string
   bookingPricingDescription?: string
@@ -317,8 +317,7 @@ export interface TourData {
   meetingPoint?: {
     address?: string
     instructions?: LexicalRichText | string
-    lat?: number
-    lng?: number
+    mapUrl?: string
   }
   faq?: TourFaqItem[]
   pricing?: TourPricing

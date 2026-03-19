@@ -94,6 +94,8 @@ export async function POST(req: NextRequest) {
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? 'https://bestpragueguide.com'
   const locale = booking.customerLanguage || 'en'
 
+  const bookingCurrency = ((booking as any).currency || 'EUR').toLowerCase()
+
   const session = await createDepositSession({
     bookingId: String(booking.id),
     requestRef: booking.requestRef,
@@ -102,6 +104,7 @@ export async function POST(req: NextRequest) {
     depositAmountEur: amount,
     successUrl: `${baseUrl}/${locale}/booking/${offerToken}?payment=success`,
     cancelUrl: `${baseUrl}/${locale}/booking/${offerToken}?payment=cancelled`,
+    currency: bookingCurrency,
   })
 
   if (!session) {

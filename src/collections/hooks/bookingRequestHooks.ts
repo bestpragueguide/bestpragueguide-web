@@ -14,6 +14,14 @@ export const beforeChangeHook: CollectionBeforeChangeHook = async ({
     data.requestRef = await generateRequestRef()
   }
 
+  // Auto-populate offer fields from booking request when status changes to 'confirmed'
+  if (operation === 'update' && data.status === 'confirmed') {
+    if (!data.confirmedDate && data.preferredDate) data.confirmedDate = data.preferredDate
+    if (!data.confirmedTime && data.preferredTime) data.confirmedTime = data.preferredTime
+    if (!data.confirmedPrice && data.totalPrice) data.confirmedPrice = data.totalPrice
+    if (!data.confirmedGuests && data.guests) data.confirmedGuests = data.guests
+  }
+
   // Auto-generate offer token when status changes to 'confirmed'
   if (operation === 'update' && data.status === 'confirmed' && !data.offerToken) {
     const { randomBytes } = await import('crypto')

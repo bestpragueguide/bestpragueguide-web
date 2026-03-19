@@ -162,12 +162,9 @@ export const Tours: CollectionConfig = {
                   localized: true,
                 },
                 {
-                  name: 'lat',
-                  type: 'number',
-                },
-                {
-                  name: 'lng',
-                  type: 'number',
+                  name: 'mapUrl',
+                  type: 'text',
+                  admin: { description: 'Google Maps link to the meeting point' },
                 },
                 {
                   name: 'instructions',

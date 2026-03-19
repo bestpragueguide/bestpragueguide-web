@@ -46,8 +46,7 @@ interface BookingDoc {
   guidePhone?: string
   meetingPointAddress?: string
   meetingPointInstructions?: unknown
-  meetingPointLat?: number
-  meetingPointLng?: number
+  meetingPointMapUrl?: string
   customerNotes?: unknown
   paymentMethod?: string
   customDepositAmount?: number
@@ -72,8 +71,7 @@ interface BookingDoc {
     meetingPoint?: {
       address?: string
       instructions?: unknown
-      lat?: number
-      lng?: number
+      mapUrl?: string
     }
   } | number
 }
@@ -245,8 +243,7 @@ export default async function BookingOfferPage({
   const meetingInstructions =
     booking.meetingPointInstructions ||
     (tour?.meetingPoint?.instructions)
-  const meetingLat = booking.meetingPointLat || tour?.meetingPoint?.lat
-  const meetingLng = booking.meetingPointLng || tour?.meetingPoint?.lng
+  const meetingMapUrl = booking.meetingPointMapUrl || tour?.meetingPoint?.mapUrl
 
   // Payment logic
   const paymentMethod = booking.paymentMethod || 'stripe_deposit'
@@ -402,13 +399,13 @@ export default async function BookingOfferPage({
                   <div className="flex justify-between text-sm">
                     <span className="text-navy/70">{t('deposit')}</span>
                     <span className="font-medium text-navy">
-                      {formatPrice(depositAmount, 'EUR')}
+                      {formatPrice(depositAmount, (booking.currency || 'EUR') as Currency)}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-navy/70">{t('cashBalance')}</span>
                     <span className="font-medium text-navy">
-                      {formatPrice(cashBalance, 'EUR')}
+                      {formatPrice(cashBalance, (booking.currency || 'EUR') as Currency)}
                     </span>
                   </div>
                 </>
@@ -423,7 +420,7 @@ export default async function BookingOfferPage({
             <BookingPaymentButton
               offerToken={token}
               amount={paymentAmount}
-              currency="EUR"
+              currency={(booking.currency || 'EUR') as string}
               label={paymentLabel}
               locale={locale}
             />
@@ -474,9 +471,9 @@ export default async function BookingOfferPage({
                 className="text-sm text-navy/70 mb-4"
               />
             ) : null}
-            {meetingLat && meetingLng && (
+            {meetingMapUrl && (
               <a
-                href={`https://www.google.com/maps/dir/?api=1&destination=${meetingLat},${meetingLng}`}
+                href={meetingMapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-sm font-medium text-gold hover:text-gold/80 transition-colors"

@@ -34,7 +34,7 @@ function siteSettingsFallback(locale: string): SiteSettingsData {
     socialLinks: {
       instagramUrl: 'https://instagram.com/bestpragueguide',
     },
-    mapCoordinates: { lat: 50.0875, lng: 14.4213 },
+    mapUrl: 'https://maps.google.com/?q=50.0875,14.4213',
     licenseText: locale === 'ru'
       ? 'Лицензированный гид, Ассоциация гидов Чехии'
       : 'Licensed Guide, Czech Guide Association',
@@ -212,7 +212,7 @@ export async function getSiteSettings(locale: string): Promise<SiteSettingsData>
       instagramHandle: data.instagramHandle || 'bestpragueguide',
       businessHours: data.businessHours || '09:00–20:00 CET',
       socialLinks: data.socialLinks || { instagramUrl: 'https://instagram.com/bestpragueguide' },
-      mapCoordinates: data.mapCoordinates || { lat: 50.0875, lng: 14.4213 },
+      mapUrl: data.mapUrl || siteSettingsFallback(locale).mapUrl,
       licenseText: data.licenseText || siteSettingsFallback(locale).licenseText,
       copyrightText: data.copyrightText || siteSettingsFallback(locale).copyrightText,
       bookingPricingDescription: (data as any).bookingPricingDescription || undefined,

@@ -20,10 +20,11 @@ export async function createDepositSession(params: {
   depositAmountEur: number
   successUrl: string
   cancelUrl: string
+  currency?: string
 }): Promise<{ sessionId: string; url: string; paymentIntentId: string } | null> {
   if (!stripe) return null
 
-  // Stripe requires integer amounts in smallest unit. EUR uses cents.
+  // Stripe requires integer amounts in smallest unit (cents for EUR/USD, hellers for CZK).
   const amountCents = Math.round(params.depositAmountEur * 100)
 
   const session = await stripe.checkout.sessions.create({
@@ -38,7 +39,7 @@ export async function createDepositSession(params: {
     line_items: [
       {
         price_data: {
-          currency: 'eur',
+          currency: params.currency || 'eur',
           unit_amount: amountCents,
           product_data: {
             name: `Deposit — ${params.tourTitle}`,

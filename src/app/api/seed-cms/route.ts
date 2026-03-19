@@ -25,7 +25,7 @@ export async function POST() {
         socialLinks: {
           instagramUrl: 'https://instagram.com/bestpragueguide',
         },
-        mapCoordinates: { lat: 50.0875, lng: 14.4213 },
+        mapUrl: 'https://maps.google.com/?q=50.0875,14.4213',
         licenseText: 'Licensed Guide, Czech Guide Association',
         copyrightText: '© {year} Best Prague Guide. All rights reserved.',
         bookingTrustBadges: [

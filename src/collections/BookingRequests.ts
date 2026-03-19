@@ -273,14 +273,9 @@ export const BookingRequests: CollectionConfig = {
               admin: { description: 'Custom meeting instructions for this booking' },
             },
             {
-              name: 'meetingPointLat',
-              type: 'number',
-              admin: { description: 'Meeting point latitude' },
-            },
-            {
-              name: 'meetingPointLng',
-              type: 'number',
-              admin: { description: 'Meeting point longitude' },
+              name: 'meetingPointMapUrl',
+              type: 'text',
+              admin: { description: 'Google Maps link. Leave empty to use tour default.' },
             },
             {
               name: 'customerNotes',
