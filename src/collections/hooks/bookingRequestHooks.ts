@@ -18,8 +18,8 @@ export const beforeChangeHook: CollectionBeforeChangeHook = async ({
   // Auto-generate offer token and set defaults on create
   if (operation === 'create') {
     if (!data.offerToken) {
-      const { randomBytes } = await import('crypto')
-      data.offerToken = randomBytes(32).toString('hex')
+      const chars = '0123456789abcdefghijklmnopqrstuvwxyz'
+      data.offerToken = Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
     }
     if (!data.guideName) data.guideName = 'Uliana'
     if (!data.guidePhone) data.guidePhone = '+420 776 306 858'
