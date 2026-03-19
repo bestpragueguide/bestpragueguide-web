@@ -23,6 +23,7 @@ interface BookingRequestFormProps {
   submitLabel?: string
   successTitle?: string
   successMessage?: string
+  disclaimerText?: string
   consentText?: string
 }
 
@@ -40,6 +41,7 @@ export function BookingRequestForm({
   submitLabel,
   successTitle,
   successMessage,
+  disclaimerText,
   consentText,
 }: BookingRequestFormProps) {
   const t = useTranslations('booking')
@@ -474,6 +476,10 @@ export function BookingRequestForm({
         )}
         {status === 'loading' ? t('sending') : (submitLabel || t('submit'))}
       </button>
+
+      {disclaimerText && (
+        <p className="text-[11px] text-navy/40 text-center leading-relaxed">{disclaimerText}</p>
+      )}
 
       {status === 'rate-limited' && (
         <div className="text-sm text-center p-3 bg-gold/5 border border-gold/20 rounded-lg">

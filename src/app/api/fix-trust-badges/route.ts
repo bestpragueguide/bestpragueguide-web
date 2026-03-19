@@ -20,6 +20,7 @@ export async function POST(request: NextRequest) {
         bookingSubmitLabel: 'Submit Request',
         bookingSuccessTitle: 'Request Received!',
         bookingSuccessMessage: 'Thank you! We received your request and will get back to you shortly.',
+        bookingDisclaimerText: 'By submitting you agree to be contacted about your request.',
         bookingConsentText: 'I agree to the [terms] and [privacy]',
         bookingPricingDescription: 'All prices are per your individual group, not per person.',
         bookingTrustBadges: [
@@ -52,6 +53,7 @@ export async function POST(request: NextRequest) {
         bookingSubmitLabel: 'Отправить запрос',
         bookingSuccessTitle: 'Запрос получен!',
         bookingSuccessMessage: 'Спасибо! Мы получили ваш запрос и свяжемся с вами в ближайшее время.',
+        bookingDisclaimerText: 'Отправляя форму, вы соглашаетесь на связь по вашему запросу.',
         bookingConsentText: 'Я принимаю [terms] и [privacy]',
         bookingPricingDescription: 'Все цены указаны за вашу индивидуальную группу, а не за человека.',
         bookingTrustBadges: badges.map((badge: any, i: number) => ({
@@ -72,6 +74,7 @@ export async function POST(request: NextRequest) {
         bookingSubmitLabel: enResult.bookingSubmitLabel,
         bookingSuccessTitle: enResult.bookingSuccessTitle,
         bookingSuccessMessage: enResult.bookingSuccessMessage,
+        bookingDisclaimerText: enResult.bookingDisclaimerText,
         bookingConsentText: enResult.bookingConsentText,
         bookingPricingDescription: enResult.bookingPricingDescription,
         bookingTrustBadges: enResult.bookingTrustBadges,

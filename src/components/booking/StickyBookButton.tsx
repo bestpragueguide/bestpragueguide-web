@@ -23,6 +23,7 @@ interface StickyBookButtonProps {
   submitLabel?: string
   successTitle?: string
   successMessage?: string
+  disclaimerText?: string
   consentText?: string
 }
 
@@ -40,6 +41,7 @@ export function StickyBookButton({
   submitLabel,
   successTitle,
   successMessage,
+  disclaimerText,
   consentText,
 }: StickyBookButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -110,6 +112,7 @@ export function StickyBookButton({
           submitLabel={submitLabel}
           successTitle={successTitle}
           successMessage={successMessage}
+          disclaimerText={disclaimerText}
           consentText={consentText}
         />
       </BookingModal>

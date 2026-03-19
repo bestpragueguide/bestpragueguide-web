@@ -194,6 +194,14 @@ export const SiteSettings: GlobalConfig = {
               },
             },
             {
+              name: 'bookingDisclaimerText',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Small text below the submit button (e.g. "By submitting you agree to be contacted about your request.")',
+              },
+            },
+            {
               name: 'bookingConsentText',
               type: 'text',
               localized: true,

@@ -220,6 +220,7 @@ export async function getSiteSettings(locale: string): Promise<SiteSettingsData>
       bookingSubmitLabel: (data as any).bookingSubmitLabel || undefined,
       bookingSuccessTitle: (data as any).bookingSuccessTitle || undefined,
       bookingSuccessMessage: (data as any).bookingSuccessMessage || undefined,
+      bookingDisclaimerText: (data as any).bookingDisclaimerText || undefined,
       bookingConsentText: (data as any).bookingConsentText || undefined,
       bookingTrustBadges: (data as any).bookingTrustBadges?.length
         ? (data as any).bookingTrustBadges.map((b: any) => ({ text: b.text }))

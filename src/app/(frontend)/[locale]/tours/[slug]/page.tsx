@@ -427,6 +427,7 @@ export default async function TourDetailPage({
               submitLabel={siteSettings.bookingSubmitLabel}
               successTitle={siteSettings.bookingSuccessTitle}
               successMessage={siteSettings.bookingSuccessMessage}
+              disclaimerText={siteSettings.bookingDisclaimerText}
               consentText={siteSettings.bookingConsentText}
             />
 
