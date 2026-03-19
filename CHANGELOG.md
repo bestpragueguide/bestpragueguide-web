@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.33.0] - 2026-03-19
+
+### Added
+- **Payment confirmation email** — Stripe webhook sends PaymentReceivedEmail to customer + admin copy after successful payment
+- **Stripe webhook configured** — endpoint registered at Stripe, `STRIPE_WEBHOOK_SECRET` set in Coolify; handles `checkout.session.completed`
+- **Booking Update email** — resend button sends "Booking update" subject instead of re-confirming; differentiates first send vs updates
+- **Save before send** — Send Offer / Send Update button saves the document first, then sends email
+- **High-quality images** — Lanczos3 kernel + mozjpeg encoder; quality 85-92%; all 402 images regenerated via `/api/regenerate-media`
+- **`formatAmount()`** — new currency helper for displaying prices already in target currency (no double conversion)
+
+### Fixed
+- **Currency conversion** — booking form submits totalPrice converted to selected currency; booking page displays stored amount directly without reconversion
+- **Booking offer email summary** — now matches booking request email (added email, phone, payment method, language)
+- **EUR symbol** — fixed '€' instead of 'EUR' in offer email
+- **RichText email rendering** — `toEmailHtml()` converts Lexical JSON to proper HTML with bold, italic, links, lists
+- **Max guests** — increased from 8/50 to 1000 in collection and Zod schema
+- **Lexical conversion** — existing plain text email templates auto-converted to Lexical JSON
+
+### Changed
+- **No auto-email on confirm** — admin sends offer manually via "Send Offer" button
+- **Default payment method** — cash_only; default guide: Uliana / +420 776 306 858
+- **Short offer tokens** — 8-char alphanumeric for SMS-friendly URLs
+- **Image sizes** — all use focalpoint position, Lanczos3 kernel, mozjpeg at 85-92% quality
+
 ## [1.32.0] - 2026-03-19
 
 ### Added
