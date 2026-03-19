@@ -25,7 +25,7 @@ Bilingual (EN/RU) private tour portal for Prague.
 All site content is editable from Payload admin panel:
 
 ### Globals
-- **SiteSettings** — contact info, social links (Instagram, YouTube, TripAdvisor, Google Business), map coordinates, WhatsApp templates, license/copyright, booking pricing description, booking trust badges, announcement banner
+- **SiteSettings** — contact info, social links (Instagram, YouTube, TripAdvisor, Google Business), map coordinates, WhatsApp templates, license/copyright, booking pricing description, booking trust badges (no fallback — empty unless configured in admin), announcement banner
 - **Navigation** — header links, CTA button, footer columns with links
 - **Homepage** — hero (tagline, subtitle, CTA, background image, mobile image), trust bar items, guide profile, categories grid, process steps, testimonials heading, FAQ heading, CTA section, SEO
 - **AboutPage** — founder profile (photo, bio, quote), stats, team section, values, gallery, dual CTAs, SEO
@@ -122,8 +122,9 @@ All site content is editable from Payload admin panel:
 - `src/lib/rate-limit.ts` — shared rate limiter (Redis sorted sets with in-memory fallback), used by booking and contact API routes and server actions
 - `src/lib/email-validation.ts` — disposable email domain blocklist (~50 domains), used by booking/contact routes and server actions
 - `src/components/shared/ShareButtons.tsx` — Web Share API on mobile (native OS share sheet), desktop fallback with WhatsApp, Telegram, Facebook, Twitter/X, LinkedIn, copy link
-- `src/app/actions/booking.ts` — `submitBookingRequest()` server action (mirrors API route logic, used by BookingRequestForm)
-- `src/app/actions/contact.ts` — `submitContactForm()` server action (mirrors API route logic, used by ContactForm)
+- `src/app/actions/booking.ts` — `submitBookingRequest()` server action (mirrors API route logic, used by BookingRequestForm); converts `specialRequests` plain text to Lexical JSON via `textToLexicalJson()` before `payload.create()`
+- `src/app/actions/contact.ts` — `submitContactForm()` server action (mirrors API route logic, used by ContactForm); converts `message` plain text to Lexical JSON via `textToLexicalJson()` before `payload.create()`
+- Form submissions to richText fields (specialRequests, message) MUST convert plain text to Lexical JSON — passing plain strings to `payload.create()` causes validation errors
 
 ## OSS Integration (v1.15.2)
 - **n8n** (`src/lib/n8n.ts`) — fire-and-forget webhook hub; 4 methods: bookingNew, bookingConfirmed, tourCompleted, paymentReceived
@@ -181,6 +182,7 @@ All site content is editable from Payload admin panel:
 - SEO metaDescription fields remain textarea (must be plain text for meta tags)
 - When rendering richText in listings/cards, always use `extractPlainText()` — never render richText objects directly as JSX children
 - `/api/migrate-richtext` endpoint converts existing plain text to Lexical format
+- `textToLexicalJson(text)` helper (defined in booking/contact actions and API routes) converts plain form text to Lexical JSON for `payload.create()` — required because richText fields reject plain strings
 
 ## Live Preview
 - Payload Live Preview configured in `payload.config.ts` with Mobile/Tablet/Desktop breakpoints
