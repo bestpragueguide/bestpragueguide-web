@@ -284,6 +284,11 @@ export const BookingRequests: CollectionConfig = {
               localized: true,
               admin: { description: 'Notes visible to the customer on the booking page' },
             },
+          ],
+        },
+        {
+          label: 'Payment',
+          fields: [
             {
               name: 'paymentMethod',
               type: 'select',
@@ -301,18 +306,6 @@ export const BookingRequests: CollectionConfig = {
               type: 'number',
               admin: { description: 'Custom deposit in EUR. Leave empty for default %.' },
             },
-          ],
-        },
-        {
-          label: 'Payment & CRM',
-          fields: [
-            {
-              name: 'stripePaymentLink',
-              type: 'text',
-              admin: {
-                description: 'Manually added Stripe Payment Link',
-              },
-            },
             {
               name: 'paymentStatus',
               type: 'select',
@@ -328,6 +321,11 @@ export const BookingRequests: CollectionConfig = {
                 { label: 'Refunded',       value: 'refunded' },
               ],
               admin: { position: 'sidebar' },
+            },
+            {
+              name: 'stripePaymentLink',
+              type: 'text',
+              admin: { description: 'Stripe Payment Link' },
             },
             {
               name: 'depositAmountEur',
@@ -367,6 +365,11 @@ export const BookingRequests: CollectionConfig = {
               type: 'date',
               admin: { readOnly: true },
             },
+          ],
+        },
+        {
+          label: 'CRM',
+          fields: [
             {
               name: 'npsScore',
               type: 'number',
@@ -383,7 +386,7 @@ export const BookingRequests: CollectionConfig = {
             {
               name: 'mauticContactId',
               type: 'number',
-              admin: { readOnly: true },
+              admin: { readOnly: true, description: 'Mautic contact ID' },
             },
             {
               name: 'twentyContactId',
@@ -393,14 +396,12 @@ export const BookingRequests: CollectionConfig = {
           ],
         },
         {
-          label: 'Internal',
+          label: 'Metadata',
           fields: [
             {
               name: 'ipInfo',
               type: 'group',
-              admin: {
-                description: 'IP geolocation data',
-              },
+              admin: { description: 'IP geolocation data from booking submission' },
               fields: [
                 { name: 'ip', type: 'text' },
                 { name: 'city', type: 'text' },
@@ -409,6 +410,11 @@ export const BookingRequests: CollectionConfig = {
                 { name: 'isp', type: 'text' },
               ],
             },
+          ],
+        },
+        {
+          label: 'Internal',
+          fields: [
             {
               name: 'internalNotes',
               type: 'richText',
