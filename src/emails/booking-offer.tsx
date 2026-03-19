@@ -20,6 +20,9 @@ export interface BookingOfferEmailProps {
   depositAmount?: number
   cashBalance?: number
   currency: string
+  customerEmail?: string
+  customerPhone?: string
+  paymentMethod?: string
   requestRef: string
   offerUrl: string
   locale: 'en' | 'ru'
@@ -42,6 +45,9 @@ export function BookingOfferEmail({
   depositAmount,
   cashBalance,
   currency = 'EUR',
+  customerEmail,
+  customerPhone,
+  paymentMethod,
   requestRef,
   offerUrl,
   locale,
@@ -81,6 +87,23 @@ export function BookingOfferEmail({
     })
   }
 
+  if (customerEmail) {
+    summaryRows.push({ label: 'Email', value: customerEmail })
+  }
+  if (customerPhone) {
+    summaryRows.push({ label: isRu ? 'Телефон' : 'Phone', value: customerPhone })
+  }
+  if (paymentMethod) {
+    const pmLabels: Record<string, { en: string; ru: string }> = {
+      stripe_deposit: { en: 'Credit card (deposit)', ru: 'Картой (депозит)' },
+      stripe_full: { en: 'Credit card (full)', ru: 'Картой (полная)' },
+      cash_only: { en: 'Cash on tour day', ru: 'Наличными в день экскурсии' },
+      none: { en: 'Not required', ru: 'Не требуется' },
+    }
+    const pmLabel = pmLabels[paymentMethod]
+    summaryRows.push({ label: isRu ? 'Оплата' : 'Payment', value: pmLabel ? (isRu ? pmLabel.ru : pmLabel.en) : paymentMethod })
+  }
+  summaryRows.push({ label: isRu ? 'Язык' : 'Language', value: isRu ? 'Русский' : 'English' })
   summaryRows.push({
     label: isRu ? 'Номер заявки' : 'Reference',
     value: requestRef,
