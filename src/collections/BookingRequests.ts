@@ -12,7 +12,11 @@ export const BookingRequests: CollectionConfig = {
     defaultColumns: ['requestRef', 'customerName', 'tour', 'preferredDate', 'status', 'createdAt'],
     group: 'Bookings',
     listSearchableFields: ['requestRef', 'customerName', 'customerEmail'],
-    components: {},
+    components: {
+      edit: {
+        beforeDocumentControls: ['@/components/admin/BookingStatusBar#BookingStatusBar'],
+      },
+    },
   },
   timestamps: true,
   hooks: {
@@ -204,15 +208,6 @@ export const BookingRequests: CollectionConfig = {
                 { label: 'Declined', value: 'declined' },
               ],
             },
-            {
-              type: 'ui',
-              name: 'bookingPageUrlUI',
-              admin: {
-                components: {
-                  Field: '@/components/admin/BookingPageUrlField#BookingPageUrlField',
-                },
-              },
-            },
           ],
         },
         {
@@ -305,15 +300,6 @@ export const BookingRequests: CollectionConfig = {
               name: 'customDepositAmount',
               type: 'number',
               admin: { description: 'Custom deposit in EUR. Leave empty for default %.' },
-            },
-            {
-              type: 'ui',
-              name: 'sendOfferEmailUI',
-              admin: {
-                components: {
-                  Field: '@/components/admin/SendOfferEmailField#SendOfferEmailField',
-                },
-              },
             },
           ],
         },
