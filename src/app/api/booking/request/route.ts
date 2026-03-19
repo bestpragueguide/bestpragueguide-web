@@ -145,6 +145,7 @@ export async function POST(request: NextRequest) {
       specialRequests: data.specialRequests || '',
       totalPrice: data.totalPrice,
       currency: data.currency || 'EUR',
+      paymentMethod: data.paymentMethod || 'cash_only',
       requestRef,
       locale: data.locale,
       cmsHeaderTitle: tpl.headerTitle || undefined,

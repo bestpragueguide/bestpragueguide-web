@@ -20,6 +20,7 @@ interface RequestReceivedEmailProps {
   specialRequests?: string
   totalPrice?: number | null
   currency?: string
+  paymentMethod?: string
   requestRef: string
   locale: 'en' | 'ru'
   cmsHeaderTitle?: string
@@ -42,6 +43,7 @@ export function RequestReceivedEmail({
   specialRequests,
   totalPrice,
   currency = 'EUR',
+  paymentMethod,
   requestRef,
   locale,
   cmsHeaderTitle,
@@ -79,6 +81,17 @@ export function RequestReceivedEmail({
   if (specialRequests) {
     summaryRows.push({ label: isRu ? 'Пожелания' : 'Requests', value: specialRequests })
   }
+  if (paymentMethod) {
+    const pmLabels: Record<string, { en: string; ru: string }> = {
+      stripe_deposit: { en: 'Credit card (deposit)', ru: 'Картой (депозит)' },
+      stripe_full: { en: 'Credit card (full)', ru: 'Картой (полная)' },
+      cash_only: { en: 'Cash on tour day', ru: 'Наличными в день экскурсии' },
+      none: { en: 'Not required', ru: 'Не требуется' },
+    }
+    const pmLabel = pmLabels[paymentMethod]
+    summaryRows.push({ label: isRu ? 'Оплата' : 'Payment', value: pmLabel ? (isRu ? pmLabel.ru : pmLabel.en) : paymentMethod })
+  }
+  summaryRows.push({ label: isRu ? 'Язык' : 'Language', value: isRu ? 'Русский' : 'English' })
   summaryRows.push({ label: isRu ? 'Номер заявки' : 'Reference', value: requestRef })
 
   return (

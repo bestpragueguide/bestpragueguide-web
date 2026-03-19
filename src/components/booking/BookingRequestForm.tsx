@@ -51,7 +51,7 @@ export function BookingRequestForm({
   const [requestRef, setRequestRef] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [consented, setConsented] = useState(false)
-  const [selectedPayment, setSelectedPayment] = useState<'stripe_deposit' | 'cash_only'>('cash_only')
+  const [selectedPayment, setSelectedPayment] = useState<'stripe_full' | 'cash_only'>('cash_only')
   const [guests, setGuests] = useState(2)
   const [currency, setCurrency] = useState<Currency>('EUR')
   const [selectedServiceIds, setSelectedServiceIds] = useState<Set<number>>(new Set())
@@ -458,9 +458,9 @@ export function BookingRequestForm({
             <input
               type="radio"
               name="paymentMethod"
-              value="stripe_deposit"
-              checked={selectedPayment === 'stripe_deposit'}
-              onChange={() => setSelectedPayment('stripe_deposit')}
+              value="stripe_full"
+              checked={selectedPayment === 'stripe_full'}
+              onChange={() => setSelectedPayment('stripe_full')}
               className="h-4 w-4 text-gold accent-[#C4975C]"
             />
             <div>
