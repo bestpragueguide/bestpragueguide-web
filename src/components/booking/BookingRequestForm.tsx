@@ -21,6 +21,7 @@ interface BookingRequestFormProps {
   contactPhoneDisplay?: string
   successTitle?: string
   successMessage?: string
+  consentText?: string
 }
 
 export function BookingRequestForm({
@@ -35,6 +36,7 @@ export function BookingRequestForm({
   contactPhoneDisplay,
   successTitle,
   successMessage,
+  consentText,
 }: BookingRequestFormProps) {
   const t = useTranslations('booking')
   const [status, setStatus] = useState<
@@ -42,6 +44,7 @@ export function BookingRequestForm({
   >('idle')
   const [requestRef, setRequestRef] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [consented, setConsented] = useState(false)
   const [guests, setGuests] = useState(2)
   const [currency, setCurrency] = useState<Currency>('EUR')
   const [selectedServiceIds, setSelectedServiceIds] = useState<Set<number>>(new Set())
@@ -434,10 +437,29 @@ export function BookingRequestForm({
         />
       </div>
 
+      {/* Consent checkbox */}
+      {consentText && (
+        <label className="flex items-start gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={consented}
+            onChange={(e) => setConsented(e.target.checked)}
+            className="mt-0.5 h-4 w-4 rounded border-gray-light text-gold focus:ring-gold accent-[#C4975C]"
+          />
+          <span className="text-xs text-navy/60 leading-relaxed">
+            {consentText.split(/(\[terms\]|\[privacy\])/).map((part, i) => {
+              if (part === '[terms]') return <a key={i} href={`/${locale}/terms`} target="_blank" className="text-gold underline">{locale === 'ru' ? 'Условия использования' : 'Terms of Service'}</a>
+              if (part === '[privacy]') return <a key={i} href={`/${locale}/privacy`} target="_blank" className="text-gold underline">{locale === 'ru' ? 'Политику конфиденциальности' : 'Privacy Policy'}</a>
+              return part
+            })}
+          </span>
+        </label>
+      )}
+
       {/* Submit */}
       <button
         type="submit"
-        disabled={status === 'loading'}
+        disabled={status === 'loading' || (!!consentText && !consented)}
         className="w-full px-6 py-3 bg-gold text-white font-medium rounded-lg hover:bg-gold-dark transition-colors disabled:opacity-50 min-h-[44px] flex items-center justify-center gap-2"
       >
         {status === 'loading' && (

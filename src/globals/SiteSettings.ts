@@ -178,6 +178,14 @@ export const SiteSettings: GlobalConfig = {
               },
             },
             {
+              name: 'bookingConsentText',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Consent checkbox text. Use [terms] and [privacy] as link placeholders (e.g. "I agree to the [terms] and [privacy]")',
+              },
+            },
+            {
               name: 'bookingTrustBadges',
               type: 'array',
               labels: {

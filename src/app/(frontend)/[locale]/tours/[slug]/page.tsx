@@ -420,6 +420,7 @@ export default async function TourDetailPage({
               contactPhoneDisplay={siteSettings.contactPhoneDisplay}
               successTitle={siteSettings.bookingSuccessTitle}
               successMessage={siteSettings.bookingSuccessMessage}
+              consentText={siteSettings.bookingConsentText}
             />
 
             {/* Trust badges */}
@@ -480,6 +481,7 @@ export default async function TourDetailPage({
         bookingPricingDescription={siteSettings.bookingPricingDescription}
         successTitle={siteSettings.bookingSuccessTitle}
         successMessage={siteSettings.bookingSuccessMessage}
+        consentText={siteSettings.bookingConsentText}
       />
     </div>
   )

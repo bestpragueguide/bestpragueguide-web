@@ -83,6 +83,7 @@ export async function POST(req: Request) {
       // Add booking success message columns to site_settings_locales (text, localized)
       `ALTER TABLE site_settings_locales ADD COLUMN IF NOT EXISTS booking_success_title varchar`,
       `ALTER TABLE site_settings_locales ADD COLUMN IF NOT EXISTS booking_success_message varchar`,
+      `ALTER TABLE site_settings_locales ADD COLUMN IF NOT EXISTS booking_consent_text varchar`,
 
       // Add showOnHomepage column to reviews (checkbox, not localized)
       `ALTER TABLE reviews ADD COLUMN IF NOT EXISTS show_on_homepage boolean DEFAULT false`,

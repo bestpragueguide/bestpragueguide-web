@@ -21,6 +21,7 @@ interface StickyBookButtonProps {
   bookingPricingDescription?: string
   successTitle?: string
   successMessage?: string
+  consentText?: string
 }
 
 export function StickyBookButton({
@@ -35,6 +36,7 @@ export function StickyBookButton({
   bookingPricingDescription,
   successTitle,
   successMessage,
+  consentText,
 }: StickyBookButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -101,6 +103,7 @@ export function StickyBookButton({
           contactPhoneDisplay={contactPhoneDisplay}
           successTitle={successTitle}
           successMessage={successMessage}
+          consentText={consentText}
         />
       </BookingModal>
     </>
