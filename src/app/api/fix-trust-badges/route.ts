@@ -110,6 +110,40 @@ export async function POST(request: NextRequest) {
       })
     }
 
+    // Convert plain text email template fields to Lexical JSON
+    const richTextFields = ['receivedBody', 'receivedSummaryBody', 'receivedNote', 'offerBody', 'offerNote', 'confirmedBody', 'confirmedNote', 'declinedBody', 'declinedNote', 'paymentBody', 'paymentNote', 'reminderBody', 'reminderNote']
+    for (const loc of ['en', 'ru'] as const) {
+      const tplData = await payload.findGlobal({ slug: 'email-templates', locale: loc }) as any
+      const updates: Record<string, any> = {}
+      for (const field of richTextFields) {
+        const val = tplData[field]
+        if (typeof val === 'string' && val.length > 0) {
+          // Convert plain string to Lexical JSON
+          updates[field] = {
+            root: {
+              type: 'root',
+              children: val.split('\n').filter(Boolean).map((line: string) => ({
+                type: 'paragraph',
+                children: [{ type: 'text', text: line, version: 1 }],
+                direction: 'ltr',
+                format: '',
+                indent: 0,
+                version: 1,
+              })),
+              direction: 'ltr',
+              format: '',
+              indent: 0,
+              version: 1,
+            },
+          }
+          seeded.push(`${loc.toUpperCase()} email ${field} → Lexical`)
+        }
+      }
+      if (Object.keys(updates).length > 0) {
+        await payload.updateGlobal({ slug: 'email-templates', locale: loc, data: updates as any })
+      }
+    }
+
     // Seed email templates (non-destructive)
     const enTpl = await payload.findGlobal({ slug: 'email-templates', locale: 'en' }) as any
     if (!enTpl.receivedBody || enTpl.receivedBody === 'Thank you for your request for the "{tour}" tour on {date}. We received your request and will get back to you shortly.') {
