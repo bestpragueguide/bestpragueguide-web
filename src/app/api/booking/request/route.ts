@@ -149,6 +149,8 @@ export async function POST(request: NextRequest) {
       cmsHeaderTitle: tpl.headerTitle || undefined,
       cmsGreeting: tpl.greeting ? resolveTemplate(tpl.greeting, vars) : undefined,
       cmsBody: tpl.receivedBody ? resolveTemplate(tpl.receivedBody, vars) : undefined,
+      cmsSummaryTitle: tpl.receivedSummaryTitle || undefined,
+      cmsSummaryBody: tpl.receivedSummaryBody ? resolveTemplate(tpl.receivedSummaryBody, vars) : undefined,
       cmsNote: tpl.receivedNote ? resolveTemplate(tpl.receivedNote, vars) : undefined,
       cmsFooter: tpl.footer || undefined,
     }

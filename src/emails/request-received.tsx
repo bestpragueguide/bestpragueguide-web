@@ -25,6 +25,8 @@ interface RequestReceivedEmailProps {
   cmsHeaderTitle?: string
   cmsGreeting?: string
   cmsBody?: string
+  cmsSummaryTitle?: string
+  cmsSummaryBody?: string
   cmsNote?: string
   cmsFooter?: string
 }
@@ -45,6 +47,8 @@ export function RequestReceivedEmail({
   cmsHeaderTitle,
   cmsGreeting,
   cmsBody,
+  cmsSummaryTitle,
+  cmsSummaryBody,
   cmsNote,
   cmsFooter,
 }: RequestReceivedEmailProps) {
@@ -104,8 +108,13 @@ export function RequestReceivedEmail({
 
           <Section style={summaryBox}>
             <Text style={summaryTitle}>
-              {isRu ? 'Детали запроса' : 'Booking Summary'}
+              {cmsSummaryTitle || (isRu ? 'Детали запроса' : 'Booking Summary')}
             </Text>
+            {cmsSummaryBody && cmsSummaryBody.split('\n').map((line, i) => (
+              <Text key={`sb${i}`} style={line.trim() ? text : textSpacer}>
+                {line || '\u00A0'}
+              </Text>
+            ))}
             <table style={summaryTable} cellPadding="0" cellSpacing="0">
               <tbody>
                 {summaryRows.map((row, i) => (

@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { simplifiedEditor } from '../lib/editors'
 
 export const EmailTemplates: GlobalConfig = {
   slug: 'email-templates',
@@ -25,25 +26,40 @@ export const EmailTemplates: GlobalConfig = {
             {
               name: 'receivedBody',
               label: 'Body',
-              type: 'textarea',
+              type: 'richText',
+              editor: simplifiedEditor,
               localized: true,
-              defaultValue:
-                'Thank you for your booking request! Here are the details:\n\nTour: {tour}\nDate: {date}\nTime: {time}\nGuests: {guests}\nPrice: {price} {currency}\n\nWe received your request and will get back to you shortly.',
               admin: {
-                description: 'Shown above the booking summary table. Placeholders: {name}, {tour}, {date}, {time}, {guests}, {price}, {currency}, {phone}, {email}, {requests}, {ref}. Use line breaks for formatting.',
-                rows: 8,
+                description: 'Shown above the booking summary. Placeholders in text: {name}, {tour}, {date}, {time}, {guests}, {price}, {currency}, {phone}, {email}, {requests}, {ref}',
+              },
+            },
+            {
+              name: 'receivedSummaryTitle',
+              label: 'Summary Title',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Title of the booking summary box (e.g. "Booking Summary")',
+              },
+            },
+            {
+              name: 'receivedSummaryBody',
+              label: 'Summary Body',
+              type: 'richText',
+              editor: simplifiedEditor,
+              localized: true,
+              admin: {
+                description: 'Additional text inside the summary box. Placeholders: {name}, {tour}, {date}, {time}, {guests}, {price}, {currency}, {phone}, {email}, {requests}, {ref}',
               },
             },
             {
               name: 'receivedNote',
               label: 'Contact Note',
-              type: 'textarea',
+              type: 'richText',
+              editor: simplifiedEditor,
               localized: true,
-              defaultValue:
-                'If you have any questions, contact us via WhatsApp, Telegram, or email.',
               admin: {
-                description: 'Shown below the booking summary table. Placeholders: {name}, {tour}, {date}, {time}, {guests}, {price}, {currency}, {phone}, {email}, {requests}, {ref}',
-                rows: 3,
+                description: 'Shown below the booking summary. Placeholders: {name}, {tour}, {date}, {time}, {guests}, {price}, {currency}, {phone}, {email}, {requests}, {ref}',
               },
             },
           ],
@@ -74,14 +90,11 @@ export const EmailTemplates: GlobalConfig = {
             {
               name: 'offerBody',
               label: 'Body',
-              type: 'textarea',
+              type: 'richText',
+              editor: simplifiedEditor,
               localized: true,
-              defaultValue:
-                'Great news! Your "{tour}" tour has been confirmed for {date} at {time}.\n\nPlease review the details below and complete your payment to secure the date.',
               admin: {
-                description:
-                  'Placeholders: {name}, {tour}, {date}, {time}, {guests}, {price}, {deposit}, {ref}',
-                rows: 5,
+                description: 'Placeholders in text: {name}, {tour}, {date}, {time}, {guests}, {price}, {deposit}, {ref}',
               },
             },
             {
@@ -97,13 +110,11 @@ export const EmailTemplates: GlobalConfig = {
             {
               name: 'offerNote',
               label: 'Note',
-              type: 'textarea',
+              type: 'richText',
+              editor: simplifiedEditor,
               localized: true,
-              defaultValue:
-                'Click the button above to view all details and complete your payment.',
               admin: {
                 description: 'Shown below the CTA button',
-                rows: 3,
               },
             },
           ],
@@ -148,25 +159,21 @@ export const EmailTemplates: GlobalConfig = {
             {
               name: 'confirmedBody',
               label: 'Body',
-              type: 'textarea',
+              type: 'richText',
+              editor: simplifiedEditor,
               localized: true,
-              defaultValue:
-                'Your request for the "{tour}" tour has been confirmed.',
               admin: {
-                description: 'Placeholders: {name}, {tour}, {ref}',
-                rows: 3,
+                description: 'Placeholders in text: {name}, {tour}, {ref}',
               },
             },
             {
               name: 'confirmedNote',
               label: 'Note',
-              type: 'textarea',
+              type: 'richText',
+              editor: simplifiedEditor,
               localized: true,
-              defaultValue:
-                'Meeting point details and guide contact will be sent after payment.',
               admin: {
                 description: 'Shown after booking details',
-                rows: 3,
               },
             },
           ],
@@ -187,25 +194,21 @@ export const EmailTemplates: GlobalConfig = {
             {
               name: 'declinedBody',
               label: 'Body',
-              type: 'textarea',
+              type: 'richText',
+              editor: simplifiedEditor,
               localized: true,
-              defaultValue:
-                'Unfortunately, your requested date ({date}) for the "{tour}" tour is not available.',
               admin: {
-                description: 'Placeholders: {name}, {tour}, {date}, {ref}',
-                rows: 3,
+                description: 'Placeholders in text: {name}, {tour}, {date}, {ref}',
               },
             },
             {
               name: 'declinedNote',
               label: 'Note',
-              type: 'textarea',
+              type: 'richText',
+              editor: simplifiedEditor,
               localized: true,
-              defaultValue:
-                "We'd be happy to suggest an alternative date. Please contact us via WhatsApp, Telegram, or email to discuss options.",
               admin: {
                 description: 'Shown after declined message',
-                rows: 3,
               },
             },
           ],
@@ -236,24 +239,21 @@ export const EmailTemplates: GlobalConfig = {
             {
               name: 'paymentBody',
               label: 'Body',
-              type: 'textarea',
+              type: 'richText',
+              editor: simplifiedEditor,
               localized: true,
-              defaultValue: "You're all set! Here are your tour details:",
               admin: {
-                description: 'Placeholders: {name}, {tour}',
-                rows: 3,
+                description: 'Placeholders in text: {name}, {tour}',
               },
             },
             {
               name: 'paymentNote',
               label: 'Note',
-              type: 'textarea',
+              type: 'richText',
+              editor: simplifiedEditor,
               localized: true,
-              defaultValue:
-                'Your guide will contact you the day before the tour with final details.',
               admin: {
                 description: 'Shown after tour details',
-                rows: 3,
               },
             },
           ],
@@ -284,25 +284,21 @@ export const EmailTemplates: GlobalConfig = {
             {
               name: 'reminderBody',
               label: 'Body',
-              type: 'textarea',
+              type: 'richText',
+              editor: simplifiedEditor,
               localized: true,
-              defaultValue:
-                'Your "{tour}" tour is scheduled for tomorrow!',
               admin: {
-                description: 'Placeholders: {name}, {tour}',
-                rows: 3,
+                description: 'Placeholders in text: {name}, {tour}',
               },
             },
             {
               name: 'reminderNote',
               label: 'Note',
-              type: 'textarea',
+              type: 'richText',
+              editor: simplifiedEditor,
               localized: true,
-              defaultValue:
-                'Tips: wear comfortable shoes and bring water. Contact us if you have any questions.',
               admin: {
                 description: 'Shown after tour details',
-                rows: 3,
               },
             },
           ],

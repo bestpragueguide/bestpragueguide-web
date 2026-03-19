@@ -448,6 +448,8 @@ export interface EmailTemplatesData {
   greeting?: string
   receivedSubject?: string
   receivedBody?: string
+  receivedSummaryTitle?: string
+  receivedSummaryBody?: string
   receivedNote?: string
   adminSubject?: string
   confirmedSubject?: string
@@ -475,14 +477,64 @@ export interface EmailTemplatesData {
 
 const emailTemplatesFallback: EmailTemplatesData = {}
 
+/** Extract plain text from a value that may be a string or Lexical JSON */
+function toPlainText(value: unknown): string | undefined {
+  if (!value) return undefined
+  if (typeof value === 'string') return value
+  // Lexical JSON — extract text from nodes
+  if (typeof value === 'object' && value !== null) {
+    const root = (value as any).root
+    if (!root?.children) return undefined
+    const lines: string[] = []
+    for (const node of root.children) {
+      if (node.children) {
+        lines.push(node.children.map((c: any) => c.text || '').join(''))
+      }
+    }
+    return lines.join('\n') || undefined
+  }
+  return undefined
+}
+
 export async function getEmailTemplates(locale: string): Promise<EmailTemplatesData> {
   try {
     const payload = await getPayload({ config })
-    const data = await payload.findGlobal({
+    const data: any = await payload.findGlobal({
       slug: 'email-templates',
       locale: locale as 'en' | 'ru',
     })
-    return data as unknown as EmailTemplatesData
+    // Extract plain text from richText fields for email rendering
+    return {
+      headerTitle: data.headerTitle || undefined,
+      greeting: data.greeting || undefined,
+      receivedSubject: data.receivedSubject || undefined,
+      receivedBody: toPlainText(data.receivedBody),
+      receivedSummaryTitle: data.receivedSummaryTitle || undefined,
+      receivedSummaryBody: toPlainText(data.receivedSummaryBody),
+      receivedNote: toPlainText(data.receivedNote),
+      adminSubject: data.adminSubject || undefined,
+      confirmedSubject: data.confirmedSubject || undefined,
+      confirmedHeading: data.confirmedHeading || undefined,
+      confirmedBody: toPlainText(data.confirmedBody),
+      confirmedNote: toPlainText(data.confirmedNote),
+      declinedSubject: data.declinedSubject || undefined,
+      declinedBody: toPlainText(data.declinedBody),
+      declinedNote: toPlainText(data.declinedNote),
+      paymentSubject: data.paymentSubject || undefined,
+      paymentHeading: data.paymentHeading || undefined,
+      paymentBody: toPlainText(data.paymentBody),
+      paymentNote: toPlainText(data.paymentNote),
+      reminderSubject: data.reminderSubject || undefined,
+      reminderHeading: data.reminderHeading || undefined,
+      reminderBody: toPlainText(data.reminderBody),
+      reminderNote: toPlainText(data.reminderNote),
+      offerSubject: data.offerSubject || undefined,
+      offerHeading: data.offerHeading || undefined,
+      offerBody: toPlainText(data.offerBody),
+      offerCtaLabel: data.offerCtaLabel || undefined,
+      offerNote: toPlainText(data.offerNote),
+      footer: data.footer || undefined,
+    }
   } catch {
     return emailTemplatesFallback
   }
