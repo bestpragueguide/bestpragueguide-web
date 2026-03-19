@@ -23,6 +23,8 @@ export interface BookingOfferEmailProps {
   requestRef: string
   offerUrl: string
   locale: 'en' | 'ru'
+  cmsHeaderTitle?: string
+  cmsGreeting?: string
   cmsHeading?: string
   cmsBody?: string
   cmsCtaLabel?: string
@@ -43,6 +45,8 @@ export function BookingOfferEmail({
   requestRef,
   offerUrl,
   locale,
+  cmsHeaderTitle,
+  cmsGreeting,
   cmsHeading,
   cmsBody,
   cmsCtaLabel,
@@ -106,11 +110,13 @@ export function BookingOfferEmail({
       </Preview>
       <Body style={body}>
         <Container style={container}>
-          <Text style={logo}>Best Prague Guide</Text>
+          <Text style={logo}>{cmsHeaderTitle || 'Best Prague Guide'}</Text>
           <Hr style={hr} />
 
           <Text style={heading}>
-            {cmsHeading || defaultHeading}
+            {cmsGreeting
+              ? cmsGreeting.replace('{name}', customerName)
+              : cmsHeading || defaultHeading}
           </Text>
 
           {bodyText.split('\n').map((line, i) => (
@@ -146,9 +152,9 @@ export function BookingOfferEmail({
           </Text>
 
           <Hr style={hr} />
-          <Text style={footerStyle}>
-            {cmsFooter || 'Best Prague Guide | info@bestpragueguide.com'}
-          </Text>
+          {(cmsFooter || 'Best Prague Guide | info@bestpragueguide.com').split('\n').map((line, i) => (
+            <Text key={`f${i}`} style={footerStyle}>{line || '\u00A0'}</Text>
+          ))}
         </Container>
       </Body>
     </Html>

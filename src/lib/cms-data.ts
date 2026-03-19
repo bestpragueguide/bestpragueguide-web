@@ -442,6 +442,8 @@ export async function getNotificationEmail(): Promise<string> {
 // ─── Email Templates ────────────────────────────────────────────
 
 export interface EmailTemplatesData {
+  headerTitle?: string
+  greeting?: string
   receivedSubject?: string
   receivedBody?: string
   receivedNote?: string

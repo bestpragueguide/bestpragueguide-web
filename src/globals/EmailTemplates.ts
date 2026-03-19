@@ -308,17 +308,38 @@ export const EmailTemplates: GlobalConfig = {
           ],
         },
         {
-          label: 'Footer',
+          label: 'Header & Footer',
           fields: [
+            {
+              name: 'headerTitle',
+              label: 'Header Title',
+              type: 'text',
+              localized: true,
+              defaultValue: 'Best Prague Guide',
+              admin: {
+                description: 'Logo/brand text at the top of all emails',
+              },
+            },
+            {
+              name: 'greeting',
+              label: 'Greeting Template',
+              type: 'text',
+              localized: true,
+              defaultValue: 'Hello, {name}!',
+              admin: {
+                description: 'Greeting line. Use {name} placeholder. E.g. "Hello, {name}!" or "Dear {name},"',
+              },
+            },
             {
               name: 'footer',
               label: 'Footer Text',
-              type: 'text',
+              type: 'textarea',
               localized: true,
               defaultValue:
                 'Best Prague Guide | info@bestpragueguide.com',
               admin: {
-                description: 'Shared footer text shown at the bottom of all customer emails',
+                description: 'Footer shown at the bottom of all emails. Supports line breaks.',
+                rows: 3,
               },
             },
           ],

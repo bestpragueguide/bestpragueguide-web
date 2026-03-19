@@ -22,6 +22,8 @@ interface RequestReceivedEmailProps {
   currency?: string
   requestRef: string
   locale: 'en' | 'ru'
+  cmsHeaderTitle?: string
+  cmsGreeting?: string
   cmsBody?: string
   cmsNote?: string
   cmsFooter?: string
@@ -40,6 +42,8 @@ export function RequestReceivedEmail({
   currency = 'EUR',
   requestRef,
   locale,
+  cmsHeaderTitle,
+  cmsGreeting,
   cmsBody,
   cmsNote,
   cmsFooter,
@@ -83,13 +87,13 @@ export function RequestReceivedEmail({
       </Preview>
       <Body style={body}>
         <Container style={container}>
-          <Text style={logo}>Best Prague Guide</Text>
+          <Text style={logo}>{cmsHeaderTitle || 'Best Prague Guide'}</Text>
           <Hr style={hr} />
 
           <Text style={heading}>
-            {isRu
-              ? `Здравствуйте, ${customerName}!`
-              : `Hello, ${customerName}!`}
+            {cmsGreeting
+              ? cmsGreeting.replace('{name}', customerName)
+              : (isRu ? `Здравствуйте, ${customerName}!` : `Hello, ${customerName}!`)}
           </Text>
 
           {cmsBody && cmsBody.split('\n').map((line, i) => (
@@ -121,9 +125,9 @@ export function RequestReceivedEmail({
           ))}
 
           <Hr style={hr} />
-          {cmsFooter && (
-            <Text style={footerStyle}>{cmsFooter}</Text>
-          )}
+          {cmsFooter && cmsFooter.split('\n').map((line, i) => (
+            <Text key={`f${i}`} style={footerStyle}>{line || '\u00A0'}</Text>
+          ))}
         </Container>
       </Body>
     </Html>

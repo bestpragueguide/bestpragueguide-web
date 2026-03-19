@@ -132,6 +132,8 @@ export async function POST(request: NextRequest) {
       currency: data.currency || 'EUR',
       requestRef,
       locale: data.locale,
+      cmsHeaderTitle: tpl.headerTitle || undefined,
+      cmsGreeting: tpl.greeting ? resolveTemplate(tpl.greeting, vars) : undefined,
       cmsBody: tpl.receivedBody ? resolveTemplate(tpl.receivedBody, vars) : undefined,
       cmsNote: tpl.receivedNote ? resolveTemplate(tpl.receivedNote, vars) : undefined,
       cmsFooter: tpl.footer || undefined,

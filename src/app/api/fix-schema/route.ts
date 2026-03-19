@@ -101,6 +101,8 @@ export async function POST(req: Request) {
       `ALTER TABLE site_settings_locales ADD COLUMN IF NOT EXISTS booking_page_expired_message varchar`,
 
       // EmailTemplates: offer fields on locales table
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS header_title varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS greeting varchar`,
       `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS offer_subject varchar`,
       `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS offer_heading varchar`,
       `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS offer_body varchar`,
