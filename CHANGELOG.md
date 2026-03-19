@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.31.0] - 2026-03-19
+
+### Added
+- **Offer token on booking creation** — offerToken auto-generated when booking request is created (not just on confirm), so booking page URL is available immediately
+- **Pending status on booking page** — unconfirmed bookings show blue "We received your request" banner; payment button hidden until confirmed
+- **RichText email template fields** — all body/note fields in EmailTemplates converted from textarea to richText with simplifiedEditor (bold, italic, underline, links, lists)
+- **Booking Summary customization** — new `receivedSummaryTitle` and `receivedSummaryBody` fields in Booking Received template
+- **CMS-editable booking page messages** — confirmed banner, cash note, contact note all use CMS values from Site Settings > Booking Page
+
+### Changed
+- **BookingStatusBar restyled** — compact inline badges using Payload CSS variables, Copy/Open/Send Offer buttons with visible gray backgrounds
+- **Status bar moved inline** — renders as ui field in Booking tab (not floating beforeDocumentControls dialog)
+- **Audit timeline removed from edit view** — accessible via Booking Audit Logs collection in sidebar
+
+### Fixed
+- **Deposit sync** — changing customDepositAmount auto-updates depositAmountEur and recalculates cashBalanceEur
+- **Admin tab reorganization** — Payment Method and Custom Deposit moved to Offer Details; CRM as separate tab; Metadata (IP) as separate tab
+
 ## [1.30.0] - 2026-03-19
 
 ### Added
