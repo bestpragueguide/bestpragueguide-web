@@ -101,37 +101,49 @@ export async function submitBookingRequest(formData: unknown): Promise<BookingAc
       getEmailTemplates(data.locale),
       getNotificationEmail(),
     ])
-    const vars = { name: data.customerName, tour: data.tourName, date: data.preferredDate, ref: requestRef }
+    const vars = {
+      name: data.customerName,
+      tour: data.tourName,
+      date: data.preferredDate,
+      time: data.preferredTime,
+      guests: String(data.guests),
+      phone: data.customerPhone || '',
+      email: data.customerEmail,
+      price: data.totalPrice != null ? String(data.totalPrice) : '',
+      currency: data.currency || 'EUR',
+      requests: data.specialRequests || '',
+      ref: requestRef,
+    }
+
+    const emailProps = {
+      customerName: data.customerName,
+      tourName: data.tourName,
+      preferredDate: data.preferredDate,
+      preferredTime: data.preferredTime,
+      guests: data.guests,
+      customerEmail: data.customerEmail,
+      customerPhone: data.customerPhone || '',
+      specialRequests: data.specialRequests || '',
+      totalPrice: data.totalPrice,
+      currency: data.currency || 'EUR',
+      requestRef,
+      locale: data.locale,
+      cmsBody: tpl.receivedBody ? resolveTemplate(tpl.receivedBody, vars) : undefined,
+      cmsNote: tpl.receivedNote ? resolveTemplate(tpl.receivedNote, vars) : undefined,
+      cmsFooter: tpl.footer || undefined,
+    }
 
     // Fire and forget notifications
     Promise.allSettled([
       sendEmail({
         to: data.customerEmail,
         subject: resolveTemplate(tpl.receivedSubject || (data.locale === 'ru' ? 'Запрос получен — {ref}' : 'Request received — {ref}'), vars),
-        react: RequestReceivedEmail({
-          customerName: data.customerName,
-          tourName: data.tourName,
-          preferredDate: data.preferredDate,
-          requestRef,
-          locale: data.locale,
-          cmsBody: tpl.receivedBody ? resolveTemplate(tpl.receivedBody, vars) : undefined,
-          cmsNote: tpl.receivedNote ? resolveTemplate(tpl.receivedNote, vars) : undefined,
-          cmsFooter: tpl.footer || undefined,
-        }),
+        react: RequestReceivedEmail(emailProps),
       }),
       sendAdminEmail({
         to: notificationEmail,
         subject: resolveTemplate(tpl.adminSubject || 'New booking: {ref} — {tour}', vars),
-        react: RequestReceivedEmail({
-          customerName: data.customerName,
-          tourName: data.tourName,
-          preferredDate: data.preferredDate,
-          requestRef,
-          locale: data.locale,
-          cmsBody: tpl.receivedBody ? resolveTemplate(tpl.receivedBody, vars) : undefined,
-          cmsNote: tpl.receivedNote ? resolveTemplate(tpl.receivedNote, vars) : undefined,
-          cmsFooter: tpl.footer || undefined,
-        }),
+        react: RequestReceivedEmail(emailProps),
         replyTo: data.customerEmail,
       }),
       sendTelegramMessage(formatBookingTelegramMessage(notificationData)),

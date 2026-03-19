@@ -13,6 +13,13 @@ interface RequestReceivedEmailProps {
   customerName: string
   tourName: string
   preferredDate: string
+  preferredTime?: string
+  guests?: number
+  customerEmail?: string
+  customerPhone?: string
+  specialRequests?: string
+  totalPrice?: number | null
+  currency?: string
   requestRef: string
   locale: 'en' | 'ru'
   cmsBody?: string
@@ -24,6 +31,13 @@ export function RequestReceivedEmail({
   customerName,
   tourName,
   preferredDate,
+  preferredTime,
+  guests,
+  customerEmail,
+  customerPhone,
+  specialRequests,
+  totalPrice,
+  currency = 'EUR',
   requestRef,
   locale,
   cmsBody,
@@ -31,6 +45,33 @@ export function RequestReceivedEmail({
   cmsFooter,
 }: RequestReceivedEmailProps) {
   const isRu = locale === 'ru'
+
+  const currencySymbol = currency === 'CZK' ? 'Kč' : currency === 'USD' ? '$' : '€'
+  const priceDisplay = totalPrice != null && totalPrice > 0
+    ? `${currencySymbol}${totalPrice}`
+    : (isRu ? 'По запросу' : 'On request')
+
+  const summaryRows: Array<{ label: string; value: string }> = [
+    { label: isRu ? 'Экскурсия' : 'Tour', value: tourName },
+    { label: isRu ? 'Дата' : 'Date', value: preferredDate },
+  ]
+  if (preferredTime) {
+    summaryRows.push({ label: isRu ? 'Время' : 'Time', value: preferredTime })
+  }
+  if (guests) {
+    summaryRows.push({ label: isRu ? 'Гостей' : 'Guests', value: String(guests) })
+  }
+  summaryRows.push({ label: isRu ? 'Стоимость' : 'Price', value: priceDisplay })
+  if (customerEmail) {
+    summaryRows.push({ label: 'Email', value: customerEmail })
+  }
+  if (customerPhone) {
+    summaryRows.push({ label: isRu ? 'Телефон' : 'Phone', value: customerPhone })
+  }
+  if (specialRequests) {
+    summaryRows.push({ label: isRu ? 'Пожелания' : 'Requests', value: specialRequests })
+  }
+  summaryRows.push({ label: isRu ? 'Номер заявки' : 'Reference', value: requestRef })
 
   return (
     <Html lang={locale}>
@@ -51,31 +92,34 @@ export function RequestReceivedEmail({
               : `Hello, ${customerName}!`}
           </Text>
 
-          <Text style={text}>
-            {cmsBody
-              || (isRu
-                ? `Спасибо за ваш запрос на экскурсию "${tourName}" на ${preferredDate}. Мы получили ваш запрос и свяжемся с вами в ближайшее время.`
-                : `Thank you for your request for the "${tourName}" tour on ${preferredDate}. We received your request and will get back to you shortly.`)}
-          </Text>
+          {cmsBody && (
+            <Text style={text}>{cmsBody}</Text>
+          )}
 
-          <Section style={infoBox}>
-            <Text style={infoText}>
-              {isRu ? 'Номер заявки' : 'Reference number'}:{' '}
-              <strong>{requestRef}</strong>
+          <Section style={summaryBox}>
+            <Text style={summaryTitle}>
+              {isRu ? 'Детали запроса' : 'Booking Summary'}
             </Text>
+            <table style={summaryTable} cellPadding="0" cellSpacing="0">
+              <tbody>
+                {summaryRows.map((row, i) => (
+                  <tr key={i}>
+                    <td style={labelCell}>{row.label}</td>
+                    <td style={valueCell}>{row.value}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </Section>
 
-          <Text style={text}>
-            {cmsNote
-              || (isRu
-                ? 'Если у вас есть вопросы, свяжитесь с нами через WhatsApp, Telegram или email.'
-                : 'If you have any questions, contact us via WhatsApp, Telegram, or email.')}
-          </Text>
+          {cmsNote && (
+            <Text style={text}>{cmsNote}</Text>
+          )}
 
           <Hr style={hr} />
-          <Text style={footerStyle}>
-            {cmsFooter || 'Best Prague Guide | info@bestpragueguide.com'}
-          </Text>
+          {cmsFooter && (
+            <Text style={footerStyle}>{cmsFooter}</Text>
+          )}
         </Container>
       </Body>
     </Html>
@@ -120,18 +164,42 @@ const text = {
   margin: '0 0 16px',
 }
 
-const infoBox = {
+const summaryBox = {
   backgroundColor: '#FFFFFF',
   border: '1px solid #E5E5E5',
   borderRadius: '8px',
-  padding: '16px',
+  padding: '20px',
   margin: '16px 0',
 }
 
-const infoText = {
-  fontSize: '14px',
+const summaryTitle = {
+  fontSize: '15px',
+  fontWeight: '600' as const,
   color: '#1A1A1A',
-  margin: '0',
+  margin: '0 0 12px',
+}
+
+const summaryTable = {
+  width: '100%' as const,
+  borderCollapse: 'collapse' as const,
+}
+
+const labelCell = {
+  fontSize: '13px',
+  color: '#777777',
+  padding: '6px 12px 6px 0',
+  verticalAlign: 'top' as const,
+  whiteSpace: 'nowrap' as const,
+  borderBottom: '1px solid #F0F0F0',
+}
+
+const valueCell = {
+  fontSize: '13px',
+  color: '#1A1A1A',
+  fontWeight: '500' as const,
+  padding: '6px 0',
+  verticalAlign: 'top' as const,
+  borderBottom: '1px solid #F0F0F0',
 }
 
 const footerStyle = {

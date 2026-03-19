@@ -19,7 +19,7 @@ export const EmailTemplates: GlobalConfig = {
               localized: true,
               defaultValue: 'Request received — {ref}',
               admin: {
-                description: 'Placeholders: {ref}',
+                description: 'Placeholders: {name}, {tour}, {date}, {time}, {guests}, {price}, {currency}, {phone}, {email}, {requests}, {ref}',
               },
             },
             {
@@ -30,7 +30,7 @@ export const EmailTemplates: GlobalConfig = {
               defaultValue:
                 'Thank you for your request for the "{tour}" tour on {date}. We received your request and will get back to you shortly.',
               admin: {
-                description: 'Placeholders: {name}, {tour}, {date}, {ref}',
+                description: 'Shown above the booking summary table. Placeholders: {name}, {tour}, {date}, {time}, {guests}, {price}, {currency}, {phone}, {email}, {requests}, {ref}',
                 rows: 3,
               },
             },
@@ -42,7 +42,7 @@ export const EmailTemplates: GlobalConfig = {
               defaultValue:
                 'If you have any questions, contact us via WhatsApp, Telegram, or email.',
               admin: {
-                description: 'Shown below reference number',
+                description: 'Shown below the booking summary table. Placeholders: {name}, {tour}, {date}, {time}, {guests}, {price}, {currency}, {phone}, {email}, {requests}, {ref}',
                 rows: 3,
               },
             },
