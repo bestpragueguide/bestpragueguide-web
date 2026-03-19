@@ -117,23 +117,43 @@ export function BookingStatusBar() {
               onClick={handleCopy}
               style={{
                 fontSize: 12,
-                padding: '5px 10px',
+                padding: '6px 12px',
                 border: '1px solid #d1d5db',
                 borderRadius: 4,
-                backgroundColor: copied ? '#dcfce7' : '#fff',
+                backgroundColor: copied ? '#dcfce7' : '#f3f4f6',
+                color: '#1a1a1a',
+                fontWeight: 500,
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
               }}
             >
-              {copied ? 'Copied!' : 'Copy URL'}
+              {copied ? 'Copied!' : 'Copy'}
             </button>
+            <a
+              href={offerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontSize: 12,
+                padding: '6px 12px',
+                border: '1px solid #d1d5db',
+                borderRadius: 4,
+                backgroundColor: '#f3f4f6',
+                color: '#1a1a1a',
+                fontWeight: 500,
+                textDecoration: 'none',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Open
+            </a>
             <button
               type="button"
               onClick={handleSend}
               disabled={sending}
               style={{
                 fontSize: 12,
-                padding: '5px 12px',
+                padding: '6px 14px',
                 border: 'none',
                 borderRadius: 4,
                 backgroundColor: '#C4975C',
