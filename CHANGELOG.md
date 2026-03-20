@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.34.0] - 2026-03-20
+
+### Added
+- **Stripe expired/failed payment handling** — webhook now handles `checkout.session.expired` (clears payment link, logs audit) and `payment_intent.payment_failed` (logs failure reason). New `checkout_expired` audit event type.
+- **Tour review structured data** — TourSchema now includes individual `Review` items from the reviews collection for valid Google review snippets
+
+### Changed
+- **ISR enabled** — removed `force-dynamic` from tour detail, tours catalog, homepage, reviews, blog listing pages. ISR caching with `revalidate` now works, dramatically improving TTFB.
+- **Structured data fixes** — changed `Product` to `TourProduct` (avoids shipping/return policy requirements), removed aggregateRating from `TouristTrip` (invalid per Google), added `priceValidUntil` to offers, added individual review items
+- **Next.js Image on booking page** — replaced raw `<img>` with optimized `<Image>` component with `priority` and responsive `sizes`
+- **Font optimization** — reduced Cormorant Garamond italic styles
+- **Mobile UX** — safe-area insets for iPhone notch on sticky book button, larger touch targets (currency buttons, category selects, modal close button), swipe-to-dismiss on booking modal, iOS scroll lock fix
+
+### Fixed
+- **Google Search Console errors** — "Invalid object type for field", "Missing field 'review'", "Missing field 'aggregateRating'", "Missing field 'priceValidUntil'", "Missing field 'shippingDetails'" / "Missing field 'hasMerchantReturnPolicy'" (eliminated by using TourProduct instead of Product)
+
 ## [1.33.0] - 2026-03-19
 
 ### Added

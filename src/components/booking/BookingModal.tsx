@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { formatPrice, secondaryPrices } from '@/lib/currency'
 import { getDisplayPrice } from '@/lib/pricing'
 import { guestsLabel } from '@/lib/plurals'
@@ -40,13 +40,37 @@ export function BookingModal({
     [onClose],
   )
 
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [touchDelta, setTouchDelta] = useState(0)
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.touches[0].clientY)
+  }
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStart === null) return
+    const delta = e.touches[0].clientY - touchStart
+    if (delta > 0) setTouchDelta(delta) // only track downward swipes
+  }
+  const handleTouchEnd = () => {
+    if (touchDelta > 100) onClose()
+    setTouchStart(null)
+    setTouchDelta(0)
+  }
+
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden'
+      const scrollY = window.scrollY
+      document.body.style.position = 'fixed'
+      document.body.style.top = `-${scrollY}px`
+      document.body.style.width = '100%'
       document.addEventListener('keydown', handleEscape)
     }
     return () => {
-      document.body.style.overflow = ''
+      const scrollY = document.body.style.top
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+      window.scrollTo(0, parseInt(scrollY || '0') * -1)
       document.removeEventListener('keydown', handleEscape)
     }
   }, [isOpen, handleEscape])
@@ -68,9 +92,17 @@ export function BookingModal({
       />
 
       {/* Modal panel — slides up from bottom */}
-      <div className="absolute inset-x-0 bottom-0 max-h-[90vh] bg-white rounded-t-2xl overflow-y-auto animate-slide-up">
+      <div
+        className="absolute inset-x-0 bottom-0 max-h-[90vh] bg-white rounded-t-2xl overflow-y-auto animate-slide-up"
+        style={{ transform: touchDelta > 0 ? `translateY(${touchDelta}px)` : undefined }}
+      >
         {/* Handle bar */}
-        <div className="sticky top-0 bg-white pt-3 pb-2 px-4 border-b border-gray-light/50 z-10">
+        <div
+          className="sticky top-0 bg-white pt-3 pb-2 px-4 border-b border-gray-light/50 z-10"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           <div className="w-10 h-1 bg-gray-light rounded-full mx-auto mb-3" />
           <div className="flex items-center justify-between">
             <div>
@@ -98,7 +130,7 @@ export function BookingModal({
             </div>
             <button
               onClick={onClose}
-              className="p-2 text-gray hover:text-navy"
+              className="p-3 text-gray hover:text-navy"
               aria-label={locale === 'ru' ? 'Закрыть' : 'Close'}
             >
               <svg

@@ -56,7 +56,7 @@ export function StickyBookButton({
   return (
     <>
       {/* Sticky bottom bar — mobile only */}
-      <div className="fixed bottom-0 inset-x-0 z-[80] lg:hidden bg-white border-t border-gray-light/50 px-4 py-3 shadow-[0_-4px_12px_rgba(0,0,0,0.08)]">
+      <div className="fixed bottom-0 inset-x-0 z-[80] lg:hidden bg-white border-t border-gray-light/50 px-4 py-3 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_12px_rgba(0,0,0,0.08)]">
         <div className="flex items-center justify-between gap-4">
           <div>
             {displayInfo.isOnRequest ? (

@@ -1,5 +1,3 @@
-export const dynamic = 'force-dynamic'
-
 import { getTranslations } from 'next-intl/server'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -41,6 +39,26 @@ async function getTour(slug: string, locale: string): Promise<TourData | null> {
     return (result.docs[0] as TourData) || null
   } catch {
     return null
+  }
+}
+
+async function getTourReviews(tourId: number, locale: string) {
+  try {
+    const payload = await getPayload({ config })
+    const result = await payload.find({
+      collection: 'reviews',
+      where: { tour: { equals: tourId } },
+      locale: locale as 'en' | 'ru',
+      limit: 10,
+      sort: '-createdAt',
+    })
+    return result.docs.map((r: any) => ({
+      customerName: r.customerName || 'Guest',
+      rating: r.rating || 5,
+      body: typeof r.body === 'string' ? r.body : (r.body?.root?.children?.[0]?.children?.[0]?.text || ''),
+    }))
+  } catch {
+    return []
   }
 }
 
@@ -167,6 +185,7 @@ export default async function TourDetailPage({
   const t = await getTranslations({ locale, namespace: 'tour' })
   const tCommon = await getTranslations({ locale, namespace: 'common' })
   const siteSettings = await getSiteSettings(locale)
+  const tourReviews = await getTourReviews(tour.id as number, locale)
 
   // Resolve internal links in richText description
   if (tour.description) {
@@ -463,6 +482,7 @@ export default async function TourDetailPage({
         duration={tour.duration}
         rating={tour.rating ?? undefined}
         reviewCount={tour.reviewCount ?? undefined}
+        reviews={tourReviews}
         locale={locale}
         slug={slug}
       />

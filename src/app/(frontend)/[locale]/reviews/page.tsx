@@ -1,5 +1,3 @@
-export const dynamic = 'force-dynamic'
-
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
@@ -22,6 +20,8 @@ const fallbackGalleryPhotos = [
   { src: `${SERVER_URL}/api/media/file/photo_6_2026-03-03_18-30-45.jpg`, alt: 'Tourists at Vltava riverbank' },
   { src: `${SERVER_URL}/api/media/file/photo_4_2026-03-03_18-30-45.jpg`, alt: 'Guide portrait in Old Town' },
 ]
+
+export const revalidate = 3600
 
 export async function generateMetadata({
   params,

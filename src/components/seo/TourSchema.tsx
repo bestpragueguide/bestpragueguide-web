@@ -1,5 +1,11 @@
 import { JsonLd } from './JsonLd'
 
+interface ReviewData {
+  customerName: string
+  rating: number
+  body: string
+}
+
 interface TourSchemaProps {
   title: string
   description: string
@@ -9,6 +15,7 @@ interface TourSchemaProps {
   duration: number
   rating?: number
   reviewCount?: number
+  reviews?: ReviewData[]
   locale: string
   slug: string
 }
@@ -22,11 +29,16 @@ export function TourSchema({
   duration,
   rating,
   reviewCount,
+  reviews,
   locale,
   slug,
 }: TourSchemaProps) {
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'
   const url = `${baseUrl}/${locale}/tours/${slug}`
+
+  // Price valid until end of next year
+  const nextYear = new Date().getFullYear() + 1
+  const priceValidUntil = `${nextYear}-12-31`
 
   const offers = price != null
     ? {
@@ -35,19 +47,11 @@ export function TourSchema({
         priceCurrency: currency,
         availability: 'https://schema.org/InStock',
         validFrom: new Date().toISOString().split('T')[0],
-        priceSpecification: {
-          '@type': 'UnitPriceSpecification',
-          price: price.toString(),
-          priceCurrency: currency,
-          unitText: 'per group',
-        },
+        priceValidUntil,
       }
-    : {
-        '@type': 'Offer',
-        availability: 'https://schema.org/InStock',
-        validFrom: new Date().toISOString().split('T')[0],
-      }
+    : undefined
 
+  // TouristTrip — informational, no reviews/ratings
   const touristTrip: Record<string, unknown> = {
     '@type': 'TouristTrip',
     '@id': `${url}#trip`,
@@ -60,27 +64,16 @@ export function TourSchema({
       name: 'Best Prague Guide',
       url: baseUrl,
     },
-    offers,
     duration: `PT${duration}H`,
   }
 
-  if (image) {
-    touristTrip.image = image
-  }
+  if (image) touristTrip.image = image
+  if (offers) touristTrip.offers = offers
 
-  if (rating && reviewCount) {
-    touristTrip.aggregateRating = {
-      '@type': 'AggregateRating',
-      ratingValue: rating.toString(),
-      reviewCount: reviewCount.toString(),
-      bestRating: '5',
-      worstRating: '1',
-    }
-  }
-
-  const product: Record<string, unknown> = {
-    '@type': 'Product',
-    '@id': `${url}#product`,
+  // Service (not Product — avoids shipping/return policy requirements)
+  const service: Record<string, unknown> = {
+    '@type': 'TourProduct',
+    '@id': `${url}#service`,
     name: title,
     description,
     url,
@@ -89,15 +82,32 @@ export function TourSchema({
       '@type': 'Brand',
       name: 'Best Prague Guide',
     },
-    offers,
   }
 
-  if (image) {
-    product.image = image
+  if (image) service.image = image
+  if (offers) service.offers = offers
+
+  // Add individual reviews (required by Google for review snippets)
+  if (reviews && reviews.length > 0) {
+    service.review = reviews.map((r) => ({
+      '@type': 'Review',
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: r.rating.toString(),
+        bestRating: '5',
+        worstRating: '1',
+      },
+      author: {
+        '@type': 'Person',
+        name: r.customerName,
+      },
+      reviewBody: r.body,
+    }))
   }
 
-  if (rating && reviewCount) {
-    product.aggregateRating = {
+  // AggregateRating only when we have reviews
+  if (rating && reviewCount && reviewCount > 0) {
+    service.aggregateRating = {
       '@type': 'AggregateRating',
       ratingValue: rating.toString(),
       reviewCount: reviewCount.toString(),
@@ -108,7 +118,7 @@ export function TourSchema({
 
   const data = {
     '@context': 'https://schema.org',
-    '@graph': [touristTrip, product],
+    '@graph': [touristTrip, service],
   }
 
   return <JsonLd data={data} />

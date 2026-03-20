@@ -229,7 +229,7 @@ export function BookingRequestForm({
               key={c}
               type="button"
               onClick={() => setCurrency(c)}
-              className={`px-2.5 py-0.5 text-xs rounded-full border transition-colors ${
+              className={`px-2.5 py-1.5 text-xs rounded-full border transition-colors ${
                 currency === c
                   ? 'bg-gold text-white border-gold'
                   : 'bg-white text-gray border-gray-light hover:border-gold/50'
@@ -345,7 +345,7 @@ export function BookingRequestForm({
                 <select
                   value={categoryBreakdown[cat.label] || 0}
                   onChange={(e) => updateCategory(cat.label, Number(e.target.value))}
-                  className="w-16 px-2 py-1.5 rounded-lg border border-gray-light focus:border-gold focus:ring-1 focus:ring-gold outline-none text-sm text-center"
+                  className="w-16 px-2 py-2 min-h-[40px] rounded-lg border border-gray-light focus:border-gold focus:ring-1 focus:ring-gold outline-none text-sm text-center"
                 >
                   {Array.from({ length: guests + 1 }, (_, i) => (
                     <option key={i} value={i}>{i}</option>

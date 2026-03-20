@@ -25,7 +25,7 @@ import '@/app/globals.css'
 const cormorant = Cormorant_Garamond({
   subsets: ['latin', 'cyrillic'],
   weight: ['400', '500', '600', '700'],
-  style: ['normal', 'italic'],
+  style: ['normal'],
   variable: '--font-cormorant-garamond',
   display: 'swap',
 })
@@ -41,6 +41,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
+  viewportFit: 'cover',
 }
 
 export const metadata: Metadata = {

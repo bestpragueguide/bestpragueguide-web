@@ -1,5 +1,3 @@
-export const dynamic = 'force-dynamic'
-
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { buildPageMetadata } from '@/lib/metadata'
@@ -13,6 +11,8 @@ import { TestimonialSliderWrapper } from '@/components/home/TestimonialSliderWra
 import { FAQSectionWrapper } from '@/components/home/FAQSectionWrapper'
 import { CTASection } from '@/components/home/CTASection'
 import { WebSiteSchema } from '@/components/seo/WebSiteSchema'
+
+export const revalidate = 3600
 
 export async function generateMetadata({
   params,

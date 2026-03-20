@@ -1,5 +1,3 @@
-export const dynamic = 'force-dynamic'
-
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { getTranslations } from 'next-intl/server'
@@ -9,6 +7,8 @@ import config from '@payload-config'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { TourFilters } from '@/components/tours/TourFilters'
 import { TourGrid } from '@/components/tours/TourGrid'
+
+export const revalidate = 600
 
 export async function generateMetadata({
   params,

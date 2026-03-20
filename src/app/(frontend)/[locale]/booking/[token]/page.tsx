@@ -5,6 +5,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import Image from 'next/image'
 import { getSiteSettings } from '@/lib/cms-data'
 import { SafeRichText } from '@/components/shared/SafeRichText'
 import { formatAmount, type Currency } from '@/lib/currency'
@@ -354,11 +355,14 @@ export default async function BookingOfferPage({
         {/* Tour Summary Card */}
         <div className="bg-white rounded-xl border border-gray-light/50 shadow-sm overflow-hidden">
           {heroImageUrl && (
-            <div className="h-48 sm:h-56 overflow-hidden">
-              <img
+            <div className="relative h-48 sm:h-56 overflow-hidden">
+              <Image
                 src={heroImageUrl}
                 alt={heroImage?.alt || tourTitle}
-                className="w-full h-full object-cover"
+                fill
+                priority
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 768px"
               />
             </div>
           )}
@@ -415,7 +419,7 @@ export default async function BookingOfferPage({
           <div className="space-y-3">
             <div className="flex justify-between text-sm">
               <span className="text-navy/70">{booking.customerName}</span>
-              <span className="text-navy/70">{booking.customerEmail}</span>
+              <span className="text-navy/70 break-all">{booking.customerEmail}</span>
             </div>
 
             <hr className="border-gray-light/50" />

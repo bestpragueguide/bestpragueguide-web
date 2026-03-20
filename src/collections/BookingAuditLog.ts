@@ -32,6 +32,7 @@ export const BookingAuditLog: CollectionConfig = {
         { label: 'Checkout Created', value: 'checkout_created' },
         { label: 'Payment Success', value: 'payment_success' },
         { label: 'Payment Failed', value: 'payment_failed' },
+        { label: 'Checkout Expired', value: 'checkout_expired' },
         { label: 'Webhook Received', value: 'webhook_received' },
         { label: 'Page View', value: 'page_view' },
         { label: 'Page View (Return)', value: 'page_view_return' },
