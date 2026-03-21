@@ -204,6 +204,41 @@ export async function POST(request: NextRequest) {
       seeded.push('RU email offer template')
     }
 
+    // Seed Homepage + About page SEO metadata (non-destructive)
+    const enHome = await payload.findGlobal({ slug: 'homepage', locale: 'en' }) as any
+    if (!enHome.seo?.metaTitle) {
+      await payload.updateGlobal({
+        slug: 'homepage', locale: 'en',
+        data: { seo: { metaTitle: 'Private Tours in Prague | Best Prague Guide', metaDescription: 'Discover Prague with private tours from a licensed guide with 17+ years of experience. Walking tours, castle tours, day trips. Just your group — no strangers.' } } as any,
+      })
+      seeded.push('EN homepage SEO')
+    }
+    const ruHome = await payload.findGlobal({ slug: 'homepage', locale: 'ru' }) as any
+    if (!ruHome.seo?.metaTitle) {
+      await payload.updateGlobal({
+        slug: 'homepage', locale: 'ru',
+        data: { seo: { metaTitle: 'Индивидуальные экскурсии по Праге | Best Prague Guide', metaDescription: 'Откройте Прагу с лицензированным гидом с 17-летним опытом. Пешие экскурсии, замки, однодневные поездки. Только ваша группа — никаких посторонних.' } } as any,
+      })
+      seeded.push('RU homepage SEO')
+    }
+
+    const enAbout = await payload.findGlobal({ slug: 'about-page', locale: 'en' }) as any
+    if (!enAbout.seo?.metaTitle) {
+      await payload.updateGlobal({
+        slug: 'about-page', locale: 'en',
+        data: { seo: { metaTitle: 'About Us — Meet Your Guide Uliana | Best Prague Guide', metaDescription: 'Meet Uliana Formina — highest-category licensed guide with 17+ years in Prague. Our team of certified guides delivers private, personalized tour experiences.' } } as any,
+      })
+      seeded.push('EN about SEO')
+    }
+    const ruAbout = await payload.findGlobal({ slug: 'about-page', locale: 'ru' }) as any
+    if (!ruAbout.seo?.metaTitle) {
+      await payload.updateGlobal({
+        slug: 'about-page', locale: 'ru',
+        data: { seo: { metaTitle: 'О нас — Ваш гид Ульяна | Best Prague Guide', metaDescription: 'Познакомьтесь с Ульяной Форминой — лицензированным гидом высшей категории с 17-летним опытом. Команда сертифицированных гидов для индивидуальных экскурсий.' } } as any,
+      })
+      seeded.push('RU about SEO')
+    }
+
     // Verify
     const enResult = await payload.findGlobal({ slug: 'site-settings', locale: 'en' }) as any
     const ruResult = await payload.findGlobal({ slug: 'site-settings', locale: 'ru' }) as any
