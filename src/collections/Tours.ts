@@ -426,7 +426,6 @@ export const Tours: CollectionConfig = {
                   name: 'metaDescription',
                   type: 'textarea',
                   localized: true,
-                  maxLength: 160,
                 },
                 {
                   name: 'ogImage',

@@ -42,7 +42,6 @@ export const ReviewsPage: GlobalConfig = {
           name: 'metaDescription',
           type: 'textarea',
           localized: true,
-          maxLength: 160,
         },
         {
           name: 'ogImage',
