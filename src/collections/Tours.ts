@@ -421,7 +421,6 @@ export const Tours: CollectionConfig = {
                   name: 'metaTitle',
                   type: 'text',
                   localized: true,
-                  maxLength: 60,
                 },
                 {
                   name: 'metaDescription',

@@ -186,7 +186,6 @@ export const AboutPage: GlobalConfig = {
                   name: 'metaTitle',
                   type: 'text',
                   localized: true,
-                  maxLength: 60,
                 },
                 {
                   name: 'metaDescription',

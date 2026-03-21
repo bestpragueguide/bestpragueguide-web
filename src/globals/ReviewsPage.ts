@@ -37,7 +37,6 @@ export const ReviewsPage: GlobalConfig = {
           name: 'metaTitle',
           type: 'text',
           localized: true,
-          maxLength: 60,
         },
         {
           name: 'metaDescription',
