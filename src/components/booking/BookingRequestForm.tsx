@@ -435,7 +435,7 @@ export function BookingRequestForm({
         />
       </div>
 
-      {/* Payment Method */}
+      {/* Payment Method — hidden while Stripe is in sandbox mode
       <div>
         <p className="text-sm font-medium text-navy mb-2">
           {locale === 'ru' ? 'Способ оплаты' : 'Payment Method'}
@@ -473,6 +473,7 @@ export function BookingRequestForm({
           </label>
         </div>
       </div>
+      */}
 
       {/* Special Requests */}
       <div>
