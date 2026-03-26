@@ -102,6 +102,7 @@ All site content is editable from Payload admin panel:
 | `/api/fix-richtext` | POST | Secret | Convert plain-text richText fields to Lexical JSON in tours + about-page tables |
 | `/api/fix-links` | POST | Secret | Set `newTab: true` on all existing link nodes in richText columns across all collections |
 | `/api/fix-seo` | POST | Secret | Generate missing metaTitle, metaDescription (from excerpt), set ogImage from heroImage for all tours (both locales) |
+| `/api/fix-seo-keywords` | POST | Secret | Seed keyword-optimized meta titles and descriptions (with prices) for all 37 tours from marketing SEO task |
 | `/api/indexnow` | POST | Secret | Submit all published URLs (static pages, tours, blog posts) to IndexNow for instant Bing/Yandex indexing |
 | `/api/migrate-richtext` | POST | No | Convert plain text to Lexical richText |
 | `/api/import-tours` | POST | No | Import tours from JSON |

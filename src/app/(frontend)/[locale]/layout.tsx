@@ -10,6 +10,7 @@ import { Footer } from '@/components/layout/Footer'
 import { WhatsAppButton } from '@/components/shared/WhatsAppButton'
 import { BackToTop } from '@/components/shared/BackToTop'
 import { OrganizationSchema } from '@/components/seo/OrganizationSchema'
+import { WebSiteSchema } from '@/components/seo/WebSiteSchema'
 import { RefreshOnSave } from '@/components/shared/RefreshOnSave'
 import { CookieConsent } from '@/components/shared/CookieConsent'
 import {
@@ -111,6 +112,7 @@ export default async function FrontendLayout({
           <BackToTop />
           <CookieConsent locale={locale} />
           <OrganizationSchema />
+          <WebSiteSchema locale={locale} />
           <RefreshOnSave />
         </NextIntlClientProvider>
         <GoogleTagManagerHead />

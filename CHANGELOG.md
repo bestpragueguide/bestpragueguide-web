@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.35.0] - 2026-03-26
+
+### Added
+- **robots.txt** — `public/robots.txt` with sitemap reference for search engine crawlers
+- **WebSiteSchema** — JSON-LD WebSite schema with SearchAction now rendered on all pages (was defined but unused)
+- **Keyword-optimized SEO for all 37 tours** — `/api/fix-seo-keywords` endpoint seeds meta titles with primary keywords and meta descriptions with prices for all 14 EN + 23 RU tour pages, following character limits (EN: 60/160, RU: 50/130)
+
+### Changed
+- **noIndex field rendering** — `generateMetadata()` on tour detail pages now respects the `seo.noIndex` checkbox, outputting `robots: { index: false, follow: true }` when set
+
 ## [1.34.1] - 2026-03-26
 
 ### Changed

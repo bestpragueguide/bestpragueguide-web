@@ -146,6 +146,7 @@ export async function generateMetadata({
   return {
     title,
     description,
+    ...(tour.seo?.noIndex ? { robots: { index: false, follow: true } } : {}),
     alternates: {
       canonical: `${baseUrl}/${locale}/${locale === 'ru' ? 'ekskursii' : 'tours'}/${slug}`,
       languages,
