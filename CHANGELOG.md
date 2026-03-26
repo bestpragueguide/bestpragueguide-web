@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.34.1] - 2026-03-26
+
+### Changed
+- **Lazy loading images** — added `loading="lazy"` to below-fold images on GuideProfile, About gallery, Reviews gallery, Blog list cards, Blog detail related posts, and Blog sidebar popular posts. Removed unnecessary `priority` from GuideProfile photo (below fold). Improves initial page load and LCP.
+
 ## [1.34.0] - 2026-03-20
 
 ### Added

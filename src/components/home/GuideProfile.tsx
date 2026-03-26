@@ -30,7 +30,7 @@ export function GuideProfile({ data, locale }: GuideProfileProps) {
               fill
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 40vw"
-              priority
+              loading="lazy"
             />
           </div>
 

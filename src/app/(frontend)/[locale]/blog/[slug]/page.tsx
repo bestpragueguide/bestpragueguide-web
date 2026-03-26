@@ -261,6 +261,7 @@ export default async function BlogPostPage({
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-300"
                             sizes="(max-width: 640px) 100vw, 33vw"
+                            loading="lazy"
                           />
                         ) : (
                           <div className="w-full h-full bg-gray-light" />
@@ -327,6 +328,7 @@ export default async function BlogPostPage({
                               fill
                               className="object-cover"
                               sizes="64px"
+                              loading="lazy"
                             />
                           ) : (
                             <div className="w-full h-full bg-gray-light" />

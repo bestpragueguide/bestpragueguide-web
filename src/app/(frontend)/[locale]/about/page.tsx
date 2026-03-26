@@ -136,6 +136,7 @@ export default async function AboutPage({
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 33vw, 33vw"
+                  loading="lazy"
                 />
               </div>
             ))}

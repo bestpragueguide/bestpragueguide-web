@@ -131,6 +131,7 @@ export default async function ReviewsPage({
                 fill
                 className="object-cover hover:scale-105 transition-transform duration-300"
                 sizes="(max-width: 640px) 33vw, (max-width: 1024px) 25vw, 14vw"
+                loading="lazy"
               />
             </div>
           ))}
