@@ -63,6 +63,12 @@ const altTextMap: Record<string, { en?: string; ru?: string }> = {
     ru: 'srednevekovoe-shou-praga-vechernyj-banket',
   },
   // RU-only tours
+  '1630-uzhin-i-srednevekovoe-shou-v-taverne-u-pauka': {
+    ru: 'srednevekovyj-uzhin-praga-taverna-u-pauka',
+  },
+  '2000-uzhin-i-srednevekovoe-shou-v-taverne-u-pauka': {
+    ru: 'srednevekovoe-shou-praga-vechernyj-banket',
+  },
   'praga-za-3-chasa-obzornaya-ekskursiya': {
     ru: 'obzornaya-ekskursiya-praga-3-chasa-gid',
   },
