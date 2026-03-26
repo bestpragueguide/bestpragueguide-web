@@ -169,17 +169,30 @@ export async function POST(req: Request) {
                 WHERE _parent_id = ${heroImageId} AND _locale = ${locale}`
           )
 
-          // Also update gallery images if they exist
+          // Also update gallery images — both media_locales AND tours_gallery_locales
           const gallery = (tour as any).gallery || []
+          let galleryUpdated = 0
           for (let i = 0; i < gallery.length; i++) {
             const galleryItem = gallery[i]
+            const galleryItemId = galleryItem?.id // varchar ID in tours_gallery
             const galleryImage = typeof galleryItem?.image === 'object' ? galleryItem.image : null
             const galleryImageId = galleryImage?.id || (typeof galleryItem?.image === 'number' ? galleryItem.image : null)
-            if (!galleryImageId) continue
 
             // Gallery alt: base alt + gallery index
-            const galleryAlt = `${altText}-gallery-${i + 1}`
-            if (galleryAlt.length <= 60) {
+            const galleryAlt = `${altText}-${i + 1}`
+            if (galleryAlt.length > 60) continue
+
+            // Update tours_gallery_locales (item.alt — takes priority on tour detail page)
+            if (galleryItemId) {
+              await db.execute(
+                sql`UPDATE tours_gallery_locales SET alt = ${galleryAlt}
+                    WHERE _parent_id = ${galleryItemId} AND _locale = ${locale}`
+              )
+              galleryUpdated++
+            }
+
+            // Update media_locales (fallback, used on other pages)
+            if (galleryImageId) {
               await db.execute(
                 sql`UPDATE media_locales SET alt = ${galleryAlt}
                     WHERE _parent_id = ${galleryImageId} AND _locale = ${locale}
@@ -195,6 +208,7 @@ export async function POST(req: Request) {
             alt: altText,
             altLen: altText.length,
             galleryCount: gallery.length,
+            galleryUpdated,
           })
         } catch (err: unknown) {
           const msg = err instanceof Error ? err.message : 'Unknown'

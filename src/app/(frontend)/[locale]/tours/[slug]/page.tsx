@@ -137,6 +137,7 @@ export async function generateMetadata({
   if (hasOtherLocale) {
     languages.en = `${baseUrl}/en/tours/${enSlug}`
     languages.ru = `${baseUrl}/ru/ekskursii/${ruSlug}`
+    languages['x-default'] = `${baseUrl}/en/tours/${enSlug}`
   }
 
   const heroImage = typeof tour.heroImage === 'object' ? tour.heroImage : null
