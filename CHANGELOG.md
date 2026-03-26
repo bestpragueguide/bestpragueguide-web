@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.35.1] - 2026-03-26
+
+### Added
+- **SEO alt text for tour images** — `/api/fix-alt-text` endpoint sets keyword-rich, hyphenated alt text for hero images and gallery images across all 37 tours (44 alt texts total, max 60 chars, transliterated for RU)
+
 ## [1.35.0] - 2026-03-26
 
 ### Added
