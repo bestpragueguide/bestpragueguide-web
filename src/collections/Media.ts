@@ -30,18 +30,6 @@ export const Media: CollectionConfig = {
     ...(mediaDir ? { staticDir: mediaDir } : {}),
     crop: true,
     focalPoint: true,
-    formatOptions: {
-      format: 'jpeg',
-      options: {
-        quality: 92,
-        mozjpeg: true,
-      },
-    },
-    resizeOptions: {
-      fit: 'cover',
-      kernel: 'lanczos3',
-      withoutEnlargement: true,
-    },
     imageSizes: [
       {
         name: 'thumbnail',
