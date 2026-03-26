@@ -17,42 +17,55 @@ export async function POST(request: NextRequest) {
     const drizzle = db.drizzle
     const results: string[] = []
 
-    // Fetch all published tours with their published locales
+    // Fetch all published tours
     const toursResult = await drizzle.execute(sql`
-      SELECT t.id, t.category, t.subcategory,
-        tl.title,
-        COALESCE(
-          (SELECT array_agg(tpl.value) FROM tours_published_locales tpl WHERE tpl.parent_id = t.id),
-          ARRAY[]::text[]
-        ) as locales
+      SELECT t.id, t.category, t.subcategory
       FROM tours t
-      LEFT JOIN tours_locales tl ON tl._parent_id = t.id AND tl._locale = 'en'
       WHERE t._status = 'published'
       ORDER BY t.sort_order
     `)
-    const tours = toursResult.rows || toursResult
+    const tourRows = toursResult.rows || toursResult
 
-    // Get RU titles for tours that don't have EN title
-    const ruTitles = await drizzle.execute(sql`
-      SELECT tl._parent_id as id, tl.title
-      FROM tours_locales tl
-      WHERE tl._locale = 'ru'
+    // Fetch EN titles
+    const enTitlesResult = await drizzle.execute(sql`
+      SELECT _parent_id as id, title FROM tours_locales WHERE _locale = 'en'
+    `)
+    const enTitleMap = new Map<number, string>()
+    for (const r of (enTitlesResult.rows || enTitlesResult)) {
+      enTitleMap.set(r.id, r.title)
+    }
+
+    // Fetch RU titles
+    const ruTitlesResult = await drizzle.execute(sql`
+      SELECT _parent_id as id, title FROM tours_locales WHERE _locale = 'ru'
     `)
     const ruTitleMap = new Map<number, string>()
-    for (const r of (ruTitles.rows || ruTitles)) {
+    for (const r of (ruTitlesResult.rows || ruTitlesResult)) {
       ruTitleMap.set(r.id, r.title)
     }
 
-    // Enrich tours with locale info
-    const enriched = tours.map((t: any) => ({
-      id: t.id,
-      title: t.title || ruTitleMap.get(t.id) || `Tour #${t.id}`,
-      category: t.category || '',
-      subcategory: t.subcategory || '',
-      locales: t.locales || [],
-      isEn: (t.locales || []).includes('en'),
-      isRu: (t.locales || []).includes('ru'),
-    }))
+    // Fetch published locales
+    const localesResult = await drizzle.execute(sql`
+      SELECT parent_id, value FROM tours_published_locales
+    `)
+    const localeMap = new Map<number, string[]>()
+    for (const r of (localesResult.rows || localesResult)) {
+      if (!localeMap.has(r.parent_id)) localeMap.set(r.parent_id, [])
+      localeMap.get(r.parent_id)!.push(r.value)
+    }
+
+    // Enrich tours
+    const enriched = tourRows.map((t: any) => {
+      const locales = localeMap.get(t.id) || []
+      return {
+        id: t.id,
+        title: enTitleMap.get(t.id) || ruTitleMap.get(t.id) || `Tour #${t.id}`,
+        category: t.category || '',
+        subcategory: t.subcategory || '',
+        isEn: locales.includes('en'),
+        isRu: locales.includes('ru'),
+      }
+    })
 
     // Clear all existing relatedTours
     await drizzle.execute(sql`DELETE FROM tours_rels WHERE path = 'relatedTours'`)
