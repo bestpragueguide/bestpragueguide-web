@@ -26,14 +26,39 @@ const staticPages = [
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = []
 
-  // Static pages — both locales
-  // Use a fixed date so crawlers see a stable lastmod (update when content changes)
-  const staticLastModified = new Date('2026-03-15')
+  // Fetch last-modified dates from CMS globals
+  const globalDates = new Map<string, Date>()
+  try {
+    const payload = await getPayload({ config })
+    const globals = ['homepage', 'about-page', 'reviews-page', 'navigation', 'site-settings']
+    for (const slug of globals) {
+      const g = await payload.findGlobal({ slug: slug as any })
+      if (g.updatedAt) globalDates.set(slug, new Date(g.updatedAt as string))
+    }
+  } catch { /* use fallback */ }
+
+  const pageGlobalMap: Record<string, string> = {
+    '': 'homepage',
+    'tours': 'site-settings',
+    'about': 'about-page',
+    'reviews': 'reviews-page',
+    'contact': 'site-settings',
+    'faq': 'site-settings',
+    'blog': 'site-settings',
+    'privacy': 'site-settings',
+    'terms': 'site-settings',
+    'cancellation-policy': 'site-settings',
+  }
+
+  const fallbackDate = new Date()
 
   for (const page of staticPages) {
+    const globalSlug = pageGlobalMap[page.path] || 'site-settings'
+    const lastModified = globalDates.get(globalSlug) || fallbackDate
+
     entries.push({
       url: `${BASE_URL}/en/${page.en}`,
-      lastModified: staticLastModified,
+      lastModified,
       alternates: {
         languages: {
           en: `${BASE_URL}/en/${page.en}`,
@@ -43,7 +68,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
     entries.push({
       url: `${BASE_URL}/ru/${page.ru}`,
-      lastModified: staticLastModified,
+      lastModified,
       alternates: {
         languages: {
           en: `${BASE_URL}/en/${page.en}`,
