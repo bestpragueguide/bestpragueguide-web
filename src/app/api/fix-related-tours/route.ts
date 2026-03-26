@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
     // Fetch all published tours
     const allTours = await payload.find({
       collection: 'tours',
+      where: { _status: { equals: 'published' } },
       limit: 200,
       depth: 0,
       locale: 'en',
