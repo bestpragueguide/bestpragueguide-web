@@ -15,12 +15,13 @@ export async function POST(request: NextRequest) {
     const results: string[] = []
 
     // Fetch all published tours
+    // Fetch all tours (drafts enabled — Payload uses _status internally)
     const allTours = await payload.find({
       collection: 'tours',
-      where: { _status: { equals: 'published' } },
       limit: 200,
       depth: 0,
       locale: 'en',
+      draft: false, // only published
     })
 
     const tours = allTours.docs.map((t: any) => ({
