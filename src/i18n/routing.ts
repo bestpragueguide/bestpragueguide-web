@@ -16,15 +16,22 @@ const ruPathMap: Record<string, string> = {
  */
 export function localizeHref(href: string, locale: string): string {
   if (!href.startsWith('/')) return href
+
+  // Strip existing locale prefix if present (e.g. "/ru/tours" → "/tours")
+  let path = href
+  const localeMatch = href.match(/^\/(en|ru)(\/.*)$/)
+  if (localeMatch) {
+    path = localeMatch[2] // e.g. "/tours" or "/tours?category=..."
+  }
+
   if (locale === 'ru') {
-    // Replace known path prefixes, preserving query string
     for (const [en, ru] of Object.entries(ruPathMap)) {
-      if (href === en || href.startsWith(`${en}?`) || href.startsWith(`${en}/`)) {
-        return `/${locale}${ru}${href.slice(en.length)}`
+      if (path === en || path.startsWith(`${en}?`) || path.startsWith(`${en}/`)) {
+        return `/${locale}${ru}${path.slice(en.length)}`
       }
     }
   }
-  return `/${locale}${href}`
+  return `/${locale}${path}`
 }
 
 export const routing = defineRouting({
