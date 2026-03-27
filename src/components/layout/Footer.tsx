@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher'
 import { Logo } from '@/components/shared/Logo'
+import { localizeHref } from '@/i18n/routing'
 import type { NavigationData, SiteSettingsData } from '@/lib/cms-types'
 
 interface FooterProps {
@@ -78,7 +79,7 @@ export function Footer({ navigation, siteSettings, locale }: FooterProps) {
                 {column.links.map((link, linkIdx) => (
                   <li key={linkIdx}>
                     <Link
-                      href={link.href.startsWith('/') ? `/${locale}${link.href}` : link.href}
+                      href={localizeHref(link.href, locale)}
                       className="text-sm text-white/60 hover:text-gold transition-colors"
                       {...(link.openInNewTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                     >

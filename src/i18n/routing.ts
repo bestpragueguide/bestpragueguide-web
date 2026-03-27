@@ -1,5 +1,32 @@
 import { defineRouting } from 'next-intl/routing'
 
+/** Map of EN paths → RU paths for localized URL segments */
+const ruPathMap: Record<string, string> = {
+  '/tours': '/ekskursii',
+  '/about': '/o-nas',
+  '/reviews': '/otzyvy',
+  '/contact': '/kontakty',
+  '/faq': '/voprosy',
+}
+
+/**
+ * Localize a CMS href (e.g. "/tours") for a given locale.
+ * Prepends /{locale} and translates known path segments for RU.
+ * Preserves query strings.
+ */
+export function localizeHref(href: string, locale: string): string {
+  if (!href.startsWith('/')) return href
+  if (locale === 'ru') {
+    // Replace known path prefixes, preserving query string
+    for (const [en, ru] of Object.entries(ruPathMap)) {
+      if (href === en || href.startsWith(`${en}?`) || href.startsWith(`${en}/`)) {
+        return `/${locale}${ru}${href.slice(en.length)}`
+      }
+    }
+  }
+  return `/${locale}${href}`
+}
+
 export const routing = defineRouting({
   locales: ['en', 'ru'],
   defaultLocale: 'en',

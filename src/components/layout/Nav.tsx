@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher'
 import { Logo } from '@/components/shared/Logo'
 import { MobileMenu } from './MobileMenu'
+import { localizeHref } from '@/i18n/routing'
 import type { NavigationData } from '@/lib/cms-types'
 
 interface NavProps {
@@ -16,13 +17,11 @@ export function Nav({ navigation, locale }: NavProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const navLinks = navigation.headerLinks.map((link) => ({
-    href: link.href.startsWith('/') ? `/${locale}${link.href}` : link.href,
+    href: localizeHref(link.href, locale),
     label: link.label,
   }))
 
-  const ctaHref = navigation.headerCta.href.startsWith('/')
-    ? `/${locale}${navigation.headerCta.href}`
-    : navigation.headerCta.href
+  const ctaHref = localizeHref(navigation.headerCta.href, locale)
 
   return (
     <>

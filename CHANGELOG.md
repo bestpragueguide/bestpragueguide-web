@@ -2,9 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.35.3] - 2026-03-27
+## [1.35.4] - 2026-03-27
+
+### Added
+- **`localizeHref()` helper** — `src/i18n/routing.ts` utility that translates CMS href paths (`/tours`, `/about`, `/reviews`, `/contact`, `/faq`) to localized RU paths (`/ekskursii`, `/o-nas`, `/otzyvy`, `/kontakty`, `/voprosy`). Preserves query strings and sub-paths.
 
 ### Fixed
+- **Navigation localized URLs** — Nav and Footer now use `localizeHref()` to translate CMS-stored paths for RU locale, fixing `/ru/tours/` → `/ru/ekskursii/` and all other localized paths in header links, CTA, and footer columns
 - **Localized tour URLs** — all internal tour links now use `/ru/ekskursii/` instead of `/ru/tours/` for RU locale, eliminating unnecessary 307 redirects. Fixed in TourCard, FeaturedTours, TourSchema, WebSiteSchema, blog CTAs, and tour detail breadcrumbs.
 
 ## [1.35.2] - 2026-03-26
