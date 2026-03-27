@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
 import { buildPageMetadata } from '@/lib/metadata'
 import { getAboutPageData, resolveMediaUrl } from '@/lib/cms-data'
+import { localizeHref } from '@/i18n/routing'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { Button } from '@/components/shared/Button'
 import { SafeRichText } from '@/components/shared/SafeRichText'
@@ -52,12 +53,8 @@ export default async function AboutPage({
     ? data.galleryPhotos.map((p) => resolveMediaUrl(p.image) || '')
     : fallbackGalleryPhotos
 
-  const ctaPrimaryHref = data.ctaPrimaryHref.startsWith('/')
-    ? `/${locale}${data.ctaPrimaryHref}`
-    : data.ctaPrimaryHref
-  const ctaSecondaryHref = data.ctaSecondaryHref.startsWith('/')
-    ? `/${locale}${data.ctaSecondaryHref}`
-    : data.ctaSecondaryHref
+  const ctaPrimaryHref = localizeHref(data.ctaPrimaryHref, locale)
+  const ctaSecondaryHref = localizeHref(data.ctaSecondaryHref, locale)
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

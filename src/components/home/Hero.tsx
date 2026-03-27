@@ -2,6 +2,7 @@ import { Button } from '@/components/shared/Button'
 import { resolveMediaUrl } from '@/lib/cms-data'
 import type { HomepageData } from '@/lib/cms-types'
 import { FALLBACK_IMAGES } from '@/lib/constants'
+import { localizeHref } from '@/i18n/routing'
 
 interface HeroProps {
   data: HomepageData
@@ -20,9 +21,7 @@ export function Hero({ data, locale }: HeroProps) {
     || resolveMediaUrl(data.heroBackgroundImage, 'mobileHero')
   const heroAlt = (bgImage as any)?.alt || (locale === 'ru' ? 'Панорама Праги' : 'Prague panoramic view')
 
-  const ctaHref = data.heroCtaHref.startsWith('/')
-    ? `/${locale}${data.heroCtaHref}`
-    : data.heroCtaHref
+  const ctaHref = localizeHref(data.heroCtaHref, locale)
 
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center bg-navy overflow-hidden">

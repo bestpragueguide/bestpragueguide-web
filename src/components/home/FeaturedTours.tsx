@@ -5,6 +5,7 @@ import { TourCard } from '@/components/tours/TourCard'
 import { Button } from '@/components/shared/Button'
 import { resolveMediaUrl } from '@/lib/cms-data'
 import type { HomepageData } from '@/lib/cms-types'
+import { localizeHref } from '@/i18n/routing'
 import { getTranslations } from 'next-intl/server'
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
@@ -68,9 +69,7 @@ export async function FeaturedTours({ data, locale }: FeaturedToursProps) {
             const imgUrl = resolveMediaUrl(cat.image)
               || fallbackCategoryImages[i]
               || fallbackCategoryImages[0]
-            const href = cat.href.startsWith('/')
-              ? `/${locale}${cat.href}`
-              : cat.href
+            const href = localizeHref(cat.href, locale)
 
             return (
               <a

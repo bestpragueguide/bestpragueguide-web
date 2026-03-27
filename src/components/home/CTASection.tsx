@@ -1,3 +1,4 @@
+import { localizeHref } from '@/i18n/routing'
 import type { HomepageData, SiteSettingsData } from '@/lib/cms-types'
 
 interface CTASectionProps {
@@ -7,9 +8,7 @@ interface CTASectionProps {
 }
 
 export function CTASection({ data, siteSettings, locale }: CTASectionProps) {
-  const ctaHref = data.ctaButtonHref.startsWith('/')
-    ? `/${locale}${data.ctaButtonHref}`
-    : data.ctaButtonHref
+  const ctaHref = localizeHref(data.ctaButtonHref, locale)
 
   return (
     <section className="py-10 lg:py-14 bg-gold">

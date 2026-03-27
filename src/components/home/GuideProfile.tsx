@@ -4,6 +4,7 @@ import { SafeRichText } from '@/components/shared/SafeRichText'
 import { resolveMediaUrl } from '@/lib/cms-data'
 import type { HomepageData } from '@/lib/cms-types'
 import { FALLBACK_IMAGES } from '@/lib/constants'
+import { localizeHref } from '@/i18n/routing'
 
 interface GuideProfileProps {
   data: HomepageData
@@ -14,9 +15,7 @@ export function GuideProfile({ data, locale }: GuideProfileProps) {
   const photoUrl = resolveMediaUrl(data.guidePhoto)
     || FALLBACK_IMAGES.guide
 
-  const learnMoreHref = data.guideLearnMoreHref.startsWith('/')
-    ? `/${locale}${data.guideLearnMoreHref}`
-    : data.guideLearnMoreHref
+  const learnMoreHref = localizeHref(data.guideLearnMoreHref, locale)
 
   return (
     <section className="py-10 lg:py-14 bg-cream">
