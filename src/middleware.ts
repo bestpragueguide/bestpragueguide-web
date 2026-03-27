@@ -14,7 +14,18 @@ export default function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(path, baseUrl), 301)
   }
 
-  return intlMiddleware(request)
+  const response = intlMiddleware(request)
+
+  // Upgrade next-intl 307 (temporary) redirects to 301 (permanent)
+  // for localized pathname rewrites (e.g. /ru/tours → /ru/ekskursii)
+  if (response.status === 307) {
+    const location = response.headers.get('location')
+    if (location) {
+      return NextResponse.redirect(new URL(location, request.url), 301)
+    }
+  }
+
+  return response
 }
 
 export const config = {

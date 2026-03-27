@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.35.5] - 2026-03-27
+
+### Changed
+- **301 permanent redirects** — upgraded next-intl pathname redirects from 307 (temporary) to 301 (permanent), telling search engines to permanently consolidate localized URL variants (e.g. `/ru/tours/` → `/ru/ekskursii/`)
+
 ## [1.35.4] - 2026-03-27
 
 ### Added
