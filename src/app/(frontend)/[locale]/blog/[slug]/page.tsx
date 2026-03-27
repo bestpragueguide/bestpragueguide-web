@@ -228,7 +228,7 @@ export default async function BlogPostPage({
                 {tPages('blogCtaHeading')}
               </p>
               <Link
-                href={`/${locale}/tours`}
+                href={`/${locale}/${locale === 'ru' ? 'ekskursii' : 'tours'}`}
                 className="inline-flex items-center px-6 py-3 bg-gold text-white font-medium rounded-lg hover:bg-gold-dark transition-colors"
               >
                 {tPages('blogCtaButton')}
@@ -350,7 +350,7 @@ export default async function BlogPostPage({
                 {tPages('blogCtaHeading')}
               </p>
               <Link
-                href={`/${locale}/tours`}
+                href={`/${locale}/${locale === 'ru' ? 'ekskursii' : 'tours'}`}
                 className="inline-flex items-center px-5 py-2.5 bg-gold text-white text-sm font-medium rounded-lg hover:bg-gold-dark transition-colors"
               >
                 {tPages('blogCtaButton')}

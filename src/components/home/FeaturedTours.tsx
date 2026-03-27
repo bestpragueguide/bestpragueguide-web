@@ -130,7 +130,7 @@ export async function FeaturedTours({ data, locale }: FeaturedToursProps) {
 
         {/* All Tours button */}
         <div className="mt-12 text-center">
-          <Button href={`/${locale}/tours`} variant="secondary">
+          <Button href={`/${locale}/${locale === 'ru' ? 'ekskursii' : 'tours'}`} variant="secondary">
             {commonT('allTours')}
           </Button>
         </div>

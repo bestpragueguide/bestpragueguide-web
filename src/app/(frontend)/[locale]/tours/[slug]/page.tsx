@@ -259,7 +259,7 @@ export default async function TourDetailPage({
         items={[
           {
             label: t('breadcrumbTours'),
-            href: `/${locale}/tours`,
+            href: `/${locale}/${locale === 'ru' ? 'ekskursii' : 'tours'}`,
           },
           { label: tour.title },
         ]}

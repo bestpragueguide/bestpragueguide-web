@@ -34,7 +34,7 @@ export function TourSchema({
   slug,
 }: TourSchemaProps) {
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'
-  const url = `${baseUrl}/${locale}/tours/${slug}`
+  const url = `${baseUrl}/${locale}/${locale === 'ru' ? 'ekskursii' : 'tours'}/${slug}`
 
   // Price valid until end of next year
   const nextYear = new Date().getFullYear() + 1

@@ -23,7 +23,7 @@ export function WebSiteSchema({ locale }: WebSiteSchemaProps) {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: `https://bestpragueguide.com/${locale}/tours?q={search_term_string}`,
+        urlTemplate: `https://bestpragueguide.com/${locale}/${locale === 'ru' ? 'ekskursii' : 'tours'}?q={search_term_string}`,
       },
       'query-input': 'required name=search_term_string',
     },

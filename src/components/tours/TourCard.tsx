@@ -43,7 +43,7 @@ export function TourCard({
 
   return (
     <Link
-      href={`/${locale}/tours/${slug}`}
+      href={`/${locale}/${locale === 'ru' ? 'ekskursii' : 'tours'}/${slug}`}
       className="group block bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
     >
       {/* Image */}

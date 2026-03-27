@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.35.3] - 2026-03-27
+
+### Fixed
+- **Localized tour URLs** — all internal tour links now use `/ru/ekskursii/` instead of `/ru/tours/` for RU locale, eliminating unnecessary 307 redirects. Fixed in TourCard, FeaturedTours, TourSchema, WebSiteSchema, blog CTAs, and tour detail breadcrumbs.
+
 ## [1.35.2] - 2026-03-26
 
 ### Added
