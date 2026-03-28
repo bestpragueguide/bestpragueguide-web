@@ -83,22 +83,30 @@ export async function POST(req: NextRequest) {
           meetingPoint = (booking.tour as any).meetingPoint?.address
         }
 
+        const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'
+        const offerUrl = booking.offerToken ? `${baseUrl}/${locale}/booking/${booking.offerToken}` : undefined
+
+        const paymentEmailProps = {
+          customerName: booking.customerName,
+          tourName: tourTitle,
+          preferredDate: booking.confirmedDate || booking.preferredDate,
+          preferredTime: booking.confirmedTime || booking.preferredTime,
+          meetingPoint,
+          requestRef: booking.requestRef,
+          paidAmount: paidEur,
+          currency: booking.currency || 'EUR',
+          offerUrl,
+          locale,
+          cmsHeading: tpl.paymentHeading ? resolveTemplate(tpl.paymentHeading, vars) : undefined,
+          cmsBody: tpl.paymentBody ? resolveTemplate(tpl.paymentBody, vars) : undefined,
+          cmsNote: tpl.paymentNote ? resolveTemplate(tpl.paymentNote, vars) : undefined,
+          cmsFooter: tpl.footer || undefined,
+        }
+
         await sendEmail({
           to: booking.customerEmail,
           subject: resolveTemplate(tpl.paymentSubject || (locale === 'ru' ? 'Оплата получена — {tour}' : 'Payment received — {tour}'), vars),
-          react: PaymentReceivedEmail({
-            customerName: booking.customerName,
-            tourName: tourTitle,
-            preferredDate: booking.confirmedDate || booking.preferredDate,
-            preferredTime: booking.confirmedTime || booking.preferredTime,
-            meetingPoint,
-            requestRef: booking.requestRef,
-            locale,
-            cmsHeading: tpl.paymentHeading ? resolveTemplate(tpl.paymentHeading, vars) : undefined,
-            cmsBody: tpl.paymentBody ? resolveTemplate(tpl.paymentBody, vars) : undefined,
-            cmsNote: tpl.paymentNote ? resolveTemplate(tpl.paymentNote, vars) : undefined,
-            cmsFooter: tpl.footer || undefined,
-          }),
+          react: PaymentReceivedEmail(paymentEmailProps),
         })
 
         // Admin copy
@@ -106,19 +114,7 @@ export async function POST(req: NextRequest) {
         await sendEmail({
           to: adminEmail,
           subject: `[Payment] ${booking.requestRef} — ${tourTitle}`,
-          react: PaymentReceivedEmail({
-            customerName: booking.customerName,
-            tourName: tourTitle,
-            preferredDate: booking.confirmedDate || booking.preferredDate,
-            preferredTime: booking.confirmedTime || booking.preferredTime,
-            meetingPoint,
-            requestRef: booking.requestRef,
-            locale,
-            cmsHeading: tpl.paymentHeading ? resolveTemplate(tpl.paymentHeading, vars) : undefined,
-            cmsBody: tpl.paymentBody ? resolveTemplate(tpl.paymentBody, vars) : undefined,
-            cmsNote: tpl.paymentNote ? resolveTemplate(tpl.paymentNote, vars) : undefined,
-            cmsFooter: tpl.footer || undefined,
-          }),
+          react: PaymentReceivedEmail(paymentEmailProps),
           replyTo: booking.customerEmail,
         })
 

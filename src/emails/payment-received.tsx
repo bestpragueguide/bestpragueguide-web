@@ -6,6 +6,7 @@ import {
   Container,
   Section,
   Text,
+  Button,
   Hr,
   Preview,
 } from '@react-email/components'
@@ -17,6 +18,9 @@ interface PaymentReceivedEmailProps {
   preferredTime: string
   meetingPoint?: string
   requestRef: string
+  paidAmount?: number
+  currency?: string
+  offerUrl?: string
   locale: 'en' | 'ru'
   cmsHeading?: string
   cmsBody?: string
@@ -31,6 +35,9 @@ export function PaymentReceivedEmail({
   preferredTime,
   meetingPoint,
   requestRef,
+  paidAmount,
+  currency = 'EUR',
+  offerUrl,
   locale,
   cmsHeading,
   cmsBody,
@@ -84,11 +91,25 @@ export function PaymentReceivedEmail({
                 {meetingPoint}
               </Text>
             )}
+            {paidAmount != null && paidAmount > 0 && (
+              <Text style={infoText}>
+                <strong>{isRu ? 'Оплачено' : 'Paid'}:</strong>{' '}
+                {paidAmount} {currency}
+              </Text>
+            )}
             <Text style={infoText}>
               <strong>{isRu ? 'Заявка' : 'Reference'}:</strong>{' '}
               {requestRef}
             </Text>
           </Section>
+
+          {offerUrl && (
+            <Section style={{ textAlign: 'center' as const, margin: '24px 0' }}>
+              <Button href={offerUrl} style={ctaButton}>
+                {isRu ? 'Посмотреть бронирование' : 'View Your Booking'}
+              </Button>
+            </Section>
+          )}
 
           {cmsNote ? (
             <div dangerouslySetInnerHTML={{ __html: cmsNote }} />
@@ -157,6 +178,17 @@ const infoText = {
   fontSize: '14px',
   color: '#1A1A1A',
   margin: '0 0 8px',
+}
+
+const ctaButton = {
+  backgroundColor: '#C4975C',
+  color: '#FFFFFF',
+  fontSize: '14px',
+  fontWeight: '600' as const,
+  padding: '12px 32px',
+  borderRadius: '8px',
+  textDecoration: 'none',
+  display: 'inline-block' as const,
 }
 
 const footerStyle = {
