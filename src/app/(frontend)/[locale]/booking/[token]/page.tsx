@@ -473,7 +473,7 @@ export default async function BookingOfferPage({
               )}
               {totalPaid > 0 && (
                 <div className="flex justify-between text-sm pt-2 border-t border-gray-light/30">
-                  <span className="text-navy/70">{locale === 'ru' ? 'Оплачено' : 'Amount paid'}</span>
+                  <span className="text-navy/70">{locale === 'ru' ? 'Оплачено' : 'Paid amount'}</span>
                   <span className="font-medium text-trust">
                     {formatAmount(totalPaid, (booking.currency || 'EUR') as Currency)}
                   </span>
@@ -489,7 +489,7 @@ export default async function BookingOfferPage({
               )}
               {totalPaid > 0 && balanceDue < -0.01 && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-navy/70">{locale === 'ru' ? 'Возвращено' : 'Refunded'}</span>
+                  <span className="text-navy/70">{locale === 'ru' ? 'Возвращено' : 'Refunded amount'}</span>
                   <span className="font-medium text-navy/70">
                     {formatAmount(Math.round(Math.abs(balanceDue)), (booking.currency || 'EUR') as Currency)}
                   </span>
