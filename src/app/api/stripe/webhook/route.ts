@@ -208,16 +208,35 @@ export async function POST(req: NextRequest) {
     }
   } else if (event.type === 'charge.refunded') {
     const charge = event.data.object as Stripe.Charge
-    const bookingId = charge.metadata?.bookingId
-    if (bookingId) {
-      try {
-        const payload = await getPayload({ config: configPromise })
-        const booking = await payload.findByID({
+    const paymentIntentId = typeof charge.payment_intent === 'string'
+      ? charge.payment_intent
+      : (charge.payment_intent as any)?.id
+    // Find booking by payment intent ID or charge metadata
+    let bookingId = charge.metadata?.bookingId
+    try {
+      const payload = await getPayload({ config: configPromise })
+
+      if (!bookingId && paymentIntentId) {
+        // Look up booking by stripePaymentIntentId
+        const result = await payload.find({
           collection: 'booking-requests',
-          id: bookingId,
+          where: { stripePaymentIntentId: { equals: paymentIntentId } },
+          limit: 1,
           depth: 1,
         })
-        if (!booking) return NextResponse.json({ received: true })
+        if (result.docs[0]) {
+          bookingId = String(result.docs[0].id)
+        }
+      }
+
+      if (!bookingId) return NextResponse.json({ received: true })
+
+      const booking = await payload.findByID({
+        collection: 'booking-requests',
+        id: bookingId,
+        depth: 1,
+      })
+      if (!booking) return NextResponse.json({ received: true })
 
         const refundAmountCents = charge.amount_refunded ?? 0
         const refundCurrency = (charge.currency || 'eur').toUpperCase()
@@ -321,7 +340,6 @@ export async function POST(req: NextRequest) {
       } catch (err) {
         console.error('[stripe/webhook] Refund handling failed:', err)
       }
-    }
   } else if (event.type === 'payment_intent.payment_failed') {
     const pi = event.data.object as Stripe.PaymentIntent
     const bookingId = pi.metadata?.bookingId
