@@ -482,6 +482,9 @@ export interface EmailTemplatesData {
     payment?: string; language?: string; reference?: string
     deposit?: string; cashBalance?: string
   }
+  refundSubject?: string
+  refundBody?: string
+  refundNote?: string
   summaryPaymentLabels?: {
     cash?: string; card?: string; cardFull?: string
   }
