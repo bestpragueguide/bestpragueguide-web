@@ -53,11 +53,11 @@ interface BookingDoc {
   paymentMethod?: string
   customDepositAmount?: number
   paymentStatus?: string
-  depositAmountEur?: number
-  cashBalanceEur?: number
+  depositAmount?: number
+  cashBalance?: number
   paidAt?: string
-  totalPaidEur?: number
-  balanceDueEur?: number
+  totalPaid?: number
+  balanceDue?: number
   stripePaymentLink?: string
   tour: {
     id: number
@@ -281,12 +281,12 @@ export default async function BookingOfferPage({
   // Payment logic
   const paymentMethod = booking.paymentMethod || 'stripe_deposit'
   const defaultDepositPercent = 30 // fallback if PaymentConfig not available
-  const depositAmount = booking.depositAmountEur || booking.customDepositAmount || Math.round(displayPrice * defaultDepositPercent / 100)
-  const cashBalance = booking.cashBalanceEur || (displayPrice - depositAmount)
+  const depositAmount = booking.depositAmount || booking.customDepositAmount || Math.round(displayPrice * defaultDepositPercent / 100)
+  const cashBalance = booking.cashBalance || (displayPrice - depositAmount)
   const bkPaymentStatus = String(booking.paymentStatus ?? '')
   const isPaid = bkPaymentStatus === 'deposit_paid' || bkPaymentStatus === 'fully_paid'
-  const totalPaid = booking.totalPaidEur || 0
-  const balanceDue = booking.balanceDueEur ?? (displayPrice - totalPaid)
+  const totalPaid = booking.totalPaid || 0
+  const balanceDue = booking.balanceDue ?? (displayPrice - totalPaid)
 
 
 

@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
   const depositPercent = config.depositPercent ?? 30
   const totalEur = booking.totalPrice ?? 0
   const depositEur = Math.round(totalEur * depositPercent) / 100
-  const cashBalanceEur = totalEur - depositEur
+  const cashBalance = totalEur - depositEur
 
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? 'https://bestpragueguide.com'
   const tourTitle =
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
     requestRef: booking.requestRef,
     tourTitle,
     customerEmail: booking.customerEmail,
-    depositAmountEur: depositEur,
+    depositAmount: depositEur,
     successUrl: `${baseUrl}/${booking.customerLanguage}/booking/payment-success?ref=${booking.requestRef}`,
     cancelUrl: `${baseUrl}/${booking.customerLanguage}/booking/payment-cancelled?ref=${booking.requestRef}`,
   })
@@ -78,8 +78,8 @@ export async function POST(req: NextRequest) {
     data: {
       stripePaymentLink: session.url,
       stripePaymentIntentId: session.paymentIntentId,
-      depositAmountEur: depositEur,
-      cashBalanceEur,
+      depositAmount: depositEur,
+      cashBalance,
       paymentStatus: 'link_sent',
     },
   })
@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
     guests: booking.guests,
     totalPrice: totalEur,
     prepaymentRequired: true,
-    depositAmountEur: depositEur,
+    depositAmount: depositEur,
     depositPercent,
     stripeCheckoutUrl: session.url,
     paymentDeadlineDays: config.paymentDeadlineDays ?? 3,
@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({
     success: true,
     depositEur,
-    cashBalanceEur,
+    cashBalance,
     checkoutUrl: session.url,
   })
 }

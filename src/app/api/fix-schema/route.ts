@@ -165,8 +165,11 @@ export async function POST(req: Request) {
       `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS tour_name varchar`,
       `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS last_update_sent_at timestamp(3) with time zone`,
       `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS refunded_at timestamp(3) with time zone`,
-      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS total_paid_eur numeric`,
-      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS balance_due_eur numeric`,
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS total_paid numeric`,
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS balance_due numeric`,
+      // Rename old EUR-specific columns to currency-neutral names
+      `DO $$ BEGIN ALTER TABLE booking_requests RENAME COLUMN deposit_amount_eur TO deposit_amount; EXCEPTION WHEN others THEN NULL; END $$`,
+      `DO $$ BEGIN ALTER TABLE booking_requests RENAME COLUMN cash_balance_eur TO cash_balance; EXCEPTION WHEN others THEN NULL; END $$`,
 
       // Add missing values to booking status enum
       `DO $$ BEGIN

@@ -26,12 +26,12 @@ export function PaymentLinkButton() {
       const data = (await res.json()) as {
         success?: boolean
         depositEur?: number
-        cashBalanceEur?: number
+        cashBalance?: number
         error?: string
       }
       if (data.success) {
         setMessage(
-          `✅ Payment link sent — deposit €${data.depositEur?.toFixed(2)}, cash balance €${data.cashBalanceEur?.toFixed(2)}`
+          `✅ Payment link sent — deposit €${data.depositEur?.toFixed(2)}, cash balance €${data.cashBalance?.toFixed(2)}`
         )
       } else {
         setMessage(`❌ Error: ${data.error}`)

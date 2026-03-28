@@ -45,16 +45,16 @@ export const beforeChangeHook: CollectionBeforeChangeHook = async ({
   if (operation === 'update' && data.customDepositAmount != null) {
     const doc = originalDoc || {}
     const confirmedPrice = data.confirmedPrice || doc.confirmedPrice || data.totalPrice || doc.totalPrice || 0
-    data.depositAmountEur = data.customDepositAmount
-    data.cashBalanceEur = confirmedPrice - data.customDepositAmount
+    data.depositAmount = data.customDepositAmount
+    data.cashBalance = confirmedPrice - data.customDepositAmount
   }
 
-  // Recalculate balanceDueEur when confirmedPrice changes
+  // Recalculate balanceDue when confirmedPrice changes
   if (operation === 'update') {
     const doc = originalDoc || {}
     const newPrice = data.confirmedPrice || doc.confirmedPrice || data.totalPrice || doc.totalPrice || 0
-    const totalPaid = data.totalPaidEur ?? doc.totalPaidEur ?? 0
-    data.balanceDueEur = newPrice - totalPaid
+    const totalPaid = data.totalPaid ?? doc.totalPaid ?? 0
+    data.balanceDue = newPrice - totalPaid
   }
 
   // Auto-populate tourName in customer's language
@@ -166,8 +166,8 @@ export const afterChangeHook: CollectionAfterChangeHook = async ({
           confirmedTime,
           guests: doc.confirmedGuests || doc.guests || 1,
           confirmedPrice,
-          depositAmount: doc.depositAmountEur || doc.customDepositAmount,
-          cashBalance: doc.cashBalanceEur,
+          depositAmount: doc.depositAmount || doc.customDepositAmount,
+          cashBalance: doc.cashBalance,
           currency: doc.currency || 'EUR',
           customerEmail: doc.customerEmail,
           customerPhone: doc.customerPhone || '',

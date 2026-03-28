@@ -17,7 +17,7 @@ export async function createDepositSession(params: {
   requestRef: string
   tourTitle: string
   customerEmail: string
-  depositAmountEur: number
+  depositAmount: number
   successUrl: string
   cancelUrl: string
   currency?: string
@@ -25,7 +25,7 @@ export async function createDepositSession(params: {
   if (!stripe) return null
 
   // Stripe requires integer amounts in smallest unit (cents for EUR/USD, hellers for CZK).
-  const amountCents = Math.round(params.depositAmountEur * 100)
+  const amountCents = Math.round(params.depositAmount * 100)
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
@@ -34,7 +34,7 @@ export async function createDepositSession(params: {
     metadata: {
       bookingId: params.bookingId,
       requestRef: params.requestRef,
-      depositEur: params.depositAmountEur.toFixed(2),
+      depositEur: params.depositAmount.toFixed(2),
     },
     line_items: [
       {

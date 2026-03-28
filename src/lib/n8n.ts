@@ -58,7 +58,7 @@ export interface BookingConfirmedPayload {
   guests: number
   totalPrice?: number
   prepaymentRequired: boolean
-  depositAmountEur?: number
+  depositAmount?: number
   depositPercent?: number
   stripeCheckoutUrl?: string
   paymentDeadlineDays?: number
@@ -83,8 +83,8 @@ export interface PaymentReceivedPayload {
   customerEmail: string
   customerLanguage: 'en' | 'ru'
   tourTitle: string
-  depositPaidEur: number
-  cashBalanceEur: number
+  depositPaid: number
+  cashBalance: number
   isFullyPaid: boolean
   chatwootConversationId?: number
   mauticContactId?: number

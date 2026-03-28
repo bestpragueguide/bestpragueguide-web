@@ -252,7 +252,7 @@ export async function POST(req: NextRequest) {
     guests: confirmedGuests,
     totalPrice: confirmedPrice,
     prepaymentRequired: paymentMethod !== 'cash_only' && paymentMethod !== 'none',
-    depositAmountEur: depositAmount,
+    depositAmount: depositAmount,
     stripeCheckoutUrl: undefined,
     paymentDeadlineDays: 3,
   }).catch(console.error)

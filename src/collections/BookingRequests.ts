@@ -319,7 +319,7 @@ export const BookingRequests: CollectionConfig = {
             {
               name: 'confirmedPrice',
               type: 'number',
-              admin: { description: 'Final confirmed price in EUR' },
+              admin: { description: 'Final confirmed price in booking currency' },
             },
             {
               name: 'confirmedGuests',
@@ -353,15 +353,15 @@ export const BookingRequests: CollectionConfig = {
               admin: { description: 'Stripe Payment Link' },
             },
             {
-              name: 'depositAmountEur',
+              name: 'depositAmount',
               type: 'number',
-              label: 'Deposit (EUR)',
+              label: 'Deposit',
               admin: { readOnly: true },
             },
             {
-              name: 'cashBalanceEur',
+              name: 'cashBalance',
               type: 'number',
-              label: 'Cash Balance (EUR)',
+              label: 'Cash Balance',
               admin: {
                 readOnly: true,
                 description: 'Amount guide collects on tour day',
@@ -396,15 +396,15 @@ export const BookingRequests: CollectionConfig = {
               admin: { readOnly: true },
             },
             {
-              name: 'totalPaidEur',
+              name: 'totalPaid',
               type: 'number',
-              label: 'Total Paid (EUR)',
+              label: 'Total Paid',
               admin: { readOnly: true, description: 'Running total of all payments minus refunds' },
             },
             {
-              name: 'balanceDueEur',
+              name: 'balanceDue',
               type: 'number',
-              label: 'Balance Due (EUR)',
+              label: 'Balance Due',
               admin: { readOnly: true, description: 'Positive = customer owes more. Negative = refund available. Zero = settled.' },
             },
             {
@@ -423,10 +423,10 @@ export const BookingRequests: CollectionConfig = {
                   ],
                 },
                 {
-                  name: 'amountEur',
+                  name: 'amount',
                   type: 'number',
                   required: true,
-                  label: 'Amount (EUR)',
+                  label: 'Amount',
                 },
                 {
                   name: 'description',

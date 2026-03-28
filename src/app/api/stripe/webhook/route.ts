@@ -52,17 +52,17 @@ export async function POST(req: NextRequest) {
       const existingTransactions = (booking as any).transactions || []
       const prevPaid = existingTransactions
         .filter((t: any) => t.type === 'payment')
-        .reduce((sum: number, t: any) => sum + (t.amountEur || 0), 0)
+        .reduce((sum: number, t: any) => sum + (t.amount || 0), 0)
       const prevRefunded = existingTransactions
         .filter((t: any) => t.type === 'refund')
-        .reduce((sum: number, t: any) => sum + (t.amountEur || 0), 0)
+        .reduce((sum: number, t: any) => sum + (t.amount || 0), 0)
       const newTotalPaid = prevPaid + paidEur - prevRefunded
       const confirmedPrice = booking.confirmedPrice || booking.totalPrice || totalEur
       const newBalance = confirmedPrice - newTotalPaid
 
       const newTransaction = {
         type: 'payment',
-        amountEur: paidEur,
+        amount: paidEur,
         description: prevPaid > 0 ? 'Additional payment' : 'Initial payment',
         stripeId: String(session.payment_intent ?? ''),
         recordedAt: new Date().toISOString(),
@@ -76,9 +76,9 @@ export async function POST(req: NextRequest) {
           stripePaymentIntentId: String(session.payment_intent ?? ''),
           stripeChargedCents: session.amount_total ?? 0,
           stripeChargeCurrency: session.currency?.toUpperCase() ?? 'EUR',
-          cashBalanceEur: Math.max(0, newBalance),
-          totalPaidEur: newTotalPaid,
-          balanceDueEur: newBalance,
+          cashBalance: Math.max(0, newBalance),
+          totalPaid: newTotalPaid,
+          balanceDue: newBalance,
           paidAt: new Date().toISOString(),
           transactions: [...existingTransactions, newTransaction],
         },
@@ -172,8 +172,8 @@ export async function POST(req: NextRequest) {
         customerEmail: booking.customerEmail,
         customerLanguage: booking.customerLanguage as 'en' | 'ru',
         tourTitle: String(tourDoc?.title ?? 'Tour'),
-        depositPaidEur: paidEur,
-        cashBalanceEur: totalEur - paidEur,
+        depositPaid: paidEur,
+        cashBalance: totalEur - paidEur,
         isFullyPaid,
         chatwootConversationId: booking.chatwootConversationId ?? undefined,
         mauticContactId: booking.mauticContactId ?? undefined,
@@ -228,17 +228,17 @@ export async function POST(req: NextRequest) {
         const existingTxns = (booking as any).transactions || []
         const prevPaidTotal = existingTxns
           .filter((t: any) => t.type === 'payment')
-          .reduce((sum: number, t: any) => sum + (t.amountEur || 0), 0)
+          .reduce((sum: number, t: any) => sum + (t.amount || 0), 0)
         const prevRefundTotal = existingTxns
           .filter((t: any) => t.type === 'refund')
-          .reduce((sum: number, t: any) => sum + (t.amountEur || 0), 0)
+          .reduce((sum: number, t: any) => sum + (t.amount || 0), 0)
         const newTotalPaid = prevPaidTotal - prevRefundTotal - refundAmount
         const confirmedPrice = booking.confirmedPrice || booking.totalPrice || 0
         const newBalance = confirmedPrice - newTotalPaid
 
         const refundTxn = {
           type: 'refund',
-          amountEur: refundAmount,
+          amount: refundAmount,
           description: isFullRefund ? 'Full refund' : 'Partial refund',
           stripeId: charge.id,
           recordedAt: new Date().toISOString(),
@@ -250,8 +250,8 @@ export async function POST(req: NextRequest) {
           data: {
             paymentStatus: isFullRefund ? 'refunded' : 'refund_pending',
             refundedAt: new Date().toISOString(),
-            totalPaidEur: Math.max(0, newTotalPaid),
-            balanceDueEur: newBalance,
+            totalPaid: Math.max(0, newTotalPaid),
+            balanceDue: newBalance,
             transactions: [...existingTxns, refundTxn],
           },
         })

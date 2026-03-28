@@ -53,7 +53,7 @@ export const TRACKED_FIELDS = [
   'customerName', 'customerEmail', 'customerPhone', 'totalPrice', 'currency',
   'confirmedDate', 'confirmedTime', 'confirmedPrice', 'confirmedGuests',
   'guideName', 'guidePhone', 'meetingPointAddress', 'meetingPointMapUrl',
-  'paymentMethod', 'customDepositAmount', 'depositAmountEur', 'cashBalanceEur',
+  'paymentMethod', 'customDepositAmount', 'depositAmount', 'cashBalance',
   'offerToken', 'offerSentAt', 'stripePaymentIntentId', 'paidAt',
 ]
 
