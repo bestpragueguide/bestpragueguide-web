@@ -292,6 +292,7 @@ export async function POST(req: NextRequest) {
           const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'
           const offerUrl = booking.offerToken ? `${baseUrl}/${locale}/booking/${booking.offerToken}` : undefined
 
+          const vars = { name: booking.customerName, tour: tourTitle, date: formatEmailDate(booking.confirmedDate || booking.preferredDate, locale), ref: booking.requestRef }
           const refundEmailProps = {
             customerName: booking.customerName,
             tourName: tourTitle,
@@ -301,14 +302,19 @@ export async function POST(req: NextRequest) {
             currency: booking.currency || refundCurrency,
             offerUrl,
             locale,
+            cmsBody: (tpl as any).refundBody ? resolveTemplate((tpl as any).refundBody, vars) : undefined,
+            cmsNote: (tpl as any).refundNote ? resolveTemplate((tpl as any).refundNote, vars) : undefined,
             cmsFooter: tpl.footer || undefined,
           }
 
+          const refundSubject = resolveTemplate(
+            (tpl as any).refundSubject || (locale === 'ru' ? 'Возврат обработан — {ref}' : 'Refund processed — {ref}'),
+            vars
+          )
+
           await sendEmail({
             to: booking.customerEmail,
-            subject: locale === 'ru'
-              ? `Возврат обработан — ${booking.requestRef}`
-              : `Refund processed — ${booking.requestRef}`,
+            subject: refundSubject,
             react: RefundProcessedEmail(refundEmailProps),
           })
 

@@ -612,6 +612,9 @@ export async function getEmailTemplates(locale: string): Promise<EmailTemplatesD
       offerBody: toEmailHtml(data.offerBody),
       offerCtaLabel: data.offerCtaLabel || undefined,
       offerNote: toEmailHtml(data.offerNote),
+      refundSubject: data.refundSubject || undefined,
+      refundBody: toEmailHtml(data.refundBody),
+      refundNote: toEmailHtml(data.refundNote),
       footer: data.footer || undefined,
       // Summary labels
       summaryLabels: {

@@ -339,6 +339,41 @@ export const EmailTemplates: GlobalConfig = {
           ],
         },
         {
+          label: 'Refund Processed',
+          fields: [
+            {
+              name: 'refundSubject',
+              label: 'Subject',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Placeholders: {name}, {tour}, {date}, {ref}',
+                placeholder: 'Refund processed — {ref}',
+              },
+            },
+            {
+              name: 'refundBody',
+              label: 'Body',
+              type: 'richText',
+              editor: simplifiedEditor,
+              localized: true,
+              admin: {
+                description: 'Main body text. Placeholders: {name}, {tour}, {date}, {ref}',
+              },
+            },
+            {
+              name: 'refundNote',
+              label: 'Note',
+              type: 'richText',
+              editor: simplifiedEditor,
+              localized: true,
+              admin: {
+                description: 'Shown after refund details',
+              },
+            },
+          ],
+        },
+        {
           label: 'Booking Summary',
           fields: [
             {
