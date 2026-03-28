@@ -56,7 +56,7 @@ export function Hero({ data, locale }: HeroProps) {
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+      <a href="#content" className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
         <svg
           width="24"
           height="24"
@@ -69,7 +69,7 @@ export function Hero({ data, locale }: HeroProps) {
         >
           <path d="M12 5v14M19 12l-7 7-7-7" />
         </svg>
-      </div>
+      </a>
     </section>
   )
 }

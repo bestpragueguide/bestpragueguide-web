@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.35.9] - 2026-03-28
+
+### Fixed
+- **Hero scroll arrow** — scroll-down indicator on homepage now links to `#content` section with smooth scrolling
+
 ## [1.35.8] - 2026-03-28
 
 ### Fixed
