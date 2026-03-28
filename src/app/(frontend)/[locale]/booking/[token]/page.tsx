@@ -58,6 +58,12 @@ interface BookingDoc {
   paidAt?: string
   totalPaid?: number
   balanceDue?: number
+  transactions?: Array<{
+    type: 'payment' | 'refund'
+    amount: number
+    description?: string
+    recordedAt?: string
+  }>
   stripePaymentLink?: string
   tour: {
     id: number
@@ -498,6 +504,52 @@ export default async function BookingOfferPage({
             </div>
           </div>
         </div>
+
+        {/* Transactions */}
+        {booking.transactions && booking.transactions.length > 0 && (
+          <div className="bg-white rounded-xl border border-gray-light/50 shadow-sm p-6">
+            <h2 className="text-lg font-heading font-bold text-navy mb-4">
+              {locale === 'ru' ? 'История платежей' : 'Payment History'}
+            </h2>
+            <div className="space-y-3">
+              {booking.transactions.map((txn, i) => (
+                <div key={i} className="flex justify-between items-center text-sm py-2 border-b border-gray-light/30 last:border-0">
+                  <div>
+                    <span className={`font-medium ${txn.type === 'payment' ? 'text-trust' : 'text-navy/70'}`}>
+                      {txn.type === 'payment'
+                        ? (locale === 'ru' ? 'Оплата' : 'Payment')
+                        : (locale === 'ru' ? 'Возврат' : 'Refund')}
+                    </span>
+                    {txn.description && (
+                      <span className="text-navy/50 ml-2">— {txn.description}</span>
+                    )}
+                    {txn.recordedAt && (
+                      <span className="block text-xs text-navy/40 mt-0.5">
+                        {new Date(txn.recordedAt).toLocaleDateString(locale === 'ru' ? 'ru-RU' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                      </span>
+                    )}
+                  </div>
+                  <span className={`font-medium ${txn.type === 'payment' ? 'text-trust' : 'text-navy/70'}`}>
+                    {txn.type === 'refund' ? '−' : '+'}{formatAmount(txn.amount, (booking.currency || 'EUR') as Currency)}
+                  </span>
+                </div>
+              ))}
+              {/* Balance summary */}
+              <div className="flex justify-between items-center text-sm pt-3 border-t border-navy/10">
+                <span className="font-medium text-navy">
+                  {balanceDue > 0.01
+                    ? (locale === 'ru' ? 'Осталось оплатить' : 'Remaining to pay')
+                    : (locale === 'ru' ? 'Итого оплачено' : 'Total paid')}
+                </span>
+                <span className={`font-bold ${balanceDue > 0.01 ? 'text-gold' : 'text-trust'}`}>
+                  {balanceDue > 0.01
+                    ? formatAmount(Math.round(balanceDue), (booking.currency || 'EUR') as Currency)
+                    : formatAmount(totalPaid, (booking.currency || 'EUR') as Currency)}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Payment Section */}
         {showPaymentSection && paymentAmount > 0 && (
