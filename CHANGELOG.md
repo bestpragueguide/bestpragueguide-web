@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.35.6] - 2026-03-28
+
+### Changed
+- **Stripe payments enabled in booking form** — re-enabled credit card online payment option (was hidden during Stripe sandbox mode). Customers can now choose between cash and card payment.
+
 ## [1.35.5] - 2026-03-27
 
 ### Changed
