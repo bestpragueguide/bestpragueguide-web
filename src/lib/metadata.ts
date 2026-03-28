@@ -52,6 +52,7 @@ export function buildPageMetadata(
       languages: {
         en: `${BASE_URL}/en/${paths.en}`,
         ru: `${BASE_URL}/ru/${paths.ru}`,
+        'x-default': `${BASE_URL}/en/${paths.en}`,
       },
     },
     openGraph: {

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.35.7] - 2026-03-28
+
+### Fixed
+- **x-default hreflang on all pages** — added `hreflang="x-default"` pointing to EN version on all static pages (homepage, tours, about, reviews, contact, FAQ, blog, legal) and blog detail pages. Fixes Google Search Console "Conflicting hreflang and rel=canonical" and "No self-referencing hreflang" errors.
+
 ## [1.35.6] - 2026-03-28
 
 ### Changed

@@ -71,6 +71,7 @@ export async function generateMetadata({
     if (hasOtherLocale) {
       languages.en = `${baseUrl}/en/blog/${enSlug}`
       languages.ru = `${baseUrl}/ru/blog/${ruSlug}`
+      languages['x-default'] = `${baseUrl}/en/blog/${enSlug}`
     }
 
     const fullOgImage = ogImageUrl
