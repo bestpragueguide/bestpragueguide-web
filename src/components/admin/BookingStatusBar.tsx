@@ -6,7 +6,7 @@ import { useDocumentInfo, useField } from '@payloadcms/ui'
 const statusLabels: Record<string, string> = {
   new: 'New',
   confirmed: 'Confirmed',
-  'payment-sent': 'Payment Sent',
+  'payment-sent': 'Offer Sent',
   paid: 'Paid',
   completed: 'Completed',
   cancelled: 'Cancelled',
