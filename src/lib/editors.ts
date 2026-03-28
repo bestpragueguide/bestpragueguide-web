@@ -30,7 +30,6 @@ export const simplifiedEditor = lexicalEditor({
     UnderlineFeature(),
     newTabLinkFeature(),
     UnorderedListFeature(),
-    FixedToolbarFeature(),
   ],
 })
 
