@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.36.4] - 2026-03-28
+
+### Changed
+- **Currency formatting** — all prices now display as `4 475 CZK`, `139 EUR`, `175 USD` (value + ISO code) instead of `Kč4475`, `€139`, `$175`. Applies to emails, booking pages, tour cards, and all price displays.
+
 ## [1.36.3] - 2026-03-28
 
 ### Fixed
