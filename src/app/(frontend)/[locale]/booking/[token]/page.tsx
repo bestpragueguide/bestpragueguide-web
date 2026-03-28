@@ -307,8 +307,9 @@ export default async function BookingOfferPage({
   const paymentAmount = totalPaid > 0
     ? Math.round(balanceDue)
     : paymentMethod === 'stripe_full' ? displayPrice : depositAmount
-  const paymentLabel =
-    paymentMethod === 'stripe_full' ? t('payNow') : t('payDeposit')
+  const paymentLabel = totalPaid > 0
+    ? t('payNow')
+    : paymentMethod === 'stripe_full' ? t('payNow') : t('payDeposit')
 
   // Show meeting point and guide after payment, or if cash/none
   const showPostPaymentDetails =

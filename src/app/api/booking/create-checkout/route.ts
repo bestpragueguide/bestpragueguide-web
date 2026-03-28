@@ -39,8 +39,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Booking has been declined' }, { status: 400 })
   }
 
-  // Check if payment already complete
-  if (booking.paymentStatus === 'deposit_paid' || booking.paymentStatus === 'fully_paid') {
+  // Check if fully paid with no balance due
+  const balanceDue = (booking as any).balanceDue ?? 0
+  const totalPaid = (booking as any).totalPaid ?? 0
+  if (booking.paymentStatus === 'fully_paid' && balanceDue <= 0.01) {
     return NextResponse.json({ error: 'Payment already completed' }, { status: 400 })
   }
 
@@ -55,14 +57,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'No online payment required for this booking' }, { status: 400 })
   }
 
-  // Determine amount
+  // Determine amount — use balance due if there's a prior payment (price change / partial refund)
   const confirmedPrice = (booking as any).confirmedPrice ?? booking.totalPrice ?? 0
   let amount: number
 
-  if (paymentMethod === 'stripe_full') {
+  if (totalPaid > 0 && balanceDue > 0.01) {
+    // Additional payment after price change or partial refund
+    amount = Math.round(balanceDue)
+  } else if (paymentMethod === 'stripe_full') {
     amount = confirmedPrice
   } else {
-    // stripe_deposit
+    // stripe_deposit — first payment
     const customDeposit = (booking as any).customDepositAmount
     if (customDeposit && customDeposit > 0) {
       amount = customDeposit
@@ -127,18 +132,20 @@ export async function POST(req: NextRequest) {
     metadata: { amount, currency: bookingCurrency, sessionUrl: session.url },
   }, payload)
 
-  // Update booking
-  const cashBalance = confirmedPrice - amount
+  // Update booking — only set deposit/cashBalance on first payment
+  const updateData: Record<string, unknown> = {
+    paymentStatus: 'awaiting',
+    stripePaymentLink: session.url,
+    stripePaymentIntentId: session.paymentIntentId,
+  }
+  if (totalPaid === 0) {
+    updateData.depositAmount = amount
+    updateData.cashBalance = confirmedPrice - amount
+  }
   await payload.update({
     collection: 'booking-requests',
     id: String(booking.id),
-    data: {
-      depositAmount: amount,
-      cashBalance: cashBalance,
-      paymentStatus: 'awaiting',
-      stripePaymentLink: session.url,
-      stripePaymentIntentId: session.paymentIntentId,
-    },
+    data: updateData,
   })
 
   return NextResponse.json({ checkoutUrl: session.url })
