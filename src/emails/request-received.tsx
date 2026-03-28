@@ -56,9 +56,8 @@ export function RequestReceivedEmail({
 }: RequestReceivedEmailProps) {
   const isRu = locale === 'ru'
 
-  const currencySymbol = currency === 'CZK' ? 'Kč' : currency === 'USD' ? '$' : '€'
   const priceDisplay = totalPrice != null && totalPrice > 0
-    ? `${currencySymbol}${totalPrice}`
+    ? `${totalPrice} ${currency}`
     : (isRu ? 'По запросу' : 'On request')
 
   const summaryRows: Array<{ label: string; value: string }> = [

@@ -60,8 +60,6 @@ export function BookingOfferEmail({
   cmsFooter,
 }: BookingOfferEmailProps) {
   const isRu = locale === 'ru'
-  const currencySymbol = currency === 'CZK' ? 'Kč' : currency === 'USD' ? '$' : '€'
-
   const summaryRows: Array<{ label: string; value: string }> = [
     { label: isRu ? 'Экскурсия' : 'Tour', value: tourName },
     { label: isRu ? 'Дата' : 'Date', value: confirmedDate },
@@ -69,21 +67,21 @@ export function BookingOfferEmail({
     { label: isRu ? 'Гостей' : 'Guests', value: String(guests) },
     {
       label: isRu ? 'Стоимость' : 'Price',
-      value: `${currencySymbol} ${confirmedPrice}`,
+      value: `${confirmedPrice} ${currency}`,
     },
   ]
 
   if (depositAmount != null && depositAmount > 0) {
     summaryRows.push({
       label: isRu ? 'Предоплата' : 'Deposit',
-      value: `${currencySymbol} ${depositAmount}`,
+      value: `${depositAmount} ${currency}`,
     })
   }
 
   if (cashBalance != null && cashBalance > 0) {
     summaryRows.push({
       label: isRu ? 'Остаток наличными' : 'Cash balance',
-      value: `${currencySymbol} ${cashBalance}`,
+      value: `${cashBalance} ${currency}`,
     })
   }
 
