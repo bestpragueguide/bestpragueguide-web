@@ -36,7 +36,7 @@ export async function sendWhatsAppMessage(text: string) {
   }
 }
 
-import { formatPrice, type Currency } from '@/lib/currency'
+import { formatAmount, type Currency } from '@/lib/currency'
 
 export function formatBookingWhatsAppMessage({
   requestRef,
@@ -73,7 +73,7 @@ export function formatBookingWhatsAppMessage({
   msg += `Date: ${preferredDate} at ${preferredTime}\n`
   msg += `Guests: ${guests}\n`
   if (isOnRequest) msg += `Price: On Request\n`
-  else if (totalPrice) msg += `Price: ${formatPrice(totalPrice, (currency as Currency) || 'EUR')}\n`
+  else if (totalPrice) msg += `Price: ${formatAmount(totalPrice, (currency as Currency) || 'EUR')}\n`
   msg += '\n'
   msg += `Customer: ${customerName}\n`
   msg += `Email: ${customerEmail}\n`

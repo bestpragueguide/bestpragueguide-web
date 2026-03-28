@@ -1,4 +1,4 @@
-import { formatPrice, type Currency } from '@/lib/currency'
+import { formatAmount, type Currency } from '@/lib/currency'
 
 const WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL
 
@@ -73,7 +73,7 @@ export function formatBookingSlackMessage({
     ...(isOnRequest
       ? [{ type: 'mrkdwn', text: '*Price:*\nOn Request' }]
       : totalPrice
-        ? [{ type: 'mrkdwn', text: `*Price:*\n${formatPrice(totalPrice, (currency as Currency) || 'EUR')}` }]
+        ? [{ type: 'mrkdwn', text: `*Price:*\n${formatAmount(totalPrice, (currency as Currency) || 'EUR')}` }]
         : []),
     { type: 'mrkdwn', text: `*Customer:*\n${customerName}` },
     { type: 'mrkdwn', text: `*Email:*\n${customerEmail}` },
