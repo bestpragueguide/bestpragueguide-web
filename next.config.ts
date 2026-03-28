@@ -32,11 +32,11 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://mc.yandex.ru https://cdn.jsdelivr.net https://analytics.bestpragueguide.com",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://mc.yandex.ru https://mc.yandex.com https://cdn.jsdelivr.net https://analytics.bestpragueguide.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https: http:",
-              "connect-src 'self' https://www.google-analytics.com https://mc.yandex.ru https://analytics.bestpragueguide.com https://*.google-analytics.com",
+              "connect-src 'self' https://www.google-analytics.com https://mc.yandex.ru https://mc.yandex.com https://analytics.bestpragueguide.com https://*.google-analytics.com",
               "frame-src 'self' https://maps.google.com https://www.google.com https://js.stripe.com",
               "media-src 'self'",
               "object-src 'none'",
