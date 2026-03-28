@@ -24,6 +24,7 @@ export interface BookingOfferEmailProps {
   customerEmail?: string
   customerPhone?: string
   paymentMethod?: string
+  paymentStatus?: string
   requestRef: string
   offerUrl: string
   locale: 'en' | 'ru'
@@ -52,6 +53,7 @@ export function BookingOfferEmail({
   customerEmail,
   customerPhone,
   paymentMethod,
+  paymentStatus,
   requestRef,
   offerUrl,
   locale,
@@ -82,6 +84,18 @@ export function BookingOfferEmail({
   }
   if (cashBalance != null && cashBalance > 0) {
     summaryRows.push({ label: L('cashBalance', 'Cash balance', 'Остаток наличными'), value: `${cashBalance} ${currency}` })
+  }
+  if (paymentStatus && paymentStatus !== 'not_required') {
+    const psLabels: Record<string, { en: string; ru: string }> = {
+      awaiting: { en: 'Awaiting payment', ru: 'Ожидает оплаты' },
+      link_sent: { en: 'Payment link sent', ru: 'Ссылка на оплату отправлена' },
+      deposit_paid: { en: 'Deposit paid', ru: 'Депозит оплачен' },
+      fully_paid: { en: 'Fully paid', ru: 'Полностью оплачено' },
+    }
+    const psLabel = psLabels[paymentStatus]
+    if (psLabel) {
+      summaryRows.push({ label: isRu ? 'Статус оплаты' : 'Payment Status', value: isRu ? psLabel.ru : psLabel.en })
+    }
   }
   if (customerEmail) {
     summaryRows.push({ label: L('email', 'Email', 'Email'), value: customerEmail })

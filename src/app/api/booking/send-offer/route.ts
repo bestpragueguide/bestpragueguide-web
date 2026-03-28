@@ -135,6 +135,7 @@ export async function POST(req: NextRequest) {
     customerEmail: booking.customerEmail,
     customerPhone: booking.customerPhone || '',
     paymentMethod: booking.paymentMethod || 'cash_only',
+    paymentStatus: booking.paymentStatus || undefined,
     requestRef: booking.requestRef,
     offerUrl,
     locale,

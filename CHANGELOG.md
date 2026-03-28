@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.38.0] - 2026-03-28
+
+### Added
+- **Payment status in email summaries** — deposit amount and payment status (awaiting/deposit paid/fully paid) shown in request-received and booking-offer emails
+- **Payment status on booking detail page** — customers see current payment status with color coding (gold=pending, green=paid)
+- **Auto-send update email on payment** — when paymentStatus changes to deposit_paid or fully_paid, booking update email with payment status is automatically sent to customer
+
 ## [1.37.1] - 2026-03-28
 
 ### Fixed
