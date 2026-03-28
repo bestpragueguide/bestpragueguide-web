@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.36.3] - 2026-03-28
+
+### Fixed
+- **Links missing in emails** — `toEmailHtml()` link nodes were skipped because the link check ran after the children fallback. Moved link/autolink handling before text extraction so `<a href>` tags render correctly in all CMS richText email content.
+
 ## [1.36.2] - 2026-03-28
 
 ### Changed

@@ -529,6 +529,20 @@ function renderInline(node: any): string {
   if (!node) return ''
   if (node.type === 'linebreak') return '<br/>'
 
+  // Link node — must check before text/children fallback
+  if (node.type === 'link') {
+    const href = node.fields?.url || node.url || '#'
+    const inner = (node.children || []).map((c: any) => renderInline(c)).join('')
+    return `<a href="${href}" style="color:#C4975C">${inner || href}</a>`
+  }
+
+  // Autolink node (Lexical auto-detects URLs)
+  if (node.type === 'autolink') {
+    const href = node.fields?.url || node.url || '#'
+    const inner = (node.children || []).map((c: any) => renderInline(c)).join('')
+    return `<a href="${href}" style="color:#C4975C">${inner || href}</a>`
+  }
+
   let text = node.text || ''
   if (!text && node.children) {
     return node.children.map((c: any) => renderInline(c)).join('')
@@ -542,13 +556,6 @@ function renderInline(node: any): string {
   if (format & 1) text = `<strong>${text}</strong>`
   if (format & 2) text = `<em>${text}</em>`
   if (format & 8) text = `<u>${text}</u>`
-
-  // Link node
-  if (node.type === 'link' && node.fields?.url) {
-    const href = node.fields.url
-    const inner = (node.children || []).map((c: any) => renderInline(c)).join('')
-    return `<a href="${href}" style="color:#C4975C">${inner || href}</a>`
-  }
 
   return text
 }
