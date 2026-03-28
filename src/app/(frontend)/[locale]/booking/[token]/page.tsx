@@ -452,9 +452,11 @@ export default async function BookingOfferPage({
               {bkPaymentStatus && bkPaymentStatus !== 'not_required' && (
                 <div className="flex justify-between text-sm pt-2 border-t border-gray-light/30">
                   <span className="text-navy/70">{locale === 'ru' ? 'Статус оплаты' : 'Payment Status'}</span>
-                  <span className={`font-medium ${isPaid ? 'text-trust' : 'text-gold'}`}>
+                  <span className={`font-medium ${isPaid ? 'text-trust' : bkPaymentStatus === 'refunded' || bkPaymentStatus === 'refund_pending' ? 'text-navy/70' : 'text-gold'}`}>
                     {bkPaymentStatus === 'fully_paid' ? (locale === 'ru' ? 'Оплачено' : 'Paid')
                       : bkPaymentStatus === 'deposit_paid' ? (locale === 'ru' ? 'Депозит оплачен' : 'Deposit paid')
+                      : bkPaymentStatus === 'refunded' ? (locale === 'ru' ? 'Возврат произведён' : 'Refunded')
+                      : bkPaymentStatus === 'refund_pending' ? (locale === 'ru' ? 'Возврат в обработке' : 'Refund pending')
                       : bkPaymentStatus === 'link_sent' ? (locale === 'ru' ? 'Ссылка отправлена' : 'Payment link sent')
                       : bkPaymentStatus === 'awaiting' ? (locale === 'ru' ? 'Ожидает оплаты' : 'Awaiting payment')
                       : ''}

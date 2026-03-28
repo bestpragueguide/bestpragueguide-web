@@ -6,6 +6,7 @@ import { logBookingEvent } from '@/lib/audit'
 import { sendEmail } from '@/lib/email'
 import { getEmailTemplates, resolveTemplate, getNotificationEmail } from '@/lib/cms-data'
 import { PaymentReceivedEmail } from '@/emails/payment-received'
+import { RefundProcessedEmail } from '@/emails/refund-processed'
 import { formatEmailDate } from '@/emails/utils'
 
 export const dynamic = 'force-dynamic'
@@ -180,6 +181,100 @@ export async function POST(req: NextRequest) {
         })
       } catch (err) {
         console.error('[stripe/webhook] Expired session handling failed:', err)
+      }
+    }
+  } else if (event.type === 'charge.refunded') {
+    const charge = event.data.object as Stripe.Charge
+    const bookingId = charge.metadata?.bookingId
+    if (bookingId) {
+      try {
+        const payload = await getPayload({ config: configPromise })
+        const booking = await payload.findByID({
+          collection: 'booking-requests',
+          id: bookingId,
+          depth: 1,
+        })
+        if (!booking) return NextResponse.json({ received: true })
+
+        const refundAmountCents = charge.amount_refunded ?? 0
+        const refundCurrency = (charge.currency || 'eur').toUpperCase()
+        const refundAmount = refundAmountCents / 100
+        const isFullRefund = charge.refunded
+
+        // Update booking payment status
+        await payload.update({
+          collection: 'booking-requests',
+          id: bookingId,
+          data: {
+            paymentStatus: isFullRefund ? 'refunded' : 'refund_pending',
+            refundedAt: new Date().toISOString(),
+          },
+        })
+
+        logBookingEvent({
+          bookingId,
+          eventType: 'payment_success',
+          actor: { type: 'stripe', id: event.id },
+          description: `Refund processed: ${refundAmount} ${refundCurrency}${isFullRefund ? ' (full)' : ' (partial)'}`,
+          metadata: { stripeEventId: event.id, chargeId: charge.id, refundAmount, refundCurrency, isFullRefund },
+        }, payload)
+
+        // Send refund email
+        try {
+          const locale = (booking.customerLanguage || 'en') as 'en' | 'ru'
+          const tourObj = booking.tour && typeof booking.tour === 'object' ? (booking.tour as { title?: string }) : null
+          const tourTitle = tourObj?.title || booking.tourName || 'Tour'
+          const tpl = await getEmailTemplates(locale)
+          const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'
+          const offerUrl = booking.offerToken ? `${baseUrl}/${locale}/booking/${booking.offerToken}` : undefined
+
+          const refundEmailProps = {
+            customerName: booking.customerName,
+            tourName: tourTitle,
+            preferredDate: booking.confirmedDate || booking.preferredDate,
+            requestRef: booking.requestRef,
+            refundAmount,
+            currency: booking.currency || refundCurrency,
+            offerUrl,
+            locale,
+            cmsFooter: tpl.footer || undefined,
+          }
+
+          await sendEmail({
+            to: booking.customerEmail,
+            subject: locale === 'ru'
+              ? `Возврат обработан — ${booking.requestRef}`
+              : `Refund processed — ${booking.requestRef}`,
+            react: RefundProcessedEmail(refundEmailProps),
+          })
+
+          const adminEmail = await getNotificationEmail()
+          await sendEmail({
+            to: adminEmail,
+            subject: `[Refund] ${booking.requestRef} — ${refundAmount} ${refundCurrency}`,
+            react: RefundProcessedEmail(refundEmailProps),
+            replyTo: booking.customerEmail,
+          })
+
+          logBookingEvent({
+            bookingId,
+            eventType: 'email_sent',
+            actor: { type: 'system' },
+            description: `Refund email sent to ${booking.customerEmail}`,
+            metadata: { template: 'refund-processed', refundAmount },
+          }, payload)
+        } catch (emailErr) {
+          console.error('[stripe/webhook] Refund email failed:', emailErr)
+          logBookingEvent({
+            bookingId,
+            eventType: 'email_failed',
+            actor: { type: 'system' },
+            description: `Failed to send refund email`,
+            metadata: { error: String(emailErr) },
+          }, payload)
+        }
+      } catch (err) {
+        console.error('[stripe/webhook] Refund handling failed:', err)
       }
     }
   } else if (event.type === 'payment_intent.payment_failed') {

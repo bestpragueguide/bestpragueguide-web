@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.39.0] - 2026-03-28
+
+### Added
+- **Refund handling** — Stripe `charge.refunded` webhook updates booking paymentStatus to `refunded`/`refund_pending`, sends refund email to customer with amount and View Booking link, logs audit event. New `RefundProcessedEmail` template.
+- **Refund status on booking page** — customers see "Refunded" / "Refund pending" in payment status
+
 ## [1.38.0] - 2026-03-28
 
 ### Added

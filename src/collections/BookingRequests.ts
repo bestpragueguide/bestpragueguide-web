@@ -390,6 +390,11 @@ export const BookingRequests: CollectionConfig = {
               type: 'date',
               admin: { readOnly: true },
             },
+            {
+              name: 'refundedAt',
+              type: 'date',
+              admin: { readOnly: true },
+            },
           ],
         },
         {
