@@ -423,14 +423,14 @@ export const EmailTemplates: GlobalConfig = {
               label: 'Deposit label',
               type: 'text',
               localized: true,
-              admin: { placeholder: 'Deposit' },
+              admin: { placeholder: 'Prepayment' },
             },
             {
               name: 'summaryLabelCashBalance',
               label: 'Cash balance label',
               type: 'text',
               localized: true,
-              admin: { placeholder: 'Cash balance' },
+              admin: { placeholder: 'Balance on tour day' },
             },
             {
               name: 'summaryPaymentCash',

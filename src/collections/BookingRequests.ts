@@ -355,13 +355,13 @@ export const BookingRequests: CollectionConfig = {
             {
               name: 'depositAmount',
               type: 'number',
-              label: 'Deposit',
+              label: 'Prepayment',
               admin: { readOnly: true },
             },
             {
               name: 'cashBalance',
               type: 'number',
-              label: 'Cash Balance',
+              label: 'Balance on tour day',
               admin: {
                 readOnly: true,
                 description: 'Amount guide collects on tour day',

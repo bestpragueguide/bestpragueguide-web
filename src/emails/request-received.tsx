@@ -84,7 +84,7 @@ export function RequestReceivedEmail({
   }
   summaryRows.push({ label: L('price', 'Price', 'Стоимость'), value: priceDisplay })
   if (depositAmount != null && depositAmount > 0) {
-    summaryRows.push({ label: L('deposit', 'Deposit', 'Предоплата'), value: `${depositAmount} ${currency}` })
+    summaryRows.push({ label: L('deposit', 'Prepayment', 'Предоплата'), value: `${depositAmount} ${currency}` })
   }
   if (paymentStatus && paymentStatus !== 'not_required') {
     const psLabels: Record<string, { en: string; ru: string }> = {

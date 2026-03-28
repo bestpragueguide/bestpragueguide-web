@@ -80,10 +80,10 @@ export function BookingOfferEmail({
   ]
 
   if (depositAmount != null && depositAmount > 0) {
-    summaryRows.push({ label: L('deposit', 'Deposit', 'Предоплата'), value: `${depositAmount} ${currency}` })
+    summaryRows.push({ label: L('deposit', 'Prepayment', 'Предоплата'), value: `${depositAmount} ${currency}` })
   }
   if (cashBalance != null && cashBalance > 0) {
-    summaryRows.push({ label: L('cashBalance', 'Cash balance', 'Остаток наличными'), value: `${cashBalance} ${currency}` })
+    summaryRows.push({ label: L('cashBalance', 'Balance on tour day', 'Остаток в день экскурсии'), value: `${cashBalance} ${currency}` })
   }
   if (paymentStatus && paymentStatus !== 'not_required') {
     const psLabels: Record<string, { en: string; ru: string }> = {
