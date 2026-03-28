@@ -44,6 +44,8 @@ export function BookingStatusBar() {
   const [copied, setCopied] = useState(false)
   const [sending, setSending] = useState(false)
   const [sendMsg, setSendMsg] = useState<string | null>(null)
+  const [localOfferSentAt, setLocalOfferSentAt] = useState<string | null>(null)
+  const [localUpdateSentAt, setLocalUpdateSentAt] = useState<string | null>(null)
 
   if (!id) return null
 
@@ -96,6 +98,14 @@ export function BookingStatusBar() {
         body: JSON.stringify({ bookingId: id }),
       })
       const data = (await res.json()) as { success?: boolean; error?: string }
+      if (data.success) {
+        const now = new Date().toISOString()
+        if (status === 'confirmed' && !offerSentAt && !localOfferSentAt) {
+          setLocalOfferSentAt(now)
+        } else {
+          setLocalUpdateSentAt(now)
+        }
+      }
       setSendMsg(data.success ? (saved ? 'Saved & Sent!' : 'Sent!') : `Error: ${data.error}`)
     } catch {
       setSendMsg('Failed')
@@ -135,8 +145,8 @@ export function BookingStatusBar() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
         {badge(label, `${color}18`, color)}
         {payLabel && badge(`Payment: ${payLabel}`, '#f3f4f6', '#6b7280')}
-        {offerSentAt && badge(`Offer sent ${new Date(offerSentAt).toLocaleDateString()}`, '#f0fdf4', '#16A34A')}
-        {lastUpdateSentAt && badge(`Update sent ${new Date(lastUpdateSentAt).toLocaleDateString()}`, '#eff6ff', '#1D4ED8')}
+        {(localOfferSentAt || offerSentAt) && badge(`Offer sent ${new Date(localOfferSentAt || offerSentAt).toLocaleString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`, '#f0fdf4', '#16A34A')}
+        {(localUpdateSentAt || lastUpdateSentAt) && badge(`Update sent ${new Date(localUpdateSentAt || lastUpdateSentAt).toLocaleString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`, '#eff6ff', '#1D4ED8')}
       </div>
 
       {/* Row 2: URL + actions (only when token exists) */}
