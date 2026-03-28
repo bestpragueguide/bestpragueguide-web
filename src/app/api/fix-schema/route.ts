@@ -167,6 +167,20 @@ export async function POST(req: Request) {
       `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS refunded_at timestamp(3) with time zone`,
       `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS total_paid numeric`,
       `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS balance_due numeric`,
+      // Booking transactions sub-table (array field)
+      `CREATE TABLE IF NOT EXISTS booking_requests_transactions (
+        id varchar PRIMARY KEY NOT NULL,
+        _order integer NOT NULL,
+        _parent_id integer NOT NULL REFERENCES booking_requests(id) ON DELETE CASCADE,
+        type varchar NOT NULL,
+        amount numeric,
+        description varchar,
+        stripe_id varchar,
+        recorded_at timestamp(3) with time zone
+      )`,
+      `CREATE INDEX IF NOT EXISTS booking_requests_transactions_order_idx ON booking_requests_transactions (_order)`,
+      `CREATE INDEX IF NOT EXISTS booking_requests_transactions_parent_id_idx ON booking_requests_transactions (_parent_id)`,
+
       // Rename old EUR-specific columns to currency-neutral names
       `DO $$ BEGIN ALTER TABLE booking_requests RENAME COLUMN deposit_amount_eur TO deposit_amount; EXCEPTION WHEN others THEN NULL; END $$`,
       `DO $$ BEGIN ALTER TABLE booking_requests RENAME COLUMN cash_balance_eur TO cash_balance; EXCEPTION WHEN others THEN NULL; END $$`,
