@@ -11,6 +11,7 @@ import {
   BlockquoteFeature,
   HorizontalRuleFeature,
   FixedToolbarFeature,
+  InlineToolbarFeature,
 } from '@payloadcms/richtext-lexical'
 
 const newTabLinkFeature = () =>
@@ -24,12 +25,13 @@ const newTabLinkFeature = () =>
   })
 
 export const simplifiedEditor = lexicalEditor({
-  features: () => [
+  features: ({ defaultFeatures }) => [
     BoldFeature(),
     ItalicFeature(),
     UnderlineFeature(),
     newTabLinkFeature(),
     UnorderedListFeature(),
+    FixedToolbarFeature(),
   ],
 })
 
