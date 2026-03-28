@@ -148,6 +148,7 @@ export function BookingRequestForm({
         setStatus('success')
         setRequestRef(result.requestRef || '')
         trackBookingSubmit(tourName, tourId)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       } else if (res.status === 429) {
         setStatus('rate-limited')
       } else if (result.details) {
