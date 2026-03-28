@@ -172,6 +172,9 @@ export async function POST(req: Request) {
       `DO $$ BEGIN
         ALTER TYPE enum_booking_requests_status ADD VALUE IF NOT EXISTS 'offer-sent';
       EXCEPTION WHEN others THEN NULL; END $$`,
+      `DO $$ BEGIN
+        ALTER TYPE enum_booking_requests_status ADD VALUE IF NOT EXISTS 'no-show';
+      EXCEPTION WHEN others THEN NULL; END $$`,
       // Migrate existing payment-sent records to offer-sent
       `UPDATE booking_requests SET status = 'offer-sent' WHERE status = 'payment-sent'`,
 

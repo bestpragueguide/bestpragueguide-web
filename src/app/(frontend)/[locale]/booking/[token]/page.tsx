@@ -142,6 +142,7 @@ function getOfferStatus(booking: BookingDoc): OfferStatus {
 
   if (booking.status === 'declined') return 'declined'
   if (booking.status === 'cancelled') return 'cancelled'
+  if (booking.status === 'no-show') return 'completed'
   if (booking.status === 'completed') return 'completed'
 
   if (booking.paymentStatus === 'fully_paid') return 'fully_paid'

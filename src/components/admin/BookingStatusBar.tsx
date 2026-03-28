@@ -9,6 +9,7 @@ const statusLabels: Record<string, string> = {
   'offer-sent': 'Offer Sent',
   paid: 'Paid',
   completed: 'Completed',
+  'no-show': 'No Show',
   cancelled: 'Cancelled',
   declined: 'Declined',
 }
@@ -19,6 +20,7 @@ const statusColors: Record<string, string> = {
   'offer-sent': '#C4975C',
   paid: '#16A34A',
   completed: '#16A34A',
+  'no-show': '#9333EA',
   cancelled: '#DC2626',
   declined: '#DC2626',
 }
