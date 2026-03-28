@@ -56,11 +56,15 @@ export function RequestConfirmedEmail({
               : `Confirmed, ${customerName}!`)}
           </Text>
 
-          <Text style={text}>
-            {cmsBody || (isRu
-              ? `Ваш запрос на экскурсию "${tourName}" подтверждён.`
-              : `Your request for the "${tourName}" tour has been confirmed.`)}
-          </Text>
+          {cmsBody ? (
+            <div dangerouslySetInnerHTML={{ __html: cmsBody }} />
+          ) : (
+            <Text style={text}>
+              {isRu
+                ? `Ваш запрос на экскурсию "${tourName}" подтверждён.`
+                : `Your request for the "${tourName}" tour has been confirmed.`}
+            </Text>
+          )}
 
           <Section style={infoBox}>
             <Text style={infoText}>
@@ -86,11 +90,15 @@ export function RequestConfirmedEmail({
             </Section>
           )}
 
-          <Text style={text}>
-            {cmsNote || (isRu
-              ? 'Детали места встречи и контакт гида будут отправлены после оплаты.'
-              : 'Meeting point details and guide contact will be sent after payment.')}
-          </Text>
+          {cmsNote ? (
+            <div dangerouslySetInnerHTML={{ __html: cmsNote }} />
+          ) : (
+            <Text style={text}>
+              {isRu
+                ? 'Детали места встречи и контакт гида будут отправлены после оплаты.'
+                : 'Meeting point details and guide contact will be sent after payment.'}
+            </Text>
+          )}
 
           <Hr style={hr} />
           <Text style={footerStyle}>

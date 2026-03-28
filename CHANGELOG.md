@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.36.1] - 2026-03-28
+
+### Fixed
+- **RichText rendering in emails** — CMS body/note fields in declined, confirmed, payment-received, and pre-tour-reminder emails now render HTML correctly instead of escaping tags as plain text. Content sourced from trusted CMS admin only.
+
 ## [1.36.0] - 2026-03-28
 
 ### Added

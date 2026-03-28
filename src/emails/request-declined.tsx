@@ -50,17 +50,25 @@ export function RequestDeclinedEmail({
               : `Dear ${customerName},`}
           </Text>
 
-          <Text style={text}>
-            {cmsBody || (isRu
-              ? `К сожалению, выбранная вами дата (${preferredDate}) для экскурсии "${tourName}" недоступна.`
-              : `Unfortunately, your requested date (${preferredDate}) for the "${tourName}" tour is not available.`)}
-          </Text>
+          {cmsBody ? (
+            <div dangerouslySetInnerHTML={{ __html: cmsBody }} />
+          ) : (
+            <Text style={text}>
+              {isRu
+                ? `К сожалению, выбранная вами дата (${preferredDate}) для экскурсии "${tourName}" недоступна.`
+                : `Unfortunately, your requested date (${preferredDate}) for the "${tourName}" tour is not available.`}
+            </Text>
+          )}
 
-          <Text style={text}>
-            {cmsNote || (isRu
-              ? 'Мы будем рады предложить альтернативную дату. Пожалуйста, свяжитесь с нами через WhatsApp, Telegram или email, чтобы обсудить варианты.'
-              : "We'd be happy to suggest an alternative date. Please contact us via WhatsApp, Telegram, or email to discuss options.")}
-          </Text>
+          {cmsNote ? (
+            <div dangerouslySetInnerHTML={{ __html: cmsNote }} />
+          ) : (
+            <Text style={text}>
+              {isRu
+                ? 'Мы будем рады предложить альтернативную дату. Пожалуйста, свяжитесь с нами через WhatsApp, Telegram или email, чтобы обсудить варианты.'
+                : "We'd be happy to suggest an alternative date. Please contact us via WhatsApp, Telegram, or email to discuss options."}
+            </Text>
+          )}
 
           <Hr style={hr} />
           <Text style={footerStyle}>

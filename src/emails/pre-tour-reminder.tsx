@@ -57,11 +57,15 @@ export function PreTourReminderEmail({
               : `Reminder, ${customerName}!`)}
           </Text>
 
-          <Text style={text}>
-            {cmsBody || (isRu
-              ? `Ваша экскурсия "${tourName}" запланирована на завтра!`
-              : `Your "${tourName}" tour is scheduled for tomorrow!`)}
-          </Text>
+          {cmsBody ? (
+            <div dangerouslySetInnerHTML={{ __html: cmsBody }} />
+          ) : (
+            <Text style={text}>
+              {isRu
+                ? `Ваша экскурсия "${tourName}" запланирована на завтра!`
+                : `Your "${tourName}" tour is scheduled for tomorrow!`}
+            </Text>
+          )}
 
           <Section style={infoBox}>
             <Text style={infoText}>
@@ -84,11 +88,15 @@ export function PreTourReminderEmail({
             </Text>
           </Section>
 
-          <Text style={text}>
-            {cmsNote || (isRu
-              ? 'Советы: наденьте удобную обувь и возьмите воду. При вопросах — свяжитесь с нами.'
-              : 'Tips: wear comfortable shoes and bring water. Contact us if you have any questions.')}
-          </Text>
+          {cmsNote ? (
+            <div dangerouslySetInnerHTML={{ __html: cmsNote }} />
+          ) : (
+            <Text style={text}>
+              {isRu
+                ? 'Советы: наденьте удобную обувь и возьмите воду. При вопросах — свяжитесь с нами.'
+                : 'Tips: wear comfortable shoes and bring water. Contact us if you have any questions.'}
+            </Text>
+          )}
 
           <Hr style={hr} />
           <Text style={footerStyle}>

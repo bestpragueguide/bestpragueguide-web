@@ -57,11 +57,15 @@ export function PaymentReceivedEmail({
               : `Payment received, ${customerName}!`)}
           </Text>
 
-          <Text style={text}>
-            {cmsBody || (isRu
-              ? 'Всё готово! Вот детали вашей экскурсии:'
-              : "You're all set! Here are your tour details:")}
-          </Text>
+          {cmsBody ? (
+            <div dangerouslySetInnerHTML={{ __html: cmsBody }} />
+          ) : (
+            <Text style={text}>
+              {isRu
+                ? 'Всё готово! Вот детали вашей экскурсии:'
+                : "You're all set! Here are your tour details:"}
+            </Text>
+          )}
 
           <Section style={infoBox}>
             <Text style={infoText}>
@@ -85,11 +89,15 @@ export function PaymentReceivedEmail({
             </Text>
           </Section>
 
-          <Text style={text}>
-            {cmsNote || (isRu
-              ? 'Ваш гид свяжется с вами за день до экскурсии с финальными деталями.'
-              : 'Your guide will contact you the day before the tour with final details.')}
-          </Text>
+          {cmsNote ? (
+            <div dangerouslySetInnerHTML={{ __html: cmsNote }} />
+          ) : (
+            <Text style={text}>
+              {isRu
+                ? 'Ваш гид свяжется с вами за день до экскурсии с финальными деталями.'
+                : 'Your guide will contact you the day before the tour with final details.'}
+            </Text>
+          )}
 
           <Hr style={hr} />
           <Text style={footerStyle}>
