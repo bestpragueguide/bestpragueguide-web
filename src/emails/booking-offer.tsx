@@ -33,6 +33,9 @@ export interface BookingOfferEmailProps {
   cmsCtaLabel?: string
   cmsNote?: string
   cmsFooter?: string
+  summaryLabels?: Record<string, string | undefined>
+  summaryPaymentLabels?: Record<string, string | undefined>
+  summaryLanguageLabels?: Record<string, string | undefined>
 }
 
 export function BookingOfferEmail({
@@ -58,54 +61,45 @@ export function BookingOfferEmail({
   cmsCtaLabel,
   cmsNote,
   cmsFooter,
+  summaryLabels: sl,
+  summaryPaymentLabels: spl,
+  summaryLanguageLabels: sll,
 }: BookingOfferEmailProps) {
   const isRu = locale === 'ru'
+  const L = (key: string, en: string, ru: string) => (sl?.[key]) || (isRu ? ru : en)
+
   const summaryRows: Array<{ label: string; value: string }> = [
-    { label: isRu ? 'Экскурсия' : 'Tour', value: tourName },
-    { label: isRu ? 'Дата' : 'Date', value: confirmedDate },
-    { label: isRu ? 'Время' : 'Time', value: confirmedTime },
-    { label: isRu ? 'Гостей' : 'Guests', value: String(guests) },
-    {
-      label: isRu ? 'Стоимость' : 'Price',
-      value: `${confirmedPrice} ${currency}`,
-    },
+    { label: L('tour', 'Tour', 'Экскурсия'), value: tourName },
+    { label: L('date', 'Date', 'Дата'), value: confirmedDate },
+    { label: L('time', 'Time', 'Время'), value: confirmedTime },
+    { label: L('guests', 'Guests', 'Гостей'), value: String(guests) },
+    { label: L('price', 'Price', 'Стоимость'), value: `${confirmedPrice} ${currency}` },
   ]
 
   if (depositAmount != null && depositAmount > 0) {
-    summaryRows.push({
-      label: isRu ? 'Предоплата' : 'Deposit',
-      value: `${depositAmount} ${currency}`,
-    })
+    summaryRows.push({ label: L('deposit', 'Deposit', 'Предоплата'), value: `${depositAmount} ${currency}` })
   }
-
   if (cashBalance != null && cashBalance > 0) {
-    summaryRows.push({
-      label: isRu ? 'Остаток наличными' : 'Cash balance',
-      value: `${cashBalance} ${currency}`,
-    })
+    summaryRows.push({ label: L('cashBalance', 'Cash balance', 'Остаток наличными'), value: `${cashBalance} ${currency}` })
   }
-
   if (customerEmail) {
-    summaryRows.push({ label: 'Email', value: customerEmail })
+    summaryRows.push({ label: L('email', 'Email', 'Email'), value: customerEmail })
   }
   if (customerPhone) {
-    summaryRows.push({ label: isRu ? 'Телефон' : 'Phone', value: customerPhone })
+    summaryRows.push({ label: L('phone', 'Phone', 'Телефон'), value: customerPhone })
   }
   if (paymentMethod) {
-    const pmLabels: Record<string, { en: string; ru: string }> = {
-      stripe_deposit: { en: 'Credit card (deposit)', ru: 'Картой (депозит)' },
-      stripe_full: { en: 'Credit card (full)', ru: 'Картой (полная)' },
-      cash_only: { en: 'Cash on tour day', ru: 'Наличными в день экскурсии' },
-      none: { en: 'Not required', ru: 'Не требуется' },
-    }
-    const pmLabel = pmLabels[paymentMethod]
-    summaryRows.push({ label: isRu ? 'Оплата' : 'Payment', value: pmLabel ? (isRu ? pmLabel.ru : pmLabel.en) : paymentMethod })
+    const pmValue = paymentMethod === 'cash_only'
+      ? (spl?.cash || (isRu ? 'Наличными в день экскурсии' : 'Cash on tour day'))
+      : paymentMethod === 'stripe_full'
+        ? (spl?.cardFull || (isRu ? 'Картой (полная)' : 'Credit card (full prepayment)'))
+        : paymentMethod === 'stripe_deposit'
+          ? (spl?.card || (isRu ? 'Картой (депозит)' : 'Credit card (deposit)'))
+          : paymentMethod
+    summaryRows.push({ label: L('payment', 'Payment', 'Оплата'), value: pmValue })
   }
-  summaryRows.push({ label: isRu ? 'Язык' : 'Language', value: isRu ? 'Русский' : 'English' })
-  summaryRows.push({
-    label: isRu ? 'Номер заявки' : 'Reference',
-    value: requestRef,
-  })
+  summaryRows.push({ label: L('language', 'Language', 'Язык'), value: isRu ? (sll?.ru || 'Русский') : (sll?.en || 'English') })
+  summaryRows.push({ label: L('reference', 'Reference', 'Номер заявки'), value: requestRef })
 
   const defaultHeading = isRu
     ? `Ваш тур подтверждён, ${customerName}!`

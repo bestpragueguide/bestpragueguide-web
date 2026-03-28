@@ -30,6 +30,9 @@ interface RequestReceivedEmailProps {
   cmsSummaryBody?: string
   cmsNote?: string
   cmsFooter?: string
+  summaryLabels?: Record<string, string | undefined>
+  summaryPaymentLabels?: Record<string, string | undefined>
+  summaryLanguageLabels?: Record<string, string | undefined>
 }
 
 export function RequestReceivedEmail({
@@ -53,45 +56,49 @@ export function RequestReceivedEmail({
   cmsSummaryBody,
   cmsNote,
   cmsFooter,
+  summaryLabels: sl,
+  summaryPaymentLabels: spl,
+  summaryLanguageLabels: sll,
 }: RequestReceivedEmailProps) {
   const isRu = locale === 'ru'
+  const L = (key: string, en: string, ru: string) => (sl?.[key]) || (isRu ? ru : en)
 
   const priceDisplay = totalPrice != null && totalPrice > 0
     ? `${totalPrice} ${currency}`
     : (isRu ? 'По запросу' : 'On request')
 
   const summaryRows: Array<{ label: string; value: string }> = [
-    { label: isRu ? 'Экскурсия' : 'Tour', value: tourName },
-    { label: isRu ? 'Дата' : 'Date', value: preferredDate },
+    { label: L('tour', 'Tour', 'Экскурсия'), value: tourName },
+    { label: L('date', 'Date', 'Дата'), value: preferredDate },
   ]
   if (preferredTime) {
-    summaryRows.push({ label: isRu ? 'Время' : 'Time', value: preferredTime })
+    summaryRows.push({ label: L('time', 'Time', 'Время'), value: preferredTime })
   }
   if (guests) {
-    summaryRows.push({ label: isRu ? 'Гостей' : 'Guests', value: String(guests) })
+    summaryRows.push({ label: L('guests', 'Guests', 'Гостей'), value: String(guests) })
   }
-  summaryRows.push({ label: isRu ? 'Стоимость' : 'Price', value: priceDisplay })
+  summaryRows.push({ label: L('price', 'Price', 'Стоимость'), value: priceDisplay })
   if (customerEmail) {
-    summaryRows.push({ label: 'Email', value: customerEmail })
+    summaryRows.push({ label: L('email', 'Email', 'Email'), value: customerEmail })
   }
   if (customerPhone) {
-    summaryRows.push({ label: isRu ? 'Телефон' : 'Phone', value: customerPhone })
+    summaryRows.push({ label: L('phone', 'Phone', 'Телефон'), value: customerPhone })
   }
   if (specialRequests) {
-    summaryRows.push({ label: isRu ? 'Пожелания' : 'Requests', value: specialRequests })
+    summaryRows.push({ label: L('requests', 'Special Requests', 'Пожелания'), value: specialRequests })
   }
   if (paymentMethod) {
-    const pmLabels: Record<string, { en: string; ru: string }> = {
-      stripe_deposit: { en: 'Credit card (deposit)', ru: 'Картой (депозит)' },
-      stripe_full: { en: 'Credit card (full)', ru: 'Картой (полная)' },
-      cash_only: { en: 'Cash on tour day', ru: 'Наличными в день экскурсии' },
-      none: { en: 'Not required', ru: 'Не требуется' },
-    }
-    const pmLabel = pmLabels[paymentMethod]
-    summaryRows.push({ label: isRu ? 'Оплата' : 'Payment', value: pmLabel ? (isRu ? pmLabel.ru : pmLabel.en) : paymentMethod })
+    const pmValue = paymentMethod === 'cash_only'
+      ? (spl?.cash || (isRu ? 'Наличными в день экскурсии' : 'Cash on tour day'))
+      : paymentMethod === 'stripe_full'
+        ? (spl?.cardFull || (isRu ? 'Картой (полная)' : 'Credit card (full prepayment)'))
+        : paymentMethod === 'stripe_deposit'
+          ? (spl?.card || (isRu ? 'Картой (депозит)' : 'Credit card (deposit)'))
+          : paymentMethod
+    summaryRows.push({ label: L('payment', 'Payment', 'Оплата'), value: pmValue })
   }
-  summaryRows.push({ label: isRu ? 'Язык' : 'Language', value: isRu ? 'Русский' : 'English' })
-  summaryRows.push({ label: isRu ? 'Номер заявки' : 'Reference', value: requestRef })
+  summaryRows.push({ label: L('language', 'Language', 'Язык'), value: isRu ? (sll?.ru || 'Русский') : (sll?.en || 'English') })
+  summaryRows.push({ label: L('reference', 'Reference', 'Номер заявки'), value: requestRef })
 
   return (
     <Html lang={locale}>

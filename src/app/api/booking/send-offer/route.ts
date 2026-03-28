@@ -146,6 +146,9 @@ export async function POST(req: NextRequest) {
       cmsCtaLabel: (tpl as any).offerCtaLabel || undefined,
       cmsNote: (tpl as any).offerNote ? resolveTemplate((tpl as any).offerNote, vars) : undefined,
       cmsFooter: tpl.footer || undefined,
+      summaryLabels: tpl.summaryLabels,
+      summaryPaymentLabels: tpl.summaryPaymentLabels,
+      summaryLanguageLabels: tpl.summaryLanguageLabels,
     }),
   })
 
@@ -177,6 +180,9 @@ export async function POST(req: NextRequest) {
       cmsCtaLabel: (tpl as any).offerCtaLabel || undefined,
       cmsNote: (tpl as any).offerNote ? resolveTemplate((tpl as any).offerNote, vars) : undefined,
       cmsFooter: tpl.footer || undefined,
+      summaryLabels: tpl.summaryLabels,
+      summaryPaymentLabels: tpl.summaryPaymentLabels,
+      summaryLanguageLabels: tpl.summaryLanguageLabels,
     }),
     replyTo: booking.customerEmail,
   })

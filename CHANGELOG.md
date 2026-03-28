@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.37.0] - 2026-03-28
+
+### Added
+- **CMS-editable booking summary labels** — new "Booking Summary" tab in Email Templates with 19 editable fields: row labels (Tour, Date, Time, Guests, Price, Email, Phone, Requests, Payment, Language, Reference, Deposit, Cash balance), payment method texts, and language names. All localized EN/RU with hardcoded fallbacks.
+
 ## [1.36.4] - 2026-03-28
 
 ### Changed

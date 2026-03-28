@@ -476,6 +476,18 @@ export interface EmailTemplatesData {
   offerCtaLabel?: string
   offerNote?: string
   footer?: string
+  summaryLabels?: {
+    tour?: string; date?: string; time?: string; guests?: string
+    price?: string; email?: string; phone?: string; requests?: string
+    payment?: string; language?: string; reference?: string
+    deposit?: string; cashBalance?: string
+  }
+  summaryPaymentLabels?: {
+    cash?: string; card?: string; cardFull?: string
+  }
+  summaryLanguageLabels?: {
+    en?: string; ru?: string
+  }
 }
 
 const emailTemplatesFallback: EmailTemplatesData = {}
@@ -601,6 +613,31 @@ export async function getEmailTemplates(locale: string): Promise<EmailTemplatesD
       offerCtaLabel: data.offerCtaLabel || undefined,
       offerNote: toEmailHtml(data.offerNote),
       footer: data.footer || undefined,
+      // Summary labels
+      summaryLabels: {
+        tour: data.summaryLabelTour || undefined,
+        date: data.summaryLabelDate || undefined,
+        time: data.summaryLabelTime || undefined,
+        guests: data.summaryLabelGuests || undefined,
+        price: data.summaryLabelPrice || undefined,
+        email: data.summaryLabelEmail || undefined,
+        phone: data.summaryLabelPhone || undefined,
+        requests: data.summaryLabelRequests || undefined,
+        payment: data.summaryLabelPayment || undefined,
+        language: data.summaryLabelLanguage || undefined,
+        reference: data.summaryLabelReference || undefined,
+        deposit: data.summaryLabelDeposit || undefined,
+        cashBalance: data.summaryLabelCashBalance || undefined,
+      },
+      summaryPaymentLabels: {
+        cash: data.summaryPaymentCash || undefined,
+        card: data.summaryPaymentCard || undefined,
+        cardFull: data.summaryPaymentCardFull || undefined,
+      },
+      summaryLanguageLabels: {
+        en: data.summaryLanguageEn || undefined,
+        ru: data.summaryLanguageRu || undefined,
+      },
     }
   } catch {
     return emailTemplatesFallback

@@ -155,6 +155,9 @@ export async function POST(request: NextRequest) {
       cmsSummaryBody: tpl.receivedSummaryBody ? resolveTemplate(tpl.receivedSummaryBody, vars) : undefined,
       cmsNote: tpl.receivedNote ? resolveTemplate(tpl.receivedNote, vars) : undefined,
       cmsFooter: tpl.footer || undefined,
+      summaryLabels: tpl.summaryLabels,
+      summaryPaymentLabels: tpl.summaryPaymentLabels,
+      summaryLanguageLabels: tpl.summaryLanguageLabels,
     }
 
     const notificationPromises = [
