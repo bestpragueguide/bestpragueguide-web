@@ -11,6 +11,7 @@ export const beforeChangeHook: CollectionBeforeChangeHook = async ({
   data,
   operation,
   originalDoc,
+  req,
 }) => {
   if (operation === 'create' && !data.requestRef) {
     data.requestRef = await generateRequestRef()
@@ -47,6 +48,22 @@ export const beforeChangeHook: CollectionBeforeChangeHook = async ({
     const confirmedPrice = data.confirmedPrice || doc.confirmedPrice || data.totalPrice || doc.totalPrice || 0
     data.depositAmountEur = data.customDepositAmount
     data.cashBalanceEur = confirmedPrice - data.customDepositAmount
+  }
+
+  // Auto-populate tourName in customer's language
+  const tourId = data.tour || originalDoc?.tour
+  const locale = (data.customerLanguage || originalDoc?.customerLanguage || 'en') as 'en' | 'ru'
+  if (tourId && (!data.tourName || operation === 'create')) {
+    try {
+      const id = typeof tourId === 'object' ? (tourId as any).id : tourId
+      const tour = await req.payload.findByID({
+        collection: 'tours',
+        id,
+        locale,
+        depth: 0,
+      })
+      if (tour?.title) data.tourName = tour.title as string
+    } catch { /* keep existing tourName */ }
   }
 
   return data

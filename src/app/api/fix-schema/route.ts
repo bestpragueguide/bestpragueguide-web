@@ -129,6 +129,7 @@ export async function POST(req: Request) {
       `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS meeting_point_map_url varchar`,
       `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS payment_method varchar DEFAULT 'cash_only'`,
       `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS custom_deposit_amount numeric`,
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS tour_name varchar`,
 
       // Booking Audit Log table
       `CREATE TABLE IF NOT EXISTS booking_audit_log (

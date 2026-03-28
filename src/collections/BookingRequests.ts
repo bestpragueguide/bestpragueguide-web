@@ -9,9 +9,9 @@ export const BookingRequests: CollectionConfig = {
   slug: 'booking-requests',
   admin: {
     useAsTitle: 'requestRef',
-    defaultColumns: ['requestRef', 'customerName', 'tour', 'preferredDate', 'status', 'createdAt'],
+    defaultColumns: ['requestRef', 'customerName', 'tourName', 'preferredDate', 'status', 'customerLanguage', 'createdAt'],
     group: 'Bookings',
-    listSearchableFields: ['requestRef', 'customerName', 'customerEmail'],
+    listSearchableFields: ['requestRef', 'customerName', 'customerEmail', 'tourName'],
     components: {},
   },
   timestamps: true,
@@ -127,6 +127,14 @@ export const BookingRequests: CollectionConfig = {
               type: 'relationship',
               relationTo: 'tours',
               required: true,
+            },
+            {
+              name: 'tourName',
+              type: 'text',
+              admin: {
+                readOnly: true,
+                description: 'Tour title in customer language (auto-filled)',
+              },
             },
             {
               name: 'preferredDate',

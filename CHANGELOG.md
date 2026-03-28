@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.36.0] - 2026-03-28
+
+### Added
+- **Tour name in customer's language** — new `tourName` field on BookingRequests auto-populated from tour title in customer's locale (EN/RU). Shown in admin list view so guide sees tour name in the booking language. `/api/fix-tour-names` backfills existing bookings.
+
 ## [1.35.9] - 2026-03-28
 
 ### Fixed
