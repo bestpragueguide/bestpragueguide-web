@@ -1,3 +1,4 @@
+import { formatEmailDate } from "./utils"
 import {
   Html,
   Head,
@@ -66,7 +67,7 @@ export function NewRequestAdminEmail({
               <strong>Tour:</strong> {tourName}
             </Text>
             <Text style={infoRow}>
-              <strong>Date:</strong> {preferredDate}
+              <strong>Date:</strong> {formatEmailDate(preferredDate, 'en')}
             </Text>
             <Text style={infoRow}>
               <strong>Time:</strong> {preferredTime}

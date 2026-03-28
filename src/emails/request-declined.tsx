@@ -1,3 +1,4 @@
+import { formatEmailDate } from './utils'
 import {
   Html,
   Head,
@@ -55,8 +56,8 @@ export function RequestDeclinedEmail({
           ) : (
             <Text style={text}>
               {isRu
-                ? `К сожалению, выбранная вами дата (${preferredDate}) для экскурсии "${tourName}" недоступна.`
-                : `Unfortunately, your requested date (${preferredDate}) for the "${tourName}" tour is not available.`}
+                ? `К сожалению, выбранная вами дата (${formatEmailDate(preferredDate, locale)}) для экскурсии "${tourName}" недоступна.`
+                : `Unfortunately, your requested date (${formatEmailDate(preferredDate, locale)}) for the "${tourName}" tour is not available.`}
             </Text>
           )}
 

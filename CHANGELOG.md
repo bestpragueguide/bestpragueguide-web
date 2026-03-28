@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.37.1] - 2026-03-28
+
+### Fixed
+- **Date formatting in emails** — all email templates now show dates as "3 April 2026" (EN) / "3 апреля 2026" (RU) instead of raw ISO `2026-04-03T00:00:00.000Z`. Applied to summary rows, inline text, and CMS `{date}` placeholder.
+
 ## [1.37.0] - 2026-03-28
 
 ### Added

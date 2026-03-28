@@ -6,6 +6,7 @@ import { getEmailTemplates, resolveTemplate, getNotificationEmail } from '@/lib/
 import { BookingOfferEmail } from '@/emails/booking-offer'
 import { n8n } from '@/lib/n8n'
 import { logBookingEvent } from '@/lib/audit'
+import { formatEmailDate } from '@/emails/utils'
 
 export const dynamic = 'force-dynamic'
 
@@ -101,7 +102,7 @@ export async function POST(req: NextRequest) {
   const vars: Record<string, string> = {
     name: booking.customerName,
     tour: tourTitle,
-    date: confirmedDate,
+    date: formatEmailDate(confirmedDate, locale),
     time: confirmedTime,
     guests: String(confirmedGuests),
     price: `${confirmedPrice}`,

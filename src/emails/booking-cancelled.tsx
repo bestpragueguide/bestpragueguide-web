@@ -1,3 +1,4 @@
+import { formatEmailDate } from './utils'
 import {
   Html,
   Head,
@@ -35,9 +36,10 @@ export function BookingCancelledEmail({
 }: BookingCancelledEmailProps) {
   const isRu = locale === 'ru'
 
+  const fmtDate = formatEmailDate(preferredDate, locale)
   const defaultBody = isRu
-    ? `К сожалению, ваше бронирование экскурсии \u201C${tourName}\u201D на ${preferredDate} было отменено.`
-    : `Unfortunately, your booking for the \u201C${tourName}\u201D tour on ${preferredDate} has been cancelled.`
+    ? `К сожалению, ваше бронирование экскурсии \u201C${tourName}\u201D на ${fmtDate} было отменено.`
+    : `Unfortunately, your booking for the \u201C${tourName}\u201D tour on ${fmtDate} has been cancelled.`
 
   const defaultNote = isRu
     ? 'Если у вас есть вопросы или вы хотели бы перенести экскурсию на другую дату, пожалуйста, свяжитесь с нами.'

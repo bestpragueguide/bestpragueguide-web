@@ -9,6 +9,7 @@ import {
   Hr,
   Preview,
 } from '@react-email/components'
+import { formatEmailDate } from './utils'
 
 export interface BookingOfferEmailProps {
   customerName: string
@@ -70,7 +71,7 @@ export function BookingOfferEmail({
 
   const summaryRows: Array<{ label: string; value: string }> = [
     { label: L('tour', 'Tour', 'Экскурсия'), value: tourName },
-    { label: L('date', 'Date', 'Дата'), value: confirmedDate },
+    { label: L('date', 'Date', 'Дата'), value: formatEmailDate(confirmedDate, locale) },
     { label: L('time', 'Time', 'Время'), value: confirmedTime },
     { label: L('guests', 'Guests', 'Гостей'), value: String(guests) },
     { label: L('price', 'Price', 'Стоимость'), value: `${confirmedPrice} ${currency}` },
@@ -105,9 +106,10 @@ export function BookingOfferEmail({
     ? `Ваш тур подтверждён, ${customerName}!`
     : `Your tour is confirmed, ${customerName}!`
 
+  const fmtDate = formatEmailDate(confirmedDate, locale)
   const defaultBody = isRu
-    ? `Отличные новости! Ваша экскурсия "${tourName}" подтверждена на ${confirmedDate} в ${confirmedTime}.\n\nПожалуйста, ознакомьтесь с деталями ниже и завершите оплату, чтобы закрепить дату.`
-    : `Great news! Your "${tourName}" tour has been confirmed for ${confirmedDate} at ${confirmedTime}.\n\nPlease review the details below and complete your payment to secure the date.`
+    ? `Отличные новости! Ваша экскурсия "${tourName}" подтверждена на ${fmtDate} в ${confirmedTime}.\n\nПожалуйста, ознакомьтесь с деталями ниже и завершите оплату, чтобы закрепить дату.`
+    : `Great news! Your "${tourName}" tour has been confirmed for ${fmtDate} at ${confirmedTime}.\n\nPlease review the details below and complete your payment to secure the date.`
 
   const defaultNote = isRu
     ? 'Нажмите кнопку выше, чтобы просмотреть все детали и завершить оплату.'

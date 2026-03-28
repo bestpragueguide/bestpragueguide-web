@@ -4,6 +4,7 @@ import config from '@payload-config'
 import { bookingRequestSchema, generateRequestRef } from '@/lib/booking'
 import { sendEmail, sendAdminEmail } from '@/lib/email'
 import { RequestReceivedEmail } from '@/emails/request-received'
+import { formatEmailDate } from '@/emails/utils'
 import { NewRequestAdminEmail } from '@/emails/new-request-admin'
 import {
   sendTelegramMessage,
@@ -123,7 +124,7 @@ export async function POST(request: NextRequest) {
     const vars = {
       name: data.customerName,
       tour: data.tourName,
-      date: data.preferredDate,
+      date: formatEmailDate(data.preferredDate, data.locale as 'en' | 'ru'),
       time: data.preferredTime,
       guests: String(data.guests),
       phone: data.customerPhone || '',
@@ -214,7 +215,7 @@ export async function POST(request: NextRequest) {
     console.log('[Booking] New request created:', {
       requestRef,
       tour: data.tourName,
-      date: data.preferredDate,
+      date: formatEmailDate(data.preferredDate, data.locale as 'en' | 'ru'),
       customer: data.customerName,
     })
 

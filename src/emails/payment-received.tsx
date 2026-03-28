@@ -1,3 +1,4 @@
+import { formatEmailDate } from "./utils"
 import {
   Html,
   Head,
@@ -72,7 +73,7 @@ export function PaymentReceivedEmail({
               <strong>{isRu ? 'Экскурсия' : 'Tour'}:</strong> {tourName}
             </Text>
             <Text style={infoText}>
-              <strong>{isRu ? 'Дата' : 'Date'}:</strong> {preferredDate}
+              <strong>{isRu ? 'Дата' : 'Date'}:</strong> {formatEmailDate(preferredDate, locale)}
             </Text>
             <Text style={infoText}>
               <strong>{isRu ? 'Время' : 'Time'}:</strong> {preferredTime}

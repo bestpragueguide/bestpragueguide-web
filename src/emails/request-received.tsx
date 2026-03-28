@@ -8,6 +8,7 @@ import {
   Hr,
   Preview,
 } from '@react-email/components'
+import { formatEmailDate } from './utils'
 
 interface RequestReceivedEmailProps {
   customerName: string
@@ -69,7 +70,7 @@ export function RequestReceivedEmail({
 
   const summaryRows: Array<{ label: string; value: string }> = [
     { label: L('tour', 'Tour', 'Экскурсия'), value: tourName },
-    { label: L('date', 'Date', 'Дата'), value: preferredDate },
+    { label: L('date', 'Date', 'Дата'), value: formatEmailDate(preferredDate, locale) },
   ]
   if (preferredTime) {
     summaryRows.push({ label: L('time', 'Time', 'Время'), value: preferredTime })

@@ -1,3 +1,4 @@
+import { formatEmailDate } from "./utils"
 import {
   Html,
   Head,
@@ -69,7 +70,7 @@ export function PreTourReminderEmail({
 
           <Section style={infoBox}>
             <Text style={infoText}>
-              <strong>{isRu ? 'Дата' : 'Date'}:</strong> {preferredDate}
+              <strong>{isRu ? 'Дата' : 'Date'}:</strong> {formatEmailDate(preferredDate, locale)}
             </Text>
             <Text style={infoText}>
               <strong>{isRu ? 'Время' : 'Time'}:</strong> {preferredTime}

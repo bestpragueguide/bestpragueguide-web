@@ -6,6 +6,7 @@ import { logBookingEvent } from '@/lib/audit'
 import { sendEmail } from '@/lib/email'
 import { getEmailTemplates, resolveTemplate, getNotificationEmail } from '@/lib/cms-data'
 import { PaymentReceivedEmail } from '@/emails/payment-received'
+import { formatEmailDate } from '@/emails/utils'
 
 export const dynamic = 'force-dynamic'
 
@@ -74,7 +75,7 @@ export async function POST(req: NextRequest) {
         const tourObj = booking.tour && typeof booking.tour === 'object' ? (booking.tour as { title?: string }) : null
         const tourTitle = tourObj?.title || 'Tour'
         const tpl = await getEmailTemplates(locale)
-        const vars = { name: booking.customerName, tour: tourTitle, date: booking.preferredDate, ref: booking.requestRef, time: booking.preferredTime }
+        const vars = { name: booking.customerName, tour: tourTitle, date: formatEmailDate(booking.preferredDate, locale), ref: booking.requestRef, time: booking.preferredTime }
 
         // Resolve meeting point
         let meetingPoint: string | undefined
