@@ -12,7 +12,9 @@ export function OrganizationSchema() {
     priceRange: '€€',
     address: {
       '@type': 'PostalAddress',
+      streetAddress: 'Old Town Square',
       addressLocality: 'Prague',
+      postalCode: '110 00',
       addressCountry: 'CZ',
     },
     geo: {

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.35.8] - 2026-03-28
+
+### Fixed
+- **LocalBusiness address field** — added `streetAddress` and `postalCode` to OrganizationSchema (TravelAgency) and Reviews page LocalBusiness schema. Fixes GSC "A value for the address field is required" error.
+
 ## [1.35.7] - 2026-03-28
 
 ### Fixed

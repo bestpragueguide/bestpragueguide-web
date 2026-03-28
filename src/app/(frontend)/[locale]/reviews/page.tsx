@@ -97,7 +97,9 @@ export default async function ReviewsPage({
           image: 'https://bestpragueguide.com/favicon.svg',
           address: {
             '@type': 'PostalAddress',
+            streetAddress: 'Old Town Square',
             addressLocality: 'Prague',
+            postalCode: '110 00',
             addressCountry: 'CZ',
           },
           aggregateRating: {
