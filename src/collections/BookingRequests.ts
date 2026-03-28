@@ -137,6 +137,15 @@ export const BookingRequests: CollectionConfig = {
               },
             },
             {
+              name: 'customerLanguage',
+              type: 'select',
+              required: true,
+              options: [
+                { label: 'English', value: 'en' },
+                { label: 'Русский', value: 'ru' },
+              ],
+            },
+            {
               name: 'preferredDate',
               type: 'date',
               required: true,
@@ -172,15 +181,6 @@ export const BookingRequests: CollectionConfig = {
             {
               name: 'customerPhone',
               type: 'text',
-            },
-            {
-              name: 'customerLanguage',
-              type: 'select',
-              required: true,
-              options: [
-                { label: 'English', value: 'en' },
-                { label: 'Русский', value: 'ru' },
-              ],
             },
             {
               name: 'specialRequests',
