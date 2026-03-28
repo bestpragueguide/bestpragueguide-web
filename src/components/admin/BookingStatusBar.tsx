@@ -9,6 +9,7 @@ const statusLabels: Record<string, string> = {
   'payment-sent': 'Payment Sent',
   paid: 'Paid',
   completed: 'Completed',
+  cancelled: 'Cancelled',
   declined: 'Declined',
 }
 
@@ -18,6 +19,7 @@ const statusColors: Record<string, string> = {
   'payment-sent': '#C4975C',
   paid: '#16A34A',
   completed: '#16A34A',
+  cancelled: '#DC2626',
   declined: '#DC2626',
 }
 
@@ -150,8 +152,13 @@ export function BookingStatusBar() {
           />
           {btn(copied ? 'Copied!' : 'Copy', handleCopy)}
           {btn('Open', () => {}, { href: offerUrl })}
-          {btn(
-            sending ? 'Saving & Sending...' : offerSentAt ? 'Send Update' : 'Send Offer',
+          {status === 'confirmed' && !offerSentAt && btn(
+            sending ? 'Saving & Sending...' : 'Send Offer',
+            handleSend,
+            { bg: '#C4975C', fg: '#fff', disabled: sending },
+          )}
+          {offerSentAt && btn(
+            sending ? 'Saving & Sending...' : 'Send Update',
             handleSend,
             { bg: '#C4975C', fg: '#fff', disabled: sending },
           )}
