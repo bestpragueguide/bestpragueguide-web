@@ -163,6 +163,7 @@ export async function POST(req: Request) {
       `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS payment_method varchar DEFAULT 'cash_only'`,
       `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS custom_deposit_amount numeric`,
       `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS tour_name varchar`,
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS last_update_sent_at timestamp(3) with time zone`,
 
       // Add missing values to booking status enum
       `DO $$ BEGIN

@@ -198,8 +198,12 @@ export async function POST(req: NextRequest) {
   }, payload)
 
   // Update booking
-  const updateData: Record<string, unknown> = {
-    offerSentAt: new Date().toISOString(),
+  const now = new Date().toISOString()
+  const updateData: Record<string, unknown> = {}
+  if (isResend) {
+    updateData.lastUpdateSentAt = now
+  } else {
+    updateData.offerSentAt = now
   }
   if (paymentMethod === 'stripe_deposit' || paymentMethod === 'stripe_full') {
     updateData.status = 'offer-sent'

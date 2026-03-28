@@ -38,6 +38,7 @@ export function BookingStatusBar() {
   const { value: status } = useField<string>({ path: 'status' })
   const { value: offerToken } = useField<string>({ path: 'offerToken' })
   const { value: offerSentAt } = useField<string>({ path: 'offerSentAt' })
+  const { value: lastUpdateSentAt } = useField<string>({ path: 'lastUpdateSentAt' })
   const { value: paymentStatus } = useField<string>({ path: 'paymentStatus' })
   const { value: customerLanguage } = useField<string>({ path: 'customerLanguage' })
   const [copied, setCopied] = useState(false)
@@ -135,6 +136,7 @@ export function BookingStatusBar() {
         {badge(label, `${color}18`, color)}
         {payLabel && badge(`Payment: ${payLabel}`, '#f3f4f6', '#6b7280')}
         {offerSentAt && badge(`Offer sent ${new Date(offerSentAt).toLocaleDateString()}`, '#f0fdf4', '#16A34A')}
+        {lastUpdateSentAt && badge(`Update sent ${new Date(lastUpdateSentAt).toLocaleDateString()}`, '#eff6ff', '#1D4ED8')}
       </div>
 
       {/* Row 2: URL + actions (only when token exists) */}

@@ -293,7 +293,12 @@ export const BookingRequests: CollectionConfig = {
             {
               name: 'offerSentAt',
               type: 'date',
-              admin: { readOnly: true },
+              admin: { readOnly: true, description: 'First offer sent' },
+            },
+            {
+              name: 'lastUpdateSentAt',
+              type: 'date',
+              admin: { readOnly: true, description: 'Last update email sent' },
             },
             {
               name: 'offerExpiresAt',
