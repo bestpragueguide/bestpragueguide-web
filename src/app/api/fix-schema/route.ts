@@ -51,6 +51,39 @@ export async function POST(req: Request) {
         CONSTRAINT email_templates_locales_locale_parent_id_unique UNIQUE (_locale, _parent_id)
       )`,
 
+      // Email template summary label columns
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS summary_label_tour varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS summary_label_date varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS summary_label_time varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS summary_label_guests varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS summary_label_price varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS summary_label_email varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS summary_label_phone varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS summary_label_requests varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS summary_label_payment varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS summary_label_language varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS summary_label_reference varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS summary_label_deposit varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS summary_label_cash_balance varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS summary_payment_cash varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS summary_payment_card varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS summary_payment_card_full varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS summary_language_en varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS summary_language_ru varchar`,
+      // Also add missing columns from earlier updates
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS cancelled_subject varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS cancelled_body varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS cancelled_note varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS offer_subject varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS offer_heading varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS offer_body varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS offer_cta_label varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS offer_note varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS header_title varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS greeting varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS received_summary_title varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS received_summary_body varchar`,
+
       // Payment Config global (non-destructive — CREATE IF NOT EXISTS only)
       `DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'enum_payment_config_cash_currencies') THEN CREATE TYPE enum_payment_config_cash_currencies AS ENUM ('EUR', 'USD', 'CZK'); END IF; END $$`,
       `CREATE TABLE IF NOT EXISTS payment_config (
