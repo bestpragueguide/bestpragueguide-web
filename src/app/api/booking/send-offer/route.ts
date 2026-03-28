@@ -195,7 +195,7 @@ export async function POST(req: NextRequest) {
     offerSentAt: new Date().toISOString(),
   }
   if (paymentMethod === 'stripe_deposit' || paymentMethod === 'stripe_full') {
-    updateData.status = 'payment-sent'
+    updateData.status = 'offer-sent'
   }
   await payload.update({
     collection: 'booking-requests',

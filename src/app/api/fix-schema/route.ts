@@ -131,10 +131,15 @@ export async function POST(req: Request) {
       `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS custom_deposit_amount numeric`,
       `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS tour_name varchar`,
 
-      // Add 'cancelled' to booking status enum if missing
+      // Add missing values to booking status enum
       `DO $$ BEGIN
         ALTER TYPE enum_booking_requests_status ADD VALUE IF NOT EXISTS 'cancelled';
       EXCEPTION WHEN others THEN NULL; END $$`,
+      `DO $$ BEGIN
+        ALTER TYPE enum_booking_requests_status ADD VALUE IF NOT EXISTS 'offer-sent';
+      EXCEPTION WHEN others THEN NULL; END $$`,
+      // Migrate existing payment-sent records to offer-sent
+      `UPDATE booking_requests SET status = 'offer-sent' WHERE status = 'payment-sent'`,
 
       // Booking Audit Log table
       `CREATE TABLE IF NOT EXISTS booking_audit_log (

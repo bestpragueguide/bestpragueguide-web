@@ -149,7 +149,7 @@ function getOfferStatus(booking: BookingDoc): OfferStatus {
 
   if (
     booking.paymentStatus === 'link_sent' ||
-    booking.status === 'payment-sent'
+    booking.status === 'offer-sent'
   ) {
     return 'payment_pending'
   }

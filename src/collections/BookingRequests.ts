@@ -215,7 +215,7 @@ export const BookingRequests: CollectionConfig = {
               options: [
                 { label: 'New', value: 'new' },
                 { label: 'Confirmed', value: 'confirmed' },
-                { label: 'Offer Sent', value: 'payment-sent' },
+                { label: 'Offer Sent', value: 'offer-sent' },
                 { label: 'Paid', value: 'paid' },
                 { label: 'Completed', value: 'completed' },
                 { label: 'Cancelled', value: 'cancelled' },
