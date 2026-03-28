@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.40.0] - 2026-03-28
+
+### Added
+- **Transaction ledger** — inline `transactions` array on BookingRequests with type (payment/refund), amount, description, Stripe ID, and date. All Stripe payments and refunds automatically recorded.
+- **Balance tracking** — `totalPaidEur` and `balanceDueEur` fields auto-calculated on price changes and Stripe events. Admin sees amber "Additional payment: XX EUR" or blue "Refund available: XX EUR" or green "Settled" badges.
+- **Customer balance display** — booking detail page shows "Amount paid", "Balance due" or "Refund" amounts. Payment button uses balance due amount for additional payments after price changes.
+
 ## [1.39.0] - 2026-03-28
 
 ### Added

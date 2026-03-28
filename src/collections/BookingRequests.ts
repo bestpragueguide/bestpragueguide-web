@@ -395,6 +395,56 @@ export const BookingRequests: CollectionConfig = {
               type: 'date',
               admin: { readOnly: true },
             },
+            {
+              name: 'totalPaidEur',
+              type: 'number',
+              label: 'Total Paid (EUR)',
+              admin: { readOnly: true, description: 'Running total of all payments minus refunds' },
+            },
+            {
+              name: 'balanceDueEur',
+              type: 'number',
+              label: 'Balance Due (EUR)',
+              admin: { readOnly: true, description: 'Positive = customer owes more. Negative = refund available. Zero = settled.' },
+            },
+            {
+              name: 'transactions',
+              type: 'array',
+              label: 'Transaction Ledger',
+              admin: { description: 'All payments and refunds for this booking' },
+              fields: [
+                {
+                  name: 'type',
+                  type: 'select',
+                  required: true,
+                  options: [
+                    { label: 'Payment', value: 'payment' },
+                    { label: 'Refund', value: 'refund' },
+                  ],
+                },
+                {
+                  name: 'amountEur',
+                  type: 'number',
+                  required: true,
+                  label: 'Amount (EUR)',
+                },
+                {
+                  name: 'description',
+                  type: 'text',
+                },
+                {
+                  name: 'stripeId',
+                  type: 'text',
+                  label: 'Stripe ID',
+                  admin: { readOnly: true },
+                },
+                {
+                  name: 'recordedAt',
+                  type: 'date',
+                  admin: { readOnly: true, date: { pickerAppearance: 'dayAndTime' } },
+                },
+              ],
+            },
           ],
         },
         {

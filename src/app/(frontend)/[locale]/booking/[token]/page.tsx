@@ -56,6 +56,8 @@ interface BookingDoc {
   depositAmountEur?: number
   cashBalanceEur?: number
   paidAt?: string
+  totalPaidEur?: number
+  balanceDueEur?: number
   stripePaymentLink?: string
   tour: {
     id: number
@@ -283,23 +285,28 @@ export default async function BookingOfferPage({
   const cashBalance = booking.cashBalanceEur || (displayPrice - depositAmount)
   const bkPaymentStatus = String(booking.paymentStatus ?? '')
   const isPaid = bkPaymentStatus === 'deposit_paid' || bkPaymentStatus === 'fully_paid'
+  const totalPaid = booking.totalPaidEur || 0
+  const balanceDue = booking.balanceDueEur ?? (displayPrice - totalPaid)
 
 
 
 
+  // Show payment when: stripe method, not fully paid, balance > 0, and booking is active
+  const hasBalanceDue = balanceDue > 0.01
   const showPaymentSection =
     paymentMethod !== 'none' &&
     paymentMethod !== 'cash_only' &&
-    !isPaid &&
+    hasBalanceDue &&
     offerStatus !== 'pending' &&
     offerStatus !== 'declined' &&
     offerStatus !== 'cancelled' &&
     offerStatus !== 'expired' &&
     offerStatus !== 'completed'
 
-  // Determine payment amount and label
-  const paymentAmount =
-    paymentMethod === 'stripe_full' ? displayPrice : depositAmount
+  // Determine payment amount — use balance due if there's a prior payment (price change scenario)
+  const paymentAmount = totalPaid > 0
+    ? Math.round(balanceDue)
+    : paymentMethod === 'stripe_full' ? displayPrice : depositAmount
   const paymentLabel =
     paymentMethod === 'stripe_full' ? t('payNow') : t('payDeposit')
 
@@ -460,6 +467,30 @@ export default async function BookingOfferPage({
                       : bkPaymentStatus === 'link_sent' ? (locale === 'ru' ? 'Ссылка отправлена' : 'Payment link sent')
                       : bkPaymentStatus === 'awaiting' ? (locale === 'ru' ? 'Ожидает оплаты' : 'Awaiting payment')
                       : ''}
+                  </span>
+                </div>
+              )}
+              {totalPaid > 0 && (
+                <div className="flex justify-between text-sm pt-2 border-t border-gray-light/30">
+                  <span className="text-navy/70">{locale === 'ru' ? 'Оплачено' : 'Amount paid'}</span>
+                  <span className="font-medium text-trust">
+                    {formatAmount(totalPaid, (booking.currency || 'EUR') as Currency)}
+                  </span>
+                </div>
+              )}
+              {totalPaid > 0 && balanceDue > 0.01 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-navy/70">{locale === 'ru' ? 'К оплате' : 'Balance due'}</span>
+                  <span className="font-medium text-gold">
+                    {formatAmount(Math.round(balanceDue), (booking.currency || 'EUR') as Currency)}
+                  </span>
+                </div>
+              )}
+              {totalPaid > 0 && balanceDue < -0.01 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-navy/70">{locale === 'ru' ? 'Возврат' : 'Refund'}</span>
+                  <span className="font-medium text-navy/70">
+                    {formatAmount(Math.round(Math.abs(balanceDue)), (booking.currency || 'EUR') as Currency)}
                   </span>
                 </div>
               )}

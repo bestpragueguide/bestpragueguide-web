@@ -49,6 +49,14 @@ export const beforeChangeHook: CollectionBeforeChangeHook = async ({
     data.cashBalanceEur = confirmedPrice - data.customDepositAmount
   }
 
+  // Recalculate balanceDueEur when confirmedPrice changes
+  if (operation === 'update') {
+    const doc = originalDoc || {}
+    const newPrice = data.confirmedPrice || doc.confirmedPrice || data.totalPrice || doc.totalPrice || 0
+    const totalPaid = data.totalPaidEur ?? doc.totalPaidEur ?? 0
+    data.balanceDueEur = newPrice - totalPaid
+  }
+
   // Auto-populate tourName in customer's language
   const tourId = data.tour || originalDoc?.tour
   const locale = (data.customerLanguage || originalDoc?.customerLanguage || 'en') as 'en' | 'ru'

@@ -42,6 +42,8 @@ export function BookingStatusBar() {
   const { value: offerSentAt } = useField<string>({ path: 'offerSentAt' })
   const { value: lastUpdateSentAt } = useField<string>({ path: 'lastUpdateSentAt' })
   const { value: paymentStatus } = useField<string>({ path: 'paymentStatus' })
+  const { value: totalPaidEur } = useField<number>({ path: 'totalPaidEur' })
+  const { value: balanceDueEur } = useField<number>({ path: 'balanceDueEur' })
   const { value: customerLanguage } = useField<string>({ path: 'customerLanguage' })
   const [copied, setCopied] = useState(false)
   const [sending, setSending] = useState(false)
@@ -149,6 +151,9 @@ export function BookingStatusBar() {
         {payLabel && badge(`Payment: ${payLabel}`, '#f3f4f6', '#6b7280')}
         {(localOfferSentAt || offerSentAt) && badge(`Offer sent ${new Date(localOfferSentAt || offerSentAt).toLocaleString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`, '#f0fdf4', '#16A34A')}
         {(localUpdateSentAt || lastUpdateSentAt) && badge(`Update sent ${new Date(localUpdateSentAt || lastUpdateSentAt).toLocaleString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`, '#eff6ff', '#1D4ED8')}
+        {totalPaidEur > 0 && balanceDueEur > 0.01 && badge(`Additional payment: ${Math.round(balanceDueEur)} EUR`, '#FEF3C7', '#D97706')}
+        {totalPaidEur > 0 && balanceDueEur < -0.01 && badge(`Refund available: ${Math.round(Math.abs(balanceDueEur))} EUR`, '#EFF6FF', '#1D4ED8')}
+        {totalPaidEur > 0 && Math.abs(balanceDueEur) <= 0.01 && badge('Settled', '#f0fdf4', '#16A34A')}
       </div>
 
       {/* Row 2: URL + actions (only when token exists) */}
