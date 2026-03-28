@@ -381,7 +381,7 @@ export default async function TourDetailPage({
 
         {/* Right column: booking sidebar */}
         <div className="hidden lg:block">
-          <div className="sticky top-24 bg-white rounded-xl border border-gray-light/50 p-6 shadow-sm">
+          <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto bg-white rounded-xl border border-gray-light/50 p-6 shadow-sm">
             {/* Form title */}
             {siteSettings.bookingFormTitle && (
               <h3 className="text-lg font-semibold text-navy text-center mb-5 pb-5 border-b border-gray-light/50">{siteSettings.bookingFormTitle}</h3>
