@@ -157,7 +157,7 @@ export function BookingStatusBar() {
             handleSend,
             { bg: '#C4975C', fg: '#fff', disabled: sending },
           )}
-          {offerSentAt && btn(
+          {(offerSentAt || status === 'declined' || status === 'cancelled') && !(status === 'confirmed' && !offerSentAt) && btn(
             sending ? 'Saving & Sending...' : 'Send Update',
             handleSend,
             { bg: '#C4975C', fg: '#fff', disabled: sending },
