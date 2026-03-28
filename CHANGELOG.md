@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.36.2] - 2026-03-28
+
+### Changed
+- **No auto-send emails on admin status change** — removed auto-send for declined, cancelled, and paid status transitions from afterChange hook. Admin must use "Send Offer" / "Send Email" button manually. Stripe webhook still sends payment confirmation emails automatically.
+
 ## [1.36.1] - 2026-03-28
 
 ### Fixed
