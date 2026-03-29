@@ -20,7 +20,9 @@ interface BookingCancelledEmailProps {
   cmsBody?: string
   cmsNote?: string
   cmsFooter?: string
+  cmsHeaderHtml?: string
   cmsHeaderContent?: string
+  cmsFooterHtml?: string
   cmsFooterContent?: string
 }
 
@@ -35,7 +37,9 @@ export function BookingCancelledEmail({
   cmsBody,
   cmsNote,
   cmsFooter,
+  cmsHeaderHtml,
   cmsHeaderContent,
+  cmsFooterHtml,
   cmsFooterContent,
 }: BookingCancelledEmailProps) {
   const isRu = locale === 'ru'
@@ -63,7 +67,7 @@ export function BookingCancelledEmail({
       </Preview>
       <Body style={body}>
         <Container style={container}>
-          {cmsHeaderContent ? <div style={logo} dangerouslySetInnerHTML={{ __html: cmsHeaderContent }} /> : <Text style={logo}>{cmsHeaderTitle || 'Best Prague Guide'}</Text>}
+          {cmsHeaderHtml ? <div dangerouslySetInnerHTML={{ __html: cmsHeaderHtml }} /> : cmsHeaderContent ? <div style={logo} dangerouslySetInnerHTML={{ __html: cmsHeaderContent }} /> : <Text style={logo}>{cmsHeaderTitle || 'Best Prague Guide'}</Text>}
           <Hr style={hr} />
 
           <Text style={heading}>
@@ -82,7 +86,7 @@ export function BookingCancelledEmail({
 
           <Hr style={hr} />
           <Text style={footerStyle}>
-            {cmsFooterContent ? <div dangerouslySetInnerHTML={{ __html: cmsFooterContent }} /> : (cmsFooter || 'Best Prague Guide | info@bestpragueguide.com')}
+            {cmsFooterHtml ? <div dangerouslySetInnerHTML={{ __html: cmsFooterHtml }} /> : cmsFooterContent ? <div dangerouslySetInnerHTML={{ __html: cmsFooterContent }} /> : (cmsFooter || 'Best Prague Guide | info@bestpragueguide.com')}
           </Text>
         </Container>
       </Body>

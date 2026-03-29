@@ -23,7 +23,9 @@ interface RefundProcessedEmailProps {
   cmsBody?: string
   cmsNote?: string
   cmsFooter?: string
+  cmsHeaderHtml?: string
   cmsHeaderContent?: string
+  cmsFooterHtml?: string
   cmsFooterContent?: string
 }
 
@@ -39,7 +41,9 @@ export function RefundProcessedEmail({
   cmsBody,
   cmsNote,
   cmsFooter,
+  cmsHeaderHtml,
   cmsHeaderContent,
+  cmsFooterHtml,
   cmsFooterContent,
 }: RefundProcessedEmailProps) {
   const isRu = locale === 'ru'
@@ -116,7 +120,7 @@ export function RefundProcessedEmail({
 
           <Hr style={hr} />
           <Text style={footerStyle}>
-            {cmsFooterContent ? <div dangerouslySetInnerHTML={{ __html: cmsFooterContent }} /> : (cmsFooter || 'Best Prague Guide | info@bestpragueguide.com')}
+            {cmsFooterHtml ? <div dangerouslySetInnerHTML={{ __html: cmsFooterHtml }} /> : cmsFooterContent ? <div dangerouslySetInnerHTML={{ __html: cmsFooterContent }} /> : (cmsFooter || 'Best Prague Guide | info@bestpragueguide.com')}
           </Text>
         </Container>
       </Body>

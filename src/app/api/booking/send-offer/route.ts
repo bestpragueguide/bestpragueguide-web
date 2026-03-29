@@ -146,8 +146,10 @@ export async function POST(req: NextRequest) {
     cmsCtaLabel: (tpl as any).offerCtaLabel || undefined,
     cmsNote: undefined as string | undefined,
     cmsFooter: tpl.footer || undefined,
-    cmsHeaderContent: (tpl as any).headerContent || undefined,
-    cmsFooterContent: (tpl as any).footerContent || undefined,
+    cmsHeaderHtml: (tpl as any).headerHtml || undefined,
+      cmsHeaderContent: (tpl as any).headerContent || undefined,
+    cmsFooterHtml: (tpl as any).footerHtml || undefined,
+      cmsFooterContent: (tpl as any).footerContent || undefined,
     summaryLabels: tpl.summaryLabels,
     summaryPaymentLabels: tpl.summaryPaymentLabels,
     summaryLanguageLabels: tpl.summaryLanguageLabels,
@@ -164,7 +166,9 @@ export async function POST(req: NextRequest) {
       cmsBody: tpl.declinedBody ? resolveTemplate(tpl.declinedBody, vars) : undefined,
       cmsNote: tpl.declinedNote ? resolveTemplate(tpl.declinedNote, vars) : undefined,
       cmsFooter: tpl.footer || undefined,
+      cmsHeaderHtml: (tpl as any).headerHtml || undefined,
       cmsHeaderContent: (tpl as any).headerContent || undefined,
+      cmsFooterHtml: (tpl as any).footerHtml || undefined,
       cmsFooterContent: (tpl as any).footerContent || undefined,
     })
   } else if (bookingStatus === 'cancelled') {
@@ -180,7 +184,9 @@ export async function POST(req: NextRequest) {
       cmsBody: (tpl as any).cancelledBody ? resolveTemplate((tpl as any).cancelledBody, vars) : undefined,
       cmsNote: (tpl as any).cancelledNote ? resolveTemplate((tpl as any).cancelledNote, vars) : undefined,
       cmsFooter: tpl.footer || undefined,
+      cmsHeaderHtml: (tpl as any).headerHtml || undefined,
       cmsHeaderContent: (tpl as any).headerContent || undefined,
+      cmsFooterHtml: (tpl as any).footerHtml || undefined,
       cmsFooterContent: (tpl as any).footerContent || undefined,
     })
   } else if (isFirstOffer) {

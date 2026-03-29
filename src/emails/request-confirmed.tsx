@@ -23,7 +23,9 @@ interface RequestConfirmedEmailProps {
   cmsBody?: string
   cmsNote?: string
   cmsFooter?: string
+  cmsHeaderHtml?: string
   cmsHeaderContent?: string
+  cmsFooterHtml?: string
   cmsFooterContent?: string
 }
 
@@ -39,7 +41,9 @@ export function RequestConfirmedEmail({
   cmsBody,
   cmsNote,
   cmsFooter,
+  cmsHeaderHtml,
   cmsHeaderContent,
+  cmsFooterHtml,
   cmsFooterContent,
 }: RequestConfirmedEmailProps) {
   const isRu = locale === 'ru'
@@ -107,7 +111,7 @@ export function RequestConfirmedEmail({
 
           <Hr style={hr} />
           <Text style={footerStyle}>
-            {cmsFooterContent ? <div dangerouslySetInnerHTML={{ __html: cmsFooterContent }} /> : (cmsFooter || 'Best Prague Guide | info@bestpragueguide.com')}
+            {cmsFooterHtml ? <div dangerouslySetInnerHTML={{ __html: cmsFooterHtml }} /> : cmsFooterContent ? <div dangerouslySetInnerHTML={{ __html: cmsFooterContent }} /> : (cmsFooter || 'Best Prague Guide | info@bestpragueguide.com')}
           </Text>
         </Container>
       </Body>

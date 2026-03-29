@@ -446,6 +446,7 @@ export async function getNotificationEmail(): Promise<string> {
 export interface EmailTemplatesData {
   headerTitle?: string
   headerContent?: string
+  headerHtml?: string
   greeting?: string
   receivedSubject?: string
   receivedBody?: string
@@ -478,6 +479,7 @@ export interface EmailTemplatesData {
   offerNote?: string
   footer?: string
   footerContent?: string
+  footerHtml?: string
   summaryLabels?: {
     tour?: string; date?: string; time?: string; guests?: string
     price?: string; email?: string; phone?: string; requests?: string
@@ -661,6 +663,7 @@ export async function getEmailTemplates(locale: string): Promise<EmailTemplatesD
     return {
       headerTitle: data.headerTitle || undefined,
       headerContent: toEmailHeaderHtml(data.headerContent),
+      headerHtml: data.headerHtml || undefined,
       greeting: data.greeting || undefined,
       receivedSubject: data.receivedSubject || undefined,
       receivedBody: toEmailHtml(data.receivedBody),
@@ -696,6 +699,7 @@ export async function getEmailTemplates(locale: string): Promise<EmailTemplatesD
       refundNote: toEmailHtml(data.refundNote),
       footer: data.footer || undefined,
       footerContent: toEmailFooterHtml(data.footerContent),
+      footerHtml: data.footerHtml || undefined,
       // Summary labels
       summaryLabels: {
         tour: data.summaryLabelTour || undefined,

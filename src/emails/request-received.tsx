@@ -33,7 +33,9 @@ interface RequestReceivedEmailProps {
   cmsSummaryBody?: string
   cmsNote?: string
   cmsFooter?: string
+  cmsHeaderHtml?: string
   cmsHeaderContent?: string
+  cmsFooterHtml?: string
   cmsFooterContent?: string
   summaryLabels?: Record<string, string | undefined>
   summaryPaymentLabels?: Record<string, string | undefined>
@@ -63,7 +65,9 @@ export function RequestReceivedEmail({
   cmsSummaryBody,
   cmsNote,
   cmsFooter,
+  cmsHeaderHtml,
   cmsHeaderContent,
+  cmsFooterHtml,
   cmsFooterContent,
   summaryLabels: sl,
   summaryPaymentLabels: spl,
@@ -131,7 +135,7 @@ export function RequestReceivedEmail({
       </Preview>
       <Body style={body}>
         <Container style={container}>
-          {cmsHeaderContent ? <div style={logo} dangerouslySetInnerHTML={{ __html: cmsHeaderContent }} /> : <Text style={logo}>{cmsHeaderTitle || 'Best Prague Guide'}</Text>}
+          {cmsHeaderHtml ? <div dangerouslySetInnerHTML={{ __html: cmsHeaderHtml }} /> : cmsHeaderContent ? <div style={logo} dangerouslySetInnerHTML={{ __html: cmsHeaderContent }} /> : <Text style={logo}>{cmsHeaderTitle || 'Best Prague Guide'}</Text>}
           <Hr style={hr} />
 
           <Text style={heading}>

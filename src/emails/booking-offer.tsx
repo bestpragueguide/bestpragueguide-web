@@ -35,7 +35,9 @@ export interface BookingOfferEmailProps {
   cmsCtaLabel?: string
   cmsNote?: string
   cmsFooter?: string
+  cmsHeaderHtml?: string
   cmsHeaderContent?: string
+  cmsFooterHtml?: string
   cmsFooterContent?: string
   summaryLabels?: Record<string, string | undefined>
   summaryPaymentLabels?: Record<string, string | undefined>
@@ -66,7 +68,9 @@ export function BookingOfferEmail({
   cmsCtaLabel,
   cmsNote,
   cmsFooter,
+  cmsHeaderHtml,
   cmsHeaderContent,
+  cmsFooterHtml,
   cmsFooterContent,
   summaryLabels: sl,
   summaryPaymentLabels: spl,
@@ -140,7 +144,7 @@ export function BookingOfferEmail({
       </Preview>
       <Body style={body}>
         <Container style={container}>
-          {cmsHeaderContent ? <div style={logo} dangerouslySetInnerHTML={{ __html: cmsHeaderContent }} /> : <Text style={logo}>{cmsHeaderTitle || 'Best Prague Guide'}</Text>}
+          {cmsHeaderHtml ? <div dangerouslySetInnerHTML={{ __html: cmsHeaderHtml }} /> : cmsHeaderContent ? <div style={logo} dangerouslySetInnerHTML={{ __html: cmsHeaderContent }} /> : <Text style={logo}>{cmsHeaderTitle || 'Best Prague Guide'}</Text>}
           <Hr style={hr} />
 
           <Text style={heading}>

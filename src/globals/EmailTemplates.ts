@@ -508,13 +508,13 @@ export const EmailTemplates: GlobalConfig = {
           label: 'Header & Footer',
           fields: [
             {
-              name: 'headerContent',
-              label: 'Header',
-              type: 'richText',
-              editor: fullEditor,
+              name: 'headerHtml',
+              label: 'Header HTML',
+              type: 'code',
               localized: true,
               admin: {
-                description: 'Brand header at the top of all emails. Include logo text, tagline etc.',
+                language: 'html',
+                description: 'Raw HTML for email header. Use inline styles for fonts, colors, alignment.',
               },
             },
             {
@@ -528,13 +528,13 @@ export const EmailTemplates: GlobalConfig = {
               },
             },
             {
-              name: 'footerContent',
-              label: 'Footer',
-              type: 'richText',
-              editor: simplifiedEditor,
+              name: 'footerHtml',
+              label: 'Footer HTML',
+              type: 'code',
               localized: true,
               admin: {
-                description: 'Footer shown at the bottom of all emails. Include links, contact info, legal text.',
+                language: 'html',
+                description: 'Raw HTML for email footer. Use inline styles.',
               },
             },
           ],
