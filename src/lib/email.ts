@@ -39,19 +39,21 @@ export async function sendEmail({
   // Try Gmail SMTP first
   if (gmailTransport) {
     try {
+      console.log(`[Email] Rendering HTML for ${to}: ${subject}`)
       const html = await render(react)
-      await gmailTransport.sendMail({
+      console.log(`[Email] Rendered ${html.length} chars, sending via Gmail to ${to}`)
+      const info = await gmailTransport.sendMail({
         from: FROM,
         to,
         subject,
         html,
         ...(replyTo ? { replyTo } : {}),
       })
-      console.log(`[Email] Sent via Gmail to ${to}: ${subject}`)
+      console.log(`[Email] Sent via Gmail to ${to}: ${subject} | messageId: ${info.messageId}`)
       return { success: true, provider: 'gmail' }
     } catch (error) {
       lastError = error
-      console.error('[Email] Gmail send failed:', error instanceof Error ? error.message : error)
+      console.error('[Email] Gmail send failed:', error instanceof Error ? `${error.message}\n${error.stack}` : error)
     }
   }
 
