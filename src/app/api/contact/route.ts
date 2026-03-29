@@ -10,7 +10,6 @@ import { isRateLimited } from '@/lib/rate-limit'
 import { isDisposableEmail } from '@/lib/email-validation'
 import { getNotificationEmail, getEmailTemplates, resolveTemplate } from '@/lib/cms-data'
 import { ContactConfirmationEmail } from '@/emails/contact-confirmation'
-import React from 'react'
 import { textToLexicalJson } from '@/lib/lexical-helpers'
 
 const contactSchema = z.object({
@@ -21,89 +20,7 @@ const contactSchema = z.object({
   locale: z.enum(['en', 'ru']),
 })
 
-function ContactNotificationEmail({
-  name,
-  email,
-  phone,
-  message,
-  ipInfo,
-}: {
-  name: string
-  email: string
-  phone: string
-  message: string
-  ipInfo: IpInfo
-}) {
-  const tdLabel = { padding: '8px', fontWeight: 'bold' as const, color: '#777' }
-  const tdValue = { padding: '8px' }
-  const location = [ipInfo.city, ipInfo.region, ipInfo.country].filter(Boolean).join(', ')
-
-  return React.createElement(
-    'div',
-    { style: { fontFamily: 'sans-serif', padding: '20px' } },
-    React.createElement('h2', { style: { color: '#1A1A1A' } }, 'New Contact Form Message'),
-    React.createElement(
-      'table',
-      { style: { borderCollapse: 'collapse', width: '100%' } },
-      React.createElement(
-        'tbody',
-        null,
-        React.createElement(
-          'tr',
-          null,
-          React.createElement('td', { style: tdLabel }, 'Name'),
-          React.createElement('td', { style: tdValue }, name),
-        ),
-        React.createElement(
-          'tr',
-          null,
-          React.createElement('td', { style: tdLabel }, 'Email'),
-          React.createElement(
-            'td',
-            { style: tdValue },
-            React.createElement('a', { href: `mailto:${email}` }, email),
-          ),
-        ),
-        React.createElement(
-          'tr',
-          null,
-          React.createElement('td', { style: tdLabel }, 'Phone'),
-          React.createElement(
-            'td',
-            { style: tdValue },
-            React.createElement('a', { href: `tel:${phone}` }, phone),
-          ),
-        ),
-        React.createElement(
-          'tr',
-          null,
-          React.createElement('td', { style: { ...tdLabel, verticalAlign: 'top' } }, 'Message'),
-          React.createElement('td', { style: { ...tdValue, whiteSpace: 'pre-wrap' } }, message),
-        ),
-        React.createElement(
-          'tr',
-          null,
-          React.createElement('td', { style: { ...tdLabel, borderTop: '1px solid #eee', paddingTop: '12px' } }, 'IP'),
-          React.createElement('td', { style: { ...tdValue, borderTop: '1px solid #eee', paddingTop: '12px', color: '#999' } }, ipInfo.ip),
-        ),
-        location &&
-          React.createElement(
-            'tr',
-            null,
-            React.createElement('td', { style: { ...tdLabel, color: '#999' } }, 'Location'),
-            React.createElement('td', { style: { ...tdValue, color: '#999' } }, location),
-          ),
-        ipInfo.org &&
-          React.createElement(
-            'tr',
-            null,
-            React.createElement('td', { style: { ...tdLabel, color: '#999' } }, 'ISP'),
-            React.createElement('td', { style: { ...tdValue, color: '#999' } }, ipInfo.org),
-          ),
-      ),
-    ),
-  )
-}
+// Admin contact notification now uses ContactConfirmationEmail with branded header/footer
 
 // ContactConfirmationEmail imported from @/emails/contact-confirmation
 
@@ -201,19 +118,32 @@ export async function POST(request: NextRequest) {
 
     // Send notifications in parallel
     await Promise.allSettled([
-      // Admin notification email
-      sendAdminEmail({
-        to: notificationEmail,
-        subject: `Contact form: ${data.name}`,
-        react: React.createElement(ContactNotificationEmail, {
-          name: data.name,
-          email: data.email,
-          phone: data.phone,
-          message: data.message,
-          ipInfo,
-        }),
-        replyTo: data.email,
-      }),
+      // Both admin and customer emails use CMS templates with branded header/footer
+      (async () => {
+        const tpl = await getEmailTemplates(data.locale)
+        const vars = { name: data.name }
+
+        // Admin notification
+        await sendAdminEmail({
+          to: notificationEmail,
+          subject: tpl.contactAdminSubject
+            ? resolveTemplate(tpl.contactAdminSubject, vars)
+            : `Contact form: ${data.name}`,
+          react: ContactConfirmationEmail({
+            customerName: data.name,
+            email: data.email,
+            phone: data.phone,
+            message: data.message,
+            locale: data.locale as 'en' | 'ru',
+            cmsFooter: tpl.footer || undefined,
+            cmsHeaderHtml: (tpl as any).headerHtml || undefined,
+            cmsHeaderContent: (tpl as any).headerContent || undefined,
+            cmsFooterHtml: (tpl as any).footerHtml || undefined,
+            cmsFooterContent: (tpl as any).footerContent || undefined,
+          }),
+          replyTo: data.email,
+        })
+      })(),
       // Confirmation email to customer (CMS-editable)
       (async () => {
         const tpl = await getEmailTemplates(data.locale)

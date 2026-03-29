@@ -28,6 +28,10 @@ interface NewRequestAdminEmailProps {
   location?: string
   isp?: string
   cmsFooter?: string
+  cmsHeaderHtml?: string
+  cmsHeaderContent?: string
+  cmsFooterHtml?: string
+  cmsFooterContent?: string
 }
 
 export function NewRequestAdminEmail({
@@ -47,6 +51,10 @@ export function NewRequestAdminEmail({
   location,
   isp,
   cmsFooter,
+  cmsHeaderHtml,
+  cmsHeaderContent,
+  cmsFooterHtml,
+  cmsFooterContent,
 }: NewRequestAdminEmailProps) {
   return (
     <Html lang="en">
@@ -124,7 +132,7 @@ export function NewRequestAdminEmail({
 
           <Hr style={hr} />
           <Text style={footer}>
-            Manage in admin panel → Booking Requests
+            {cmsFooterHtml ? <div dangerouslySetInnerHTML={{ __html: cmsFooterHtml }} /> : cmsFooterContent ? <div dangerouslySetInnerHTML={{ __html: cmsFooterContent }} /> : (cmsFooter || 'Best Prague Guide | info@bestpragueguide.com')}
           </Text>
         </Container>
       </Body>

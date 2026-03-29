@@ -5,7 +5,7 @@ import { bookingRequestSchema, generateRequestRef } from '@/lib/booking'
 import { sendEmail, sendAdminEmail } from '@/lib/email'
 import { RequestReceivedEmail } from '@/emails/request-received'
 import { formatEmailDate } from '@/emails/utils'
-import { NewRequestAdminEmail } from '@/emails/new-request-admin'
+// Admin gets same RequestReceivedEmail as customer
 import {
   sendTelegramMessage,
   formatBookingTelegramMessage,
