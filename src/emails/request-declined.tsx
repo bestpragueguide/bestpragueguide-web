@@ -31,6 +31,8 @@ export function RequestDeclinedEmail({
   cmsBody,
   cmsNote,
   cmsFooter,
+  cmsHeaderContent,
+  cmsFooterContent,
 }: RequestDeclinedEmailProps) {
   const isRu = locale === 'ru'
 

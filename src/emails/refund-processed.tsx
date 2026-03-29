@@ -39,6 +39,8 @@ export function RefundProcessedEmail({
   cmsBody,
   cmsNote,
   cmsFooter,
+  cmsHeaderContent,
+  cmsFooterContent,
 }: RefundProcessedEmailProps) {
   const isRu = locale === 'ru'
 

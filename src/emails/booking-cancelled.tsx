@@ -35,6 +35,8 @@ export function BookingCancelledEmail({
   cmsBody,
   cmsNote,
   cmsFooter,
+  cmsHeaderContent,
+  cmsFooterContent,
 }: BookingCancelledEmailProps) {
   const isRu = locale === 'ru'
 

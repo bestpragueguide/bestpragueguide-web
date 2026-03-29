@@ -38,6 +38,8 @@ export function PreTourReminderEmail({
   cmsBody,
   cmsNote,
   cmsFooter,
+  cmsHeaderContent,
+  cmsFooterContent,
 }: PreTourReminderEmailProps) {
   const isRu = locale === 'ru'
 

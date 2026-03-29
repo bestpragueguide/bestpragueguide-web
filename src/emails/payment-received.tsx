@@ -45,6 +45,8 @@ export function PaymentReceivedEmail({
   cmsBody,
   cmsNote,
   cmsFooter,
+  cmsHeaderContent,
+  cmsFooterContent,
 }: PaymentReceivedEmailProps) {
   const isRu = locale === 'ru'
 

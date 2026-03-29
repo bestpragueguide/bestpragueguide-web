@@ -39,6 +39,8 @@ export function RequestConfirmedEmail({
   cmsBody,
   cmsNote,
   cmsFooter,
+  cmsHeaderContent,
+  cmsFooterContent,
 }: RequestConfirmedEmailProps) {
   const isRu = locale === 'ru'
 

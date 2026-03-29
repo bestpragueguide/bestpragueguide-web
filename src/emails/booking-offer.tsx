@@ -66,6 +66,8 @@ export function BookingOfferEmail({
   cmsCtaLabel,
   cmsNote,
   cmsFooter,
+  cmsHeaderContent,
+  cmsFooterContent,
   summaryLabels: sl,
   summaryPaymentLabels: spl,
   summaryLanguageLabels: sll,

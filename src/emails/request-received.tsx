@@ -63,6 +63,8 @@ export function RequestReceivedEmail({
   cmsSummaryBody,
   cmsNote,
   cmsFooter,
+  cmsHeaderContent,
+  cmsFooterContent,
   summaryLabels: sl,
   summaryPaymentLabels: spl,
   summaryLanguageLabels: sll,
