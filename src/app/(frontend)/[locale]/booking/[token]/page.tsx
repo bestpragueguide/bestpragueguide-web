@@ -535,22 +535,44 @@ export default async function BookingOfferPage({
                 </div>
               ))}
               {/* Balance summary */}
-              <div className="flex justify-between items-center text-sm pt-3 border-t border-navy/10">
-                <span className="font-medium text-navy">
-                  {totalPaid <= 0
-                    ? (locale === 'ru' ? 'Полностью возвращено' : 'Fully refunded')
-                    : balanceDue > 0.01
-                      ? (locale === 'ru' ? 'Осталось оплатить' : 'Remaining to pay')
-                      : (locale === 'ru' ? 'Итого оплачено' : 'Total paid')}
-                </span>
-                <span className={`font-bold ${totalPaid <= 0 ? 'text-navy/70' : balanceDue > 0.01 ? 'text-gold' : 'text-trust'}`}>
-                  {totalPaid <= 0
-                    ? formatAmount(0, (booking.currency || 'EUR') as Currency)
-                    : balanceDue > 0.01
-                      ? formatAmount(Math.round(balanceDue), (booking.currency || 'EUR') as Currency)
-                      : formatAmount(totalPaid, (booking.currency || 'EUR') as Currency)}
-                </span>
-              </div>
+              {(() => {
+                const txnPayments = booking.transactions!.filter(t => t.type === 'payment').reduce((s, t) => s + (t.amount || 0), 0)
+                const txnRefunds = booking.transactions!.filter(t => t.type === 'refund').reduce((s, t) => s + (t.amount || 0), 0)
+                const net = txnPayments - txnRefunds
+                const cur = (booking.currency || 'EUR') as Currency
+                const isFullyRefunded = txnRefunds > 0 && net <= 0.01
+
+                return (
+                  <div className="pt-3 border-t border-navy/10 space-y-1">
+                    {isFullyRefunded ? (
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="font-medium text-navy">
+                          {locale === 'ru' ? 'Все платежи возвращены' : 'All payments refunded'}
+                        </span>
+                        <span className="font-bold text-navy/70">
+                          {formatAmount(txnRefunds, cur)} {locale === 'ru' ? 'возвращено' : 'refunded'}
+                        </span>
+                      </div>
+                    ) : net > 0 && balanceDue > 0.01 ? (
+                      <>
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-navy">{locale === 'ru' ? 'Оплачено' : 'Paid'}</span>
+                          <span className="font-medium text-trust">{formatAmount(net, cur)}</span>
+                        </div>
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="font-medium text-navy">{locale === 'ru' ? 'Осталось оплатить' : 'Remaining to pay'}</span>
+                          <span className="font-bold text-gold">{formatAmount(Math.round(balanceDue), cur)}</span>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="font-medium text-navy">{locale === 'ru' ? 'Итого оплачено' : 'Total paid'}</span>
+                        <span className="font-bold text-trust">{formatAmount(net, cur)}</span>
+                      </div>
+                    )}
+                  </div>
+                )
+              })()}
             </div>
           </div>
         )}
