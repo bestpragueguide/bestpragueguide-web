@@ -217,7 +217,7 @@ export async function POST(req: NextRequest) {
       const payload = await getPayload({ config: configPromise })
 
       if (!bookingId && paymentIntentId) {
-        // Look up booking by stripePaymentIntentId
+        // Look up booking by current stripePaymentIntentId
         const result = await payload.find({
           collection: 'booking-requests',
           where: { stripePaymentIntentId: { equals: paymentIntentId } },
@@ -226,6 +226,21 @@ export async function POST(req: NextRequest) {
         })
         if (result.docs[0]) {
           bookingId = String(result.docs[0].id)
+        }
+
+        // Also search transaction sub-table for earlier payment intents
+        if (!bookingId) {
+          const { sql } = await import('drizzle-orm')
+          const db = payload.db.drizzle
+          const txnResult = await db.execute(
+            sql`SELECT _parent_id FROM booking_requests_transactions
+                WHERE stripe_id = ${paymentIntentId} OR stripe_id = ${charge.id}
+                LIMIT 1`
+          )
+          const rows = (txnResult as any).rows || txnResult
+          if (rows[0]?._parent_id) {
+            bookingId = String(rows[0]._parent_id)
+          }
         }
       }
 
