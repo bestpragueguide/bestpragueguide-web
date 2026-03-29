@@ -79,12 +79,6 @@ export function BookingOfferEmail({
     { label: L('price', 'Price', 'Стоимость'), value: `${confirmedPrice} ${currency}` },
   ]
 
-  if (depositAmount != null && depositAmount > 0) {
-    summaryRows.push({ label: L('deposit', 'Prepayment', 'Предоплата'), value: `${depositAmount} ${currency}` })
-  }
-  if (cashBalance != null && cashBalance > 0) {
-    summaryRows.push({ label: L('cashBalance', 'Balance on tour day', 'Остаток в день экскурсии'), value: `${cashBalance} ${currency}` })
-  }
   if (paymentStatus && paymentStatus !== 'not_required') {
     const psLabels: Record<string, { en: string; ru: string }> = {
       awaiting: { en: 'Awaiting payment', ru: 'Ожидает оплаты' },

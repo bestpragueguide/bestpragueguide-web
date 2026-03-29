@@ -83,9 +83,6 @@ export function RequestReceivedEmail({
     summaryRows.push({ label: L('guests', 'Guests', 'Гостей'), value: String(guests) })
   }
   summaryRows.push({ label: L('price', 'Price', 'Стоимость'), value: priceDisplay })
-  if (depositAmount != null && depositAmount > 0) {
-    summaryRows.push({ label: L('deposit', 'Prepayment', 'Предоплата'), value: `${depositAmount} ${currency}` })
-  }
   if (paymentStatus && paymentStatus !== 'not_required') {
     const psLabels: Record<string, { en: string; ru: string }> = {
       awaiting: { en: 'Awaiting payment', ru: 'Ожидает оплаты' },
