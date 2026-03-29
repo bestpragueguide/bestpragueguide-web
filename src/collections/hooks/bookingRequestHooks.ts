@@ -134,10 +134,10 @@ export const afterChangeHook: CollectionAfterChangeHook = async ({
   // No auto-send emails on admin status change.
   // Admin uses "Send Offer" / "Send Email" button manually for declined/cancelled/confirmed.
 
-  // Auto-send update email when paymentStatus changes (e.g. from Stripe webhook)
+  // Auto-send update email when paymentStatus changes from Stripe webhook only (not admin)
   const oldPaymentStatus = previousDoc.paymentStatus
   const newPaymentStatus = doc.paymentStatus
-  if (oldPaymentStatus !== newPaymentStatus && newPaymentStatus &&
+  if (!req.user && oldPaymentStatus !== newPaymentStatus && newPaymentStatus &&
       (newPaymentStatus === 'deposit_paid' || newPaymentStatus === 'fully_paid')) {
     try {
       const locale = (doc.customerLanguage || 'en') as 'en' | 'ru'
