@@ -454,10 +454,6 @@ export interface EmailTemplatesData {
   receivedSummaryBody?: string
   receivedNote?: string
   adminSubject?: string
-  confirmedSubject?: string
-  confirmedHeading?: string
-  confirmedBody?: string
-  confirmedNote?: string
   declinedSubject?: string
   declinedBody?: string
   declinedNote?: string
@@ -679,10 +675,6 @@ export async function getEmailTemplates(locale: string): Promise<EmailTemplatesD
       receivedSummaryBody: toEmailHtml(data.receivedSummaryBody),
       receivedNote: toEmailHtml(data.receivedNote),
       adminSubject: data.adminSubject || undefined,
-      confirmedSubject: data.confirmedSubject || undefined,
-      confirmedHeading: data.confirmedHeading || undefined,
-      confirmedBody: toEmailHtml(data.confirmedBody),
-      confirmedNote: toEmailHtml(data.confirmedNote),
       declinedSubject: data.declinedSubject || undefined,
       declinedBody: toEmailHtml(data.declinedBody),
       declinedNote: toEmailHtml(data.declinedNote),

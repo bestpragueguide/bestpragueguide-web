@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Convert plain text email template fields to Lexical JSON
-    const richTextFields = ['receivedBody', 'receivedSummaryBody', 'receivedNote', 'offerBody', 'offerNote', 'confirmedBody', 'confirmedNote', 'declinedBody', 'declinedNote', 'paymentBody', 'paymentNote', 'reminderBody', 'reminderNote']
+    const richTextFields = ['receivedBody', 'receivedSummaryBody', 'receivedNote', 'offerBody', 'offerNote', 'declinedBody', 'declinedNote', 'paymentBody', 'paymentNote', 'reminderBody', 'reminderNote', 'updatedBody', 'updatedNote']
     for (const loc of ['en', 'ru'] as const) {
       const tplData = await payload.findGlobal({ slug: 'email-templates', locale: loc }) as any
       const updates: Record<string, any> = {}

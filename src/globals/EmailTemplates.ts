@@ -134,51 +134,6 @@ export const EmailTemplates: GlobalConfig = {
           ],
         },
         {
-          label: 'Booking Confirmed',
-          fields: [
-            {
-              name: 'confirmedSubject',
-              label: 'Subject',
-              type: 'text',
-              localized: true,
-              defaultValue: 'Confirmed — {tour}',
-              admin: {
-                description: 'Placeholders: {tour}, {ref}',
-              },
-            },
-            {
-              name: 'confirmedHeading',
-              label: 'Heading',
-              type: 'text',
-              localized: true,
-              defaultValue: 'Confirmed, {name}!',
-              admin: {
-                description: 'Placeholders: {name}',
-              },
-            },
-            {
-              name: 'confirmedBody',
-              label: 'Body',
-              type: 'richText',
-              editor: simplifiedEditor,
-              localized: true,
-              admin: {
-                description: 'Placeholders in text: {name}, {tour}, {ref}',
-              },
-            },
-            {
-              name: 'confirmedNote',
-              label: 'Note',
-              type: 'richText',
-              editor: simplifiedEditor,
-              localized: true,
-              admin: {
-                description: 'Shown after booking details',
-              },
-            },
-          ],
-        },
-        {
           label: 'Booking Declined',
           fields: [
             {
