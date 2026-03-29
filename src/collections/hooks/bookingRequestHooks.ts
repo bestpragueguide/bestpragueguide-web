@@ -1,10 +1,6 @@
 import type { CollectionBeforeChangeHook, CollectionAfterChangeHook } from 'payload'
 import { generateRequestRef } from '@/lib/booking'
 import { logBookingEvent, computeFieldDiffs } from '@/lib/audit'
-import { sendEmail } from '@/lib/email'
-import { getEmailTemplates, resolveTemplate } from '@/lib/cms-data'
-import { BookingOfferEmail } from '@/emails/booking-offer'
-import { formatEmailDate } from '@/emails/utils'
 
 export const beforeChangeHook: CollectionBeforeChangeHook = async ({
   data,
@@ -134,93 +130,8 @@ export const afterChangeHook: CollectionAfterChangeHook = async ({
   // No auto-send emails on admin status change.
   // Admin uses "Send Offer" / "Send Email" button manually for declined/cancelled/confirmed.
 
-  // Auto-send update email when paymentStatus changes from Stripe webhook only (not admin)
-  const oldPaymentStatus = previousDoc.paymentStatus
-  const newPaymentStatus = doc.paymentStatus
-  if (!req.user && oldPaymentStatus !== newPaymentStatus && newPaymentStatus &&
-      (newPaymentStatus === 'deposit_paid' || newPaymentStatus === 'fully_paid')) {
-    try {
-      const locale = (doc.customerLanguage || 'en') as 'en' | 'ru'
-      let tourName = doc.tourName || 'Tour'
-      if (!tourName || tourName === 'Tour') {
-        try {
-          const tourId = typeof doc.tour === 'object' ? (doc.tour as any).id : doc.tour
-          if (tourId) {
-            const tour = await req.payload.findByID({ collection: 'tours', id: tourId, locale, depth: 0 })
-            tourName = (tour.title as string) || tourName
-          }
-        } catch {}
-      }
-
-      const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'
-      const offerUrl = doc.offerToken ? `${baseUrl}/${locale}/booking/${doc.offerToken}` : ''
-      const confirmedDate = doc.confirmedDate || doc.preferredDate
-      const confirmedTime = doc.confirmedTime || doc.preferredTime || ''
-      const confirmedPrice = doc.confirmedPrice || doc.totalPrice || 0
-      const tpl = await getEmailTemplates(locale)
-      const vars: Record<string, string> = {
-        name: doc.customerName, tour: tourName,
-        date: formatEmailDate(confirmedDate, locale),
-        time: confirmedTime, ref: doc.requestRef,
-      }
-
-      const subject = resolveTemplate(
-        locale === 'ru' ? 'Обновление бронирования — {tour}' : 'Booking update — {tour}', vars
-      )
-
-      await sendEmail({
-        to: doc.customerEmail,
-        subject,
-        react: BookingOfferEmail({
-          customerName: doc.customerName,
-          tourName,
-          confirmedDate,
-          confirmedTime,
-          guests: doc.confirmedGuests || doc.guests || 1,
-          confirmedPrice,
-          depositAmount: doc.depositAmount || doc.customDepositAmount,
-          cashBalance: doc.cashBalance,
-          currency: doc.currency || 'EUR',
-          customerEmail: doc.customerEmail,
-          customerPhone: doc.customerPhone || '',
-          paymentMethod: doc.paymentMethod || 'cash_only',
-          paymentStatus: newPaymentStatus,
-          requestRef: doc.requestRef,
-          offerUrl,
-          locale,
-          cmsHeaderTitle: tpl.headerTitle || undefined,
-          cmsGreeting: tpl.greeting ? resolveTemplate(tpl.greeting, vars) : undefined,
-          cmsHeading: (tpl as any).offerHeading ? resolveTemplate((tpl as any).offerHeading, vars) : undefined,
-          cmsBody: (tpl as any).offerBody ? resolveTemplate((tpl as any).offerBody, vars) : undefined,
-          cmsNote: (tpl as any).offerNote ? resolveTemplate((tpl as any).offerNote, vars) : undefined,
-          cmsFooter: tpl.footer || undefined,
-          cmsHeaderHtml: (tpl as any).headerHtml || undefined,
-      cmsHeaderContent: (tpl as any).headerContent || undefined,
-          cmsFooterHtml: (tpl as any).footerHtml || undefined,
-      cmsFooterContent: (tpl as any).footerContent || undefined,
-          summaryLabels: tpl.summaryLabels,
-          summaryPaymentLabels: tpl.summaryPaymentLabels,
-          summaryLanguageLabels: tpl.summaryLanguageLabels,
-        }),
-      })
-
-      logBookingEvent({
-        bookingId: doc.id,
-        eventType: 'email_sent',
-        actor: { type: 'system' },
-        description: `Payment status update email sent (${newPaymentStatus})`,
-        metadata: { template: 'booking-offer', paymentStatus: newPaymentStatus, to: doc.customerEmail },
-      }, req.payload)
-    } catch (err) {
-      logBookingEvent({
-        bookingId: doc.id,
-        eventType: 'email_failed',
-        actor: { type: 'system' },
-        description: `Failed to send payment status update email`,
-        metadata: { paymentStatus: newPaymentStatus, error: String(err) },
-      }, req.payload)
-    }
-  }
+  // No auto-send update email on payment status changes.
+  // Stripe webhook already sends PaymentReceivedEmail or RefundProcessedEmail directly.
 
   return doc
 }
