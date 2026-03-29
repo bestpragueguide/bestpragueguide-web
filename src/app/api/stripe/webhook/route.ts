@@ -253,13 +253,21 @@ export async function POST(req: NextRequest) {
       })
       if (!booking) return NextResponse.json({ received: true })
 
-        const refundAmountCents = charge.amount_refunded ?? 0
         const refundCurrency = (charge.currency || 'eur').toUpperCase()
-        const refundAmount = refundAmountCents / 100
         const isFullRefund = charge.refunded
 
-        // Calculate running totals after refund
+        // Get the latest refund from the charge (not cumulative amount_refunded)
+        const latestRefund = charge.refunds?.data?.[0]
+        const refundAmountCents = latestRefund?.amount ?? charge.amount_refunded ?? 0
+        const refundAmount = refundAmountCents / 100
+        const refundId = latestRefund?.id || charge.id
+
+        // Skip if already recorded
         const existingTxns = (booking as any).transactions || []
+        const alreadyRecorded = existingTxns.some((t: any) => t.stripeId === refundId)
+        if (alreadyRecorded) return NextResponse.json({ received: true })
+
+        // Calculate running totals after refund
         const prevPaidTotal = existingTxns
           .filter((t: any) => t.type === 'payment')
           .reduce((sum: number, t: any) => sum + (t.amount || 0), 0)
@@ -274,7 +282,7 @@ export async function POST(req: NextRequest) {
           type: 'refund',
           amount: refundAmount,
           description: isFullRefund ? 'Full refund' : 'Partial refund',
-          stripeId: charge.id,
+          stripeId: refundId,
           recordedAt: new Date().toISOString(),
         }
 
