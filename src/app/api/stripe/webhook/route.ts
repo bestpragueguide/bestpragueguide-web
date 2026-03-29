@@ -295,7 +295,9 @@ export async function POST(req: NextRequest) {
           collection: 'booking-requests',
           id: bookingId,
           data: {
-            paymentStatus: isFullRefund ? 'refunded' : 'refund_pending',
+            paymentStatus: newTotalPaid <= 0.01 ? 'refunded'
+              : newBalance <= 0.01 ? 'fully_paid'
+              : 'deposit_paid',
             refundedAt: new Date().toISOString(),
             totalPaid: Math.max(0, newTotalPaid),
             balanceDue: newBalance,

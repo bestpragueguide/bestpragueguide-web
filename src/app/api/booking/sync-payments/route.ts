@@ -109,12 +109,10 @@ export async function POST(req: NextRequest) {
     const confirmedPrice = (booking as any).confirmedPrice || booking.totalPrice || 0
     const balanceDue = confirmedPrice - netPaid
 
-    // Determine payment status
+    // Determine payment status based on net balance
     let paymentStatus = booking.paymentStatus
-    if (totalRefunded > 0 && netPaid <= 0.01) {
+    if (netPaid <= 0.01 && totalRefunded > 0) {
       paymentStatus = 'refunded'
-    } else if (totalRefunded > 0) {
-      paymentStatus = 'refund_pending'
     } else if (balanceDue <= 0.01 && netPaid > 0) {
       paymentStatus = 'fully_paid'
     } else if (netPaid > 0) {
