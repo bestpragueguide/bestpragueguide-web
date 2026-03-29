@@ -87,9 +87,9 @@ export function BookingStatusBar() {
       const saveBtns = document.querySelectorAll('button')
       let saved = false
       for (const b of saveBtns) {
-        if (b.textContent?.trim() === 'Save' && !b.disabled) {
+        const text = b.textContent?.trim() || ''
+        if ((text === 'Save' || text === 'Save Draft' || text.includes('Save')) && !b.disabled) {
           b.click()
-          // Wait for save to complete
           await new Promise(resolve => setTimeout(resolve, 2000))
           saved = true
           break
