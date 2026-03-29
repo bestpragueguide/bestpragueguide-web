@@ -147,7 +147,7 @@ export async function POST(req: NextRequest) {
       totalRefunded,
       balanceDue,
       paymentStatus,
-      transactions: newTransactions.length,
+      transactions: rebuiltTransactions.length,
     })
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error'
