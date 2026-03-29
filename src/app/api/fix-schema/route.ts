@@ -89,6 +89,12 @@ export async function POST(req: Request) {
       `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS refund_body varchar`,
       `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS refund_note varchar`,
 
+      // Booking Updated email template columns
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS updated_subject varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS updated_heading varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS updated_body varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS updated_note varchar`,
+
       // Contact message email template columns
       `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS contact_subject varchar`,
       `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS contact_admin_subject varchar`,

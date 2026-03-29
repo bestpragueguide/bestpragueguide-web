@@ -7,6 +7,7 @@ import { getEmailTemplates, resolveTemplate, getNotificationEmail } from '@/lib/
 import { BookingOfferEmail } from '@/emails/booking-offer'
 import { RequestDeclinedEmail } from '@/emails/request-declined'
 import { BookingCancelledEmail } from '@/emails/booking-cancelled'
+import { BookingUpdatedEmail } from '@/emails/booking-updated'
 import { n8n } from '@/lib/n8n'
 import { logBookingEvent } from '@/lib/audit'
 import { formatEmailDate } from '@/emails/utils'
@@ -196,12 +197,43 @@ export async function POST(req: NextRequest) {
     offerEmailProps.cmsNote = (tpl as any).offerNote ? resolveTemplate((tpl as any).offerNote, vars) : undefined
     emailReact = BookingOfferEmail(offerEmailProps)
   } else {
-    // Update for confirmed/offer-sent/paid/completed — use offer template with update subject
-    subject = resolveTemplate(locale === 'ru' ? 'Обновление бронирования — {tour}' : 'Booking update — {tour}', vars)
-    offerEmailProps.cmsHeading = (tpl as any).offerHeading ? resolveTemplate((tpl as any).offerHeading, vars) : undefined
-    offerEmailProps.cmsBody = (tpl as any).offerBody ? resolveTemplate((tpl as any).offerBody, vars) : undefined
-    offerEmailProps.cmsNote = (tpl as any).offerNote ? resolveTemplate((tpl as any).offerNote, vars) : undefined
-    emailReact = BookingOfferEmail(offerEmailProps)
+    // Update — use Booking Updated template
+    subject = resolveTemplate((tpl as any).updatedSubject || (locale === 'ru' ? 'Обновление бронирования — {tour}' : 'Booking update — {tour}'), vars)
+
+    // Convert customerNotes richText to HTML
+    let notesHtml: string | undefined
+    if (booking.customerNotes) {
+      const { extractPlainText } = await import('@/components/shared/SafeRichText')
+      const notesText = extractPlainText(booking.customerNotes)
+      if (notesText) notesHtml = `<p style="font-size:14px;color:#333">${notesText.replace(/\n/g, '<br/>')}</p>`
+    }
+
+    emailReact = BookingUpdatedEmail({
+      customerName: booking.customerName,
+      tourName: tourTitle,
+      confirmedDate,
+      confirmedTime,
+      guests: confirmedGuests,
+      confirmedPrice,
+      currency: booking.currency || 'EUR',
+      requestRef: booking.requestRef,
+      offerUrl,
+      locale,
+      customerNotes: notesHtml,
+      cmsHeading: (tpl as any).updatedHeading ? resolveTemplate((tpl as any).updatedHeading, vars) : undefined,
+      cmsBody: (tpl as any).updatedBody ? resolveTemplate((tpl as any).updatedBody, vars) : undefined,
+      cmsNote: (tpl as any).updatedNote ? resolveTemplate((tpl as any).updatedNote, vars) : undefined,
+      cmsFooter: tpl.footer || undefined,
+      cmsHeaderHtml: (tpl as any).headerHtml || undefined,
+      cmsHeaderContent: (tpl as any).headerContent || undefined,
+      cmsFooterHtml: (tpl as any).footerHtml || undefined,
+      cmsFooterContent: (tpl as any).footerContent || undefined,
+      summaryLabels: tpl.summaryLabels,
+      summaryPaymentLabels: tpl.summaryPaymentLabels,
+      summaryLanguageLabels: tpl.summaryLanguageLabels,
+      paymentMethod: booking.paymentMethod || 'cash_only',
+      paymentStatus: booking.paymentStatus || undefined,
+    })
   }
 
   // Send customer email

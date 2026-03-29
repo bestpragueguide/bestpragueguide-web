@@ -339,6 +339,51 @@ export const EmailTemplates: GlobalConfig = {
           ],
         },
         {
+          label: 'Booking Updated',
+          fields: [
+            {
+              name: 'updatedSubject',
+              label: 'Subject',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Placeholders: {name}, {tour}, {date}, {time}, {ref}',
+                placeholder: 'Booking update — {tour}',
+              },
+            },
+            {
+              name: 'updatedHeading',
+              label: 'Heading',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Placeholders: {name}, {tour}',
+                placeholder: 'Booking update, {name}',
+              },
+            },
+            {
+              name: 'updatedBody',
+              label: 'Body',
+              type: 'richText',
+              editor: simplifiedEditor,
+              localized: true,
+              admin: {
+                description: 'Placeholders: {name}, {tour}, {date}, {time}, {ref}. Use {notes} for customer notes.',
+              },
+            },
+            {
+              name: 'updatedNote',
+              label: 'Note',
+              type: 'richText',
+              editor: simplifiedEditor,
+              localized: true,
+              admin: {
+                description: 'Shown after booking details',
+              },
+            },
+          ],
+        },
+        {
           label: 'Refund Processed',
           fields: [
             {
