@@ -547,10 +547,7 @@ export default async function BookingOfferPage({
                     {isFullyRefunded ? (
                       <div className="flex justify-between items-center text-sm">
                         <span className="font-medium text-navy">
-                          {locale === 'ru' ? 'Все платежи возвращены' : 'All payments refunded'}
-                        </span>
-                        <span className="font-bold text-navy/70">
-                          {formatAmount(txnRefunds, cur)} {locale === 'ru' ? 'возвращено' : 'refunded'}
+                          {locale === 'ru' ? 'Все платежи полностью возвращены' : 'All payments have been fully refunded'}
                         </span>
                       </div>
                     ) : net > 0 && balanceDue > 0.01 ? (
