@@ -193,11 +193,11 @@ export async function POST(req: NextRequest) {
   }
 
   // Send customer email
-  await sendEmail({
+  const emailResult = await sendEmail({
     to: booking.customerEmail,
     subject,
     react: emailReact,
-  })
+  }) as { success: boolean; error?: string; provider?: string }
 
   // Send admin copy
   const adminEmail = await getNotificationEmail()
@@ -260,5 +260,7 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({
     success: true,
     offerUrl,
+    emailProvider: emailResult.provider,
+    ...(emailResult.error ? { emailError: emailResult.error } : {}),
   })
 }
