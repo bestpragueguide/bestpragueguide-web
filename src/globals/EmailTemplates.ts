@@ -555,10 +555,10 @@ export const EmailTemplates: GlobalConfig = {
             {
               name: 'headerHtml',
               label: 'Header HTML',
-              type: 'code',
+              type: 'textarea',
               localized: true,
               admin: {
-                language: 'html',
+                rows: 10,
                 description: 'Raw HTML for email header. Use inline styles for fonts, colors, alignment.',
               },
             },
@@ -575,10 +575,10 @@ export const EmailTemplates: GlobalConfig = {
             {
               name: 'footerHtml',
               label: 'Footer HTML',
-              type: 'code',
+              type: 'textarea',
               localized: true,
               admin: {
-                language: 'html',
+                rows: 10,
                 description: 'Raw HTML for email footer. Use inline styles.',
               },
             },
