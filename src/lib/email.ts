@@ -34,7 +34,9 @@ export async function sendEmail({
   react: ReactElement
   replyTo?: string
 }) {
-  // Try Gmail SMTP first, then Resend, then skip
+  let lastError: unknown = null
+
+  // Try Gmail SMTP first
   if (gmailTransport) {
     try {
       const html = await render(react)
@@ -45,13 +47,15 @@ export async function sendEmail({
         html,
         ...(replyTo ? { replyTo } : {}),
       })
+      console.log(`[Email] Sent via Gmail to ${to}: ${subject}`)
       return { success: true, provider: 'gmail' }
     } catch (error) {
-      console.error('[Email] Gmail send failed:', error)
-      // Fall through to Resend
+      lastError = error
+      console.error('[Email] Gmail send failed:', error instanceof Error ? error.message : error)
     }
   }
 
+  // Fallback to Resend
   if (resend) {
     try {
       const result = await resend.emails.send({
@@ -61,18 +65,21 @@ export async function sendEmail({
         react,
         ...(replyTo ? { replyTo } : {}),
       })
+      console.log(`[Email] Sent via Resend to ${to}: ${subject}`)
       return { success: true, provider: 'resend', data: result }
     } catch (error) {
-      console.error('[Email] Resend send failed:', error)
-      return { success: false, error }
+      lastError = error
+      console.error('[Email] Resend send failed:', error instanceof Error ? error.message : error)
     }
   }
 
-  console.log('[Email] Skipping send (no email provider configured):', {
-    to,
-    subject,
-  })
-  return { success: true, skipped: true }
+  if (lastError) {
+    console.error(`[Email] All providers failed for ${to}: ${subject}`)
+    return { success: false, error: lastError instanceof Error ? lastError.message : String(lastError) }
+  }
+
+  console.warn(`[Email] No provider configured, skipping: ${to} — ${subject}`)
+  return { success: false, error: 'No email provider configured', skipped: true }
 }
 
 export async function sendAdminEmail({
