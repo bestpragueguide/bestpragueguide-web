@@ -567,6 +567,13 @@ export default async function BookingOfferPage({
                         <span className="font-bold text-trust">{formatAmount(net, cur)}</span>
                       </div>
                     )}
+                    {txnRefunds > 0 && (
+                      <p className="text-xs text-navy/50 mt-2">
+                        {locale === 'ru'
+                          ? 'Возврат средств на вашу карту обрабатывается в течение 5–10 рабочих дней.'
+                          : 'The payment refund to your card is processed within 5-10 business days.'}
+                      </p>
+                    )}
                   </div>
                 )
               })()}
