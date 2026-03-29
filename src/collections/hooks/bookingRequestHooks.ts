@@ -194,6 +194,8 @@ export const afterChangeHook: CollectionAfterChangeHook = async ({
           cmsBody: (tpl as any).offerBody ? resolveTemplate((tpl as any).offerBody, vars) : undefined,
           cmsNote: (tpl as any).offerNote ? resolveTemplate((tpl as any).offerNote, vars) : undefined,
           cmsFooter: tpl.footer || undefined,
+          cmsHeaderContent: (tpl as any).headerContent || undefined,
+          cmsFooterContent: (tpl as any).footerContent || undefined,
           summaryLabels: tpl.summaryLabels,
           summaryPaymentLabels: tpl.summaryPaymentLabels,
           summaryLanguageLabels: tpl.summaryLanguageLabels,

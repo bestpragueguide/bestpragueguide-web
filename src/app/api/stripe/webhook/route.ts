@@ -125,6 +125,8 @@ export async function POST(req: NextRequest) {
           cmsBody: tpl.paymentBody ? resolveTemplate(tpl.paymentBody, vars) : undefined,
           cmsNote: tpl.paymentNote ? resolveTemplate(tpl.paymentNote, vars) : undefined,
           cmsFooter: tpl.footer || undefined,
+          cmsHeaderContent: (tpl as any).headerContent || undefined,
+          cmsFooterContent: (tpl as any).footerContent || undefined,
         }
 
         await sendEmail({
@@ -335,6 +337,8 @@ export async function POST(req: NextRequest) {
             cmsBody: (tpl as any).refundBody ? resolveTemplate((tpl as any).refundBody, vars) : undefined,
             cmsNote: (tpl as any).refundNote ? resolveTemplate((tpl as any).refundNote, vars) : undefined,
             cmsFooter: tpl.footer || undefined,
+            cmsHeaderContent: (tpl as any).headerContent || undefined,
+            cmsFooterContent: (tpl as any).footerContent || undefined,
           }
 
           const refundSubject = resolveTemplate(

@@ -146,6 +146,8 @@ export async function POST(req: NextRequest) {
     cmsCtaLabel: (tpl as any).offerCtaLabel || undefined,
     cmsNote: undefined as string | undefined,
     cmsFooter: tpl.footer || undefined,
+    cmsHeaderContent: (tpl as any).headerContent || undefined,
+    cmsFooterContent: (tpl as any).footerContent || undefined,
     summaryLabels: tpl.summaryLabels,
     summaryPaymentLabels: tpl.summaryPaymentLabels,
     summaryLanguageLabels: tpl.summaryLanguageLabels,
@@ -162,6 +164,8 @@ export async function POST(req: NextRequest) {
       cmsBody: tpl.declinedBody ? resolveTemplate(tpl.declinedBody, vars) : undefined,
       cmsNote: tpl.declinedNote ? resolveTemplate(tpl.declinedNote, vars) : undefined,
       cmsFooter: tpl.footer || undefined,
+      cmsHeaderContent: (tpl as any).headerContent || undefined,
+      cmsFooterContent: (tpl as any).footerContent || undefined,
     })
   } else if (bookingStatus === 'cancelled') {
     subject = resolveTemplate((tpl as any).cancelledSubject || (locale === 'ru' ? 'Бронирование отменено — {ref}' : 'Booking cancelled — {ref}'), vars)
@@ -176,6 +180,8 @@ export async function POST(req: NextRequest) {
       cmsBody: (tpl as any).cancelledBody ? resolveTemplate((tpl as any).cancelledBody, vars) : undefined,
       cmsNote: (tpl as any).cancelledNote ? resolveTemplate((tpl as any).cancelledNote, vars) : undefined,
       cmsFooter: tpl.footer || undefined,
+      cmsHeaderContent: (tpl as any).headerContent || undefined,
+      cmsFooterContent: (tpl as any).footerContent || undefined,
     })
   } else if (isFirstOffer) {
     subject = resolveTemplate((tpl as any).offerSubject || (locale === 'ru' ? 'Ваше бронирование подтверждено — {tour}' : 'Your booking is confirmed — {tour}'), vars)

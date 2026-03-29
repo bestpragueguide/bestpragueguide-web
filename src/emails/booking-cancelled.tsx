@@ -20,6 +20,8 @@ interface BookingCancelledEmailProps {
   cmsBody?: string
   cmsNote?: string
   cmsFooter?: string
+  cmsHeaderContent?: string
+  cmsFooterContent?: string
 }
 
 export function BookingCancelledEmail({
@@ -59,7 +61,7 @@ export function BookingCancelledEmail({
       </Preview>
       <Body style={body}>
         <Container style={container}>
-          <Text style={logo}>{cmsHeaderTitle || 'Best Prague Guide'}</Text>
+          {cmsHeaderContent ? <div style={logo} dangerouslySetInnerHTML={{ __html: cmsHeaderContent }} /> : <Text style={logo}>{cmsHeaderTitle || 'Best Prague Guide'}</Text>}
           <Hr style={hr} />
 
           <Text style={heading}>
@@ -78,7 +80,7 @@ export function BookingCancelledEmail({
 
           <Hr style={hr} />
           <Text style={footerStyle}>
-            {cmsFooter || 'Best Prague Guide | info@bestpragueguide.com'}
+            {cmsFooterContent ? <div dangerouslySetInnerHTML={{ __html: cmsFooterContent }} /> : (cmsFooter || 'Best Prague Guide | info@bestpragueguide.com')}
           </Text>
         </Container>
       </Body>

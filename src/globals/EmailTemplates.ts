@@ -508,13 +508,13 @@ export const EmailTemplates: GlobalConfig = {
           label: 'Header & Footer',
           fields: [
             {
-              name: 'headerTitle',
-              label: 'Header Title',
-              type: 'text',
+              name: 'headerContent',
+              label: 'Header',
+              type: 'richText',
+              editor: simplifiedEditor,
               localized: true,
-              defaultValue: 'Best Prague Guide',
               admin: {
-                description: 'Logo/brand text at the top of all emails',
+                description: 'Brand header at the top of all emails. Include logo text, tagline etc.',
               },
             },
             {
@@ -528,15 +528,13 @@ export const EmailTemplates: GlobalConfig = {
               },
             },
             {
-              name: 'footer',
-              label: 'Footer Text',
-              type: 'textarea',
+              name: 'footerContent',
+              label: 'Footer',
+              type: 'richText',
+              editor: simplifiedEditor,
               localized: true,
-              defaultValue:
-                'Best Prague Guide | info@bestpragueguide.com',
               admin: {
-                description: 'Footer shown at the bottom of all emails. Supports line breaks.',
-                rows: 3,
+                description: 'Footer shown at the bottom of all emails. Include links, contact info, legal text.',
               },
             },
           ],

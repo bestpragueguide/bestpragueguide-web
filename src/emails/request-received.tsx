@@ -33,6 +33,8 @@ interface RequestReceivedEmailProps {
   cmsSummaryBody?: string
   cmsNote?: string
   cmsFooter?: string
+  cmsHeaderContent?: string
+  cmsFooterContent?: string
   summaryLabels?: Record<string, string | undefined>
   summaryPaymentLabels?: Record<string, string | undefined>
   summaryLanguageLabels?: Record<string, string | undefined>
@@ -127,7 +129,7 @@ export function RequestReceivedEmail({
       </Preview>
       <Body style={body}>
         <Container style={container}>
-          <Text style={logo}>{cmsHeaderTitle || 'Best Prague Guide'}</Text>
+          {cmsHeaderContent ? <div style={logo} dangerouslySetInnerHTML={{ __html: cmsHeaderContent }} /> : <Text style={logo}>{cmsHeaderTitle || 'Best Prague Guide'}</Text>}
           <Hr style={hr} />
 
           <Text style={heading}>
@@ -167,9 +169,11 @@ export function RequestReceivedEmail({
           )}
 
           <Hr style={hr} />
-          {cmsFooter && cmsFooter.split('\n').map((line, i) => (
-            <Text key={`f${i}`} style={footerStyle}>{line || '\u00A0'}</Text>
-          ))}
+          {cmsFooterContent
+            ? <div style={footerStyle} dangerouslySetInnerHTML={{ __html: cmsFooterContent }} />
+            : cmsFooter && cmsFooter.split('\n').map((line, i) => (
+                <Text key={`f${i}`} style={footerStyle}>{line || '\u00A0'}</Text>
+              ))}
         </Container>
       </Body>
     </Html>

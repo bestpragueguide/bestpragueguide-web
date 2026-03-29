@@ -26,6 +26,8 @@ interface PaymentReceivedEmailProps {
   cmsBody?: string
   cmsNote?: string
   cmsFooter?: string
+  cmsHeaderContent?: string
+  cmsFooterContent?: string
 }
 
 export function PaymentReceivedEmail({
@@ -56,7 +58,7 @@ export function PaymentReceivedEmail({
       </Preview>
       <Body style={body}>
         <Container style={container}>
-          <Text style={logo}>Best Prague Guide</Text>
+          {cmsHeaderContent ? <div dangerouslySetInnerHTML={{ __html: cmsHeaderContent }} style={logo} /> : <Text style={logo}>Best Prague Guide</Text>}
           <Hr style={hr} />
 
           <Text style={heading}>
@@ -123,7 +125,7 @@ export function PaymentReceivedEmail({
 
           <Hr style={hr} />
           <Text style={footerStyle}>
-            {cmsFooter || 'Best Prague Guide | info@bestpragueguide.com'}
+            {cmsFooterContent ? <div dangerouslySetInnerHTML={{ __html: cmsFooterContent }} /> : (cmsFooter || 'Best Prague Guide | info@bestpragueguide.com')}
           </Text>
         </Container>
       </Body>

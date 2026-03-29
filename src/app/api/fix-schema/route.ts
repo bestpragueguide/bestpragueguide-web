@@ -89,6 +89,10 @@ export async function POST(req: Request) {
       `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS refund_body varchar`,
       `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS refund_note varchar`,
 
+      // RichText header/footer columns
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS header_content varchar`,
+      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS footer_content varchar`,
+
       // Payment Config global (non-destructive — CREATE IF NOT EXISTS only)
       `DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'enum_payment_config_cash_currencies') THEN CREATE TYPE enum_payment_config_cash_currencies AS ENUM ('EUR', 'USD', 'CZK'); END IF; END $$`,
       `CREATE TABLE IF NOT EXISTS payment_config (
