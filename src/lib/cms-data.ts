@@ -509,6 +509,77 @@ function toEmailHtml(value: unknown): string | undefined {
   return undefined
 }
 
+/** Render richText to styled email HTML for header (brand fonts/colors) */
+function toEmailHeaderHtml(value: unknown): string | undefined {
+  if (!value) return undefined
+  if (typeof value === 'string') return value
+  if (typeof value === 'object' && value !== null) {
+    const root = (value as any).root
+    if (!root?.children) return undefined
+    return root.children.map((node: any) => {
+      if (!node) return ''
+      const inner = (node.children || []).map((c: any) => renderInline(c)).join('')
+      if (!inner) return ''
+      if (node.type === 'heading') {
+        return `<p style="font-family:'Cormorant Garamond',Georgia,serif;font-size:28px;font-weight:700;color:#1A1A1A;text-align:center;margin:0 0 4px;line-height:1.2">${inner}</p>`
+      }
+      return `<p style="font-family:'Cormorant Garamond',Georgia,serif;font-size:14px;font-style:italic;color:#C4975C;text-align:center;margin:0;line-height:1.4">${inner}</p>`
+    }).join('') || undefined
+  }
+  return undefined
+}
+
+/** Render richText to styled email HTML for footer (small, centered, gray) */
+function toEmailFooterHtml(value: unknown): string | undefined {
+  if (!value) return undefined
+  if (typeof value === 'string') return value
+  if (typeof value === 'object' && value !== null) {
+    const root = (value as any).root
+    if (!root?.children) return undefined
+    return root.children.map((node: any) => {
+      if (!node) return ''
+      if (node.type === 'paragraph') {
+        const inner = (node.children || []).map((c: any) => renderFooterInline(c)).join('')
+        if (!inner) return '<p style="margin:0;line-height:8px">&nbsp;</p>'
+        return `<p style="font-size:11px;line-height:18px;color:#999;text-align:center;margin:0 0 4px">${inner}</p>`
+      }
+      if (node.type === 'list') {
+        const items = (node.children || []).map((li: any) => {
+          const content = (li.children || []).map((c: any) => renderFooterInline(c)).join('')
+          return content
+        }).join(' · ')
+        return `<p style="font-size:11px;line-height:18px;color:#999;text-align:center;margin:0 0 4px">${items}</p>`
+      }
+      return ''
+    }).join('') || undefined
+  }
+  return undefined
+}
+
+function renderFooterInline(node: any): string {
+  if (!node) return ''
+  if (node.type === 'linebreak') return '<br/>'
+  if (node.type === 'link') {
+    const href = node.fields?.url || node.url || '#'
+    const inner = (node.children || []).map((c: any) => renderFooterInline(c)).join('')
+    return `<a href="${href}" style="color:#C4975C;text-decoration:none">${inner || href}</a>`
+  }
+  if (node.type === 'autolink') {
+    const href = node.fields?.url || node.url || '#'
+    const inner = (node.children || []).map((c: any) => renderFooterInline(c)).join('')
+    return `<a href="${href}" style="color:#C4975C;text-decoration:none">${inner || href}</a>`
+  }
+  let text = node.text || ''
+  if (!text && node.children) {
+    return node.children.map((c: any) => renderFooterInline(c)).join('')
+  }
+  text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  const format = node.format || 0
+  if (format & 1) text = `<strong>${text}</strong>`
+  if (format & 2) text = `<em>${text}</em>`
+  return text
+}
+
 function renderNode(node: any): string {
   if (!node) return ''
 
@@ -587,7 +658,7 @@ export async function getEmailTemplates(locale: string): Promise<EmailTemplatesD
     // Extract plain text from richText fields for email rendering
     return {
       headerTitle: data.headerTitle || undefined,
-      headerContent: toEmailHtml(data.headerContent),
+      headerContent: toEmailHeaderHtml(data.headerContent),
       greeting: data.greeting || undefined,
       receivedSubject: data.receivedSubject || undefined,
       receivedBody: toEmailHtml(data.receivedBody),
@@ -622,7 +693,7 @@ export async function getEmailTemplates(locale: string): Promise<EmailTemplatesD
       refundBody: toEmailHtml(data.refundBody),
       refundNote: toEmailHtml(data.refundNote),
       footer: data.footer || undefined,
-      footerContent: toEmailHtml(data.footerContent),
+      footerContent: toEmailFooterHtml(data.footerContent),
       // Summary labels
       summaryLabels: {
         tour: data.summaryLabelTour || undefined,

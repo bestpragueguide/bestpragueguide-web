@@ -98,11 +98,12 @@ const container = {
   maxWidth: '560px',
 }
 const logo = {
+  textAlign: 'center' as const,
+  margin: '0 0 20px',
+  fontFamily: "'Cormorant Garamond', Georgia, serif",
   fontSize: '24px',
   fontWeight: '700' as const,
   color: '#1A1A1A',
-  textAlign: 'center' as const,
-  margin: '0 0 20px',
 }
 const hr = { borderColor: '#E5E5E5', margin: '20px 0' }
 const heading = {
