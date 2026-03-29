@@ -480,6 +480,10 @@ export interface EmailTemplatesData {
   footer?: string
   footerContent?: string
   footerHtml?: string
+  contactSubject?: string
+  contactAdminSubject?: string
+  contactBody?: string
+  contactNote?: string
   summaryLabels?: {
     tour?: string; date?: string; time?: string; guests?: string
     price?: string; email?: string; phone?: string; requests?: string
@@ -700,6 +704,10 @@ export async function getEmailTemplates(locale: string): Promise<EmailTemplatesD
       footer: data.footer || undefined,
       footerContent: toEmailFooterHtml(data.footerContent),
       footerHtml: data.footerHtml || undefined,
+      contactSubject: data.contactSubject || undefined,
+      contactAdminSubject: data.contactAdminSubject || undefined,
+      contactBody: toEmailHtml(data.contactBody),
+      contactNote: toEmailHtml(data.contactNote),
       // Summary labels
       summaryLabels: {
         tour: data.summaryLabelTour || undefined,

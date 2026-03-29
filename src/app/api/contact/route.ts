@@ -8,7 +8,8 @@ import { getIpInfo, formatLocation, type IpInfo } from '@/lib/ip'
 import { sendSlackMessage, formatContactSlackMessage } from '@/lib/slack'
 import { isRateLimited } from '@/lib/rate-limit'
 import { isDisposableEmail } from '@/lib/email-validation'
-import { getNotificationEmail } from '@/lib/cms-data'
+import { getNotificationEmail, getEmailTemplates, resolveTemplate } from '@/lib/cms-data'
+import { ContactConfirmationEmail } from '@/emails/contact-confirmation'
 import React from 'react'
 import { textToLexicalJson } from '@/lib/lexical-helpers'
 
@@ -280,22 +281,35 @@ export async function POST(request: NextRequest) {
         }),
         replyTo: data.email,
       }),
-      // Confirmation email to customer
-      sendEmail({
-        to: data.email,
-        subject:
-          data.locale === 'ru'
+      // Confirmation email to customer (CMS-editable)
+      (async () => {
+        const tpl = await getEmailTemplates(data.locale)
+        const vars = { name: data.name }
+        const subject = tpl.contactSubject
+          ? resolveTemplate(tpl.contactSubject, vars)
+          : data.locale === 'ru'
             ? 'Мы получили ваше сообщение — Best Prague Guide'
-            : 'We received your message — Best Prague Guide',
-        react: React.createElement(ContactConfirmationEmail, {
-          name: data.name,
-          email: data.email,
-          phone: data.phone,
-          message: data.message,
-          locale: data.locale,
-        }),
-        replyTo: 'info@bestpragueguide.com',
-      }),
+            : 'We received your message — Best Prague Guide'
+        return sendEmail({
+          to: data.email,
+          subject,
+          react: ContactConfirmationEmail({
+            customerName: data.name,
+            email: data.email,
+            phone: data.phone,
+            message: data.message,
+            locale: data.locale as 'en' | 'ru',
+            cmsBody: tpl.contactBody ? resolveTemplate(tpl.contactBody, vars) : undefined,
+            cmsNote: tpl.contactNote ? resolveTemplate(tpl.contactNote, vars) : undefined,
+            cmsFooter: tpl.footer || undefined,
+            cmsHeaderHtml: (tpl as any).headerHtml || undefined,
+            cmsHeaderContent: (tpl as any).headerContent || undefined,
+            cmsFooterHtml: (tpl as any).footerHtml || undefined,
+            cmsFooterContent: (tpl as any).footerContent || undefined,
+          }),
+          replyTo: 'info@bestpragueguide.com',
+        })
+      })(),
       // Telegram notification
       sendTelegramMessage(
         `📩 <b>Contact Form</b>\n\n<b>Name:</b> ${data.name}\n<b>Email:</b> ${data.email}\n<b>Phone:</b> ${data.phone}\n<b>Message:</b> ${data.message}\n\n<b>IP:</b> ${ip}${location ? `\n<b>Location:</b> ${location}` : ''}${ipInfo.org ? `\n<b>ISP:</b> ${ipInfo.org}` : ''}`,

@@ -505,6 +505,51 @@ export const EmailTemplates: GlobalConfig = {
           ],
         },
         {
+          label: 'Contact Message',
+          fields: [
+            {
+              name: 'contactSubject',
+              label: 'Subject (customer)',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Subject for confirmation email to customer. Placeholders: {name}',
+                placeholder: 'We received your message — Best Prague Guide',
+              },
+            },
+            {
+              name: 'contactAdminSubject',
+              label: 'Subject (admin)',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Subject for admin notification. Placeholders: {name}',
+                placeholder: 'Contact form: {name}',
+              },
+            },
+            {
+              name: 'contactBody',
+              label: 'Body',
+              type: 'richText',
+              editor: simplifiedEditor,
+              localized: true,
+              admin: {
+                description: 'Main body text in customer confirmation. Placeholders: {name}',
+              },
+            },
+            {
+              name: 'contactNote',
+              label: 'Note',
+              type: 'richText',
+              editor: simplifiedEditor,
+              localized: true,
+              admin: {
+                description: 'Text shown after message copy',
+              },
+            },
+          ],
+        },
+        {
           label: 'Header & Footer',
           fields: [
             {
