@@ -49,12 +49,24 @@ export const beforeChangeHook: CollectionBeforeChangeHook = async ({
     data.cashBalance = confirmedPrice - data.customDepositAmount
   }
 
-  // Recalculate balanceDue when confirmedPrice changes
+  // Recalculate balanceDue and paymentStatus when confirmedPrice changes
   if (operation === 'update') {
     const doc = originalDoc || {}
     const newPrice = data.confirmedPrice || doc.confirmedPrice || data.totalPrice || doc.totalPrice || 0
     const totalPaid = data.totalPaid ?? doc.totalPaid ?? 0
-    data.balanceDue = newPrice - totalPaid
+    const newBalance = newPrice - totalPaid
+    data.balanceDue = newBalance
+
+    // Update paymentStatus when balance changes
+    if (totalPaid > 0) {
+      if (totalPaid <= 0.01) {
+        data.paymentStatus = 'refunded'
+      } else if (newBalance <= 0.01) {
+        data.paymentStatus = 'fully_paid'
+      } else {
+        data.paymentStatus = 'deposit_paid'
+      }
+    }
   }
 
   // Auto-populate tourName in customer's language
