@@ -203,14 +203,19 @@ export async function POST(request: NextRequest) {
       }),
     ]
 
-    // Fire and forget — don't block the response
-    Promise.allSettled(notificationPromises).then((results) => {
-      for (const result of results) {
-        if (result.status === 'rejected') {
-          console.error('[Booking] Notification failed:', result.reason)
-        }
+    // Wait for email results to include in response for debugging
+    const notificationResults = await Promise.allSettled(notificationPromises)
+    const emailResult = notificationResults[0]
+    const emailError = emailResult?.status === 'rejected'
+      ? String(emailResult.reason)
+      : emailResult?.status === 'fulfilled' && !(emailResult.value as any)?.success
+        ? JSON.stringify((emailResult.value as any)?.error || 'unknown')
+        : null
+    for (const result of notificationResults) {
+      if (result.status === 'rejected') {
+        console.error('[Booking] Notification failed:', result.reason)
       }
-    })
+    }
 
     console.log('[Booking] New request created:', {
       requestRef,
@@ -219,7 +224,7 @@ export async function POST(request: NextRequest) {
       customer: data.customerName,
     })
 
-    return NextResponse.json({ success: true, requestRef })
+    return NextResponse.json({ success: true, requestRef, ...(emailError ? { emailError } : {}) })
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
