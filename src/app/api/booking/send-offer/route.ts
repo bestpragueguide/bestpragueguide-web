@@ -28,10 +28,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'bookingId required' }, { status: 400 })
   }
 
+  // First fetch without locale to get customerLanguage
+  const bookingBase = await payload.findByID({
+    collection: 'booking-requests',
+    id: bookingId,
+    depth: 0,
+  })
+
+  if (!bookingBase) {
+    return NextResponse.json({ error: 'Booking not found' }, { status: 404 })
+  }
+
+  const locale = (bookingBase.customerLanguage || 'en') as 'en' | 'ru'
+
+  // Re-fetch with correct locale to get localized fields (customerNotes, etc.)
   const booking = await payload.findByID({
     collection: 'booking-requests',
     id: bookingId,
     depth: 2,
+    locale,
   })
 
   if (!booking) {
@@ -44,8 +59,6 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     )
   }
-
-  const locale = (booking.customerLanguage || 'en') as 'en' | 'ru'
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? 'https://bestpragueguide.com'
   const offerToken = (booking as any).offerToken as string
   const offerUrl = `${baseUrl}/${locale}/booking/${offerToken}`
