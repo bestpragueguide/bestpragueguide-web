@@ -256,16 +256,20 @@ export async function POST(req: NextRequest) {
         const refundCurrency = (charge.currency || 'eur').toUpperCase()
         const isFullRefund = charge.refunded
 
-        // Get the latest refund from the charge (not cumulative amount_refunded)
-        const latestRefund = charge.refunds?.data?.[0]
-        const refundAmountCents = latestRefund?.amount ?? charge.amount_refunded ?? 0
-        const refundAmount = refundAmountCents / 100
-        const refundId = latestRefund?.id || charge.id
+        // Get all individual refunds from Stripe API for this charge
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+        const refundsList = await stripe.refunds.list({ charge: charge.id, limit: 20 })
 
-        // Skip if already recorded
+        // Find refunds not yet recorded
         const existingTxns = (booking as any).transactions || []
-        const alreadyRecorded = existingTxns.some((t: any) => t.stripeId === refundId)
-        if (alreadyRecorded) return NextResponse.json({ received: true })
+        const recordedRefundIds = new Set(existingTxns.filter((t: any) => t.type === 'refund').map((t: any) => t.stripeId))
+
+        const newRefunds = refundsList.data.filter(r => !recordedRefundIds.has(r.id))
+        if (newRefunds.length === 0) return NextResponse.json({ received: true })
+
+        const refundAmount = newRefunds.reduce((sum, r) => sum + r.amount / 100, 0)
+        // Use first new refund ID as primary
+        const refundId = newRefunds[0].id
 
         // Calculate running totals after refund
         const prevPaidTotal = existingTxns
@@ -278,13 +282,14 @@ export async function POST(req: NextRequest) {
         const confirmedPrice = booking.confirmedPrice || booking.totalPrice || 0
         const newBalance = confirmedPrice - newTotalPaid
 
-        const refundTxn = {
+        // Create a transaction entry for each new refund
+        const newRefundTxns = newRefunds.map(r => ({
           type: 'refund',
-          amount: refundAmount,
-          description: isFullRefund ? 'Full refund' : 'Partial refund',
-          stripeId: refundId,
-          recordedAt: new Date().toISOString(),
-        }
+          amount: r.amount / 100,
+          description: isFullRefund && newRefunds.length === 1 ? 'Full refund' : 'Partial refund',
+          stripeId: r.id,
+          recordedAt: new Date(r.created * 1000).toISOString(),
+        }))
 
         await payload.update({
           collection: 'booking-requests',
@@ -294,7 +299,7 @@ export async function POST(req: NextRequest) {
             refundedAt: new Date().toISOString(),
             totalPaid: Math.max(0, newTotalPaid),
             balanceDue: newBalance,
-            transactions: [...existingTxns, refundTxn],
+            transactions: [...existingTxns, ...newRefundTxns],
           },
         })
 
