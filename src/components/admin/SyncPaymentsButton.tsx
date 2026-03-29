@@ -14,11 +14,9 @@ export function SyncPaymentsButton() {
     setSyncing(true)
     setMsg(null)
     try {
-      const secret = prompt('Enter admin secret:')
-      if (!secret) { setSyncing(false); return }
       const res = await fetch('/api/booking/sync-payments', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-init-secret': secret },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ bookingId: id }),
       })
       const data = (await res.json()) as { success?: boolean; synced?: number; error?: string; message?: string }

@@ -8,8 +8,11 @@ export const dynamic = 'force-dynamic'
 
 /** POST /api/booking/sync-payments — Sync Stripe transactions for a booking */
 export async function POST(req: NextRequest) {
+  // Auth: JWT (admin panel) or x-init-secret (API)
+  const payload = await getPayload({ config: configPromise })
   const secret = req.headers.get('x-init-secret')
-  if (secret !== process.env.PAYLOAD_SECRET) {
+  const { user } = await payload.auth({ headers: req.headers })
+  if (!user && secret !== process.env.PAYLOAD_SECRET) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -30,7 +33,6 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const payload = await getPayload({ config: configPromise })
     const booking = await payload.findByID({
       collection: 'booking-requests',
       id: bookingId,
