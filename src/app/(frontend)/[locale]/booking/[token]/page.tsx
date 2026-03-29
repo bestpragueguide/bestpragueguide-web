@@ -505,6 +505,19 @@ export default async function BookingOfferPage({
           </div>
         </div>
 
+        {/* Customer Notes */}
+        {booking.customerNotes != null ? (
+          <div className="bg-white rounded-xl border border-gray-light/50 shadow-sm p-6">
+            <h2 className="text-lg font-heading font-bold text-navy mb-4">
+              {t('importantInfo')}
+            </h2>
+            <SafeRichText
+              data={booking.customerNotes}
+              className="text-sm text-navy/80 prose prose-sm max-w-none"
+            />
+          </div>
+        ) : null}
+
         {/* Payment Section */}
         {showPaymentSection && paymentAmount > 0 && (
           <div className="bg-white rounded-xl border border-gray-light/50 shadow-sm p-6">
@@ -686,19 +699,6 @@ export default async function BookingOfferPage({
             </div>
           </div>
         )}
-
-        {/* Customer Notes */}
-        {booking.customerNotes != null ? (
-          <div className="bg-white rounded-xl border border-gray-light/50 shadow-sm p-6">
-            <h2 className="text-lg font-heading font-bold text-navy mb-4">
-              {t('importantInfo')}
-            </h2>
-            <SafeRichText
-              data={booking.customerNotes}
-              className="text-sm text-navy/80 prose prose-sm max-w-none"
-            />
-          </div>
-        ) : null}
 
         {/* Contact Help */}
         <div className="bg-white rounded-xl border border-gray-light/50 shadow-sm p-6">
