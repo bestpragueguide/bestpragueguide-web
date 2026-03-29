@@ -18,8 +18,6 @@ export const beforeChangeHook: CollectionBeforeChangeHook = async ({
       const chars = '0123456789abcdefghijklmnopqrstuvwxyz'
       data.offerToken = Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
     }
-    if (!data.guideName) data.guideName = 'Uliana'
-    if (!data.guidePhone) data.guidePhone = '+420 776 306 858'
   }
 
   // Auto-populate offer fields from booking request when status changes to 'confirmed'
