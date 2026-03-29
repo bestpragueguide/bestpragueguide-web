@@ -516,13 +516,15 @@ function toEmailHeaderHtml(value: unknown): string | undefined {
   if (typeof value === 'object' && value !== null) {
     const root = (value as any).root
     if (!root?.children) return undefined
-    return root.children.map((node: any) => {
+    return root.children.map((node: any, idx: number) => {
       if (!node) return ''
       const inner = (node.children || []).map((c: any) => renderInline(c)).join('')
       if (!inner) return ''
-      if (node.type === 'heading') {
+      // First element or heading = brand name (large, bold, serif)
+      if (node.type === 'heading' || idx === 0) {
         return `<p style="font-family:'Cormorant Garamond',Georgia,serif;font-size:28px;font-weight:700;color:#1A1A1A;text-align:center;margin:0 0 4px;line-height:1.2">${inner}</p>`
       }
+      // Subsequent paragraphs = tagline (italic, gold)
       return `<p style="font-family:'Cormorant Garamond',Georgia,serif;font-size:14px;font-style:italic;color:#C4975C;text-align:center;margin:0;line-height:1.4">${inner}</p>`
     }).join('') || undefined
   }

@@ -1,5 +1,5 @@
 import type { GlobalConfig } from 'payload'
-import { simplifiedEditor } from '../lib/editors'
+import { simplifiedEditor, fullEditor } from '../lib/editors'
 
 export const EmailTemplates: GlobalConfig = {
   slug: 'email-templates',
@@ -511,7 +511,7 @@ export const EmailTemplates: GlobalConfig = {
               name: 'headerContent',
               label: 'Header',
               type: 'richText',
-              editor: simplifiedEditor,
+              editor: fullEditor,
               localized: true,
               admin: {
                 description: 'Brand header at the top of all emails. Include logo text, tagline etc.',
