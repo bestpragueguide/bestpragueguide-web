@@ -505,82 +505,6 @@ export default async function BookingOfferPage({
           </div>
         </div>
 
-        {/* Transactions */}
-        {booking.transactions && booking.transactions.length > 0 && (
-          <div className="bg-white rounded-xl border border-gray-light/50 shadow-sm p-6">
-            <h2 className="text-lg font-heading font-bold text-navy mb-4">
-              {locale === 'ru' ? 'История платежей' : 'Payment History'}
-            </h2>
-            <div className="space-y-3">
-              {booking.transactions.map((txn, i) => (
-                <div key={i} className="flex justify-between items-center text-sm py-2 border-b border-gray-light/30 last:border-0">
-                  <div>
-                    <span className={`font-medium ${txn.type === 'payment' ? 'text-trust' : 'text-navy/70'}`}>
-                      {txn.type === 'payment'
-                        ? (locale === 'ru' ? 'Оплата' : 'Payment')
-                        : (locale === 'ru' ? 'Возврат' : 'Refund')}
-                    </span>
-                    {txn.description && (
-                      <span className="text-navy/50 ml-2">— {txn.description}</span>
-                    )}
-                    {txn.recordedAt && (
-                      <span className="block text-xs text-navy/40 mt-0.5">
-                        {new Date(txn.recordedAt).toLocaleDateString(locale === 'ru' ? 'ru-RU' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
-                      </span>
-                    )}
-                  </div>
-                  <span className={`font-medium ${txn.type === 'payment' ? 'text-trust' : 'text-navy/70'}`}>
-                    {txn.type === 'refund' ? '−' : '+'}{formatAmount(txn.amount, (booking.currency || 'EUR') as Currency)}
-                  </span>
-                </div>
-              ))}
-              {/* Balance summary */}
-              {(() => {
-                const txnPayments = booking.transactions!.filter(t => t.type === 'payment').reduce((s, t) => s + (t.amount || 0), 0)
-                const txnRefunds = booking.transactions!.filter(t => t.type === 'refund').reduce((s, t) => s + (t.amount || 0), 0)
-                const net = txnPayments - txnRefunds
-                const cur = (booking.currency || 'EUR') as Currency
-                const isFullyRefunded = txnRefunds > 0 && net <= 0.01
-
-                return (
-                  <div className="pt-3 border-t border-navy/10 space-y-1">
-                    {isFullyRefunded ? (
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="font-medium text-navy">
-                          {locale === 'ru' ? 'Все платежи полностью возвращены' : 'All payments have been fully refunded'}
-                        </span>
-                      </div>
-                    ) : net > 0 && balanceDue > 0.01 ? (
-                      <>
-                        <div className="flex justify-between items-center text-sm">
-                          <span className="text-navy">{locale === 'ru' ? 'Оплачено' : 'Paid'}</span>
-                          <span className="font-medium text-trust">{formatAmount(net, cur)}</span>
-                        </div>
-                        <div className="flex justify-between items-center text-sm">
-                          <span className="font-medium text-navy">{locale === 'ru' ? 'Осталось оплатить' : 'Remaining to pay'}</span>
-                          <span className="font-bold text-gold">{formatAmount(Math.round(balanceDue), cur)}</span>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="font-medium text-navy">{locale === 'ru' ? 'Итого оплачено' : 'Total paid'}</span>
-                        <span className="font-bold text-trust">{formatAmount(net, cur)}</span>
-                      </div>
-                    )}
-                    {txnRefunds > 0 && (
-                      <p className="text-xs text-navy/50 mt-2">
-                        {locale === 'ru'
-                          ? 'Возврат средств на вашу карту обрабатывается в течение 5–10 рабочих дней.'
-                          : 'The payment refund to your card is processed within 5-10 business days.'}
-                      </p>
-                    )}
-                  </div>
-                )
-              })()}
-            </div>
-          </div>
-        )}
-
         {/* Payment Section */}
         {showPaymentSection && paymentAmount > 0 && (
           <div className="bg-white rounded-xl border border-gray-light/50 shadow-sm p-6">
@@ -685,6 +609,81 @@ export default async function BookingOfferPage({
               </div>
             )}
             <p className="text-xs text-navy/50 mt-3">{t('guideWillContact')}</p>
+          </div>
+        )}
+
+        {/* Payment History */}
+        {booking.transactions && booking.transactions.length > 0 && (
+          <div className="bg-white rounded-xl border border-gray-light/50 shadow-sm p-6">
+            <h2 className="text-lg font-heading font-bold text-navy mb-4">
+              {locale === 'ru' ? 'История платежей' : 'Payment History'}
+            </h2>
+            <div className="space-y-3">
+              {booking.transactions.map((txn, i) => (
+                <div key={i} className="flex justify-between items-center text-sm py-2 border-b border-gray-light/30 last:border-0">
+                  <div>
+                    <span className={`font-medium ${txn.type === 'payment' ? 'text-trust' : 'text-navy/70'}`}>
+                      {txn.type === 'payment'
+                        ? (locale === 'ru' ? 'Оплата' : 'Payment')
+                        : (locale === 'ru' ? 'Возврат' : 'Refund')}
+                    </span>
+                    {txn.description && (
+                      <span className="text-navy/50 ml-2">— {txn.description}</span>
+                    )}
+                    {txn.recordedAt && (
+                      <span className="block text-xs text-navy/40 mt-0.5">
+                        {new Date(txn.recordedAt).toLocaleDateString(locale === 'ru' ? 'ru-RU' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                      </span>
+                    )}
+                  </div>
+                  <span className={`font-medium ${txn.type === 'payment' ? 'text-trust' : 'text-navy/70'}`}>
+                    {txn.type === 'refund' ? '−' : '+'}{formatAmount(txn.amount, (booking.currency || 'EUR') as Currency)}
+                  </span>
+                </div>
+              ))}
+              {(() => {
+                const txnPayments = booking.transactions!.filter(t => t.type === 'payment').reduce((s, t) => s + (t.amount || 0), 0)
+                const txnRefunds = booking.transactions!.filter(t => t.type === 'refund').reduce((s, t) => s + (t.amount || 0), 0)
+                const net = txnPayments - txnRefunds
+                const cur = (booking.currency || 'EUR') as Currency
+                const isFullyRefunded = txnRefunds > 0 && net <= 0.01
+
+                return (
+                  <div className="pt-3 border-t border-navy/10 space-y-1">
+                    {isFullyRefunded ? (
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="font-medium text-navy">
+                          {locale === 'ru' ? 'Все платежи полностью возвращены' : 'All payments have been fully refunded'}
+                        </span>
+                      </div>
+                    ) : net > 0 && balanceDue > 0.01 ? (
+                      <>
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-navy">{locale === 'ru' ? 'Оплачено' : 'Paid'}</span>
+                          <span className="font-medium text-trust">{formatAmount(net, cur)}</span>
+                        </div>
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="font-medium text-navy">{locale === 'ru' ? 'Осталось оплатить' : 'Remaining to pay'}</span>
+                          <span className="font-bold text-gold">{formatAmount(Math.round(balanceDue), cur)}</span>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="font-medium text-navy">{locale === 'ru' ? 'Итого оплачено' : 'Total paid'}</span>
+                        <span className="font-bold text-trust">{formatAmount(net, cur)}</span>
+                      </div>
+                    )}
+                    {txnRefunds > 0 && (
+                      <p className="text-xs text-navy/50 mt-2">
+                        {locale === 'ru'
+                          ? 'Возврат средств на вашу карту обрабатывается в течение 5–10 рабочих дней.'
+                          : 'The payment refund to your card is processed within 5-10 business days.'}
+                      </p>
+                    )}
+                  </div>
+                )
+              })()}
+            </div>
           </div>
         )}
 
