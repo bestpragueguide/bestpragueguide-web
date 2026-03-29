@@ -30,6 +30,7 @@ import { BookingPageUrlField as BookingPageUrlField_custom } from '../../../comp
 import { SendOfferEmailField as SendOfferEmailField_custom } from '../../../components/admin/SendOfferEmailField'
 import { BookingStatusBar as BookingStatusBar_custom } from '../../../components/admin/BookingStatusBar'
 import { BookingAuditTimeline as BookingAuditTimeline_custom } from '../../../components/admin/BookingAuditTimeline'
+import { SyncPaymentsButton as SyncPaymentsButton_custom } from '../../../components/admin/SyncPaymentsButton'
 export const importMap = {
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalField": RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -62,5 +63,6 @@ export const importMap = {
   "@/components/admin/BookingPageUrlField#BookingPageUrlField": BookingPageUrlField_custom,
   "@/components/admin/SendOfferEmailField#SendOfferEmailField": SendOfferEmailField_custom,
   "@/components/admin/BookingStatusBar#BookingStatusBar": BookingStatusBar_custom,
-  "@/components/admin/BookingAuditTimeline#BookingAuditTimeline": BookingAuditTimeline_custom
+  "@/components/admin/BookingAuditTimeline#BookingAuditTimeline": BookingAuditTimeline_custom,
+  "@/components/admin/SyncPaymentsButton#SyncPaymentsButton": SyncPaymentsButton_custom
 }
