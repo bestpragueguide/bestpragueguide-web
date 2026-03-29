@@ -62,7 +62,7 @@ export function NewRequestAdminEmail({
       <Preview>New booking request {requestRef} — {tourName}</Preview>
       <Body style={body}>
         <Container style={container}>
-          <Text style={logo}>Best Prague Guide — Admin</Text>
+          {cmsHeaderHtml ? <div dangerouslySetInnerHTML={{ __html: cmsHeaderHtml }} /> : cmsHeaderContent ? <div style={logo} dangerouslySetInnerHTML={{ __html: cmsHeaderContent }} /> : <Text style={logo}>Best Prague Guide</Text>}
           <Hr style={hr} />
 
           <Text style={heading}>New Booking Request</Text>

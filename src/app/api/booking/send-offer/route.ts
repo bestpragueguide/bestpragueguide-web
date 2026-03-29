@@ -115,11 +115,16 @@ export async function POST(req: NextRequest) {
     notes: '',
   }
 
-  // Extract customer notes as plain text for {notes} placeholder
+  // Extract customer notes for {notes} placeholder — richText as HTML
   if (booking.customerNotes) {
     try {
       const { extractPlainText } = await import('@/components/shared/SafeRichText')
-      vars.notes = extractPlainText(booking.customerNotes) || ''
+      const notesText = extractPlainText(booking.customerNotes)
+      if (notesText) {
+        vars.notes = notesText.split('\n').map(line =>
+          `<p style="font-size:14px;line-height:22px;color:#333;margin:0 0 4px">${line}</p>`
+        ).join('')
+      }
     } catch {}
   }
 

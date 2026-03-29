@@ -58,7 +58,7 @@ export function RefundProcessedEmail({
       </Preview>
       <Body style={body}>
         <Container style={container}>
-          {cmsHeaderContent ? <div dangerouslySetInnerHTML={{ __html: cmsHeaderContent }} style={logo} /> : <Text style={logo}>Best Prague Guide</Text>}
+          {cmsHeaderHtml ? <div dangerouslySetInnerHTML={{ __html: cmsHeaderHtml }} /> : cmsHeaderContent ? <div style={logo} dangerouslySetInnerHTML={{ __html: cmsHeaderContent }} /> : <Text style={logo}>Best Prague Guide</Text>}
           <Hr style={hr} />
 
           <Text style={heading}>

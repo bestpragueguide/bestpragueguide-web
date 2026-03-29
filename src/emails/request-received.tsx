@@ -175,11 +175,7 @@ export function RequestReceivedEmail({
           )}
 
           <Hr style={hr} />
-          {cmsFooterContent
-            ? <div style={footerStyle} dangerouslySetInnerHTML={{ __html: cmsFooterContent }} />
-            : cmsFooter && cmsFooter.split('\n').map((line, i) => (
-                <Text key={`f${i}`} style={footerStyle}>{line || '\u00A0'}</Text>
-              ))}
+          {cmsFooterHtml ? <div dangerouslySetInnerHTML={{ __html: cmsFooterHtml }} /> : cmsFooterContent ? <div dangerouslySetInnerHTML={{ __html: cmsFooterContent }} /> : (cmsFooter || 'Best Prague Guide | info@bestpragueguide.com')}
         </Container>
       </Body>
     </Html>
