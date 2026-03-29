@@ -16,7 +16,6 @@ interface BookingUpdatedEmailProps {
   requestRef: string
   offerUrl: string
   locale: 'en' | 'ru'
-  customerNotes?: string
   cmsHeading?: string
   cmsBody?: string
   cmsNote?: string
@@ -34,7 +33,7 @@ interface BookingUpdatedEmailProps {
 
 export function BookingUpdatedEmail({
   customerName, tourName, confirmedDate, confirmedTime, guests, confirmedPrice,
-  currency = 'EUR', requestRef, offerUrl, locale, customerNotes,
+  currency = 'EUR', requestRef, offerUrl, locale,
   cmsHeading, cmsBody, cmsNote, cmsFooter,
   cmsHeaderHtml, cmsHeaderContent, cmsFooterHtml, cmsFooterContent,
   summaryLabels: sl, summaryPaymentLabels: spl, summaryLanguageLabels: sll,
@@ -86,7 +85,6 @@ export function BookingUpdatedEmail({
           <Hr style={hr} />
           <Text style={headingS}>{cmsHeading || (isRu ? `Обновление бронирования, ${customerName}` : `Booking update, ${customerName}`)}</Text>
           {cmsBody ? <div dangerouslySetInnerHTML={{ __html: cmsBody }} /> : <Text style={textS}>{isRu ? 'Ваше бронирование было обновлено. Пожалуйста, ознакомьтесь с актуальными деталями.' : 'Your booking has been updated. Please review the latest details.'}</Text>}
-          {customerNotes && <Section style={{ margin: '16px 0' }}><Text style={{ fontSize: '13px', fontWeight: '600' as const, color: '#1A1A1A', margin: '0 0 6px' }}>{isRu ? 'Примечание:' : 'Note:'}</Text><div dangerouslySetInnerHTML={{ __html: customerNotes }} /></Section>}
           {offerUrl && <Section style={{ textAlign: 'center' as const, margin: '20px 0' }}><Button href={offerUrl} style={ctaS}>{isRu ? 'Посмотреть бронирование' : 'View Your Booking'}</Button></Section>}
           <Section style={boxS}><table style={tblS} cellPadding="0" cellSpacing="0"><tbody>{summaryRows.map((row, i) => <tr key={i}><td style={lblS}>{row.label}</td><td style={valS}>{row.value}</td></tr>)}</tbody></table></Section>
           {cmsNote ? <div dangerouslySetInnerHTML={{ __html: cmsNote }} /> : null}

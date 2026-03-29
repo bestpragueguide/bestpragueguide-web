@@ -112,6 +112,15 @@ export async function POST(req: NextRequest) {
     price: `${confirmedPrice}`,
     deposit: depositAmount != null ? `${depositAmount}` : '',
     ref: booking.requestRef,
+    notes: '',
+  }
+
+  // Extract customer notes as plain text for {notes} placeholder
+  if (booking.customerNotes) {
+    try {
+      const { extractPlainText } = await import('@/components/shared/SafeRichText')
+      vars.notes = extractPlainText(booking.customerNotes) || ''
+    } catch {}
   }
 
   // Determine email type based on current booking status
@@ -200,14 +209,6 @@ export async function POST(req: NextRequest) {
     // Update — use Booking Updated template
     subject = resolveTemplate((tpl as any).updatedSubject || (locale === 'ru' ? 'Обновление бронирования — {tour}' : 'Booking update — {tour}'), vars)
 
-    // Convert customerNotes richText to HTML
-    let notesHtml: string | undefined
-    if (booking.customerNotes) {
-      const { extractPlainText } = await import('@/components/shared/SafeRichText')
-      const notesText = extractPlainText(booking.customerNotes)
-      if (notesText) notesHtml = `<p style="font-size:14px;color:#333">${notesText.replace(/\n/g, '<br/>')}</p>`
-    }
-
     emailReact = BookingUpdatedEmail({
       customerName: booking.customerName,
       tourName: tourTitle,
@@ -219,7 +220,6 @@ export async function POST(req: NextRequest) {
       requestRef: booking.requestRef,
       offerUrl,
       locale,
-      customerNotes: notesHtml,
       cmsHeading: (tpl as any).updatedHeading ? resolveTemplate((tpl as any).updatedHeading, vars) : undefined,
       cmsBody: (tpl as any).updatedBody ? resolveTemplate((tpl as any).updatedBody, vars) : undefined,
       cmsNote: (tpl as any).updatedNote ? resolveTemplate((tpl as any).updatedNote, vars) : undefined,
