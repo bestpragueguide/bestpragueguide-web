@@ -101,9 +101,9 @@ export async function POST(req: Request) {
       `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS contact_body varchar`,
       `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS contact_note varchar`,
 
-      // RichText header/footer columns
-      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS header_content varchar`,
-      `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS footer_content varchar`,
+      // Clear old richText header/footer that may contain invalid Lexical nodes
+      `UPDATE email_templates_locales SET header_content = NULL WHERE header_content IS NOT NULL`,
+      `UPDATE email_templates_locales SET footer_content = NULL WHERE footer_content IS NOT NULL`,
       `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS header_html varchar`,
       `ALTER TABLE email_templates_locales ADD COLUMN IF NOT EXISTS footer_html varchar`,
 
