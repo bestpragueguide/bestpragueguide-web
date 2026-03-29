@@ -445,6 +445,15 @@ export const BookingRequests: CollectionConfig = {
                 },
               ],
             },
+            {
+              name: 'syncPayments',
+              type: 'ui',
+              admin: {
+                components: {
+                  Field: '/src/components/admin/SyncPaymentsButton#SyncPaymentsButton',
+                },
+              },
+            },
           ],
         },
         {

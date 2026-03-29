@@ -119,32 +119,6 @@ export function BookingStatusBar() {
     setTimeout(() => setSendMsg(null), 4000)
   }
 
-  const [syncing, setSyncing] = useState(false)
-  const [syncMsg, setSyncMsg] = useState<string | null>(null)
-
-  const handleSync = async () => {
-    setSyncing(true)
-    setSyncMsg(null)
-    try {
-      const res = await fetch('/api/booking/sync-payments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-init-secret': prompt('Enter admin secret:') || '' },
-        body: JSON.stringify({ bookingId: id }),
-      })
-      const data = (await res.json()) as { success?: boolean; synced?: number; error?: string; message?: string }
-      if (data.success) {
-        setSyncMsg(data.synced ? `Synced ${data.synced} transactions` : (data.message || 'In sync'))
-        if (data.synced) window.location.reload()
-      } else {
-        setSyncMsg(`Error: ${data.error}`)
-      }
-    } catch {
-      setSyncMsg('Failed')
-    }
-    setSyncing(false)
-    setTimeout(() => setSyncMsg(null), 5000)
-  }
-
   const badge = (text: string, bg: string, fg: string) => (
     <span style={{
       display: 'inline-block', fontSize: 11, fontWeight: 600, color: fg,
@@ -208,19 +182,9 @@ export function BookingStatusBar() {
             handleSend,
             { bg: '#C4975C', fg: '#fff', disabled: sending },
           )}
-          {btn(
-            syncing ? 'Syncing...' : 'Sync Payments',
-            handleSync,
-            { disabled: syncing },
-          )}
           {sendMsg && (
             <span style={{ fontSize: 11, color: sendMsg.startsWith('Error') ? '#DC2626' : '#16A34A' }}>
               {sendMsg}
-            </span>
-          )}
-          {syncMsg && (
-            <span style={{ fontSize: 11, color: syncMsg.startsWith('Error') ? '#DC2626' : '#16A34A' }}>
-              {syncMsg}
             </span>
           )}
         </div>
