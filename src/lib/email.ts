@@ -42,11 +42,14 @@ export async function sendEmail({
       console.log(`[Email] Rendering HTML for ${to}: ${subject}`)
       const html = await render(react)
       console.log(`[Email] Rendered ${html.length} chars, sending via Gmail to ${to}`)
+      // Generate plain text version for better deliverability
+      const text = html.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim().slice(0, 2000)
       const info = await gmailTransport.sendMail({
         from: FROM,
         to,
         subject,
         html,
+        text,
         ...(replyTo ? { replyTo } : {}),
       })
       console.log(`[Email] Sent via Gmail to ${to}: ${subject} | messageId: ${info.messageId}`)
