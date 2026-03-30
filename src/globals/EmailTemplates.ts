@@ -24,7 +24,6 @@ export const EmailTemplates: GlobalConfig = {
               },
             },
             {
-            {
               name: 'receivedHeading',
               label: 'Heading',
               type: 'text',
@@ -158,7 +157,6 @@ export const EmailTemplates: GlobalConfig = {
               },
             },
             {
-            {
               name: 'declinedHeading',
               label: 'Heading',
               type: 'text',
@@ -203,7 +201,6 @@ export const EmailTemplates: GlobalConfig = {
                 description: 'Placeholders: {name}, {tour}, {date}, {ref}',
               },
             },
-            {
             {
               name: 'cancelledHeading',
               label: 'Heading',
@@ -384,7 +381,6 @@ export const EmailTemplates: GlobalConfig = {
                 placeholder: 'Refund processed — {ref}',
               },
             },
-            {
             {
               name: 'refundHeading',
               label: 'Heading',
@@ -571,7 +567,6 @@ export const EmailTemplates: GlobalConfig = {
                 placeholder: 'Contact form: {name}',
               },
             },
-            {
             {
               name: 'contactHeading',
               label: 'Heading',
