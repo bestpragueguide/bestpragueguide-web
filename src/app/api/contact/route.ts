@@ -162,6 +162,7 @@ export async function POST(request: NextRequest) {
             phone: data.phone,
             message: data.message,
             locale: data.locale as 'en' | 'ru',
+            cmsHeading: (tpl as any).contactHeading ? resolveTemplate((tpl as any).contactHeading, vars) : undefined,
             cmsBody: tpl.contactBody ? resolveTemplate(tpl.contactBody, vars) : undefined,
             cmsNote: tpl.contactNote ? resolveTemplate(tpl.contactNote, vars) : undefined,
             cmsFooter: tpl.footer || undefined,

@@ -28,6 +28,7 @@ interface RequestReceivedEmailProps {
   locale: 'en' | 'ru'
   cmsHeaderTitle?: string
   cmsGreeting?: string
+  cmsHeading?: string
   cmsBody?: string
   cmsSummaryTitle?: string
   cmsSummaryBody?: string
@@ -60,6 +61,7 @@ export function RequestReceivedEmail({
   locale,
   cmsHeaderTitle,
   cmsGreeting,
+  cmsHeading,
   cmsBody,
   cmsSummaryTitle,
   cmsSummaryBody,

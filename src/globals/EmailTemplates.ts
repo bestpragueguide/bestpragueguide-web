@@ -24,6 +24,17 @@ export const EmailTemplates: GlobalConfig = {
               },
             },
             {
+            {
+              name: 'receivedHeading',
+              label: 'Heading',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Placeholders: {name}, {tour}, {ref}',
+                placeholder: 'Hello, {name}!',
+              },
+            },
+            {
               name: 'receivedBody',
               label: 'Body',
               type: 'richText',
@@ -147,6 +158,17 @@ export const EmailTemplates: GlobalConfig = {
               },
             },
             {
+            {
+              name: 'declinedHeading',
+              label: 'Heading',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Placeholders: {name}, {tour}, {ref}',
+                placeholder: 'Request update, {name}',
+              },
+            },
+            {
               name: 'declinedBody',
               label: 'Body',
               type: 'richText',
@@ -179,6 +201,17 @@ export const EmailTemplates: GlobalConfig = {
               defaultValue: 'Booking cancelled — {ref}',
               admin: {
                 description: 'Placeholders: {name}, {tour}, {date}, {ref}',
+              },
+            },
+            {
+            {
+              name: 'cancelledHeading',
+              label: 'Heading',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Placeholders: {name}, {tour}, {ref}',
+                placeholder: 'Booking cancelled, {name}',
               },
             },
             {
@@ -349,6 +382,17 @@ export const EmailTemplates: GlobalConfig = {
               admin: {
                 description: 'Placeholders: {name}, {tour}, {date}, {ref}',
                 placeholder: 'Refund processed — {ref}',
+              },
+            },
+            {
+            {
+              name: 'refundHeading',
+              label: 'Heading',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Placeholders: {name}, {tour}, {ref}',
+                placeholder: 'Refund processed, {name}',
               },
             },
             {
@@ -525,6 +569,17 @@ export const EmailTemplates: GlobalConfig = {
               admin: {
                 description: 'Subject for admin notification. Placeholders: {name}',
                 placeholder: 'Contact form: {name}',
+              },
+            },
+            {
+            {
+              name: 'contactHeading',
+              label: 'Heading',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Placeholders: {name}, {tour}, {ref}',
+                placeholder: 'Thank you, {name}!',
               },
             },
             {

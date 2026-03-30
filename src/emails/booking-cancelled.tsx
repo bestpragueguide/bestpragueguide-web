@@ -17,6 +17,7 @@ interface BookingCancelledEmailProps {
   locale: 'en' | 'ru'
   cmsHeaderTitle?: string
   cmsGreeting?: string
+  cmsHeading?: string
   cmsBody?: string
   cmsNote?: string
   cmsFooter?: string
@@ -34,6 +35,7 @@ export function BookingCancelledEmail({
   locale,
   cmsHeaderTitle,
   cmsGreeting,
+  cmsHeading,
   cmsBody,
   cmsNote,
   cmsFooter,

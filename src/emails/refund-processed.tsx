@@ -20,6 +20,7 @@ interface RefundProcessedEmailProps {
   currency: string
   offerUrl?: string
   locale: 'en' | 'ru'
+  cmsHeading?: string
   cmsBody?: string
   cmsNote?: string
   cmsFooter?: string
@@ -38,6 +39,7 @@ export function RefundProcessedEmail({
   currency = 'EUR',
   offerUrl,
   locale,
+  cmsHeading,
   cmsBody,
   cmsNote,
   cmsFooter,
@@ -62,9 +64,9 @@ export function RefundProcessedEmail({
           <Hr style={hr} />
 
           <Text style={heading}>
-            {isRu
+{cmsHeading || (isRu
               ? `Возврат обработан, ${customerName}`
-              : `Refund processed, ${customerName}`}
+              : `Refund processed, ${customerName}`)}
           </Text>
 
           {/* CMS body from trusted admin Lexical richText editor */}

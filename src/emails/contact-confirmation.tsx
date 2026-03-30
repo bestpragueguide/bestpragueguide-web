@@ -16,6 +16,7 @@ interface ContactConfirmationEmailProps {
   phone: string
   message: string
   locale: 'en' | 'ru'
+  cmsHeading?: string
   cmsBody?: string
   cmsNote?: string
   cmsFooter?: string
@@ -31,6 +32,7 @@ export function ContactConfirmationEmail({
   phone,
   message,
   locale,
+  cmsHeading,
   cmsBody,
   cmsNote,
   cmsFooter,
@@ -55,9 +57,9 @@ export function ContactConfirmationEmail({
           <Hr style={hr} />
 
           <Text style={heading}>
-            {isRu
+{cmsHeading || (isRu
               ? `Спасибо, ${customerName}!`
-              : `Thank you, ${customerName}!`}
+              : `Thank you, ${customerName}!`)}
           </Text>
 
           {cmsBody ? (

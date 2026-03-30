@@ -151,6 +151,7 @@ export async function POST(request: NextRequest) {
       locale: data.locale,
       cmsHeaderTitle: tpl.headerTitle || undefined,
       cmsGreeting: tpl.greeting ? resolveTemplate(tpl.greeting, vars) : undefined,
+      cmsHeading: (tpl as any).receivedHeading ? resolveTemplate((tpl as any).receivedHeading, vars) : undefined,
       cmsBody: tpl.receivedBody ? resolveTemplate(tpl.receivedBody, vars) : undefined,
       cmsSummaryTitle: tpl.receivedSummaryTitle || undefined,
       cmsSummaryBody: tpl.receivedSummaryBody ? resolveTemplate(tpl.receivedSummaryBody, vars) : undefined,

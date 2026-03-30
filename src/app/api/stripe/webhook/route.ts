@@ -336,6 +336,7 @@ export async function POST(req: NextRequest) {
             currency: booking.currency || refundCurrency,
             offerUrl,
             locale,
+            cmsHeading: (tpl as any).refundHeading ? resolveTemplate((tpl as any).refundHeading, vars) : undefined,
             cmsBody: (tpl as any).refundBody ? resolveTemplate((tpl as any).refundBody, vars) : undefined,
             cmsNote: (tpl as any).refundNote ? resolveTemplate((tpl as any).refundNote, vars) : undefined,
             cmsFooter: tpl.footer || undefined,

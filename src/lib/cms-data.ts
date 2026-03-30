@@ -449,15 +449,18 @@ export interface EmailTemplatesData {
   headerHtml?: string
   greeting?: string
   receivedSubject?: string
+  receivedHeading?: string
   receivedBody?: string
   receivedSummaryTitle?: string
   receivedSummaryBody?: string
   receivedNote?: string
   adminSubject?: string
   declinedSubject?: string
+  declinedHeading?: string
   declinedBody?: string
   declinedNote?: string
   cancelledSubject?: string
+  cancelledHeading?: string
   cancelledBody?: string
   cancelledNote?: string
   paymentSubject?: string
@@ -482,6 +485,7 @@ export interface EmailTemplatesData {
   updatedNote?: string
   contactSubject?: string
   contactAdminSubject?: string
+  contactHeading?: string
   contactBody?: string
   contactNote?: string
   summaryLabels?: {
@@ -491,6 +495,7 @@ export interface EmailTemplatesData {
     deposit?: string; cashBalance?: string
   }
   refundSubject?: string
+  refundHeading?: string
   refundBody?: string
   refundNote?: string
   summaryPaymentLabels?: {
@@ -670,15 +675,18 @@ export async function getEmailTemplates(locale: string): Promise<EmailTemplatesD
       headerHtml: data.headerHtml || undefined,
       greeting: data.greeting || undefined,
       receivedSubject: data.receivedSubject || undefined,
+      receivedHeading: data.receivedHeading || undefined,
       receivedBody: toEmailHtml(data.receivedBody),
       receivedSummaryTitle: data.receivedSummaryTitle || undefined,
       receivedSummaryBody: toEmailHtml(data.receivedSummaryBody),
       receivedNote: toEmailHtml(data.receivedNote),
       adminSubject: data.adminSubject || undefined,
       declinedSubject: data.declinedSubject || undefined,
+      declinedHeading: data.declinedHeading || undefined,
       declinedBody: toEmailHtml(data.declinedBody),
       declinedNote: toEmailHtml(data.declinedNote),
       cancelledSubject: data.cancelledSubject || undefined,
+      cancelledHeading: data.cancelledHeading || undefined,
       cancelledBody: toEmailHtml(data.cancelledBody),
       cancelledNote: toEmailHtml(data.cancelledNote),
       paymentSubject: data.paymentSubject || undefined,
@@ -695,6 +703,7 @@ export async function getEmailTemplates(locale: string): Promise<EmailTemplatesD
       offerCtaLabel: data.offerCtaLabel || undefined,
       offerNote: toEmailHtml(data.offerNote),
       refundSubject: data.refundSubject || undefined,
+      refundHeading: data.refundHeading || undefined,
       refundBody: toEmailHtml(data.refundBody),
       refundNote: toEmailHtml(data.refundNote),
       footer: data.footer || undefined,
@@ -705,6 +714,7 @@ export async function getEmailTemplates(locale: string): Promise<EmailTemplatesD
       updatedBody: toEmailHtml(data.updatedBody),
       updatedNote: toEmailHtml(data.updatedNote),
       contactSubject: data.contactSubject || undefined,
+      contactHeading: data.contactHeading || undefined,
       contactAdminSubject: data.contactAdminSubject || undefined,
       contactBody: toEmailHtml(data.contactBody),
       contactNote: toEmailHtml(data.contactNote),

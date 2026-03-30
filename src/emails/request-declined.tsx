@@ -15,6 +15,7 @@ interface RequestDeclinedEmailProps {
   preferredDate: string
   requestRef: string
   locale: 'en' | 'ru'
+  cmsHeading?: string
   cmsBody?: string
   cmsNote?: string
   cmsFooter?: string
@@ -30,6 +31,7 @@ export function RequestDeclinedEmail({
   preferredDate,
   requestRef,
   locale,
+  cmsHeading,
   cmsBody,
   cmsNote,
   cmsFooter,
@@ -54,9 +56,9 @@ export function RequestDeclinedEmail({
           <Hr style={hr} />
 
           <Text style={heading}>
-            {isRu
+{cmsHeading || (isRu
               ? `Уважаемый(-ая) ${customerName},`
-              : `Dear ${customerName},`}
+              : `Dear ${customerName},`)}
           </Text>
 
           {cmsBody ? (
