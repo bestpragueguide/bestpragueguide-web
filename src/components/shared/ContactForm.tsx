@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
+import { trackContactSubmit } from '@/lib/analytics'
 
 interface ContactFormProps {
   locale: string
@@ -51,6 +52,7 @@ export function ContactForm({ locale, phoneDisplay }: ContactFormProps) {
 
       if (result.success) {
         setStatus('success')
+        trackContactSubmit()
         form.reset()
       } else if (res.status === 429) {
         setStatus('rate_limited')

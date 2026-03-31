@@ -20,6 +20,7 @@ import {
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics'
 import { YandexMetrika } from '@/components/analytics/YandexMetrika'
 import { UmamiAnalytics } from '@/components/analytics/UmamiAnalytics'
+import { MetaPixel } from '@/components/analytics/MetaPixel'
 import { getSiteSettings, getNavigation } from '@/lib/cms-data'
 import '@/app/globals.css'
 
@@ -122,6 +123,7 @@ export default async function FrontendLayout({
         <GoogleAnalytics />
         <UmamiAnalytics />
         <YandexMetrika />
+        <MetaPixel />
       </body>
     </html>
   )
