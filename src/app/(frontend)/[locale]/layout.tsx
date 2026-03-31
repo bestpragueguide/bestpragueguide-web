@@ -20,7 +20,7 @@ import {
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics'
 import { YandexMetrika } from '@/components/analytics/YandexMetrika'
 import { UmamiAnalytics } from '@/components/analytics/UmamiAnalytics'
-import { MetaPixel } from '@/components/analytics/MetaPixel'
+import { MetaPixelNoscript } from '@/components/analytics/MetaPixel'
 import { getSiteSettings, getNavigation } from '@/lib/cms-data'
 import '@/app/globals.css'
 
@@ -98,6 +98,15 @@ export default async function FrontendLayout({
 
   return (
     <html lang={locale} dir="ltr">
+      {process.env.NEXT_PUBLIC_FB_PIXEL_ID && (
+        <head>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${process.env.NEXT_PUBLIC_FB_PIXEL_ID}');fbq('track','PageView');`,
+            }}
+          />
+        </head>
+      )}
       <body className={`${cormorant.variable} ${dmSans.variable}`}>
         <GoogleTagManagerBody />
         <NextIntlClientProvider messages={messages}>
@@ -123,7 +132,7 @@ export default async function FrontendLayout({
         <GoogleAnalytics />
         <UmamiAnalytics />
         <YandexMetrika />
-        <MetaPixel pixelId={process.env.NEXT_PUBLIC_FB_PIXEL_ID} />
+        <MetaPixelNoscript pixelId={process.env.NEXT_PUBLIC_FB_PIXEL_ID} />
       </body>
     </html>
   )
