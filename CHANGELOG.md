@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.40.1] - 2026-03-31
+
+### Fixed
+- **Meta Pixel not loading** — `NEXT_PUBLIC_FB_PIXEL_ID` was empty at build time, causing the MetaPixel component to return null. Fixed by passing pixel ID as a runtime prop from the server layout instead of relying on build-time inlining. Added `NEXT_PUBLIC_FB_PIXEL_ID` and `FB_CAPI_TOKEN` to docker-compose runtime environment.
+
 ## [1.40.0] - 2026-03-28
 
 ### Added

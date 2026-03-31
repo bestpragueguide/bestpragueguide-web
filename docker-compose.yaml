@@ -26,6 +26,8 @@ services:
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
       - TELEGRAM_ADMIN_CHAT_ID=${TELEGRAM_ADMIN_CHAT_ID}
       - MEDIA_DIR=/app/media
+      - NEXT_PUBLIC_FB_PIXEL_ID=${NEXT_PUBLIC_FB_PIXEL_ID}
+      - FB_CAPI_TOKEN=${FB_CAPI_TOKEN}
 
 volumes:
   bestpragueguide-media:

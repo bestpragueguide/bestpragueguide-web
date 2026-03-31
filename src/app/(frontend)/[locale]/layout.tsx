@@ -123,7 +123,7 @@ export default async function FrontendLayout({
         <GoogleAnalytics />
         <UmamiAnalytics />
         <YandexMetrika />
-        <MetaPixel />
+        <MetaPixel pixelId={process.env.NEXT_PUBLIC_FB_PIXEL_ID} />
       </body>
     </html>
   )
