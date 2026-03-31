@@ -4,7 +4,6 @@ declare global {
   interface Window {
     dataLayer?: Record<string, unknown>[]
     ym?: (id: number, method: string, goal: string, params?: Record<string, unknown>) => void
-    fbq?: (...args: unknown[]) => void
   }
 }
 
