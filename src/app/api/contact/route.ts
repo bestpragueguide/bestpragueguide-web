@@ -191,6 +191,15 @@ export async function POST(request: NextRequest) {
           isp: ipInfo.org,
         }),
       ),
+      // Meta CAPI — server-side Lead event
+      import('@/lib/meta-capi').then(({ capiTrackContactLead }) =>
+        capiTrackContactLead({
+          email: data.email,
+          phone: data.phone,
+          ip,
+          userAgent: request.headers.get('user-agent') || '',
+        })
+      ).catch(() => {}),
     ])
 
     return NextResponse.json({ success: true })

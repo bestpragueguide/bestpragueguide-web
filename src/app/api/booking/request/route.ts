@@ -206,6 +206,18 @@ export async function POST(request: NextRequest) {
         ipCountry: ipInfo?.country,
         submittedAt: new Date().toISOString(),
       }),
+      // Meta CAPI — server-side Lead event
+      import('@/lib/meta-capi').then(({ capiTrackLead }) =>
+        capiTrackLead({
+          email: data.customerEmail,
+          phone: data.customerPhone,
+          tourName: data.tourName,
+          price: data.totalPrice ?? undefined,
+          currency: data.currency || 'EUR',
+          ip: ipInfo.ip,
+          userAgent: request.headers.get('user-agent') || '',
+        })
+      ).catch(() => {}),
     ]
 
     // Wait for email results to include in response for debugging
