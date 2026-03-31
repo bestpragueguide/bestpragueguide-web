@@ -501,7 +501,7 @@ export default async function TourDetailPage({
       )}
 
       {/* Analytics: track tour view */}
-      <TourViewTracker tourName={tour.title} tourId={tour.id as number} price={displayPrice.price || undefined} />
+      <TourViewTracker tourName={tour.title} tourId={tour.id as number} price={displayPrice.fromPrice || undefined} />
 
       {/* Mobile sticky book button */}
       <StickyBookButton
