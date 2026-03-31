@@ -1,7 +1,5 @@
-// Meta (Facebook) Pixel — loads only when pixelId prop is provided
-// pixelId is passed from the server layout (runtime env var) to avoid build-time inlining issues
-'use client'
-
+// Meta (Facebook) Pixel — loads only when NEXT_PUBLIC_FB_PIXEL_ID is set
+// Server Component (no 'use client') — matches GoogleAnalytics/YandexMetrika pattern
 import Script from 'next/script'
 
 export function MetaPixel({ pixelId }: { pixelId?: string }) {
@@ -12,21 +10,18 @@ export function MetaPixel({ pixelId }: { pixelId?: string }) {
       <Script
         id="meta-pixel"
         strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            !function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}(window,document,'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init','${pixelId}');
-            fbq('track','PageView');
-          `,
-        }}
-      />
+      >{`
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window,document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init','${pixelId}');
+        fbq('track','PageView');
+      `}</Script>
       <noscript>
         <img
           height="1"
