@@ -2,10 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.40.1] - 2026-03-31
+## [1.40.1] - 2026-04-01
 
 ### Fixed
-- **Meta Pixel not loading** — `NEXT_PUBLIC_FB_PIXEL_ID` was empty at build time, causing the MetaPixel component to return null. Fixed by passing pixel ID as a runtime prop from the server layout instead of relying on build-time inlining. Added `NEXT_PUBLIC_FB_PIXEL_ID` and `FB_CAPI_TOKEN` to docker-compose runtime environment.
+- **Meta Pixel not loading** — moved pixel script to a raw `<script>` tag in `<head>` (matching Meta's official placement) instead of using `next/script` afterInteractive strategy which injected via JS after hydration. Pixel ID passed as runtime prop from server layout to avoid build-time inlining issues. Added `NEXT_PUBLIC_FB_PIXEL_ID` and `FB_CAPI_TOKEN` to docker-compose runtime environment. Cleaned up duplicate env vars in Coolify.
 
 ## [1.40.0] - 2026-03-28
 
