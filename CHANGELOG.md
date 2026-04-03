@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.40.2] - 2026-04-03
+
+### Fixed
+- **Missing alt text on 143 media items** — added GET handler to `/api/fix-alt-text` that fills missing alt text for all media from filename (both EN and RU locales). Generates alt by converting filename to readable text (removing extension, replacing separators with spaces).
+
 ## [1.40.1] - 2026-04-01
 
 ### Fixed

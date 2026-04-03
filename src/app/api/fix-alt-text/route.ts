@@ -134,6 +134,69 @@ const altTextMap: Record<string, { en?: string; ru?: string }> = {
   },
 }
 
+// GET: Fill missing alt text for ALL media from filename (both locales)
+export async function GET(req: Request) {
+  try {
+    const secret = req.headers.get('x-init-secret')
+    const payload = await getPayload({ config })
+    if (secret !== process.env.PAYLOAD_SECRET) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const db = payload.db.drizzle
+
+    // Generate alt from filename: remove extension, replace separators with spaces, trim
+    function filenameToAlt(filename: string): string {
+      const name = filename.replace(/\.[^.]+$/, '') // remove extension
+        .replace(/[-_]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+      return name
+    }
+
+    // Find all media with missing alt for each locale
+    let updated = 0
+    const details: { id: number; filename: string; alt: string; locale: string }[] = []
+
+    for (const locale of ['en', 'ru'] as const) {
+      // Query media_locales rows where alt is NULL or empty
+      const missing = await db.execute(
+        sql`SELECT ml._parent_id AS id, m.filename
+            FROM media_locales ml
+            JOIN media m ON m.id = ml._parent_id
+            WHERE ml._locale = ${locale}
+            AND (ml.alt IS NULL OR ml.alt = '')
+            AND m.filename IS NOT NULL`
+      )
+
+      const rows = (missing as any).rows || missing
+      for (const row of rows) {
+        const alt = filenameToAlt(row.filename)
+        if (!alt) continue
+
+        await db.execute(
+          sql`UPDATE media_locales SET alt = ${alt}
+              WHERE _parent_id = ${row.id} AND _locale = ${locale}`
+        )
+        updated++
+        if (details.length < 50) {
+          details.push({ id: row.id, filename: row.filename, alt, locale })
+        }
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      updated,
+      details,
+    })
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
+}
+
+// POST: Apply SEO-optimized alt text for tour hero/gallery images
 export async function POST(req: Request) {
   try {
     const secret = req.headers.get('x-init-secret')
