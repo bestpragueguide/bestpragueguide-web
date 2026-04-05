@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.40.3] - 2026-04-05
+
+### Added
+- **Vision-based SEO alt text for all media** — `scripts/fix-alt-text-vision.py` downloads each image, analyzes it with Claude Sonnet 4.6 vision via the CLI, and generates keyword-rich alt text (EN + RU, max 100 chars) covering landmarks, locations, and activities. Supports stop/resume via `scripts/fix-alt-state.json`, `--retry-failed`, `--dry-run`, `--reset`, and `--model` flags. Processed 142 images missing alt text (0 failures after retry pass). Cost: $10.13.
+
 ## [1.40.2] - 2026-04-03
 
 ### Fixed
