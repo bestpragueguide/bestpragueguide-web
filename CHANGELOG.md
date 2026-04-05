@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.40.4] - 2026-04-05
+
+### Changed
+- **Blog renamed to "Plan Your Visit" / "Путеводитель"** — updated `blogBreadcrumb` and `blogHeading` i18n keys in `en.json` and `ru.json`. Navigation label was already updated in CMS. URLs unchanged (`/blog/`, `/ekskursii/` etc.) to preserve Google indexing.
+
 ## [1.40.3] - 2026-04-05
 
 ### Added
