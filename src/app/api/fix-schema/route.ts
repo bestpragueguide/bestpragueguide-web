@@ -284,6 +284,10 @@ export async function POST(req: Request) {
         UNIQUE(_locale, _parent_id)
       )`,
 
+      // Guest category minRequired field
+      `ALTER TABLE tours_pricing_guest_categories ADD COLUMN IF NOT EXISTS min_required numeric`,
+      `ALTER TABLE _tours_v_version_pricing_guest_categories ADD COLUMN IF NOT EXISTS min_required numeric`,
+
       // tours_rels table for relatedTours hasMany relationship
       `CREATE TABLE IF NOT EXISTS tours_rels (
         id serial PRIMARY KEY,
