@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.40.6] - 2026-04-06
+
+### Fixed
+- **`og:type` was `article` on tour pages** — changed to `website` (correct per OG spec; `product` is not a valid OG type). Affects all tour detail pages.
+- **`x-default` hreflang missing on single-locale pages** — tour and blog post pages published in one language only now emit an `x-default` hreflang pointing to the EN URL (for EN-only pages) or to the homepage (for RU-only pages without an EN equivalent).
+- **Terezin-Memorial slug casing** — added 301 redirect from `/en/tours/Terezin-Memorial` to `/en/tours/terezin-memorial` in `next.config.ts`.
+- **`/api/` and `/admin/` not blocked in robots.txt** — added `Disallow: /api/` and `Disallow: /admin/` to prevent crawl budget waste.
+
 ## [1.40.5] - 2026-04-06
 
 ### Fixed

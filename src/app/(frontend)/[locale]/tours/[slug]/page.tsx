@@ -138,6 +138,11 @@ export async function generateMetadata({
     languages.en = `${baseUrl}/en/tours/${enSlug}`
     languages.ru = `${baseUrl}/ru/ekskursii/${ruSlug}`
     languages['x-default'] = `${baseUrl}/en/tours/${enSlug}`
+  } else {
+    // Single-locale page: x-default points to EN URL if available, otherwise homepage
+    languages['x-default'] = locale === 'en'
+      ? `${baseUrl}/en/tours/${slug}`
+      : `${baseUrl}/en/`
   }
 
   const heroImage = typeof tour.heroImage === 'object' ? tour.heroImage : null
@@ -155,7 +160,7 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      type: 'article',
+      type: 'website',
       locale: locale === 'ru' ? 'ru_RU' : 'en_US',
       alternateLocale: locale === 'ru' ? ['en_US'] : ['ru_RU'],
       siteName: 'Best Prague Guide',

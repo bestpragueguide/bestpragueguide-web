@@ -72,6 +72,11 @@ export async function generateMetadata({
       languages.en = `${baseUrl}/en/blog/${enSlug}`
       languages.ru = `${baseUrl}/ru/blog/${ruSlug}`
       languages['x-default'] = `${baseUrl}/en/blog/${enSlug}`
+    } else {
+      // Single-locale page: x-default points to EN URL if available, otherwise homepage
+      languages['x-default'] = locale === 'en'
+        ? `${baseUrl}/en/blog/${slug}`
+        : `${baseUrl}/en/`
     }
 
     const fullOgImage = ogImageUrl
