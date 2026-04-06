@@ -106,7 +106,7 @@ export function BookingRequestForm({
     if (!hasCategories) return []
     const errs: string[] = []
     // Sum of categories must equal Number of Guests
-    if (categoryTotal > 0 && categoryTotal !== guests) {
+    if (categoryTotal !== guests) {
       errs.push(t('categoryTotalMismatch', { guests: String(guests), total: String(categoryTotal) }))
     }
     // Per-category minimum
@@ -137,7 +137,7 @@ export function BookingRequestForm({
     setErrors({})
 
     // Validate category breakdown totals Number of Guests
-    if (hasCategories && categoryTotal > 0 && categoryTotal !== guests) {
+    if (hasCategories && categoryTotal !== guests) {
       setErrors({ categories: t('categoryTotalMismatch', { guests: String(guests), total: String(categoryTotal) }) })
       return
     }
@@ -417,7 +417,7 @@ export function BookingRequestForm({
               </div>
             ))}
           </div>
-          {hasCategories && categoryTotal > 0 && categoryTotal !== guests && (
+          {hasCategories && categoryTotal !== guests && (
             <p className="text-xs text-error mt-2">
               {t('categoryTotalMismatch', { guests: String(guests), total: String(categoryTotal) })}
             </p>
@@ -584,7 +584,7 @@ export function BookingRequestForm({
         disabled={
           status === 'loading' ||
           (!!consentText && !consented) ||
-          (hasCategories && categoryTotal > 0 && categoryTotal !== guests) ||
+          (hasCategories && categoryTotal !== guests) ||
           categoryErrors.length > 0 ||
           (!priceResult.isOnRequest && totalWithModifiers !== null && totalWithModifiers <= 0)
         }

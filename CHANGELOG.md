@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.40.9] - 2026-04-06
+
+### Fixed
+- **Guest category validation was not enforced** — validation only triggered after partial selection (categoryTotal > 0). Now enforced always: when guest categories exist, they MUST be filled and sum to Number of Guests. Submit button disabled from the start until categories are properly assigned.
+
 ## [1.40.8] - 2026-04-06
 
 ### Added
