@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.40.5] - 2026-04-06
+
+### Fixed
+- **Guest category "free" not working** — `isFree` was incorrectly skipping the `priceModifier` in the total calculation. `isFree` is now display-only (shows "(free)" label); the `priceModifier` still applies so a free guest's per-person cost is correctly offset (e.g. `priceModifier: -50` on a PER\_PERSON tour subtracts that guest's share from the total). GROUP\_TIERS free guests with `priceModifier: 0` are unaffected.
+- **Guest category sign always showed `+`** — negative modifiers (discounts) displayed as `+-20 EUR`. Now shows `+20 EUR` for surcharges and `-20 EUR` for discounts.
+
 ## [1.40.4] - 2026-04-05
 
 ### Changed

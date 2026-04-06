@@ -84,7 +84,8 @@ export function BookingRequestForm({
     if (!pricing.guestCategories?.length) return 0
     return pricing.guestCategories.reduce((total, cat) => {
       const count = categoryBreakdown[cat.label] || 0
-      if (cat.isFree || cat.onRequest) return total
+      if (cat.onRequest) return total
+      // isFree is display-only; priceModifier still applies (e.g. -50 offsets per-person cost)
       return total + count * (cat.priceModifier || 0)
     }, 0)
   }, [pricing.guestCategories, categoryBreakdown])
@@ -340,7 +341,7 @@ export function BookingRequestForm({
                   {cat.isFree
                     ? ` (${t('free')})`
                     : cat.priceModifier
-                      ? ` (+${formatPrice(cat.priceModifier, currency)})`
+                      ? ` (${cat.priceModifier > 0 ? '+' : ''}${formatPrice(cat.priceModifier, currency)})`
                       : ''}
                 </span>
                 <select
