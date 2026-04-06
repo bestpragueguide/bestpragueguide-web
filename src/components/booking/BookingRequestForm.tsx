@@ -52,10 +52,25 @@ export function BookingRequestForm({
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [consented, setConsented] = useState(false)
   const [selectedPayment, setSelectedPayment] = useState<'stripe_full' | 'cash_only'>('cash_only')
-  const [guests, setGuests] = useState(2)
+  // Minimum guests from category minRequired values
+  const minGuestsFromCategories = useMemo(() => {
+    if (!pricing.guestCategories?.length) return 1
+    return Math.max(1, pricing.guestCategories.reduce((sum, cat) => sum + (cat.minRequired || 0), 0))
+  }, [pricing.guestCategories])
+
+  const [guests, setGuests] = useState(() => Math.max(2, minGuestsFromCategories))
   const [currency, setCurrency] = useState<Currency>('EUR')
   const [selectedServiceIds, setSelectedServiceIds] = useState<Set<number>>(new Set())
-  const [categoryBreakdown, setCategoryBreakdown] = useState<Record<string, number>>({})
+  const [categoryBreakdown, setCategoryBreakdown] = useState<Record<string, number>>(() => {
+    if (!pricing.guestCategories?.length) return {}
+    const initial: Record<string, number> = {}
+    for (const cat of pricing.guestCategories) {
+      if (cat.minRequired && cat.minRequired > 0) {
+        initial[cat.label] = cat.minRequired
+      }
+    }
+    return initial
+  })
 
 
   const tomorrow = new Date()
@@ -363,7 +378,7 @@ export function BookingRequestForm({
           onChange={(e) => setGuests(Number(e.target.value))}
           className={inputClass}
         >
-          {Array.from({ length: maxGuests }, (_, i) => i + 1).map((n) => (
+          {Array.from({ length: maxGuests - minGuestsFromCategories + 1 }, (_, i) => i + minGuestsFromCategories).map((n) => (
             <option key={n} value={n}>
               {n === maxGuests && openEnded
                 ? `${n}+ ${guestsLabel(n, locale)}`
@@ -395,25 +410,17 @@ export function BookingRequestForm({
                       : cat.priceModifier
                         ? ` (${cat.priceModifier > 0 ? '+' : ''}${formatPrice(cat.priceModifier, currency)})`
                         : ''}
-                    {cat.minRequired && cat.minRequired > 0
-                      ? ` *`
-                      : ''}
                   </span>
                   <select
-                    value={categoryBreakdown[cat.label] || 0}
+                    value={categoryBreakdown[cat.label] ?? (cat.minRequired || 0)}
                     onChange={(e) => updateCategory(cat.label, Number(e.target.value))}
                     className="w-16 px-2 py-2 min-h-[40px] rounded-lg border border-gray-light focus:border-gold focus:ring-1 focus:ring-gold outline-none text-sm text-center"
                   >
-                    {Array.from({ length: guests + 1 }, (_, i) => (
-                      <option key={i} value={i}>{i}</option>
+                    {Array.from({ length: guests - (cat.minRequired || 0) + 1 }, (_, i) => i + (cat.minRequired || 0)).map((n) => (
+                      <option key={n} value={n}>{n}</option>
                     ))}
                   </select>
                 </div>
-                {cat.minRequired && cat.minRequired > 0 && (categoryBreakdown[cat.label] || 0) < cat.minRequired && (
-                  <p className="text-xs text-navy/40 mt-0.5">
-                    {t('categoryMinRequired', { min: String(cat.minRequired), label: cat.label })}
-                  </p>
-                )}
               </div>
             ))}
           </div>
