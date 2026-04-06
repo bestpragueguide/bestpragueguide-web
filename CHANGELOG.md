@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.40.7] - 2026-04-06
+
+### Fixed
+- **Terezin redirect loop** — `next.config.ts` `redirects()` matched case-insensitively, causing infinite 308 loop on `/en/tours/terezin-memorial`. Moved redirect to middleware with exact case-sensitive match (`=== '/en/tours/Terezin-Memorial'`). Returns 301 instead of 308.
+
 ## [1.40.6] - 2026-04-06
 
 ### Fixed

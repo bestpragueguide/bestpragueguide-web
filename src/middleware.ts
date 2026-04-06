@@ -14,6 +14,14 @@ export default function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(path, baseUrl), 301)
   }
 
+  // Case-sensitive redirect: old mixed-case Terezin slug → lowercase
+  if (request.nextUrl.pathname === '/en/tours/Terezin-Memorial') {
+    return NextResponse.redirect(
+      new URL('/en/tours/terezin-memorial', request.url),
+      301,
+    )
+  }
+
   const response = intlMiddleware(request)
 
   // Upgrade next-intl 307 (temporary) redirects to 301 (permanent)

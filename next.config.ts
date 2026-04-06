@@ -22,15 +22,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async redirects() {
-    return [
-      {
-        source: '/en/tours/Terezin-Memorial',
-        destination: '/en/tours/terezin-memorial',
-        permanent: true,
-      },
-    ]
-  },
   async headers() {
     return [
       {
