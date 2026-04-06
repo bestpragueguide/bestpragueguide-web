@@ -49,8 +49,10 @@ export async function POST(req: NextRequest) {
         }
 
         // Convert markdown to Lexical JSON (skip H1 — title is separate)
-        const contentWithoutH1 = article.content.replace(/^# .+\n+/, '')
-        const contentLexical = markdownToLexical(contentWithoutH1)
+        let contentClean = article.content.replace(/^# .+\n+/, '')
+        // Strip HTML <a> tags to plain text (Lexical link nodes cause validation issues)
+        contentClean = contentClean.replace(/<a[^>]*>([^<]*)<\/a>/g, '$1')
+        const contentLexical = markdownToLexical(contentClean)
         const excerptLexical = markdownToLexical(article.excerpt)
 
         const doc = await payload.create({
