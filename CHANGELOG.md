@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.40.8] - 2026-04-06
+
+### Added
+- **Guest category validation** — booking form now validates: (1) sum of category selections must equal Number of Guests, (2) total amount must be greater than zero, (3) per-category minimum guests (`minRequired` field, e.g. "at least 1 adult"). Submit button disabled when invalid, inline error messages in EN/RU.
+- **`minRequired` field on guest categories** — new CMS field on `Tours.pricing.guestCategories[]` to set minimum required guests per category.
+
 ## [1.40.7] - 2026-04-06
 
 ### Fixed

@@ -26,7 +26,10 @@
     "guestCategoriesDefault": "Категории гостей",
     "free": "бесплатно",
     "perPerson": "чел",
-    "perPersonAbbr": "чел"
+    "perPersonAbbr": "чел",
+    "categoryTotalMismatch": "Сумма категорий должна быть {guests} (сейчас {total})",
+    "categoryMinRequired": "Минимум {min} {label}",
+    "totalAmountInvalid": "Итоговая сумма должна быть больше нуля"
   },
   "categories": {
     "pragueTours": "Экскурсии по Праге",

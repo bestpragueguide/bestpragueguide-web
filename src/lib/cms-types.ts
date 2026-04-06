@@ -211,6 +211,7 @@ export interface GuestCategory {
   priceModifier?: number
   isFree?: boolean
   onRequest?: boolean
+  minRequired?: number
 }
 
 export interface TourServiceAttachment {

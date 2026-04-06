@@ -26,7 +26,10 @@
     "guestCategoriesDefault": "Guest Categories",
     "free": "free",
     "perPerson": "pp",
-    "perPersonAbbr": "pp"
+    "perPersonAbbr": "pp",
+    "categoryTotalMismatch": "Guest categories must total {guests} (currently {total})",
+    "categoryMinRequired": "At least {min} {label}",
+    "totalAmountInvalid": "Total amount must be greater than zero"
   },
   "categories": {
     "pragueTours": "Prague Tours",

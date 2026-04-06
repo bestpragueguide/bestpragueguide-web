@@ -96,6 +96,29 @@ export function BookingRequestForm({
     ? priceResult.total + categoryModifier
     : null
 
+  const hasCategories = (pricing.guestCategories?.length ?? 0) > 0
+  const categoryTotal = useMemo(() => {
+    if (!hasCategories) return 0
+    return Object.values(categoryBreakdown).reduce((sum, n) => sum + n, 0)
+  }, [hasCategories, categoryBreakdown])
+
+  const categoryErrors = useMemo(() => {
+    if (!hasCategories) return []
+    const errs: string[] = []
+    // Sum of categories must equal Number of Guests
+    if (categoryTotal > 0 && categoryTotal !== guests) {
+      errs.push(t('categoryTotalMismatch', { guests: String(guests), total: String(categoryTotal) }))
+    }
+    // Per-category minimum
+    for (const cat of pricing.guestCategories!) {
+      const min = cat.minRequired || 0
+      if (min > 0 && (categoryBreakdown[cat.label] || 0) < min) {
+        errs.push(t('categoryMinRequired', { min: String(min), label: cat.label }))
+      }
+    }
+    return errs
+  }, [hasCategories, categoryTotal, guests, pricing.guestCategories, categoryBreakdown, t])
+
   function toggleService(id: number) {
     setSelectedServiceIds(prev => {
       const next = new Set(prev)
@@ -111,8 +134,30 @@ export function BookingRequestForm({
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setStatus('loading')
     setErrors({})
+
+    // Validate category breakdown totals Number of Guests
+    if (hasCategories && categoryTotal > 0 && categoryTotal !== guests) {
+      setErrors({ categories: t('categoryTotalMismatch', { guests: String(guests), total: String(categoryTotal) }) })
+      return
+    }
+
+    // Validate per-category minimums
+    for (const cat of pricing.guestCategories || []) {
+      const min = cat.minRequired || 0
+      if (min > 0 && (categoryBreakdown[cat.label] || 0) < min) {
+        setErrors({ categories: t('categoryMinRequired', { min: String(min), label: cat.label }) })
+        return
+      }
+    }
+
+    // Validate total amount > 0
+    if (!priceResult.isOnRequest && totalWithModifiers !== null && totalWithModifiers <= 0) {
+      setErrors({ total: t('totalAmountInvalid') })
+      return
+    }
+
+    setStatus('loading')
 
     const form = e.currentTarget
     const data = {
@@ -258,6 +303,12 @@ export function BookingRequestForm({
             </p>
           </>
         )}
+        {!priceResult.isOnRequest && totalWithModifiers !== null && totalWithModifiers <= 0 && (
+          <p className="text-xs text-error mt-2">{t('totalAmountInvalid')}</p>
+        )}
+        {errors.total && (
+          <p className="text-xs text-error mt-1">{errors.total}</p>
+        )}
       </div>
 
       {/* Date */}
@@ -335,27 +386,45 @@ export function BookingRequestForm({
           </p>
           <div className="space-y-2">
             {pricing.guestCategories.map((cat) => (
-              <div key={cat.label} className="flex items-center justify-between">
-                <span className="text-sm text-navy/70">
-                  {cat.label}
-                  {cat.isFree
-                    ? ` (${t('free')})`
-                    : cat.priceModifier
-                      ? ` (${cat.priceModifier > 0 ? '+' : ''}${formatPrice(cat.priceModifier, currency)})`
+              <div key={cat.label}>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-navy/70">
+                    {cat.label}
+                    {cat.isFree
+                      ? ` (${t('free')})`
+                      : cat.priceModifier
+                        ? ` (${cat.priceModifier > 0 ? '+' : ''}${formatPrice(cat.priceModifier, currency)})`
+                        : ''}
+                    {cat.minRequired && cat.minRequired > 0
+                      ? ` *`
                       : ''}
-                </span>
-                <select
-                  value={categoryBreakdown[cat.label] || 0}
-                  onChange={(e) => updateCategory(cat.label, Number(e.target.value))}
-                  className="w-16 px-2 py-2 min-h-[40px] rounded-lg border border-gray-light focus:border-gold focus:ring-1 focus:ring-gold outline-none text-sm text-center"
-                >
-                  {Array.from({ length: guests + 1 }, (_, i) => (
-                    <option key={i} value={i}>{i}</option>
-                  ))}
-                </select>
+                  </span>
+                  <select
+                    value={categoryBreakdown[cat.label] || 0}
+                    onChange={(e) => updateCategory(cat.label, Number(e.target.value))}
+                    className="w-16 px-2 py-2 min-h-[40px] rounded-lg border border-gray-light focus:border-gold focus:ring-1 focus:ring-gold outline-none text-sm text-center"
+                  >
+                    {Array.from({ length: guests + 1 }, (_, i) => (
+                      <option key={i} value={i}>{i}</option>
+                    ))}
+                  </select>
+                </div>
+                {cat.minRequired && cat.minRequired > 0 && (categoryBreakdown[cat.label] || 0) < cat.minRequired && (
+                  <p className="text-xs text-navy/40 mt-0.5">
+                    {t('categoryMinRequired', { min: String(cat.minRequired), label: cat.label })}
+                  </p>
+                )}
               </div>
             ))}
           </div>
+          {hasCategories && categoryTotal > 0 && categoryTotal !== guests && (
+            <p className="text-xs text-error mt-2">
+              {t('categoryTotalMismatch', { guests: String(guests), total: String(categoryTotal) })}
+            </p>
+          )}
+          {errors.categories && (
+            <p className="text-xs text-error mt-1">{errors.categories}</p>
+          )}
         </div>
       )}
 
@@ -512,7 +581,13 @@ export function BookingRequestForm({
       {/* Submit */}
       <button
         type="submit"
-        disabled={status === 'loading' || (!!consentText && !consented)}
+        disabled={
+          status === 'loading' ||
+          (!!consentText && !consented) ||
+          (hasCategories && categoryTotal > 0 && categoryTotal !== guests) ||
+          categoryErrors.length > 0 ||
+          (!priceResult.isOnRequest && totalWithModifiers !== null && totalWithModifiers <= 0)
+        }
         className="w-full px-6 py-3 bg-gold text-white font-medium rounded-lg hover:bg-gold-dark transition-colors disabled:opacity-50 min-h-[44px] flex items-center justify-center gap-2"
       >
         {status === 'loading' && (
