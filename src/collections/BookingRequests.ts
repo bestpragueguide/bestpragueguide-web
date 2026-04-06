@@ -187,22 +187,7 @@ export const BookingRequests: CollectionConfig = {
               type: 'richText',
               editor: simplifiedEditor,
             },
-            {
-              name: 'guestCategoryBreakdown',
-              type: 'json',
-              admin: {
-                description: 'Guest category selections (e.g. {"Adult": 2, "Child": 1})',
-                readOnly: true,
-              },
-            },
-            {
-              name: 'selectedServices',
-              type: 'json',
-              admin: {
-                description: 'Additional services selected at booking (e.g. [{"id": 1, "name": "Castle Entry"}])',
-                readOnly: true,
-              },
-            },
+            // guestCategoryBreakdown and selectedServices fields added after fix-schema creates columns
             {
               name: 'totalPrice',
               type: 'number',
