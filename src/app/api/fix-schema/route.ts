@@ -284,9 +284,12 @@ export async function POST(req: Request) {
         UNIQUE(_locale, _parent_id)
       )`,
 
-      // Booking request: guest category breakdown and selected services (JSON fields)
-      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS guest_category_breakdown jsonb`,
-      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS selected_services jsonb`,
+      // Booking request: guest category breakdown and selected services (textarea = varchar)
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS guest_category_breakdown varchar`,
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS selected_services varchar`,
+      // Fix column type if previously created as jsonb
+      `DO $$ BEGIN ALTER TABLE booking_requests ALTER COLUMN guest_category_breakdown TYPE varchar USING guest_category_breakdown::text; EXCEPTION WHEN others THEN NULL; END $$`,
+      `DO $$ BEGIN ALTER TABLE booking_requests ALTER COLUMN selected_services TYPE varchar USING selected_services::text; EXCEPTION WHEN others THEN NULL; END $$`,
 
       // Guest category minRequired field
       `ALTER TABLE tours_pricing_guest_categories ADD COLUMN IF NOT EXISTS min_required numeric`,

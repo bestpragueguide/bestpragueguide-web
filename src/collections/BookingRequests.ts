@@ -189,18 +189,18 @@ export const BookingRequests: CollectionConfig = {
             },
             {
               name: 'guestCategoryBreakdown',
-              type: 'json',
+              type: 'textarea',
               admin: {
-                description: 'Guest category selections (e.g. {"Adult": 2, "Child": 1})',
                 readOnly: true,
+                description: 'Guest categories selected at booking',
               },
             },
             {
               name: 'selectedServices',
-              type: 'json',
+              type: 'textarea',
               admin: {
-                description: 'Additional services selected at booking (e.g. [{"id": 1, "name": "Castle Entry"}])',
                 readOnly: true,
+                description: 'Additional services selected at booking',
               },
             },
             {

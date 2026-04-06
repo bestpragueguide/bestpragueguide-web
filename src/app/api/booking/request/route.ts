@@ -68,8 +68,12 @@ export async function POST(request: NextRequest) {
         customerPhone: data.customerPhone || '',
         customerLanguage: data.locale,
         specialRequests: textToLexicalJson(data.specialRequests || '') as any,
-        guestCategoryBreakdown: data.guestCategories || undefined,
-        selectedServices: data.selectedServices || undefined,
+        guestCategoryBreakdown: data.guestCategories
+          ? Object.entries(data.guestCategories).map(([label, count]) => `${label}: ${count}`).join('\n')
+          : undefined,
+        selectedServices: data.selectedServices?.length
+          ? data.selectedServices.map(s => s.name).join('\n')
+          : undefined,
         totalPrice: data.totalPrice ?? 0,
         currency: data.currency || 'EUR',
         paymentMethod: data.paymentMethod || 'cash_only',
