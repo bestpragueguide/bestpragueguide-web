@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+"""
+Import blog articles from .md + -meta.json files into Payload CMS
+via the /api/import-blog endpoint.
+
+Usage:
+  python3 scripts/import-blog-articles.py ../bestpragueguide-docs/marketing/seo2/articles/
+  python3 scripts/import-blog-articles.py ../bestpragueguide-docs/marketing/seo2/articles/ --batch-size 10
+  python3 scripts/import-blog-articles.py ../bestpragueguide-docs/marketing/seo2/articles/ --dry-run
+"""
+
+import sys, json, os, glob, subprocess
+
+PAYLOAD_URL = os.environ.get("PAYLOAD_URL", "https://bestpragueguide.com")
+PAYLOAD_SECRET = os.environ.get("PAYLOAD_SECRET", "")
+BATCH_SIZE = 10
+STATE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "import-blog-state.json")
+
+
+def load_state():
+    if os.path.exists(STATE_FILE):
+        with open(STATE_FILE) as f:
+            return json.load(f)
+    return {"imported": [], "errors": []}
+
+
+def save_state(state):
+    with open(STATE_FILE, "w") as f:
+        json.dump(state, f, indent=2)
+
+
+def send_batch(articles, dry_run=False):
+    if dry_run:
+        for a in articles:
+            print(f"  DRY-RUN: {a['slug']} — {a['metaTitle'][:50]}")
+        return [{"slug": a["slug"], "status": "dry-run"} for a in articles]
+
+    payload = json.dumps({"articles": articles})
+    r = subprocess.run([
+        "curl", "-s", "-X", "POST", f"{PAYLOAD_URL}/api/import-blog",
+        "-H", f"x-init-secret: {PAYLOAD_SECRET}",
+        "-H", "Content-Type: application/json",
+        "-d", payload,
+    ], capture_output=True, text=True, timeout=120)
+
+    try:
+        data = json.loads(r.stdout)
+        if "error" in data:
+            print(f"  API ERROR: {data['error']}")
+            return [{"slug": a["slug"], "status": "error", "error": data["error"]} for a in articles]
+        return data.get("results", [])
+    except json.JSONDecodeError:
+        print(f"  PARSE ERROR: {r.stdout[:200]}")
+        return [{"slug": a["slug"], "status": "error", "error": "parse error"} for a in articles]
+
+
+def main():
+    dry_run = "--dry-run" in sys.argv
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+
+    batch_size = BATCH_SIZE
+    for a in sys.argv[1:]:
+        if a.startswith("--batch-size"):
+            batch_size = int(a.split("=")[1] if "=" in a else sys.argv[sys.argv.index(a) + 1])
+
+    if not args:
+        print("Usage: python3 import-blog-articles.py <articles-directory> [--dry-run] [--batch-size N]")
+        sys.exit(1)
+
+    if not PAYLOAD_SECRET and not dry_run:
+        print("ERROR: Set PAYLOAD_SECRET env var")
+        sys.exit(1)
+
+    articles_dir = args[0]
+    md_files = sorted(glob.glob(os.path.join(articles_dir, "*.md")))
+    md_files = [f for f in md_files if not f.endswith("-meta.json")]
+
+    state = load_state()
+    already_imported = set(state["imported"])
+
+    # Build article list
+    articles = []
+    for md_path in md_files:
+        slug = os.path.basename(md_path).replace(".md", "")
+        if slug in already_imported:
+            continue
+
+        meta_path = md_path.replace(".md", "-meta.json")
+        if not os.path.exists(meta_path):
+            print(f"  SKIP {slug}: no meta file")
+            continue
+
+        with open(md_path) as f:
+            content = f.read()
+        with open(meta_path) as f:
+            meta = json.load(f)
+
+        articles.append({
+            "slug": meta.get("slug", slug),
+            "title": meta.get("title", ""),
+            "content": content,
+            "metaTitle": meta.get("metaTitle", ""),
+            "metaDescription": meta.get("metaDescription", ""),
+            "excerpt": meta.get("excerpt", ""),
+            "faqItems": meta.get("faqItems", []),
+            "publishedAt": "2026-04-06T12:00:00.000Z",
+        })
+
+    if not articles:
+        print(f"No new articles to import ({len(already_imported)} already imported)")
+        sys.exit(0)
+
+    print(f"Importing {len(articles)} articles in batches of {batch_size}...")
+
+    total_created = 0
+    total_skipped = 0
+    total_errors = 0
+
+    for i in range(0, len(articles), batch_size):
+        batch = articles[i:i + batch_size]
+        print(f"\nBatch {i // batch_size + 1} ({len(batch)} articles):")
+        results = send_batch(batch, dry_run)
+
+        for r in results:
+            status = r.get("status", "unknown")
+            slug = r.get("slug", "?")
+            if status == "created":
+                total_created += 1
+                state["imported"].append(slug)
+                print(f"  OK: {slug} (id={r.get('id', '?')})")
+            elif status == "skipped":
+                total_skipped += 1
+                state["imported"].append(slug)
+                print(f"  SKIP: {slug} (already exists, id={r.get('id', '?')})")
+            elif status == "dry-run":
+                pass
+            else:
+                total_errors += 1
+                state["errors"].append({"slug": slug, "error": r.get("error", "unknown")})
+                print(f"  FAIL: {slug} — {r.get('error', 'unknown')[:100]}")
+
+        if not dry_run:
+            save_state(state)
+
+    print(f"\nDone: {total_created} created, {total_skipped} skipped, {total_errors} errors")
+
+
+if __name__ == "__main__":
+    main()

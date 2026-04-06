@@ -1,0 +1,179 @@
+/**
+ * Convert Markdown (with HTML <a> links) to Payload Lexical JSON.
+ * Handles: headings, bold, HTML links, paragraphs, lists, horizontal rules.
+ */
+
+interface LexicalNode {
+  type: string
+  version: number
+  [key: string]: any
+}
+
+function textNode(text: string, format: number = 0): LexicalNode {
+  return { type: 'text', text, version: 1, format, mode: 'normal', detail: 0, style: '' }
+}
+
+function paragraphNode(children: LexicalNode[]): LexicalNode {
+  return { type: 'paragraph', children, direction: 'ltr', format: '', indent: 0, version: 1, textFormat: 0, textStyle: '' }
+}
+
+function headingNode(level: number, children: LexicalNode[]): LexicalNode {
+  return { type: 'heading', tag: `h${level}`, children, direction: 'ltr', format: '', indent: 0, version: 1 }
+}
+
+function linkNode(url: string, children: LexicalNode[], newTab: boolean = true): LexicalNode {
+  return {
+    type: 'link',
+    children,
+    direction: 'ltr',
+    format: '',
+    indent: 0,
+    version: 3,
+    fields: {
+      linkType: url.startsWith('/') ? 'internal' : 'custom',
+      url,
+      newTab,
+    },
+  }
+}
+
+function listNode(items: LexicalNode[][], tag: 'ul' | 'ol' = 'ul'): LexicalNode {
+  return {
+    type: 'list',
+    listType: tag === 'ol' ? 'number' : 'bullet',
+    start: 1,
+    tag,
+    children: items.map((children, i) => ({
+      type: 'listitem',
+      children,
+      direction: 'ltr',
+      format: '',
+      indent: 0,
+      version: 1,
+      value: i + 1,
+    })),
+    direction: 'ltr',
+    format: '',
+    indent: 0,
+    version: 1,
+  }
+}
+
+function horizontalRuleNode(): LexicalNode {
+  return { type: 'horizontalrule', version: 1 }
+}
+
+/** Parse inline content: **bold**, <a href>links</a>, plain text */
+function parseInline(text: string): LexicalNode[] {
+  const nodes: LexicalNode[] = []
+  const pattern = /(\*\*(.+?)\*\*)|(<a\s+href="([^"]*)"[^>]*>(.+?)<\/a>)/g
+  let lastIndex = 0
+  let match
+
+  while ((match = pattern.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      const plain = text.slice(lastIndex, match.index)
+      if (plain) nodes.push(textNode(plain))
+    }
+
+    if (match[1]) {
+      nodes.push(textNode(match[2], 1))
+    } else if (match[3]) {
+      nodes.push(linkNode(match[4], [textNode(match[5])]))
+    }
+
+    lastIndex = match.index + match[0].length
+  }
+
+  if (lastIndex < text.length) {
+    const remaining = text.slice(lastIndex)
+    if (remaining) nodes.push(textNode(remaining))
+  }
+
+  if (nodes.length === 0) {
+    nodes.push(textNode(text))
+  }
+
+  return nodes
+}
+
+export function markdownToLexical(markdown: string): object {
+  const lines = markdown.split('\n')
+  const children: LexicalNode[] = []
+  let i = 0
+
+  while (i < lines.length) {
+    const line = lines[i]
+
+    if (line.trim() === '') { i++; continue }
+
+    if (/^---+$/.test(line.trim())) {
+      children.push(horizontalRuleNode())
+      i++
+      continue
+    }
+
+    const headingMatch = line.match(/^(#{1,6})\s+(.+)$/)
+    if (headingMatch) {
+      children.push(headingNode(headingMatch[1].length, parseInline(headingMatch[2])))
+      i++
+      continue
+    }
+
+    if (/^[-*]\s+/.test(line.trim())) {
+      const items: LexicalNode[][] = []
+      while (i < lines.length && /^[-*]\s+/.test(lines[i].trim())) {
+        items.push(parseInline(lines[i].trim().replace(/^[-*]\s+/, '')))
+        i++
+      }
+      children.push(listNode(items, 'ul'))
+      continue
+    }
+
+    if (/^\d+\.\s+/.test(line.trim())) {
+      const items: LexicalNode[][] = []
+      while (i < lines.length && /^\d+\.\s+/.test(lines[i].trim())) {
+        items.push(parseInline(lines[i].trim().replace(/^\d+\.\s+/, '')))
+        i++
+      }
+      children.push(listNode(items, 'ol'))
+      continue
+    }
+
+    if (line.trim().startsWith('|')) {
+      const tableLines: string[] = []
+      while (i < lines.length && lines[i].trim().startsWith('|')) {
+        if (!lines[i].trim().match(/^\|[-\s|:]+\|$/)) {
+          tableLines.push(lines[i].trim())
+        }
+        i++
+      }
+      for (const tl of tableLines) {
+        const cells = tl.split('|').filter(c => c.trim()).map(c => c.trim())
+        children.push(paragraphNode(parseInline(cells.join(' | '))))
+      }
+      continue
+    }
+
+    const paraLines: string[] = []
+    while (i < lines.length && lines[i].trim() !== '' && !lines[i].match(/^#{1,6}\s/) && !lines[i].trim().startsWith('|') && !/^[-*]\s+/.test(lines[i].trim()) && !/^\d+\.\s+/.test(lines[i].trim()) && !/^---+$/.test(lines[i].trim())) {
+      paraLines.push(lines[i])
+      i++
+    }
+
+    if (paraLines.length > 0) {
+      children.push(paragraphNode(parseInline(paraLines.join(' '))))
+    }
+  }
+
+  return {
+    root: {
+      type: 'root',
+      children,
+      direction: 'ltr',
+      format: '',
+      indent: 0,
+      version: 1,
+    },
+  }
+}
