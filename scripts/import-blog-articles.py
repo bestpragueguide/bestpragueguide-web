@@ -35,7 +35,7 @@ def send_batch(articles, dry_run=False):
             print(f"  DRY-RUN: {a['slug']} — {a['metaTitle'][:50]}")
         return [{"slug": a["slug"], "status": "dry-run"} for a in articles]
 
-    payload = json.dumps({"articles": articles})
+    payload = json.dumps({"articles": articles, "defaultHeroImageId": 691})
     r = subprocess.run([
         "curl", "-s", "-X", "POST", f"{PAYLOAD_URL}/api/import-blog",
         "-H", f"x-init-secret: {PAYLOAD_SECRET}",
@@ -95,6 +95,17 @@ def main():
         with open(meta_path) as f:
             meta = json.load(f)
 
+        # Auto-assign category from slug
+        category = "prague-guide"
+        if any(k in slug for k in ["eat", "food", "cuisine", "beer", "dinner", "tipping"]):
+            category = "food-and-drink"
+        elif any(k in slug for k in ["day-trip", "karlstejn", "terezin", "hluboka", "cesky-krumlov", "karlovy", "karlsbad", "konopiste", "bohemian", "pilsner", "dresden", "vienna", "sternberk", "kozel", "skoda"]):
+            category = "day-trips"
+        elif any(k in slug for k in ["safe", "currency", "tipping", "scam", "dos-and-donts", "tourist-trap", "first-time", "hotel", "souvenir", "budget"]):
+            category = "tips"
+        elif any(k in slug for k in ["history", "communism", "kafka", "wwii", "revolution", "jewish-history", "legends", "famous-people", "traditions", "architecture", "art-nouveau"]):
+            category = "history"
+
         articles.append({
             "slug": meta.get("slug", slug),
             "title": meta.get("title", ""),
@@ -102,6 +113,7 @@ def main():
             "metaTitle": meta.get("metaTitle", ""),
             "metaDescription": meta.get("metaDescription", ""),
             "excerpt": meta.get("excerpt", ""),
+            "category": category,
             "faqItems": meta.get("faqItems", []),
             "publishedAt": "2026-04-06T12:00:00.000Z",
         })

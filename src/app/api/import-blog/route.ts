@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json()
-    const { articles } = body as {
+    const { articles, defaultHeroImageId } = body as {
       articles: Array<{
         slug: string
         title: string
@@ -19,9 +19,11 @@ export async function POST(req: NextRequest) {
         metaTitle: string
         metaDescription: string
         excerpt: string
+        category?: string
         faqItems?: Array<{ question: string; answer: string }>
         publishedAt?: string
       }>
+      defaultHeroImageId?: number
     }
 
     if (!articles?.length) {
@@ -59,6 +61,8 @@ export async function POST(req: NextRequest) {
             title: article.title,
             content: contentLexical as any,
             excerpt: excerptLexical as any,
+            category: article.category || 'prague-guide',
+            heroImage: defaultHeroImageId || 691,
             publishedLocales: ['en'],
             publishedAt: article.publishedAt || new Date().toISOString(),
             _status: 'published',
