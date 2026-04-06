@@ -120,7 +120,7 @@ All site content is editable from Payload admin panel:
 
 ## Booking System
 - `src/components/booking/BookingModal.tsx` — modal wrapper with price header
-- `src/components/booking/BookingRequestForm.tsx` — form with date, time, guests, guest categories, additional services, customer info, consent checkbox; uses `calculatePrice()` for dynamic pricing; accepts optional `preferredTimes` prop (falls back to `TIME_SLOTS` from `booking.ts`); success title/message CMS-editable with i18n fallback; consent checkbox shown only when `consentText` is configured in SiteSettings
+- `src/components/booking/BookingRequestForm.tsx` — form with date, time, guests, guest categories, additional services, customer info, consent checkbox; uses `calculatePrice()` for dynamic pricing; accepts optional `preferredTimes` prop (falls back to `TIME_SLOTS` from `booking.ts`); success title/message CMS-editable with i18n fallback; consent checkbox shown only when `consentText` is configured in SiteSettings; client-side validations: category total must equal Number of Guests, per-category `minRequired` (e.g. "at least 1 adult"), total amount must be > 0
 - `src/components/booking/StickyBookButton.tsx` — sticky CTA on tour detail pages
 - `src/app/api/booking/request/route.ts` — POST endpoint: validates, saves to BookingRequests, sends notifications
 - Notifications: email (Gmail SMTP primary, Resend fallback), Telegram, WhatsApp, Slack, n8n — all fire in parallel on new booking
@@ -167,7 +167,7 @@ All site content is editable from Payload admin panel:
 - `src/collections/Services.ts` — reusable add-on services (entry tickets, vehicles, etc.)
 - Tours have `pricing` group with `model` selector, `groupTiers[]`, `guestCategoriesHeading`, `guestCategories[]`, `additionalServices[]`
 - Tour detail sidebar shows group tiers table + additional services list above the booking form
-- Guest categories appear as per-category counters in the booking form with price modifiers (e.g., Junior +€10)
+- Guest categories appear as per-category counters in the booking form with price modifiers (e.g., Junior +€10); `minRequired` field sets minimum per category (e.g., 1 Adult); category total must equal Number of Guests
 - `guestCategoriesHeading` (localized) — custom section title (e.g., "Zoo/Museum Ticket"); falls back to "Guest Categories"
 - Additional services appear as checkboxes in the booking form; selecting adds price to total
 - Open-ended last tier (no `maxGuests`): dropdown shows "X+ guests" as last option, `getMaxGuests()` returns `minGuests` of that tier
