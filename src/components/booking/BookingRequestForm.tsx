@@ -97,13 +97,22 @@ export function BookingRequestForm({
 
   const categoryModifier = useMemo(() => {
     if (!pricing.guestCategories?.length) return 0
-    return pricing.guestCategories.reduce((total, cat) => {
+    let modifier = 0
+    let freeCount = 0
+    for (const cat of pricing.guestCategories) {
       const count = categoryBreakdown[cat.label] || 0
-      if (cat.onRequest) return total
-      // isFree is display-only; priceModifier still applies (e.g. -50 offsets per-person cost)
-      return total + count * (cat.priceModifier || 0)
-    }, 0)
-  }, [pricing.guestCategories, categoryBreakdown])
+      if (cat.onRequest) continue
+      if (cat.isFree) {
+        freeCount += count
+      }
+      modifier += count * (cat.priceModifier || 0)
+    }
+    // For PER_PERSON pricing, subtract per-person price for free guests
+    if (pricing.model === 'PER_PERSON' && freeCount > 0 && pricing.perPersonPrice) {
+      modifier -= freeCount * pricing.perPersonPrice
+    }
+    return modifier
+  }, [pricing.guestCategories, pricing.model, pricing.perPersonPrice, categoryBreakdown])
 
   const displayInfo = useMemo(() => getDisplayPrice(pricing), [pricing])
 
