@@ -29,7 +29,7 @@
     "perPersonAbbr": "чел",
     "categoryTotalMismatch": "Сумма категорий должна быть {guests} (сейчас {total})",
     "categoryMinRequired": "Минимум {min} {label}",
-    "totalAmountInvalid": "Итоговая сумма должна быть больше нуля"
+    "totalAmountInvalid": "Некорректная конфигурация бронирования — измените категории гостей"
   },
   "categories": {
     "pragueTours": "Экскурсии по Праге",
