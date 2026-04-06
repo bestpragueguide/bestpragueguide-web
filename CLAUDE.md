@@ -232,7 +232,7 @@ All site content is editable from Payload admin panel:
 - **Tour/Review List Filtering** — `baseFilter` was removed from Tours and Reviews (caused client-side crash when navigating directly to documents excluded by the filter); use admin column filters instead
 
 ## Middleware
-- `src/middleware.ts` — www→non-www redirect (301), next-intl locale detection/prefix
+- `src/middleware.ts` — www→non-www redirect (301), case-sensitive slug redirects (Terezin-Memorial → terezin-memorial), next-intl locale detection/prefix. **Do NOT use `next.config.ts` `redirects()` for case-sensitive redirects** — it matches case-insensitively and causes infinite loops
 - Matcher excludes: `/api`, `/admin`, `/tour-order`, `/_next`, `/_vercel`, static files
 - `localeDetection: true` — auto-detects visitor language from browser/region
 - `localePrefix: 'always'` — URLs always have `/en/` or `/ru/`
