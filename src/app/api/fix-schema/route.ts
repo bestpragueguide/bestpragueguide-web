@@ -284,6 +284,10 @@ export async function POST(req: Request) {
         UNIQUE(_locale, _parent_id)
       )`,
 
+      // Booking request: guest category breakdown and selected services (JSON fields)
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS guest_category_breakdown jsonb`,
+      `ALTER TABLE booking_requests ADD COLUMN IF NOT EXISTS selected_services jsonb`,
+
       // Guest category minRequired field
       `ALTER TABLE tours_pricing_guest_categories ADD COLUMN IF NOT EXISTS min_required numeric`,
       `ALTER TABLE _tours_v_version_pricing_guest_categories ADD COLUMN IF NOT EXISTS min_required numeric`,

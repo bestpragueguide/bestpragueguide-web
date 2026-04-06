@@ -25,6 +25,8 @@ export const bookingRequestSchema = z.object({
   currency: z.enum(['EUR', 'CZK', 'USD']).optional().default('EUR'),
   paymentMethod: z.enum(['stripe_deposit', 'stripe_full', 'cash_only', 'none']).optional().default('cash_only'),
   locale: z.enum(['en', 'ru']),
+  guestCategories: z.record(z.string(), z.number()).optional(),
+  selectedServices: z.array(z.object({ id: z.number(), name: z.string() })).optional(),
 })
 
 export type BookingRequestInput = z.infer<typeof bookingRequestSchema>

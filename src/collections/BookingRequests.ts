@@ -188,6 +188,22 @@ export const BookingRequests: CollectionConfig = {
               editor: simplifiedEditor,
             },
             {
+              name: 'guestCategoryBreakdown',
+              type: 'json',
+              admin: {
+                description: 'Guest category selections (e.g. {"Adult": 2, "Child": 1})',
+                readOnly: true,
+              },
+            },
+            {
+              name: 'selectedServices',
+              type: 'json',
+              admin: {
+                description: 'Additional services selected at booking (e.g. [{"id": 1, "name": "Castle Entry"}])',
+                readOnly: true,
+              },
+            },
+            {
               name: 'totalPrice',
               type: 'number',
               admin: {

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.41.0] - 2026-04-06
+
+### Added
+- **Guest category breakdown stored on bookings** — `guestCategoryBreakdown` (JSON) and `selectedServices` (JSON) fields on BookingRequests. Admin can now see what categories and services the customer selected (e.g. `{"Adult": 2, "Child": 1}`). Read-only in admin panel.
+
 ## [1.40.9] - 2026-04-06
 
 ### Fixed

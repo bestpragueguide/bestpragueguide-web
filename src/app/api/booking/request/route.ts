@@ -68,6 +68,8 @@ export async function POST(request: NextRequest) {
         customerPhone: data.customerPhone || '',
         customerLanguage: data.locale,
         specialRequests: textToLexicalJson(data.specialRequests || '') as any,
+        guestCategoryBreakdown: data.guestCategories || undefined,
+        selectedServices: data.selectedServices || undefined,
         totalPrice: data.totalPrice ?? 0,
         currency: data.currency || 'EUR',
         paymentMethod: data.paymentMethod || 'cash_only',
