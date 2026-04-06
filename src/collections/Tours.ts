@@ -363,7 +363,7 @@ export const Tours: CollectionConfig = {
                     { name: 'priceModifier', type: 'number', admin: { description: 'Price adjustment in EUR (e.g. 15 for +€15)' } },
                     { name: 'isFree', type: 'checkbox', defaultValue: false },
                     { name: 'onRequest', type: 'checkbox', defaultValue: false },
-                    { name: 'minRequired', type: 'number', min: 0, admin: { description: 'Minimum guests required for this category (e.g. 1 for "at least 1 adult"). 0 or empty = no minimum.' } },
+                    // minRequired field will be added after DB column exists — see fix-schema endpoint
                   ],
                 },
                 {
