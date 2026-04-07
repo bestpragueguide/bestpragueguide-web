@@ -79,7 +79,6 @@ export const BlogPosts: CollectionConfig = {
       name: 'heroImage',
       type: 'upload',
       relationTo: 'media',
-      required: true,
     },
     {
       name: 'author',
