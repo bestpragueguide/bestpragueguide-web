@@ -2,7 +2,7 @@
   "booking": {
     "date": "Preferred Date",
     "time": "Start Time",
-    "guests": "Number of Guests",
+    "guests": "Total Number of Guests",
     "name": "Your Name",
     "email": "Email",
     "phone": "Phone / WhatsApp",
@@ -27,7 +27,7 @@
     "free": "free",
     "perPerson": "pp",
     "perPersonAbbr": "pp",
-    "categoryTotalMismatch": "Guest categories must total {guests} (currently {total})",
+    "categoryTotalMismatch": "Please make sure the number of guests in \"Guest Categories\" matches the total number of guests ({guests} selected, {total} assigned)",
     "categoryMinRequired": "At least {min} {label}",
     "totalAmountInvalid": "Invalid booking configuration — please adjust guest categories"
   },

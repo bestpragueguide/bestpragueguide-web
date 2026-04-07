@@ -2,7 +2,7 @@
   "booking": {
     "date": "Желаемая дата",
     "time": "Время начала",
-    "guests": "Сколько вас будет человек",
+    "guests": "Общее количество гостей",
     "name": "Ваше имя",
     "email": "Email",
     "phone": "Телефон / WhatsApp",
@@ -27,7 +27,7 @@
     "free": "бесплатно",
     "perPerson": "чел",
     "perPersonAbbr": "чел",
-    "categoryTotalMismatch": "Сумма категорий должна быть {guests} (сейчас {total})",
+    "categoryTotalMismatch": "Убедитесь, что количество гостей в категориях совпадает с общим числом ({guests} выбрано, {total} распределено)",
     "categoryMinRequired": "Минимум {min} {label}",
     "totalAmountInvalid": "Некорректная конфигурация бронирования — измените категории гостей"
   },
