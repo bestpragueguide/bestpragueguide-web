@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.41.1] - 2026-04-07
+
+### Changed
+- **Booking form label** — "Number of Guests" renamed to "Total Number of Guests" (EN/RU)
+- **Category mismatch message** — updated to: "Please make sure the number of guests in Guest Categories matches the total number of guests (X selected, Y assigned)"
+- **Blog listing** — posts with hero images sort first; empty hero image placeholders hidden on listing, detail, related posts, and sidebar
+- **Blog listing limit** — increased from 50 to 200
+- **heroImage on BlogPosts** — no longer required (admin selects images manually)
+- **83 new blog articles** — published to CMS (IDs 44-126), status set to published, hero images cleared for admin selection
+
 ## [1.41.0] - 2026-04-06
 
 ### Added
