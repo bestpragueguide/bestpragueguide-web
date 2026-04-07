@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.41.2] - 2026-04-07
+
+### Fixed
+- **Blog article links restored** — all 83 articles updated with internal links (tours, blog cross-links, medieval dinner). Links open in new tab. Fixed Lexical link format: use `linkType: 'custom'` with full URLs instead of `'internal'` which requires doc references.
+
 ## [1.41.1] - 2026-04-07
 
 ### Changed
