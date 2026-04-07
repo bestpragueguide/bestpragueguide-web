@@ -247,11 +247,13 @@ All site content is editable from Payload admin panel:
 - Fonts: Cormorant Garamond (headings), DM Sans (body)
 
 ## Analytics
-- `src/components/analytics/GoogleAnalytics.tsx` — GA4 via gtag.js (`NEXT_PUBLIC_GA_ID`)
+- `src/components/analytics/GoogleAnalytics.tsx` — GA4 + Google Ads via shared gtag.js (`NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_GADS_ID`)
 - `src/components/analytics/GoogleTagManager.tsx` — GTM head + noscript body (`NEXT_PUBLIC_GTM_ID`)
 - `src/components/analytics/UmamiAnalytics.tsx` — self-hosted Umami (`NEXT_PUBLIC_UMAMI_WEBSITE_ID` + `NEXT_PUBLIC_UMAMI_SRC`)
 - `src/components/analytics/YandexMetrika.tsx` — Yandex Metrika (`NEXT_PUBLIC_YANDEX_METRIKA_ID`)
-- `src/lib/analytics.ts` — `trackEvent(name, params)` pushes to GTM dataLayer + Yandex reachGoal
+- `src/lib/analytics.ts` — `trackEvent(name, params)` pushes to GTM dataLayer + Yandex reachGoal; `trackBookingSubmit` / `trackContactSubmit` fire Meta Pixel Lead + Google Ads conversion with enhanced conversions (email+phone); `trackWhatsAppClick` fires Meta Pixel Contact + Google Ads conversion
+- `src/components/shared/TrackedWhatsAppLink.tsx` — client wrapper for WhatsApp links in server components, fires `trackWhatsAppClick` on click
+- Google Ads conversion labels: `NEXT_PUBLIC_GADS_LABEL_BOOKING`, `NEXT_PUBLIC_GADS_LABEL_CONTACT`, `NEXT_PUBLIC_GADS_LABEL_WHATSAPP`
 - All components no-op when env vars are unset (safe for dev)
 - Umami dashboard: https://analytics.bestpragueguide.com
 

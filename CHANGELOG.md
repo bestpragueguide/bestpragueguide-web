@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.42.0] - 2026-04-07
+
+### Added
+- **Google Ads conversion tracking** — 3 conversion events: booking form (enhanced with email+phone), contact form (enhanced with email+phone), WhatsApp click (all wa.me links). Uses `NEXT_PUBLIC_GADS_ID`, `NEXT_PUBLIC_GADS_LABEL_BOOKING`, `_CONTACT`, `_WHATSAPP` env vars. All no-op when empty.
+- **`TrackedWhatsAppLink` component** — client wrapper for WhatsApp links in server components (CTA section, footer) to fire Google Ads + Meta Pixel conversion on click
+- **`allow_enhanced_conversions: true`** on Google Ads gtag config
+- **`window.gtag` type** added to `global.d.ts`
+
 ## [1.41.2] - 2026-04-07
 
 ### Fixed
