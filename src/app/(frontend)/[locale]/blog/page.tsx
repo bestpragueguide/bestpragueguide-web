@@ -64,9 +64,16 @@ export default async function BlogPage({
   const availableCategories = [...new Set(allPosts.map((p: any) => p.category as string))].filter(Boolean)
 
   // Filter posts by selected category (server-side)
-  const posts = selectedCategory
+  const filteredPosts = selectedCategory
     ? allPosts.filter((p: any) => p.category === selectedCategory)
     : allPosts
+
+  // Sort: posts with hero images first, then without
+  const posts = [...filteredPosts].sort((a: any, b: any) => {
+    const aHasImage = typeof a.heroImage === 'object' && a.heroImage?.url ? 1 : 0
+    const bHasImage = typeof b.heroImage === 'object' && b.heroImage?.url ? 1 : 0
+    return bHasImage - aHasImage
+  })
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -99,8 +106,8 @@ export default async function BlogPage({
                 href={`/${locale}/blog/${post.slug}`}
                 className="group block bg-white rounded-xl overflow-hidden border border-gray-light/50 hover:shadow-lg transition-shadow duration-300"
               >
-                <div className="relative aspect-[16/10] overflow-hidden">
-                  {imageUrl ? (
+                {imageUrl && (
+                  <div className="relative aspect-[16/10] overflow-hidden">
                     <Image
                       src={fullImageUrl}
                       alt={heroImage?.alt || post.title}
@@ -109,10 +116,8 @@ export default async function BlogPage({
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       loading="lazy"
                     />
-                  ) : (
-                    <div className="w-full h-full bg-gray-light" />
-                  )}
-                </div>
+                  </div>
+                )}
                 <div className="p-5">
                   <h2 className="text-lg font-heading font-semibold text-navy group-hover:text-gold transition-colors">
                     {post.title}

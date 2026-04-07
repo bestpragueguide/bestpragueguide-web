@@ -259,8 +259,8 @@ export default async function BlogPostPage({
                       href={`/${locale}/blog/${related.slug}`}
                       className="group block"
                     >
-                      <div className="relative aspect-[16/10] rounded-lg overflow-hidden mb-3">
-                        {relImgUrl ? (
+                      {relImgUrl && (
+                        <div className="relative aspect-[16/10] rounded-lg overflow-hidden mb-3">
                           <Image
                             src={fullRelImgUrl}
                             alt={related.title}
@@ -269,10 +269,8 @@ export default async function BlogPostPage({
                             sizes="(max-width: 640px) 100vw, 33vw"
                             loading="lazy"
                           />
-                        ) : (
-                          <div className="w-full h-full bg-gray-light" />
-                        )}
-                      </div>
+                        </div>
+                      )}
                       <h3 className="font-heading font-semibold text-navy group-hover:text-gold transition-colors">
                         {related.title}
                       </h3>
@@ -326,8 +324,8 @@ export default async function BlogPostPage({
                         href={`/${locale}/blog/${p.slug}`}
                         className="group flex gap-3"
                       >
-                        <div className="relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden">
-                          {imgUrl ? (
+                        {imgUrl && (
+                          <div className="relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden">
                             <Image
                               src={fullImgUrl}
                               alt={p.title}
@@ -336,10 +334,8 @@ export default async function BlogPostPage({
                               sizes="64px"
                               loading="lazy"
                             />
-                          ) : (
-                            <div className="w-full h-full bg-gray-light" />
-                          )}
-                        </div>
+                          </div>
+                        )}
                         <span className="text-sm font-medium text-navy group-hover:text-gold transition-colors line-clamp-3">
                           {p.title}
                         </span>
