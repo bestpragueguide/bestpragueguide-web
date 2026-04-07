@@ -35,7 +35,12 @@ def send_batch(articles, dry_run=False):
             print(f"  DRY-RUN: {a['slug']} — {a['metaTitle'][:50]}")
         return [{"slug": a["slug"], "status": "dry-run"} for a in articles]
 
-    payload = json.dumps({"articles": articles, "defaultHeroImageId": 691})
+    data = {"articles": articles}
+    if os.environ.get("IMPORT_MODE") == "update":
+        data["mode"] = "update"
+    else:
+        data["defaultHeroImageId"] = 691
+    payload = json.dumps(data)
     r = subprocess.run([
         "curl", "-s", "-X", "POST", f"{PAYLOAD_URL}/api/import-blog",
         "-H", f"x-init-secret: {PAYLOAD_SECRET}",
@@ -136,13 +141,15 @@ def main():
         for r in results:
             status = r.get("status", "unknown")
             slug = r.get("slug", "?")
-            if status == "created":
+            if status in ("created", "updated"):
                 total_created += 1
-                state["imported"].append(slug)
-                print(f"  OK: {slug} (id={r.get('id', '?')})")
+                if slug not in state["imported"]:
+                    state["imported"].append(slug)
+                print(f"  {'OK' if status == 'created' else 'UPDATED'}: {slug} (id={r.get('id', '?')})")
             elif status == "skipped":
                 total_skipped += 1
-                state["imported"].append(slug)
+                if slug not in state["imported"]:
+                    state["imported"].append(slug)
                 print(f"  SKIP: {slug} (already exists, id={r.get('id', '?')})")
             elif status == "dry-run":
                 pass

@@ -30,8 +30,8 @@ function linkNode(url: string, children: LexicalNode[], newTab: boolean = true):
     indent: 0,
     version: 3,
     fields: {
-      linkType: url.startsWith('/') ? 'internal' : 'custom',
-      url,
+      linkType: 'custom',
+      url: url.startsWith('/') ? `https://bestpragueguide.com${url}` : url,
       newTab,
     },
   }

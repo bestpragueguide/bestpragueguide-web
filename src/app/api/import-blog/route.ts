@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json()
-    const { articles, defaultHeroImageId } = body as {
+    const { articles, defaultHeroImageId, mode } = body as {
       articles: Array<{
         slug: string
         title: string
@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
         publishedAt?: string
       }>
       defaultHeroImageId?: number
+      mode?: 'create' | 'update'
     }
 
     if (!articles?.length) {
@@ -43,17 +44,33 @@ export async function POST(req: NextRequest) {
           locale: 'en',
         })
 
-        if (existing.docs.length > 0) {
+        // Convert markdown to Lexical JSON (skip H1 — title is separate)
+        const contentClean = article.content.replace(/^# .+\n+/, '')
+        const contentLexical = markdownToLexical(contentClean)
+        const excerptLexical = markdownToLexical(article.excerpt)
+
+        if (existing.docs.length > 0 && mode === 'update') {
+          // Update existing article content
+          const existingDoc = existing.docs[0]
+          await payload.update({
+            collection: 'blog-posts',
+            id: existingDoc.id,
+            locale: 'en',
+            data: {
+              content: contentLexical as any,
+              excerpt: excerptLexical as any,
+              seo: {
+                metaTitle: article.metaTitle,
+                metaDescription: article.metaDescription,
+              },
+            } as any,
+          })
+          results.push({ slug: article.slug, status: 'updated', id: existingDoc.id as number })
+          continue
+        } else if (existing.docs.length > 0) {
           results.push({ slug: article.slug, status: 'skipped', id: existing.docs[0].id as number })
           continue
         }
-
-        // Convert markdown to Lexical JSON (skip H1 — title is separate)
-        let contentClean = article.content.replace(/^# .+\n+/, '')
-        // Strip HTML <a> tags to plain text (Lexical link nodes cause validation issues)
-        contentClean = contentClean.replace(/<a[^>]*>([^<]*)<\/a>/g, '$1')
-        const contentLexical = markdownToLexical(contentClean)
-        const excerptLexical = markdownToLexical(article.excerpt)
 
         const doc = await payload.create({
           collection: 'blog-posts',
@@ -64,7 +81,7 @@ export async function POST(req: NextRequest) {
             content: contentLexical as any,
             excerpt: excerptLexical as any,
             category: article.category || 'prague-guide',
-            heroImage: defaultHeroImageId || 691,
+            heroImage: defaultHeroImageId || undefined,
             publishedLocales: ['en'],
             publishedAt: article.publishedAt || new Date().toISOString(),
             _status: 'published',
