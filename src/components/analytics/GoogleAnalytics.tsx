@@ -20,7 +20,7 @@ export function GoogleAnalytics() {
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           ${gaId ? `gtag('config', '${gaId}');` : ''}
-          ${gadsId ? `gtag('config', '${gadsId}');` : ''}
+          ${gadsId ? `gtag('config', '${gadsId}', { allow_enhanced_conversions: true });` : ''}
         `}
       </Script>
     </>

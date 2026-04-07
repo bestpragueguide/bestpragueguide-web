@@ -52,7 +52,7 @@ export function ContactForm({ locale, phoneDisplay }: ContactFormProps) {
 
       if (result.success) {
         setStatus('success')
-        trackContactSubmit()
+        trackContactSubmit(data.email, data.phone)
         form.reset()
       } else if (res.status === 429) {
         setStatus('rate_limited')

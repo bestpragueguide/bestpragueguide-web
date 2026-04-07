@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher'
 import { Logo } from '@/components/shared/Logo'
+import { TrackedWhatsAppLink } from '@/components/shared/TrackedWhatsAppLink'
 import { localizeHref } from '@/i18n/routing'
 import type { NavigationData, SiteSettingsData } from '@/lib/cms-types'
 
@@ -39,9 +40,9 @@ export function Footer({ navigation, siteSettings, locale }: FooterProps) {
               {siteSettings.contactEmail}
             </a>
             {' · '}
-            <a href={`https://wa.me/${siteSettings.whatsappNumber}`} target="_blank" rel="noopener noreferrer" className="text-gold hover:text-gold-dark transition-colors">
+            <TrackedWhatsAppLink href={`https://wa.me/${siteSettings.whatsappNumber}`} className="text-gold hover:text-gold-dark transition-colors">
               WhatsApp
-            </a>
+            </TrackedWhatsAppLink>
             {' · '}
             <a href={`tel:${siteSettings.contactPhone}`} className="text-gold hover:text-gold-dark transition-colors">
               {siteSettings.contactPhoneDisplay}

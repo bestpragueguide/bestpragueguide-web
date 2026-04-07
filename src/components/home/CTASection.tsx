@@ -1,5 +1,6 @@
 import { localizeHref } from '@/i18n/routing'
 import type { HomepageData, SiteSettingsData } from '@/lib/cms-types'
+import { TrackedWhatsAppLink } from '@/components/shared/TrackedWhatsAppLink'
 
 interface CTASectionProps {
   data: HomepageData
@@ -26,14 +27,12 @@ export function CTASection({ data, siteSettings, locale }: CTASectionProps) {
             {data.ctaButtonLabel}
           </a>
 
-          <a
+          <TrackedWhatsAppLink
             href={`https://wa.me/${siteSettings.whatsappNumber}`}
             className="inline-flex items-center justify-center font-medium rounded-lg px-8 py-4 text-lg border-2 border-white text-white hover:bg-white/10 transition-colors visited:text-white"
-            target="_blank"
-            rel="noopener noreferrer"
           >
             {data.ctaWhatsappLabel}
-          </a>
+          </TrackedWhatsAppLink>
         </div>
       </div>
     </section>
