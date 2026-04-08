@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
       }>
       defaultHeroImageId?: number
       mode?: 'create' | 'update'
+      locale?: 'en' | 'ru'
     }
 
     if (!articles?.length) {
@@ -33,6 +34,7 @@ export async function POST(req: NextRequest) {
 
     const payload = await getPayload({ config })
     const results: Array<{ slug: string; status: string; id?: number; error?: string }> = []
+    const articleLocale = body.locale || 'en'
 
     for (const article of articles) {
       try {
@@ -41,7 +43,7 @@ export async function POST(req: NextRequest) {
           collection: 'blog-posts',
           where: { slug: { equals: article.slug } },
           limit: 1,
-          locale: 'en',
+          locale: articleLocale,
         })
 
         // Convert markdown to Lexical JSON (skip H1 — title is separate)
@@ -55,7 +57,7 @@ export async function POST(req: NextRequest) {
           await payload.update({
             collection: 'blog-posts',
             id: existingDoc.id,
-            locale: 'en',
+            locale: articleLocale,
             data: {
               content: contentLexical as any,
               excerpt: excerptLexical as any,
@@ -74,7 +76,7 @@ export async function POST(req: NextRequest) {
 
         const doc = await payload.create({
           collection: 'blog-posts',
-          locale: 'en',
+          locale: articleLocale,
           data: {
             slug: article.slug,
             title: article.title,
@@ -82,7 +84,7 @@ export async function POST(req: NextRequest) {
             excerpt: excerptLexical as any,
             category: article.category || 'prague-guide',
             heroImage: defaultHeroImageId || undefined,
-            publishedLocales: ['en'],
+            publishedLocales: [articleLocale],
             publishedAt: article.publishedAt || new Date().toISOString(),
             _status: 'published',
             seo: {

@@ -35,18 +35,25 @@ def send_batch(articles, dry_run=False):
             print(f"  DRY-RUN: {a['slug']} — {a['metaTitle'][:50]}")
         return [{"slug": a["slug"], "status": "dry-run"} for a in articles]
 
+    import tempfile
     data = {"articles": articles}
+    if os.environ.get("IMPORT_LOCALE"):
+        data["locale"] = os.environ["IMPORT_LOCALE"]
     if os.environ.get("IMPORT_MODE") == "update":
         data["mode"] = "update"
     else:
         data["defaultHeroImageId"] = 691
-    payload = json.dumps(data)
+    # Write payload to temp file to avoid "Argument list too long"
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as tmp:
+        json.dump(data, tmp, ensure_ascii=False)
+        tmp_path = tmp.name
     r = subprocess.run([
         "curl", "-s", "-X", "POST", f"{PAYLOAD_URL}/api/import-blog",
         "-H", f"x-init-secret: {PAYLOAD_SECRET}",
         "-H", "Content-Type: application/json",
-        "-d", payload,
+        "-d", f"@{tmp_path}",
     ], capture_output=True, text=True, timeout=120)
+    os.unlink(tmp_path)
 
     try:
         data = json.loads(r.stdout)
