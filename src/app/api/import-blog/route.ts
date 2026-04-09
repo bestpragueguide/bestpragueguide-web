@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
             content: contentLexical as any,
             excerpt: excerptLexical as any,
             category: article.category || 'prague-guide',
-            heroImage: defaultHeroImageId || undefined,
+            ...(defaultHeroImageId ? { heroImage: defaultHeroImageId } : {}),
             publishedLocales: [articleLocale],
             publishedAt: article.publishedAt || new Date().toISOString(),
             _status: 'published',
