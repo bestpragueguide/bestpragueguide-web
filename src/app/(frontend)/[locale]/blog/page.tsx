@@ -11,6 +11,7 @@ import config from '@payload-config'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { BlogCategoryFilter } from '@/components/blog/BlogCategoryFilter'
 import { extractPlainText } from '@/components/shared/SafeRichText'
+import { ItemListSchema } from '@/components/seo/ItemListSchema'
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
 
@@ -75,8 +76,11 @@ export default async function BlogPage({
     return bHasImage - aHasImage
   })
 
+  const blogItemList = posts.map((p: any) => ({ url: `/${locale}/blog/${p.slug}`, name: p.title }))
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <ItemListSchema items={blogItemList} />
       <Breadcrumbs
         items={[{ label: tPages('blogBreadcrumb') }]}
         locale={locale}

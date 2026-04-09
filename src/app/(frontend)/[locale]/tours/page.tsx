@@ -8,6 +8,7 @@ import config from '@payload-config'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { TourFilters } from '@/components/tours/TourFilters'
 import { TourGrid } from '@/components/tours/TourGrid'
+import { ItemListSchema } from '@/components/seo/ItemListSchema'
 
 export const revalidate = 600
 
@@ -94,8 +95,12 @@ export default async function ToursPage({
     }
   })
 
+  const tourSlugPrefix = locale === 'ru' ? '/ru/ekskursii/' : '/en/tours/'
+  const itemListItems = tours.map(t => ({ url: `${tourSlugPrefix}${t.slug}`, name: t.title }))
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <ItemListSchema items={itemListItems} />
       <Breadcrumbs
         items={[
           {
