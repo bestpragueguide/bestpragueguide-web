@@ -41,8 +41,7 @@ def send_batch(articles, dry_run=False):
         data["locale"] = os.environ["IMPORT_LOCALE"]
     if os.environ.get("IMPORT_MODE") == "update":
         data["mode"] = "update"
-    else:
-        data["defaultHeroImageId"] = 691
+    # Do NOT set defaultHeroImageId — admin selects images manually
     # Write payload to temp file to avoid "Argument list too long"
     with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as tmp:
         json.dump(data, tmp, ensure_ascii=False)
