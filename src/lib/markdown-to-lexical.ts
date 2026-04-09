@@ -120,6 +120,16 @@ export function markdownToLexical(markdown: string): object {
       continue
     }
 
+    // HTML heading tags: <h2 ...>text</h2>, <h3>text</h3> etc.
+    const htmlHeadingMatch = line.match(/^<h([2-6])[^>]*>(.*?)<\/h\1>$/)
+    if (htmlHeadingMatch) {
+      const level = parseInt(htmlHeadingMatch[1])
+      const text = htmlHeadingMatch[2].replace(/<[^>]+>/g, '')
+      children.push(headingNode(level, parseInline(text)))
+      i++
+      continue
+    }
+
     if (/^[-*]\s+/.test(line.trim())) {
       const items: LexicalNode[][] = []
       while (i < lines.length && /^[-*]\s+/.test(lines[i].trim())) {
