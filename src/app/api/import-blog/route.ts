@@ -51,6 +51,9 @@ export async function POST(req: NextRequest) {
         // Strip image placeholders: [ФОТО: ...], [IMAGE: ...]
         contentClean = contentClean.replace(/^\[ФОТО:[^\]]*\]\s*$/gm, '')
         contentClean = contentClean.replace(/^\[IMAGE:[^\]]*\]\s*$/gm, '')
+        // Strip [ПРОВЕРИТЬ...] and [VERIFY] marks
+        contentClean = contentClean.replace(/\s*\[ПРОВЕРИТЬ[^\]]*\]/g, '')
+        contentClean = contentClean.replace(/\s*\[VERIFY[^\]]*\]/g, '')
         // Strip byline (Обновлено: ... высшей категории)
         contentClean = contentClean.replace(/^\*\*Обновлено:.*категории\s*$/gm, '')
         // Strip TOC: <ul>/<li> blocks with anchor links, and markdown list items with href="#"
