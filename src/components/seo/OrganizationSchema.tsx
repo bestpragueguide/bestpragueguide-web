@@ -7,7 +7,7 @@ export function OrganizationSchema() {
     name: 'Best Prague Guide',
     url: 'https://bestpragueguide.com',
     description:
-      'Private tours in Prague from a guide with 17 years of experience.',
+      'Private tours in Prague with a licensed guide. Just your group, no strangers.',
     image: 'https://bestpragueguide.com/og-default.jpg',
     priceRange: '€€',
     address: {

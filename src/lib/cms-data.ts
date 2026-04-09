@@ -105,20 +105,20 @@ function homepageFallback(locale: string): HomepageData {
       ? 'Откройте Прагу, которую не видят туристы'
       : 'Discover the Prague Tourists Never See',
     heroSubtitle: locale === 'ru'
-      ? 'Индивидуальные экскурсии от гида с 17-летним опытом. Только ваша группа — никаких посторонних.'
-      : 'Private tours from a guide with 17 years of experience. Just your group — no strangers.',
+      ? 'Индивидуальные экскурсии с лицензированным гидом. Только ваша группа — никаких посторонних.'
+      : 'Private tours with a licensed local guide. Just your group — no strangers.',
     heroCta: locale === 'ru' ? 'Смотреть экскурсии' : 'Explore Tours',
     heroCtaHref: '/tours',
     trustBarItems: [
-      { icon: 'experience', text: locale === 'ru' ? '17 лет опыта' : '17 Years Experience' },
+      { icon: 'experience', text: locale === 'ru' ? 'Многолетний опыт' : 'Years of Experience' },
       { icon: 'guests', text: locale === 'ru' ? '10 000+ довольных гостей' : '10,000+ Happy Guests' },
       { icon: 'licensed', text: locale === 'ru' ? 'Команда лицензированных гидов' : 'Team of Licensed Guides' },
       { icon: 'curated', text: locale === 'ru' ? 'Каждая экскурсия создана основателем' : 'Every Tour Curated by Founder' },
     ],
     guideHeading: locale === 'ru' ? 'Ваш гид' : 'Meet Your Guide',
     guideBio: locale === 'ru'
-      ? 'Ульяна Формина делится своей любовью к Праге уже более 17 лет. Как лицензированный гид высшей категории и основатель Best Prague Guide, она лично разрабатывает каждый маршрут и подбирает каждого гида в команду.'
-      : 'Uliana Formina has been sharing her passion for Prague for over 17 years. As a highest-category licensed guide and founder of Best Prague Guide, she personally curates every tour route and hand-picks each guide on her team.',
+      ? 'Ульяна Формина — лицензированный гид высшей категории и основатель Best Prague Guide. Она лично разрабатывает каждый маршрут и подбирает каждого гида в команду.'
+      : 'Uliana Formina is a highest-category licensed guide and founder of Best Prague Guide. She personally curates every tour route and hand-picks each guide on her team.',
     guideLearnMore: locale === 'ru' ? 'Подробнее о нас' : 'Learn More About Us',
     guideLearnMoreHref: '/about',
     categoriesHeading: locale === 'ru' ? 'Все экскурсии' : 'All Tours',
@@ -147,8 +147,8 @@ function aboutPageFallback(locale: string): AboutPageData {
   return {
     founderHeading: locale === 'ru' ? 'Основатель и ведущий гид' : 'Founder and Lead Guide',
     founderBio: locale === 'ru'
-      ? 'Более 17 лет Ульяна Формина делится своей глубокой любовью к Праге с путешественниками со всего мира. Как лицензированный гид высшей категории и член Ассоциации гидов Чехии, она приняла более 10 000 гостей, показав им скрытые уголки и знаковые достопримечательности города.'
-      : 'For over 17 years, Uliana Formina has been sharing her deep love for Prague with travelers from around the world. As a highest-category licensed guide and member of the Czech Guide Association, she has welcomed more than 10,000 guests to the city\'s hidden corners and iconic landmarks.',
+      ? 'Ульяна Формина — лицензированный гид высшей категории и член Ассоциации гидов Чехии. За годы работы она приняла тысячи гостей, показав им скрытые уголки и знаковые достопримечательности Праги.'
+      : 'Uliana Formina is a highest-category licensed guide and member of the Czech Guide Association. Over the years, she has welcomed thousands of guests to the city\'s hidden corners and iconic landmarks.',
     founderQuote: locale === 'ru'
       ? 'Я создала эту компанию, чтобы обеспечить качество экскурсий, как если бы я лично вела каждую из них.'
       : 'I built this company to deliver tour quality as if I personally led every single one.',

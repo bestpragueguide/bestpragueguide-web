@@ -9,8 +9,8 @@ export function WebSiteSchema({ locale }: WebSiteSchemaProps) {
     ? 'Best Prague Guide — Частные экскурсии по Праге'
     : 'Best Prague Guide — Private Tours in Prague'
   const description = locale === 'ru'
-    ? 'Индивидуальные экскурсии по Праге с лицензированным гидом. 17 лет опыта.'
-    : 'Private tours in Prague with a licensed guide. 17 years of experience.'
+    ? 'Индивидуальные экскурсии по Праге с лицензированным гидом высшей категории.'
+    : 'Private tours in Prague with a highest-category licensed guide.'
 
   const data: Record<string, unknown> = {
     '@context': 'https://schema.org',
