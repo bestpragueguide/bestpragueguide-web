@@ -47,7 +47,12 @@ export async function POST(req: NextRequest) {
         })
 
         // Convert markdown to Lexical JSON (skip H1 — title is separate)
-        const contentClean = article.content.replace(/^# .+\n+/, '')
+        let contentClean = article.content.replace(/^# .+\n+/, '')
+        // Strip image placeholders: [ФОТО: ...], [IMAGE: ...], [ПРОВЕРИТЬ...]
+        contentClean = contentClean.replace(/^\[ФОТО:[^\]]*\]\s*$/gm, '')
+        contentClean = contentClean.replace(/^\[IMAGE:[^\]]*\]\s*$/gm, '')
+        // Strip byline (Обновлено: ... высшей категории)
+        contentClean = contentClean.replace(/^\*\*Обновлено:.*категории\s*$/gm, '')
         const contentLexical = markdownToLexical(contentClean)
         const excerptLexical = markdownToLexical(article.excerpt)
 
