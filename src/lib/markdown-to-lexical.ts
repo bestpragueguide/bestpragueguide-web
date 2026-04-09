@@ -130,6 +130,30 @@ export function markdownToLexical(markdown: string): object {
       continue
     }
 
+    // HTML list: <ul>...<li>...</li>...</ul> or <ol>
+    if (line.trim() === '<ul>' || line.trim() === '<ol>') {
+      const tag = line.trim() === '<ol>' ? 'ol' : 'ul'
+      const items: LexicalNode[][] = []
+      i++
+      while (i < lines.length && !lines[i].trim().startsWith(`</${tag}>`)) {
+        const liMatch = lines[i].match(/<li>(.*?)<\/li>/)
+        if (liMatch) {
+          const liContent = liMatch[1].replace(/<[^>]+>/g, '')
+          if (liContent.trim()) items.push(parseInline(liContent))
+        }
+        i++
+      }
+      if (i < lines.length) i++ // skip </ul> or </ol>
+      if (items.length > 0) children.push(listNode(items, tag as 'ul' | 'ol'))
+      continue
+    }
+
+    // Skip standalone HTML tags that are list wrappers
+    if (/^<\/?[uo]l>$/.test(line.trim()) || /^<li>/.test(line.trim())) {
+      i++
+      continue
+    }
+
     if (/^[-*]\s+/.test(line.trim())) {
       const items: LexicalNode[][] = []
       while (i < lines.length && /^[-*]\s+/.test(lines[i].trim())) {
