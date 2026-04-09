@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.43.0] - 2026-04-09
+
+### Fixed
+- **Removed all "17 years/лет" from JSON-LD schemas, meta descriptions, and fallback content** — OrganizationSchema, WebSiteSchema, layout metadata, i18n meta (EN+RU), cms-data fallbacks. Replaced with experience-neutral phrasing ("licensed guide", "highest-category"). Numbers change over time and should not be hardcoded.
+- **Blog import: strip `[ПРОВЕРИТЬ]`, `[VERIFY]`, `[ФОТО:]`, `[IMAGE:]` placeholders and bylines** — 497 verify marks and 368 image placeholders were visible to readers. Now stripped during import.
+- **Blog import: strip TOC anchor links** — `<ul><li><a href="#...">` table-of-contents blocks removed (Lexical doesn't support heading IDs). HTML heading `id=` attributes cleaned.
+- **Blog import: parse `<h2>`-`<h6>` HTML heading tags** — 21 articles used raw HTML headings that rendered as plain text. Converter now handles both markdown `##` and HTML `<h2>` syntax.
+- **4 broken RU internal links fixed** — prazhskij-grad, karlov-most, terezin-iz-pragi, drezden-iz-pragi corrected to actual slugs.
+- **Blog import: locale support** — `IMPORT_LOCALE` env var for RU imports, temp file for large payloads.
+
+### Added
+- **56 Russian blog articles imported to CMS** — IDs 141-195, all published, submitted to IndexNow. 66 RU blog URLs in sitemap.
+- **Umami website ID updated** — `942585ca-...` → `51caf193-7873-413b-9c38-7b69a0f189de`
+
 ## [1.42.0] - 2026-04-07
 
 ### Added
