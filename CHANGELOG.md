@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.44.0] - 2026-04-09
+
+### Added
+- **121 new blog articles imported** — 80 EN expansion (transport, food, activities, neighborhoods, demographics, day trips, practical, comparisons, seasonal, monthly, shopping) + 41 RU expansion (viewpoints, nightlife, parks, car rental, castles, accessibility, restaurants, cafes, markets, museums, concerts, festivals). All published and submitted to IndexNow.
+- Site now has 197 EN blog posts and 107 RU blog posts (304 total).
+
 ## [1.43.0] - 2026-04-09
 
 ### Fixed
