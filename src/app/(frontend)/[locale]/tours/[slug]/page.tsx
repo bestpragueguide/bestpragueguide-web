@@ -208,6 +208,32 @@ export default async function TourDetailPage({
 
   const relatedTours = await getRelatedTours(locale, selectedRelatedIds.length > 0 ? selectedRelatedIds : undefined)
 
+  // Fetch related blog posts by matching tour category/slug keywords
+  let relatedBlogPosts: Array<{ title: string; slug: string }> = []
+  try {
+    const blogResult = await payload.find({
+      collection: 'blog-posts',
+      where: {
+        status: { equals: 'published' },
+        publishedLocales: { in: [locale] },
+      },
+      limit: 0,
+      locale: locale as 'en' | 'ru',
+    })
+    // Match by tour slug keywords in blog slug
+    const tourSlugWords = (tour.slug || '').split('-').filter((w: string) => w.length > 3)
+    const scored = blogResult.docs
+      .map((post: any) => {
+        const postSlug = (post.slug || '') as string
+        const matches = tourSlugWords.filter((w: string) => postSlug.includes(w)).length
+        return { title: post.title as string, slug: postSlug, matches }
+      })
+      .filter((p: any) => p.matches > 0)
+      .sort((a: any, b: any) => b.matches - a.matches)
+      .slice(0, 3)
+    relatedBlogPosts = scored
+  } catch { /* blog links unavailable */ }
+
   const galleryImages = (tour.gallery || []).map(
     (item) => ({
       url:
@@ -381,8 +407,28 @@ export default async function TourDetailPage({
 
           {/* Reviews hidden — kept for future use */}
 
-          {/* Related */}
+          {/* Related Tours */}
           <TourRelated tours={relatedTourCards} locale={locale} />
+
+          {/* Related Blog Articles */}
+          {relatedBlogPosts.length > 0 && (
+            <section className="mt-12">
+              <h2 className="text-2xl font-heading font-bold text-navy mb-6">
+                {locale === 'ru' ? 'Полезные статьи' : 'Related Articles'}
+              </h2>
+              <div className="space-y-3">
+                {relatedBlogPosts.map((post) => (
+                  <a
+                    key={post.slug}
+                    href={`/${locale}/blog/${post.slug}`}
+                    className="block text-gold hover:text-gold-dark transition-colors text-sm font-medium"
+                  >
+                    → {post.title}
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
 
         {/* Right column: booking sidebar */}
