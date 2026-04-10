@@ -211,6 +211,7 @@ export default async function TourDetailPage({
   // Fetch related blog posts by matching tour category/slug keywords
   let relatedBlogPosts: Array<{ title: string; slug: string }> = []
   try {
+    const payload = await getPayload({ config })
     const blogResult = await payload.find({
       collection: 'blog-posts',
       where: {
