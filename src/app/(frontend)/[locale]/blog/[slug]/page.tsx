@@ -147,7 +147,7 @@ export default async function BlogPostPage({
         status: { equals: 'published' },
         publishedLocales: { in: [locale] },
       },
-      limit: 50,
+      limit: 0,
       locale: locale as 'en' | 'ru',
       sort: '-publishedAt',
     })
