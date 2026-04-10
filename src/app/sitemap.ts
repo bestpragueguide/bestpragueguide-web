@@ -86,7 +86,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const enTours = await payload.find({
       collection: 'tours',
       where: { status: { equals: 'published' } },
-      limit: 200,
+      limit: 0,
       locale: 'en',
     })
 
@@ -94,7 +94,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const ruTours = await payload.find({
       collection: 'tours',
       where: { status: { equals: 'published' } },
-      limit: 200,
+      limit: 0,
       locale: 'ru',
     })
 
@@ -150,14 +150,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const enPosts = await payload.find({
       collection: 'blog-posts',
       where: { status: { equals: 'published' } },
-      limit: 500,
+      limit: 0,
       locale: 'en',
     })
 
     const ruPosts = await payload.find({
       collection: 'blog-posts',
       where: { status: { equals: 'published' } },
-      limit: 500,
+      limit: 0,
       locale: 'ru',
     })
 

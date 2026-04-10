@@ -59,7 +59,7 @@ export default async function ToursPage({
         publishedLocales: { in: [locale] },
       },
       sort: 'sortOrder',
-      limit: 50,
+      limit: 0,
       locale: locale as 'en' | 'ru',
     })
     tours = result.docs as typeof tours
