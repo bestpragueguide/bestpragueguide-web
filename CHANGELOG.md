@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.45.0] - 2026-04-10
+
+### Fixed
+- **Media file serving completely broken** — Payload 3.x standalone mode couldn't serve files from `/app/media` (all 404 despite 9,697 files existing). Created custom `/api/media/file/[...path]` route that reads directly from `MEDIA_DIR` with proper MIME types and `Cache-Control: immutable`.
+- **191 missing image sizes regenerated** — `/api/media-regenerate` endpoint generates missing sized variants (thumbnail, card, mobileCard, hero, mobileHero, og) using Sharp with focal-point-aware cropping. All 39 tour pages now have working gallery images.
+- **Sitemap missing 104 blog posts** — RU-only posts were never added (loop only iterated over EN posts). Added separate RU-only loop. Increased limit to 0 (unlimited). Sitemap now shows all 363 URLs.
+- **Query limits removed** — sitemap, blog listing, tour listing all set to `limit: 0` (unlimited).
+
+### Added
+- `/api/media-check` — diagnostic endpoint for filesystem inspection
+- `/api/media-regenerate` — batch image size regeneration with page support
+
 ## [1.44.0] - 2026-04-09
 
 ### Added
