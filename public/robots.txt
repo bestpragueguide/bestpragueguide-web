@@ -3,4 +3,10 @@ Allow: /
 Disallow: /api/
 Disallow: /admin/
 
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
 Sitemap: https://bestpragueguide.com/sitemap.xml
