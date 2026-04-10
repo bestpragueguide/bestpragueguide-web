@@ -76,6 +76,7 @@ async function getRelatedTours(
       where: {
         id: { in: selectedIds },
         status: { equals: 'published' },
+        publishedLocales: { in: [locale] },
       },
       limit: selectedIds.length,
       locale: locale as 'en' | 'ru',
