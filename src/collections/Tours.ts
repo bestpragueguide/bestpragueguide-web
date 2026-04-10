@@ -29,6 +29,12 @@ export const Tours: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'subcategory', 'status'],
     group: 'Content',
+    baseListFilter: ({ req }) => {
+      const locale = req.locale || 'en'
+      return {
+        publishedLocales: { in: [locale] },
+      }
+    },
   },
   versions: {
     drafts: true,
