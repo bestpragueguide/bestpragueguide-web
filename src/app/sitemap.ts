@@ -146,25 +146,35 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const payload = await getPayload({ config })
 
+    // Fetch ALL published blog posts (increase limit for large sites)
     const enPosts = await payload.find({
       collection: 'blog-posts',
       where: { status: { equals: 'published' } },
-      limit: 200,
+      limit: 500,
       locale: 'en',
     })
 
     const ruPosts = await payload.find({
       collection: 'blog-posts',
       where: { status: { equals: 'published' } },
-      limit: 200,
+      limit: 500,
       locale: 'ru',
     })
 
+    // Build maps for cross-referencing slugs
     const ruPostSlugMap = new Map<number, string>()
     for (const p of ruPosts.docs) {
       ruPostSlugMap.set(p.id as number, p.slug as string)
     }
+    const enPostSlugMap = new Map<number, string>()
+    for (const p of enPosts.docs) {
+      enPostSlugMap.set(p.id as number, p.slug as string)
+    }
 
+    // Track which post IDs we've already added
+    const addedPostIds = new Set<number>()
+
+    // Process EN posts (adds EN URLs + RU URLs for bilingual posts)
     for (const post of enPosts.docs) {
       const publishedLocales = (post as any).publishedLocales || []
       const enSlug = post.slug
@@ -198,6 +208,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           alternates: { languages: alternates },
         })
       }
+
+      addedPostIds.add(post.id as number)
+    }
+
+    // Process RU-only posts not already covered by EN loop
+    for (const post of ruPosts.docs) {
+      if (addedPostIds.has(post.id as number)) continue
+      const publishedLocales = (post as any).publishedLocales || []
+      if (!publishedLocales.includes('ru')) continue
+
+      const ruSlug = post.slug as string
+      const lastMod = new Date((post.updatedAt as string) || (post as any).publishedAt)
+
+      entries.push({
+        url: `${BASE_URL}/ru/blog/${ruSlug}`,
+        lastModified: lastMod,
+        alternates: { languages: { ru: `${BASE_URL}/ru/blog/${ruSlug}` } },
+      })
     }
   } catch (error) {
     console.error('[Sitemap] Failed to fetch blog posts:', error)
