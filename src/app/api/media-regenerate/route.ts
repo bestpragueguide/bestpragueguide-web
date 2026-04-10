@@ -48,9 +48,11 @@ export async function POST(req: NextRequest) {
       }
     } else if (all) {
       const maxLimit = queryLimit || 50
+      const page = body.page || 1
       const result = await payload.find({
         collection: 'media',
         limit: maxLimit,
+        page,
         sort: 'id',
       })
       docs = result.docs
