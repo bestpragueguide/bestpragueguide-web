@@ -26,6 +26,12 @@ export const BlogPosts: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'status', 'publishedAt'],
     group: 'Content',
+    baseListFilter: ({ req }) => {
+      const locale = req.locale || 'en'
+      return {
+        publishedLocales: { in: [locale] },
+      }
+    },
   },
   versions: {
     drafts: true,
