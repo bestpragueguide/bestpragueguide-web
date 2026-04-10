@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.46.0] - 2026-04-10
+
+### Added
+- **44 remaining blog articles** — 40 RU expansion Phase 1 (#57-96: museums, restaurants, shopping, day trips, monthly guide, seniors, neighborhoods, Czech phrases, Easter, weddings, cycling, concerts, Brno, Tábor, spas, wine, UNESCO, nature, food deep dives) + 4 EN missing (#105 Český Krumlov transport, #116 craft beer, #182 best hotels, #185 Christmas markets outside Prague). All published and submitted to IndexNow.
+- **Site totals: 400 URLs** (201 EN blog + 140 RU blog + 16 EN tours + 23 RU tours + 20 static). All SEO content tasks complete.
+
 ## [1.45.0] - 2026-04-10
 
 ### Fixed
