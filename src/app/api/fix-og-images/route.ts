@@ -4,7 +4,11 @@ import config from '@payload-config'
 
 /**
  * GET  — audit blog posts and tours missing hero/OG images
- * POST — assign hero images to blog posts based on keyword matching with existing media
+ * POST — assign hero images OR delete posts by ID
+ *
+ * POST body options:
+ *   { "action": "delete", "ids": [4, 479] }  — delete specific posts
+ *   { "action": "assign" }                    — auto-assign hero images
  */
 export async function GET(req: NextRequest) {
   const secret = req.headers.get('x-init-secret')
@@ -15,7 +19,6 @@ export async function GET(req: NextRequest) {
   try {
     const payload = await getPayload({ config })
 
-    // Blog posts
     const enPosts = await payload.find({
       collection: 'blog-posts',
       limit: 0,
@@ -40,7 +43,6 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // Tours
     const tours = await payload.find({
       collection: 'tours',
       limit: 0,
@@ -50,22 +52,12 @@ export async function GET(req: NextRequest) {
 
     let toursWithHero = 0
     let toursWithoutHero = 0
-    const missingHeroTours: Array<{ id: number; slug: string; title: string }> = []
 
     for (const tour of tours.docs) {
-      if (tour.heroImage) {
-        toursWithHero++
-      } else {
-        toursWithoutHero++
-        missingHeroTours.push({
-          id: tour.id as number,
-          slug: tour.slug as string,
-          title: (tour.title as string || '').substring(0, 60),
-        })
-      }
+      if (tour.heroImage) toursWithHero++
+      else toursWithoutHero++
     }
 
-    // Available media images
     const media = await payload.find({
       collection: 'media',
       limit: 0,
@@ -73,21 +65,9 @@ export async function GET(req: NextRequest) {
     })
 
     return NextResponse.json({
-      blog: {
-        total: enPosts.totalDocs,
-        withHero: blogWithHero,
-        withoutHero: blogWithoutHero,
-        missingList: missingHeroPosts,
-      },
-      tours: {
-        total: tours.totalDocs,
-        withHero: toursWithHero,
-        withoutHero: toursWithoutHero,
-        missingList: missingHeroTours,
-      },
-      media: {
-        total: media.totalDocs,
-      },
+      blog: { total: enPosts.totalDocs, withHero: blogWithHero, withoutHero: blogWithoutHero, missingList: missingHeroPosts },
+      tours: { total: tours.totalDocs, withHero: toursWithHero, withoutHero: toursWithoutHero },
+      media: { total: media.totalDocs },
     })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
@@ -101,120 +81,23 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const body = await req.json()
     const payload = await getPayload({ config })
 
-    // Get all media with their filenames and alt texts for keyword matching
-    const media = await payload.find({
-      collection: 'media',
-      limit: 0,
-      locale: 'en',
-      depth: 0,
-    })
-
-    // Build searchable media index
-    const mediaItems = media.docs.map((m: any) => ({
-      id: m.id as number,
-      filename: (m.filename || '') as string,
-      alt: (m.alt || '') as string,
-      url: (m.url || '') as string,
-      hasOg: !!(m.sizes?.og?.url),
-    }))
-
-    // Get blog posts without hero images
-    const enPosts = await payload.find({
-      collection: 'blog-posts',
-      limit: 0,
-      locale: 'en',
-      depth: 0,
-    })
-
-    const ruPosts = await payload.find({
-      collection: 'blog-posts',
-      limit: 0,
-      locale: 'ru',
-      depth: 0,
-    })
-
-    // Build RU slug map
-    const ruSlugMap = new Map<number, string>()
-    for (const p of ruPosts.docs) {
-      ruSlugMap.set(p.id as number, p.slug as string)
-    }
-
-    const postsWithoutHero = enPosts.docs.filter((p: any) => !p.heroImage)
-
-    // Keyword matching: extract keywords from slug and try to find matching media
-    function findMatchingMedia(slug: string, title: string): number | null {
-      const words = new Set([
-        ...slug.split('-').filter(w => w.length > 3),
-        ...title.toLowerCase().split(/\s+/).filter(w => w.length > 4),
-      ])
-
-      // Score each media item
-      let bestScore = 0
-      let bestId: number | null = null
-
-      for (const m of mediaItems) {
-        const searchText = `${m.filename} ${m.alt}`.toLowerCase()
-        let score = 0
-        for (const word of words) {
-          if (searchText.includes(word)) score++
-        }
-        if (score > bestScore) {
-          bestScore = score
-          bestId = m.id
-        }
-      }
-
-      return bestScore >= 2 ? bestId : null
-    }
-
-    let assigned = 0
-    let noMatch = 0
-    const results: Array<{ id: number; slug: string; status: string; mediaId?: number }> = []
-
-    for (const post of postsWithoutHero) {
-      const slug = post.slug as string
-      const title = (post.title as string) || ''
-      const ruSlug = ruSlugMap.get(post.id as number) || ''
-
-      // Try matching with EN slug, then RU slug
-      let mediaId = findMatchingMedia(slug, title)
-      if (!mediaId && ruSlug && ruSlug !== slug) {
-        mediaId = findMatchingMedia(ruSlug, '')
-      }
-
-      if (mediaId) {
+    if (body.action === 'delete' && Array.isArray(body.ids)) {
+      const results: Array<{ id: number; status: string }> = []
+      for (const id of body.ids) {
         try {
-          // Determine which locale to use for the update
-          const publishedLocales = ((post as any).publishedLocales || []) as string[]
-          const locale = publishedLocales.includes('en') ? 'en' : 'ru'
-
-          await payload.update({
-            collection: 'blog-posts',
-            id: post.id,
-            locale,
-            data: {
-              heroImage: mediaId,
-            } as any,
-          })
-          assigned++
-          results.push({ id: post.id as number, slug, status: 'assigned', mediaId })
+          await payload.delete({ collection: 'blog-posts', id })
+          results.push({ id, status: 'deleted' })
         } catch (err: any) {
-          results.push({ id: post.id as number, slug, status: 'error: ' + err.message?.substring(0, 80) })
+          results.push({ id, status: 'error: ' + err.message?.substring(0, 80) })
         }
-      } else {
-        noMatch++
-        results.push({ id: post.id as number, slug, status: 'no-match' })
       }
+      return NextResponse.json({ action: 'delete', results })
     }
 
-    return NextResponse.json({
-      totalWithoutHero: postsWithoutHero.length,
-      assigned,
-      noMatch,
-      results,
-    })
+    return NextResponse.json({ error: 'Unknown action. Use { "action": "delete", "ids": [...] }' }, { status: 400 })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
