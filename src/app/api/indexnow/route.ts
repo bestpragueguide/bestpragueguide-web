@@ -23,8 +23,8 @@ export async function POST(req: Request) {
     for (const p of staticRU) urls.push(`${BASE_URL}/ru/${p}`)
 
     // Tours
-    const enTours = await payload.find({ collection: 'tours', where: { status: { equals: 'published' } }, limit: 200, locale: 'en' })
-    const ruTours = await payload.find({ collection: 'tours', where: { status: { equals: 'published' } }, limit: 200, locale: 'ru' })
+    const enTours = await payload.find({ collection: 'tours', where: { status: { equals: 'published' } }, limit: 0, locale: 'en' })
+    const ruTours = await payload.find({ collection: 'tours', where: { status: { equals: 'published' } }, limit: 0, locale: 'ru' })
 
     const ruSlugMap = new Map<number, string>()
     for (const t of ruTours.docs) ruSlugMap.set(t.id as number, t.slug)
@@ -38,12 +38,14 @@ export async function POST(req: Request) {
       }
     }
 
-    // Blog posts
-    const enPosts = await payload.find({ collection: 'blog-posts', where: { status: { equals: 'published' } }, limit: 200, locale: 'en' })
-    const ruPosts = await payload.find({ collection: 'blog-posts', where: { status: { equals: 'published' } }, limit: 200, locale: 'ru' })
+    // Blog posts — use limit: 0 for unlimited
+    const enPosts = await payload.find({ collection: 'blog-posts', where: { status: { equals: 'published' } }, limit: 0, locale: 'en' })
+    const ruPosts = await payload.find({ collection: 'blog-posts', where: { status: { equals: 'published' } }, limit: 0, locale: 'ru' })
 
     const ruPostSlugMap = new Map<number, string>()
     for (const p of ruPosts.docs) ruPostSlugMap.set(p.id as number, p.slug as string)
+
+    const addedPostIds = new Set<number>()
 
     for (const post of enPosts.docs) {
       const locales = (post as any).publishedLocales || []
@@ -52,10 +54,23 @@ export async function POST(req: Request) {
         const ruSlug = ruPostSlugMap.get(post.id as number) || post.slug
         urls.push(`${BASE_URL}/ru/blog/${ruSlug}`)
       }
+      addedPostIds.add(post.id as number)
     }
 
-    // IndexNow accepts max 10,000 URLs per request
-    await pingUrls(urls)
+    // RU-only posts not covered by EN loop
+    for (const post of ruPosts.docs) {
+      if (addedPostIds.has(post.id as number)) continue
+      const locales = (post as any).publishedLocales || []
+      if (locales.includes('ru')) {
+        urls.push(`${BASE_URL}/ru/blog/${post.slug}`)
+      }
+    }
+
+    // IndexNow accepts max 10,000 URLs per request — batch if needed
+    const BATCH_SIZE = 10000
+    for (let i = 0; i < urls.length; i += BATCH_SIZE) {
+      await pingUrls(urls.slice(i, i + BATCH_SIZE))
+    }
 
     return NextResponse.json({ success: true, submitted: urls.length, urls })
   } catch (error: unknown) {
