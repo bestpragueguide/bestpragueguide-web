@@ -1,16 +1,19 @@
 'use client'
 
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
 interface TourFiltersProps {
   availableCategories: string[]
   availableSubcategories: string[]
+  onSearch?: (query: string) => void
 }
 
 export function TourFilters({
   availableCategories,
   availableSubcategories,
+  onSearch,
 }: TourFiltersProps) {
   const t = useTranslations('categories')
   const tPages = useTranslations('pages')
@@ -20,7 +23,33 @@ export function TourFilters({
 
   const activeCategory = searchParams.get('category') || 'all'
   const activeSubcategory = searchParams.get('subcategory') || 'all'
-  const searchQuery = searchParams.get('q') || ''
+  const [searchValue, setSearchValue] = useState(searchParams.get('q') || '')
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>()
+
+  // Notify parent of search changes instantly
+  const handleSearch = useCallback((value: string) => {
+    setSearchValue(value)
+    onSearch?.(value)
+
+    // Debounce URL update (500ms)
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString())
+      if (value) {
+        params.set('q', value)
+      } else {
+        params.delete('q')
+      }
+      const qs = params.toString()
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
+    }, 500)
+  }, [searchParams, router, pathname, onSearch])
+
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current)
+    }
+  }, [])
 
   function setFilter(key: string, value: string) {
     const params = new URLSearchParams(searchParams.toString())
@@ -30,6 +59,7 @@ export function TourFilters({
     } else {
       params.set(key, value)
     }
+    if (searchValue) params.set('q', searchValue)
     const qs = params.toString()
     router.push(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
   }
@@ -40,7 +70,6 @@ export function TourFilters({
 
   return (
     <div className="mb-8 space-y-4">
-      {/* Search input */}
       <div className="relative">
         <svg
           className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-navy/30"
@@ -53,13 +82,12 @@ export function TourFilters({
         <input
           type="search"
           placeholder={tPages('toursSearchPlaceholder')}
-          value={searchQuery}
-          onChange={(e) => setFilter('q', e.target.value)}
+          value={searchValue}
+          onChange={(e) => handleSearch(e.target.value)}
           className="w-full max-w-md pl-10 pr-4 py-2.5 text-sm border border-gray-light rounded-lg focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold/30 bg-white text-navy placeholder:text-navy/40"
         />
       </div>
 
-      {/* Main categories */}
       <div className="flex flex-wrap gap-2">
         <FilterPill
           active={activeCategory === 'all'}
@@ -85,7 +113,6 @@ export function TourFilters({
         )}
       </div>
 
-      {/* Subcategories */}
       {showSubcategories && (
         <div className="flex flex-wrap gap-2 pl-4 border-l-2 border-gold/30">
           <FilterPill

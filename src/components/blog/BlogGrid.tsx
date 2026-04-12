@@ -18,13 +18,14 @@ interface BlogPost {
 interface BlogGridProps {
   posts: BlogPost[]
   locale: string
+  searchQuery?: string
 }
 
-export function BlogGrid({ posts, locale }: BlogGridProps) {
+export function BlogGrid({ posts, locale, searchQuery = '' }: BlogGridProps) {
   const searchParams = useSearchParams()
   const tPages = useTranslations('pages')
   const category = searchParams.get('category')
-  const query = (searchParams.get('q') || '').toLowerCase().trim()
+  const query = searchQuery.toLowerCase().trim()
 
   const filtered = posts.filter((post) => {
     if (category && category !== 'all' && post.category !== category) return false

@@ -8,8 +8,7 @@ import { buildPageMetadata } from '@/lib/metadata'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
-import { BlogCategoryFilter } from '@/components/blog/BlogCategoryFilter'
-import { BlogGrid } from '@/components/blog/BlogGrid'
+import { BlogCatalog } from '@/components/blog/BlogCatalog'
 import { extractPlainText } from '@/components/shared/SafeRichText'
 import { ItemListSchema } from '@/components/seo/ItemListSchema'
 
@@ -99,13 +98,11 @@ export default async function BlogPage({
       </h1>
 
       <Suspense fallback={null}>
-        {availableCategories.length > 1 && (
-          <BlogCategoryFilter
-            availableCategories={availableCategories}
-            locale={locale}
-          />
-        )}
-        <BlogGrid posts={posts} locale={locale} />
+        <BlogCatalog
+          posts={posts}
+          locale={locale}
+          availableCategories={availableCategories}
+        />
       </Suspense>
     </div>
   )

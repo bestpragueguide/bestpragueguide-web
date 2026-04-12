@@ -23,14 +23,15 @@ interface Tour {
 interface TourGridProps {
   tours: Tour[]
   locale: string
+  searchQuery?: string
 }
 
-export function TourGrid({ tours, locale }: TourGridProps) {
+export function TourGrid({ tours, locale, searchQuery = '' }: TourGridProps) {
   const searchParams = useSearchParams()
   const tPages = useTranslations('pages')
   const category = searchParams.get('category')
   const subcategory = searchParams.get('subcategory')
-  const query = (searchParams.get('q') || '').toLowerCase().trim()
+  const query = searchQuery.toLowerCase().trim()
 
   const filtered = tours.filter((tour) => {
     if (category && category !== 'all' && tour.category !== category) return false

@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { categoryLabels } from '@/lib/blog'
@@ -7,24 +8,50 @@ import { categoryLabels } from '@/lib/blog'
 interface BlogCategoryFilterProps {
   availableCategories: string[]
   locale: string
+  onSearch?: (query: string) => void
 }
 
-export function BlogCategoryFilter({ availableCategories, locale }: BlogCategoryFilterProps) {
+export function BlogCategoryFilter({ availableCategories, locale, onSearch }: BlogCategoryFilterProps) {
   const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
   const tPages = useTranslations('pages')
 
   const activeCategory = searchParams.get('category') || 'all'
-  const searchQuery = searchParams.get('q') || ''
+  const [searchValue, setSearchValue] = useState(searchParams.get('q') || '')
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>()
 
-  function setParam(key: string, value: string) {
-    const params = new URLSearchParams(searchParams.toString())
-    if (value === 'all' || value === '') {
-      params.delete(key)
-    } else {
-      params.set(key, value)
+  const handleSearch = useCallback((value: string) => {
+    setSearchValue(value)
+    onSearch?.(value)
+
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString())
+      if (value) {
+        params.set('q', value)
+      } else {
+        params.delete('q')
+      }
+      const qs = params.toString()
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
+    }, 500)
+  }, [searchParams, router, pathname, onSearch])
+
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current)
     }
+  }, [])
+
+  function setCategory(value: string) {
+    const params = new URLSearchParams(searchParams.toString())
+    if (value === 'all') {
+      params.delete('category')
+    } else {
+      params.set('category', value)
+    }
+    if (searchValue) params.set('q', searchValue)
     const qs = params.toString()
     router.push(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
   }
@@ -34,7 +61,6 @@ export function BlogCategoryFilter({ availableCategories, locale }: BlogCategory
 
   return (
     <div className="mb-8 space-y-4">
-      {/* Search input */}
       <div className="relative">
         <svg
           className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-navy/30"
@@ -47,22 +73,21 @@ export function BlogCategoryFilter({ availableCategories, locale }: BlogCategory
         <input
           type="search"
           placeholder={tPages('blogSearchPlaceholder')}
-          value={searchQuery}
-          onChange={(e) => setParam('q', e.target.value)}
+          value={searchValue}
+          onChange={(e) => handleSearch(e.target.value)}
           className="w-full max-w-md pl-10 pr-4 py-2.5 text-sm border border-gray-light rounded-lg focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold/30 bg-white text-navy placeholder:text-navy/40"
         />
       </div>
 
-      {/* Category pills */}
       <div className="flex flex-wrap gap-2">
-        <FilterPill active={activeCategory === 'all'} onClick={() => setParam('category', 'all')}>
+        <FilterPill active={activeCategory === 'all'} onClick={() => setCategory('all')}>
           {allLabel}
         </FilterPill>
         {availableCategories.map((cat) => (
           <FilterPill
             key={cat}
             active={activeCategory === cat}
-            onClick={() => setParam('category', cat)}
+            onClick={() => setCategory(cat)}
           >
             {labels[cat] || cat}
           </FilterPill>

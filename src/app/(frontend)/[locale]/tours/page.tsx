@@ -6,8 +6,7 @@ import { buildPageMetadata } from '@/lib/metadata'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
-import { TourFilters } from '@/components/tours/TourFilters'
-import { TourGrid } from '@/components/tours/TourGrid'
+import { TourCatalog } from '@/components/tours/TourCatalog'
 import { ItemListSchema } from '@/components/seo/ItemListSchema'
 
 export const revalidate = 600
@@ -115,11 +114,12 @@ export default async function ToursPage({
       </h1>
 
       <Suspense fallback={null}>
-        <TourFilters
+        <TourCatalog
+          tours={gridTours}
+          locale={locale}
           availableCategories={availableCategories}
           availableSubcategories={availableSubcategories}
         />
-        <TourGrid tours={gridTours} locale={locale} />
       </Suspense>
     </div>
   )
