@@ -10,6 +10,8 @@ import { extractPlainText } from '@/components/shared/SafeRichText'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { ShareButtons } from '@/components/shared/ShareButtons'
 import { BlogPostSchema } from '@/components/seo/BlogPostSchema'
+import { FAQSchema } from '@/components/seo/FAQSchema'
+import { extractFAQFromLexical } from '@/lib/extract-faq'
 import { categoryLabels, allCategories } from '@/lib/blog'
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
@@ -373,6 +375,7 @@ export default async function BlogPostPage({
         locale={locale}
         slug={slug}
       />
+      <FAQSchema items={extractFAQFromLexical(post.content)} />
     </div>
   )
 }
