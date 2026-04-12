@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - **FAQPage JSON-LD schema on all blog posts** — `extractFAQFromLexical()` utility parses FAQ Q&As from Lexical richText content at render time; `FAQSchema` component renders structured data for Google rich results. All 466 blog posts now eligible for FAQ rich snippets.
-- **106 internal cross-links** — injected "Related Reading" sections into 11 EN hub articles (47 links) and 14 RU hub articles (59 links), connecting orphan articles to high-traffic hubs by topic cluster (food, bars, practical, romantic, culture, family, outdoors, day trips, neighborhoods).
+- **258 internal cross-links eliminating all orphans** — Round 1: 11 EN hubs (47 links) + 14 RU hubs (59 links). Round 2: 23 EN hubs (61 links) + 17 RU hubs (34 links). Result: 0 orphan articles remaining (was 163). Every article now has at least 1 incoming blog link.
 - `/api/fix-blog-locales` — endpoint to audit and fix `publishedLocales` field using `fallbackLocale: false` detection.
 
 ### Fixed
