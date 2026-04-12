@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.49.0] - 2026-04-12
+
+### Added
+- **FAQPage JSON-LD schema on all blog posts** — `extractFAQFromLexical()` utility parses FAQ Q&As from Lexical richText content at render time; `FAQSchema` component renders structured data for Google rich results. All 466 blog posts now eligible for FAQ rich snippets.
+- **106 internal cross-links** — injected "Related Reading" sections into 11 EN hub articles (47 links) and 14 RU hub articles (59 links), connecting orphan articles to high-traffic hubs by topic cluster (food, bars, practical, romantic, culture, family, outdoors, day trips, neighborhoods).
+- `/api/fix-blog-locales` — endpoint to audit and fix `publishedLocales` field using `fallbackLocale: false` detection.
+
+### Fixed
+- **IndexNow submitting only 259/526 URLs** — blog query used `limit: 200`, now `limit: 0`; added RU-only post loop. Now submits all 526 URLs.
+- **1 blog post wrong `publishedLocales`** — fixed via `/api/fix-blog-locales`.
+- **Sitemap now matches IndexNow** — both report 526 URLs (244 EN blog + 222 RU blog + 16 EN tours + 23 RU tours + 20 static + 1 new).
+
 ## [1.48.0] - 2026-04-12
 
 ### Added
