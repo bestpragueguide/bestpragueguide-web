@@ -8,9 +8,41 @@ import config from '@payload-config'
  * GET  — audit: count posts with wrong publishedLocales
  * POST — fix: set publishedLocales based on actual content presence
  *
- * Logic: if a post has title+content in EN locale → include 'en'
- *        if a post has title+content in RU locale → include 'ru'
+ * Detection: fetch with fallbackLocale:false — if title is null/empty,
+ * that locale has no real content (Payload returns null instead of fallback).
  */
+
+async function detectLocales(payload: any) {
+  // fallbackLocale: false returns null for fields without locale-specific data
+  const enPosts = await payload.find({
+    collection: 'blog-posts',
+    limit: 0,
+    locale: 'en',
+    fallbackLocale: false as any,
+    depth: 0,
+  })
+
+  const ruPosts = await payload.find({
+    collection: 'blog-posts',
+    limit: 0,
+    locale: 'ru',
+    fallbackLocale: false as any,
+    depth: 0,
+  })
+
+  const enTitles = new Map<number, string>()
+  const ruTitles = new Map<number, string>()
+
+  for (const p of enPosts.docs) {
+    enTitles.set(p.id as number, (p.title || '') as string)
+  }
+  for (const p of ruPosts.docs) {
+    ruTitles.set(p.id as number, (p.title || '') as string)
+  }
+
+  return { enPosts, enTitles, ruTitles }
+}
+
 export async function GET(req: NextRequest) {
   const secret = req.headers.get('x-init-secret')
   if (secret !== process.env.PAYLOAD_SECRET) {
@@ -19,45 +51,18 @@ export async function GET(req: NextRequest) {
 
   try {
     const payload = await getPayload({ config })
-
-    const enPosts = await payload.find({
-      collection: 'blog-posts',
-      limit: 0,
-      locale: 'en',
-      depth: 0,
-    })
-
-    const ruPosts = await payload.find({
-      collection: 'blog-posts',
-      limit: 0,
-      locale: 'ru',
-      depth: 0,
-    })
-
-    // Build maps of which posts have real content in each locale
-    const enHasContent = new Map<number, boolean>()
-    const ruHasContent = new Map<number, boolean>()
-
-    for (const p of enPosts.docs) {
-      const title = (p.title || '') as string
-      enHasContent.set(p.id as number, title.length > 0)
-    }
-
-    for (const p of ruPosts.docs) {
-      const title = (p.title || '') as string
-      ruHasContent.set(p.id as number, title.length > 0)
-    }
+    const { enPosts, enTitles, ruTitles } = await detectLocales(payload)
 
     let correctCount = 0
     let wrongCount = 0
-    const wrongPosts: Array<{ id: number; slug: string; current: string[]; shouldBe: string[] }> = []
+    const wrongPosts: Array<{ id: number; slug: string; enTitle: string; ruTitle: string; current: string[]; shouldBe: string[] }> = []
 
     for (const p of enPosts.docs) {
       const id = p.id as number
       const currentLocales = ((p as any).publishedLocales || []) as string[]
       const shouldBe: string[] = []
-      if (enHasContent.get(id)) shouldBe.push('en')
-      if (ruHasContent.get(id)) shouldBe.push('ru')
+      if ((enTitles.get(id) || '').length > 0) shouldBe.push('en')
+      if ((ruTitles.get(id) || '').length > 0) shouldBe.push('ru')
 
       const currentSorted = [...currentLocales].sort().join(',')
       const shouldSorted = [...shouldBe].sort().join(',')
@@ -67,7 +72,14 @@ export async function GET(req: NextRequest) {
       } else {
         wrongCount++
         if (wrongPosts.length < 30) {
-          wrongPosts.push({ id, slug: p.slug as string, current: currentLocales, shouldBe })
+          wrongPosts.push({
+            id,
+            slug: p.slug as string,
+            enTitle: (enTitles.get(id) || '').substring(0, 40),
+            ruTitle: (ruTitles.get(id) || '').substring(0, 40),
+            current: currentLocales,
+            shouldBe,
+          })
         }
       }
     }
@@ -91,30 +103,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const payload = await getPayload({ config })
-
-    const enPosts = await payload.find({
-      collection: 'blog-posts',
-      limit: 0,
-      locale: 'en',
-      depth: 0,
-    })
-
-    const ruPosts = await payload.find({
-      collection: 'blog-posts',
-      limit: 0,
-      locale: 'ru',
-      depth: 0,
-    })
-
-    const enHasContent = new Map<number, boolean>()
-    const ruHasContent = new Map<number, boolean>()
-
-    for (const p of enPosts.docs) {
-      enHasContent.set(p.id as number, ((p.title || '') as string).length > 0)
-    }
-    for (const p of ruPosts.docs) {
-      ruHasContent.set(p.id as number, ((p.title || '') as string).length > 0)
-    }
+    const { enPosts, enTitles, ruTitles } = await detectLocales(payload)
 
     let fixed = 0
     let skipped = 0
@@ -124,8 +113,8 @@ export async function POST(req: NextRequest) {
       const id = p.id as number
       const currentLocales = ((p as any).publishedLocales || []) as string[]
       const shouldBe: string[] = []
-      if (enHasContent.get(id)) shouldBe.push('en')
-      if (ruHasContent.get(id)) shouldBe.push('ru')
+      if ((enTitles.get(id) || '').length > 0) shouldBe.push('en')
+      if ((ruTitles.get(id) || '').length > 0) shouldBe.push('ru')
 
       const currentSorted = [...currentLocales].sort().join(',')
       const shouldSorted = [...shouldBe].sort().join(',')
@@ -136,7 +125,6 @@ export async function POST(req: NextRequest) {
       }
 
       try {
-        // Use the locale that has content for the update
         const updateLocale = shouldBe.includes('en') ? 'en' : 'ru'
         await payload.update({
           collection: 'blog-posts',
