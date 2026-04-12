@@ -26,9 +26,14 @@ export async function POST(req: NextRequest) {
 
     for (const doc of drafts) {
       try {
+        // Determine locale from publishedLocales
+        const locales = (doc as any).publishedLocales || []
+        const locale = locales.includes('ru') && !locales.includes('en') ? 'ru' : 'en'
+
         await payload.update({
           collection: 'blog-posts',
           id: doc.id,
+          locale,
           data: {
             status: 'published',
             _status: 'published',
