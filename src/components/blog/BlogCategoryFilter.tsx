@@ -19,7 +19,7 @@ export function BlogCategoryFilter({ availableCategories, locale, onSearch }: Bl
 
   const activeCategory = searchParams.get('category') || 'all'
   const [searchValue, setSearchValue] = useState(searchParams.get('q') || '')
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>()
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const handleSearch = useCallback((value: string) => {
     setSearchValue(value)

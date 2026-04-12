@@ -24,7 +24,7 @@ export function TourFilters({
   const activeCategory = searchParams.get('category') || 'all'
   const activeSubcategory = searchParams.get('subcategory') || 'all'
   const [searchValue, setSearchValue] = useState(searchParams.get('q') || '')
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>()
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Notify parent of search changes instantly
   const handleSearch = useCallback((value: string) => {
