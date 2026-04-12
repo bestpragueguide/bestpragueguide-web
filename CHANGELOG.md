@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.50.0] - 2026-04-12
+
+### Added
+- **Search filter on Tours page** — text search input filters tours by title, excerpt, and slug with multi-word AND matching. Works alongside existing category/subcategory pills. Bilingual (EN/RU).
+- **Search filter on Blog page** — text search input filters blog posts by title, excerpt, and slug. Works alongside existing category pills. Bilingual (EN/RU). New `BlogGrid` client component for search-compatible rendering.
+
+### Fixed
+- **Deleted corrupted blog post** (id=4) with Cyrillic characters in slug (`wчччalking`) causing 404 in blog listing
+
 ## [1.49.0] - 2026-04-12
 
 ### Added
