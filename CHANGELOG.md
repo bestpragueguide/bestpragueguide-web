@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.48.0] - 2026-04-12
+
+### Added
+- **81 RU blog articles (expansion 3+4)** — #138-#218, ~134,700 words, covering EES/ETIAS, scams, insurance, tax free, trains, ski resorts, day trips (Nuremberg, Munich, Saxon Switzerland), proposals, bachelor/bachelorette parties, honeymoons, strollers, youth, pharmacies, beer baths, traditions, escape rooms, photo spots, tram 22, night trains, Prague Pride, districts guide, first visit checklist, visa guide, absinthe, garnet, communism museum, islands, e-scooters, vegan, cooking class, cherry blossoms, Halloween, Valentine's, planetarium, beer quest, Christmas table, doctors, street art, caves, transit, cemeteries, teambuilding, gluten-free, allergies, kosher/halal, attitude to Russians. All imported (IDs 397-477) and published.
+- **35 RU H2 additions** to 18 existing articles — cross-linking new topics into cuisine, beer, winter, safety, couples, transport, currency, accommodation, autumn, airport, souvenirs, free activities, budget, castles, shopping, Dresden, nightlife, events calendar articles.
+- `/api/append-h2` — endpoint to insert H2 sections into existing blog articles (finds insertion point before FAQ/CTA sections)
+- `/api/fix-blog-status` — endpoint to bulk-publish draft blog posts with locale-aware updates
+- `scripts/import-h2-additions.py` — script to import H2 additions via append-h2 endpoint
+
+### Fixed
+- **125 blog posts stuck as draft** — custom `status` field was `draft` while Payload `_status` was `published`; bulk-fixed (43 EN + 82 RU) via /api/fix-blog-status
+- **TypeScript build error** — missing `payload` variable in tour detail page blog query (line 214)
+
+## [1.47.0] - 2026-04-10
+
+### Added
+- **43 EN blog gap articles** — #187-#229, ~79,010 words, covering rooftop bars, proposals, Czech phrases, tap water, pub crawls, apps, clubs, daily costs, teenagers, second visit, honeymoon, bachelor/bachelorette, late-night food, wine bars, happy hour, beer ordering, gluten-free, halal, photography, sunset, film locations, literary guide, art galleries, parks, picnic, books/movies, running, cycling, Aquapalace, ice cream, Vršovice, coworking, planetarium, culture mile, kosher, responsible tourism. All imported (IDs 354-396) and published.
+- **22 EN H2 additions** to existing articles — October clothing, 2-day worth, castle access, Petřín funicular, city distances, advance tickets, card payments, public holidays, polední menu, Sapa market, hidden courtyards, Operation Anthropoid, zoo Arctic pavilion, ETIAS/EES updates, e-scooter ban, Airbnb rules, 4-5 days, pub age limits, Mozart Museum.
+
+### Fixed
+- **34 EN meta descriptions** missing required → arrow symbol — fixed and pushed to live site
+- **1 broken external link** — removed lobkowicz.com (SSL cert invalid)
+
 ## [1.46.0] - 2026-04-10
 
 ### Added
