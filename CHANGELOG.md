@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.52.0] - 2026-04-13
+
+### Added
+- **About page SEO optimization** (seo10) — EN `/en/about` → `/en/prague-guide` with 301 redirect. New title: "Prague Tour Guide — Licensed Private Tours". New H1: "Your Private Tour Guide in Prague". SEO alt text on founder photo. 3 new content sections: "Why Hire a Private Guide", "Our Private Tours" (15 tour links), FAQ (6 Q&As). Person + LocalBusiness + FAQPage JSON-LD schemas. All nav/footer links updated. RU `/ru/o-nas` unchanged.
+- `/api/fix-about-seo` — one-shot CMS update for About page SEO fields and nav links
+- `/api/audit-media-alt` — audit and bulk-update media alt texts by locale
+
 ## [1.51.0] - 2026-04-13
 
 ### Added
