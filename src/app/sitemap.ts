@@ -9,7 +9,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.
 const staticPages = [
   { path: '', en: '', ru: '' },
   { path: 'tours', en: 'tours', ru: 'ekskursii' },
-  { path: 'about', en: 'about', ru: 'o-nas' },
+  { path: 'about', en: 'prague-guide', ru: 'o-nas' },
   { path: 'reviews', en: 'reviews', ru: 'otzyvy' },
   { path: 'contact', en: 'contact', ru: 'kontakty' },
   { path: 'faq', en: 'faq', ru: 'voprosy' },

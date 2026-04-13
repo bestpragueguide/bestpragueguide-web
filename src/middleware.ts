@@ -22,6 +22,14 @@ export default function middleware(request: NextRequest) {
     )
   }
 
+  // 301 redirect: old /en/about → new /en/prague-guide
+  if (request.nextUrl.pathname === '/en/about') {
+    return NextResponse.redirect(
+      new URL('/en/prague-guide', request.url),
+      301,
+    )
+  }
+
   const response = intlMiddleware(request)
 
   // Upgrade next-intl 307 (temporary) redirects to 301 (permanent)

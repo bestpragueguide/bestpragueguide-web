@@ -4,6 +4,7 @@ import { defineRouting } from 'next-intl/routing'
 const ruPathMap: Record<string, string> = {
   '/tours': '/ekskursii',
   '/about': '/o-nas',
+  '/prague-guide': '/o-nas',
   '/reviews': '/otzyvy',
   '/contact': '/kontakty',
   '/faq': '/voprosy',
@@ -43,7 +44,7 @@ export const routing = defineRouting({
     '/': '/',
     '/tours': { en: '/tours', ru: '/ekskursii' },
     '/tours/[slug]': { en: '/tours/[slug]', ru: '/ekskursii/[slug]' },
-    '/about': { en: '/about', ru: '/o-nas' },
+    '/about': { en: '/prague-guide', ru: '/o-nas' },
     '/reviews': { en: '/reviews', ru: '/otzyvy' },
     '/contact': { en: '/contact', ru: '/kontakty' },
     '/faq': { en: '/faq', ru: '/voprosy' },

@@ -120,7 +120,7 @@ function homepageFallback(locale: string): HomepageData {
       ? 'Ульяна Формина — лицензированный гид высшей категории и основатель Best Prague Guide. Она лично разрабатывает каждый маршрут и подбирает каждого гида в команду.'
       : 'Uliana Formina is a highest-category licensed guide and founder of Best Prague Guide. She personally curates every tour route and hand-picks each guide on her team.',
     guideLearnMore: locale === 'ru' ? 'Подробнее о нас' : 'Learn More About Us',
-    guideLearnMoreHref: '/about',
+    guideLearnMoreHref: '/prague-guide',
     categoriesHeading: locale === 'ru' ? 'Все экскурсии' : 'All Tours',
     categories: [
       { label: locale === 'ru' ? 'Экскурсии по Праге' : 'Prague Tours', href: '/tours?category=prague-tours' },

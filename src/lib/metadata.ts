@@ -9,7 +9,7 @@ const BASE_URL =
 const localizedPaths: Record<string, { en: string; ru: string }> = {
   '': { en: '', ru: '' },
   tours: { en: 'tours', ru: 'ekskursii' },
-  about: { en: 'about', ru: 'o-nas' },
+  about: { en: 'prague-guide', ru: 'o-nas' },
   reviews: { en: 'reviews', ru: 'otzyvy' },
   contact: { en: 'contact', ru: 'kontakty' },
   faq: { en: 'faq', ru: 'voprosy' },

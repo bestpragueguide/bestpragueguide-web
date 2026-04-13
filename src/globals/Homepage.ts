@@ -107,7 +107,7 @@ export const Homepage: GlobalConfig = {
             {
               name: 'guideLearnMoreHref',
               type: 'text',
-              defaultValue: '/about',
+              defaultValue: '/prague-guide',
             },
             {
               name: 'guidePhoto',
