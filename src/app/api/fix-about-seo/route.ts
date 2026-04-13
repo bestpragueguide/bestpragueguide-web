@@ -83,6 +83,57 @@ export async function POST(req: NextRequest) {
       results.push('homepage: error - ' + err.message?.substring(0, 100))
     }
 
+    // 4. Update bio first sentence — add "private tour" and "in Prague"
+    try {
+      const about = await payload.findGlobal({ slug: 'about-page', locale: 'en' })
+      const bio = (about as any).founderBio
+      if (bio?.root?.children) {
+        const updated = JSON.parse(JSON.stringify(bio))
+        let found = false
+        // Walk Lexical tree and fix text nodes
+        function walkAndFix(node: any) {
+          if (node.text && typeof node.text === 'string') {
+            // "licensed top-category guide" → "licensed top-category private tour guide in Prague"
+            if (node.text.includes('licensed top-category guide') && !node.text.includes('private tour guide in Prague')) {
+              node.text = node.text.replace(
+                'licensed top-category guide',
+                'licensed top-category private tour guide in Prague'
+              )
+              found = true
+            }
+            // Also handle "highest-category licensed guide" variant
+            if (node.text.includes('highest-category licensed guide') && !node.text.includes('private tour guide in Prague')) {
+              node.text = node.text.replace(
+                'highest-category licensed guide',
+                'highest-category licensed private tour guide in Prague'
+              )
+              found = true
+            }
+          }
+          if (node.children) {
+            for (const child of node.children) {
+              walkAndFix(child)
+            }
+          }
+        }
+        walkAndFix(updated.root)
+        if (found) {
+          await payload.updateGlobal({
+            slug: 'about-page',
+            locale: 'en',
+            data: { founderBio: updated } as any,
+          })
+          results.push('bio: updated first sentence')
+        } else {
+          results.push('bio: already contains "private tour guide in Prague" or pattern not found')
+        }
+      } else {
+        results.push('bio: not a Lexical richText field')
+      }
+    } catch (err: any) {
+      results.push('bio: error - ' + err.message?.substring(0, 100))
+    }
+
     return NextResponse.json({ results })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
