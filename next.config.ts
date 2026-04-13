@@ -40,7 +40,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https: http:",
-              "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://www.google.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://mc.yandex.ru https://mc.yandex.com wss://mc.yandex.com https://analytics.bestpragueguide.com https://www.facebook.com https://connect.facebook.net",
+              "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://www.google.com https://*.google.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://mc.yandex.ru https://mc.yandex.com wss://mc.yandex.com https://analytics.bestpragueguide.com https://www.facebook.com https://connect.facebook.net",
               "frame-src 'self' https://maps.google.com https://www.google.com https://js.stripe.com",
               "media-src 'self'",
               "object-src 'none'",
