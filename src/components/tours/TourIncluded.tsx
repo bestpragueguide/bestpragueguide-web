@@ -35,6 +35,9 @@ export function TourIncluded({ included, excluded, locale }: TourIncludedProps) 
         {/* Excluded */}
         {excluded.length > 0 && (
           <div>
+            <h3 className="text-lg font-heading font-semibold text-navy mb-3">
+              {locale === 'ru' ? 'Что НЕ включено' : "What's NOT Included"}
+            </h3>
             <ul className="space-y-2">
               {excluded.map((item, index) => (
                 <li key={index} className="flex items-start gap-2 text-sm">
