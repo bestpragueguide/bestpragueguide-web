@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.51.0] - 2026-04-13
+
+### Added
+- **"What's NOT Included" heading** on tour detail pages — excluded items now have their own H3 subheading (EN: "What's NOT Included", RU: "Что НЕ включено")
+- **Google Ads conversion labels** — added `NEXT_PUBLIC_GADS_LABEL_BOOKING`, `NEXT_PUBLIC_GADS_LABEL_CONTACT`, `NEXT_PUBLIC_GADS_LABEL_WHATSAPP` env vars to Coolify. Booking, contact, and WhatsApp conversions now fire with enhanced conversions (email + phone).
+- `/api/fix-blog-categories` — endpoint to recategorize blog posts by slug/title keyword matching
+
+### Fixed
+- **CSP blocking Google Ads** — added `*.google.com`, `*.google.fr`, `*.google.de`, `*.google.cz`, `*.google.co.uk`, `*.google.ru`, `*.googleadservices.com`, `*.doubleclick.net`, `*.googletagmanager.com`, `wss://mc.yandex.com` to `connect-src`. Console errors: 3 → 0.
+- **194 blog posts miscategorized** — recategorized via `/api/fix-blog-categories`. Distribution: prague-guide 232, tips 65, history 61, day-trips 57, food-and-drink 50.
+- **Search filter performance** — replaced `router.push` per keystroke with local React state + 500ms debounced `router.replace`. Added TourCatalog/BlogCatalog wrapper components.
+
 ## [1.50.0] - 2026-04-12
 
 ### Added
