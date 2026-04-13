@@ -11,14 +11,13 @@ export function TourIncluded({ included, excluded, locale }: TourIncludedProps) 
 
   return (
     <div className="mt-10">
-      <h2 className="text-2xl font-heading font-bold text-navy mb-6">
-        {locale === 'ru' ? 'Что включено' : "What's Included"}
-      </h2>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {/* Included */}
         {included.length > 0 && (
           <div>
+            <h2 className="text-2xl font-heading font-bold text-navy mb-4">
+              {locale === 'ru' ? 'Что включено' : "What's Included"}
+            </h2>
             <ul className="space-y-2">
               {included.map((item, index) => (
                 <li key={index} className="flex items-start gap-2 text-sm">
@@ -35,9 +34,9 @@ export function TourIncluded({ included, excluded, locale }: TourIncludedProps) 
         {/* Excluded */}
         {excluded.length > 0 && (
           <div>
-            <h3 className="text-lg font-heading font-semibold text-navy mb-3">
+            <h2 className="text-2xl font-heading font-bold text-navy mb-4">
               {locale === 'ru' ? 'Что НЕ включено' : "What's NOT Included"}
-            </h3>
+            </h2>
             <ul className="space-y-2">
               {excluded.map((item, index) => (
                 <li key={index} className="flex items-start gap-2 text-sm">
