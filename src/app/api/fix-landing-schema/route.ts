@@ -15,9 +15,15 @@ export async function POST(req: NextRequest) {
     const results: string[] = []
 
     const queries = [
+      // Main table
       `ALTER TABLE pages ADD COLUMN IF NOT EXISTS hero_image_id integer REFERENCES media(id) ON DELETE SET NULL`,
       `ALTER TABLE pages ADD COLUMN IF NOT EXISTS landing_tour_slugs varchar`,
       `ALTER TABLE pages_locales ADD COLUMN IF NOT EXISTS subtitle varchar`,
+      // Version table — must mirror main table columns with version_ prefix
+      `ALTER TABLE _pages_v ADD COLUMN IF NOT EXISTS version_hero_image_id integer`,
+      `ALTER TABLE _pages_v ADD COLUMN IF NOT EXISTS version_landing_tour_slugs varchar`,
+      `ALTER TABLE _pages_v_locales ADD COLUMN IF NOT EXISTS version_subtitle varchar`,
+      // FAQ items array table
       `CREATE TABLE IF NOT EXISTS pages_faq_items (
         id varchar PRIMARY KEY,
         _order integer NOT NULL,
@@ -29,6 +35,21 @@ export async function POST(req: NextRequest) {
         question varchar,
         answer varchar,
         _parent_id varchar NOT NULL,
+        _locale _locales NOT NULL,
+        UNIQUE(_parent_id, _locale)
+      )`,
+      // FAQ items version table
+      `CREATE TABLE IF NOT EXISTS _pages_v_version_faq_items (
+        id serial PRIMARY KEY,
+        _order integer NOT NULL,
+        _parent_id integer NOT NULL REFERENCES _pages_v(id) ON DELETE CASCADE
+      )`,
+      `ALTER TABLE _pages_v_version_faq_items ADD COLUMN IF NOT EXISTS _locale _locales`,
+      `CREATE TABLE IF NOT EXISTS _pages_v_version_faq_items_locales (
+        id serial PRIMARY KEY,
+        question varchar,
+        answer varchar,
+        _parent_id integer NOT NULL,
         _locale _locales NOT NULL,
         UNIQUE(_parent_id, _locale)
       )`,
