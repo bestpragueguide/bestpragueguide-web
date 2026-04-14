@@ -19,10 +19,15 @@ export async function POST(req: NextRequest) {
       `ALTER TABLE pages ADD COLUMN IF NOT EXISTS hero_image_id integer REFERENCES media(id) ON DELETE SET NULL`,
       `ALTER TABLE pages ADD COLUMN IF NOT EXISTS landing_tour_slugs varchar`,
       `ALTER TABLE pages_locales ADD COLUMN IF NOT EXISTS subtitle varchar`,
-      // Version table — must mirror main table columns with version_ prefix
+      // Version table — must mirror ALL main table columns with version_ prefix
       `ALTER TABLE _pages_v ADD COLUMN IF NOT EXISTS version_hero_image_id integer`,
       `ALTER TABLE _pages_v ADD COLUMN IF NOT EXISTS version_landing_tour_slugs varchar`,
+      `ALTER TABLE _pages_v ADD COLUMN IF NOT EXISTS version_template varchar`,
+      `ALTER TABLE _pages_v ADD COLUMN IF NOT EXISTS version_seo_og_image_id integer`,
       `ALTER TABLE _pages_v_locales ADD COLUMN IF NOT EXISTS version_subtitle varchar`,
+      `ALTER TABLE _pages_v_locales ADD COLUMN IF NOT EXISTS version_last_updated varchar`,
+      `ALTER TABLE _pages_v_locales ADD COLUMN IF NOT EXISTS version_seo_meta_title varchar`,
+      `ALTER TABLE _pages_v_locales ADD COLUMN IF NOT EXISTS version_seo_meta_description varchar`,
       // FAQ items array table
       `CREATE TABLE IF NOT EXISTS pages_faq_items (
         id varchar PRIMARY KEY,
