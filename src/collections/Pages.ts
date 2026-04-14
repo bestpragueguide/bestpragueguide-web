@@ -73,5 +73,43 @@ export const Pages: CollectionConfig = {
         condition: (data) => data?.template === 'legal',
       },
     },
+    // Landing page fields
+    {
+      name: 'heroImage',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        condition: (data) => data?.template === 'landing',
+        description: 'Hero image for the landing page',
+      },
+    },
+    {
+      name: 'subtitle',
+      type: 'text',
+      localized: true,
+      admin: {
+        condition: (data) => data?.template === 'landing',
+        description: 'Subtitle below H1 — 1-2 sentences',
+      },
+    },
+    {
+      name: 'landingTourSlugs',
+      type: 'text',
+      admin: {
+        condition: (data) => data?.template === 'landing',
+        description: 'Comma-separated tour slugs to feature (e.g. "charles-bridge-old-town,prague-castle-lesser-town")',
+      },
+    },
+    {
+      name: 'faqItems',
+      type: 'array',
+      admin: {
+        condition: (data) => data?.template === 'landing',
+      },
+      fields: [
+        { name: 'question', type: 'text', required: true, localized: true },
+        { name: 'answer', type: 'textarea', required: true, localized: true },
+      ],
+    },
   ],
 }

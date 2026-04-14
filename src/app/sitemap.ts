@@ -84,6 +84,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   }
 
+  // EN-only landing pages (no RU equivalent)
+  const enOnlyPages = [
+    'private-walking-tour-prague',
+    'licensed-guide-prague',
+    'prague-sightseeing-tour',
+  ]
+  for (const slug of enOnlyPages) {
+    entries.push({
+      url: `${BASE_URL}/en/${slug}`,
+      lastModified: fallbackDate,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    })
+  }
+
   // Dynamic tour pages
   try {
     const payload = await getPayload({ config })
