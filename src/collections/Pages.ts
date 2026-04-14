@@ -8,9 +8,7 @@ export const Pages: CollectionConfig = {
     defaultColumns: ['title', 'slug', 'template', 'updatedAt'],
     group: 'Content',
   },
-  versions: {
-    drafts: true,
-  },
+  versions: false,
   fields: [
     {
       name: 'title',
