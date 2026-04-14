@@ -142,7 +142,7 @@ Complete your sightseeing day with <a href="/en/tours/2000-medieval-dinner-pragu
       try {
         const contentLexical = markdownToLexical(pageData.content)
 
-        // Simple create — no draft, explicit _status
+        // Create as draft first
         const doc = await payload.create({
           collection: 'pages',
           locale: 'en',
@@ -161,7 +161,16 @@ Complete your sightseeing day with <a href="/en/tours/2000-medieval-dinner-pragu
             _status: 'published',
           } as any,
         })
-        results.push(`${pageData.slug}: created (id=${doc.id})`)
+
+        // Publish explicitly
+        await payload.update({
+          collection: 'pages',
+          id: doc.id,
+          locale: 'en',
+          data: { _status: 'published' } as any,
+        })
+
+        results.push(`${pageData.slug}: created and published (id=${doc.id})`)
       } catch (err: any) {
         results.push(`${pageData.slug}: error — ${err.message?.substring(0, 100)}`)
       }
