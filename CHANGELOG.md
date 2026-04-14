@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.53.0] - 2026-04-14
+
+### Added
+- **Sitemap `changeFrequency` and `priority`** — homepage daily/1.0, tours weekly/0.8, blog weekly/0.6, legal yearly/0.2. Helps Bing, Yandex, and other crawlers prioritize crawling.
+
 ## [1.52.0] - 2026-04-13
 
 ### Added

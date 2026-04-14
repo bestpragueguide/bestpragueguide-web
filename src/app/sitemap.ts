@@ -7,19 +7,21 @@ import config from '@payload-config'
 const BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'
 
 const staticPages = [
-  { path: '', en: '', ru: '' },
-  { path: 'tours', en: 'tours', ru: 'ekskursii' },
-  { path: 'about', en: 'prague-guide', ru: 'o-nas' },
-  { path: 'reviews', en: 'reviews', ru: 'otzyvy' },
-  { path: 'contact', en: 'contact', ru: 'kontakty' },
-  { path: 'faq', en: 'faq', ru: 'voprosy' },
-  { path: 'blog', en: 'blog', ru: 'blog' },
-  { path: 'privacy', en: 'privacy', ru: 'privacy' },
-  { path: 'terms', en: 'terms', ru: 'terms' },
+  { path: '', en: '', ru: '', changeFrequency: 'daily' as const, priority: 1.0 },
+  { path: 'tours', en: 'tours', ru: 'ekskursii', changeFrequency: 'weekly' as const, priority: 0.9 },
+  { path: 'about', en: 'prague-guide', ru: 'o-nas', changeFrequency: 'monthly' as const, priority: 0.8 },
+  { path: 'reviews', en: 'reviews', ru: 'otzyvy', changeFrequency: 'weekly' as const, priority: 0.6 },
+  { path: 'contact', en: 'contact', ru: 'kontakty', changeFrequency: 'monthly' as const, priority: 0.5 },
+  { path: 'faq', en: 'faq', ru: 'voprosy', changeFrequency: 'monthly' as const, priority: 0.5 },
+  { path: 'blog', en: 'blog', ru: 'blog', changeFrequency: 'daily' as const, priority: 0.8 },
+  { path: 'privacy', en: 'privacy', ru: 'privacy', changeFrequency: 'yearly' as const, priority: 0.2 },
+  { path: 'terms', en: 'terms', ru: 'terms', changeFrequency: 'yearly' as const, priority: 0.2 },
   {
     path: 'cancellation-policy',
     en: 'cancellation-policy',
     ru: 'cancellation-policy',
+    changeFrequency: 'yearly' as const,
+    priority: 0.2,
   },
 ]
 
@@ -59,6 +61,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entries.push({
       url: `${BASE_URL}/en/${page.en}`,
       lastModified,
+      changeFrequency: page.changeFrequency,
+      priority: page.priority,
       alternates: {
         languages: {
           en: `${BASE_URL}/en/${page.en}`,
@@ -69,6 +73,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entries.push({
       url: `${BASE_URL}/ru/${page.ru}`,
       lastModified,
+      changeFrequency: page.changeFrequency,
+      priority: page.priority,
       alternates: {
         languages: {
           en: `${BASE_URL}/en/${page.en}`,
@@ -82,7 +88,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const payload = await getPayload({ config })
 
-    // Fetch tours in EN locale for English slugs
     const enTours = await payload.find({
       collection: 'tours',
       where: { status: { equals: 'published' } },
@@ -90,7 +95,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       locale: 'en',
     })
 
-    // Fetch tours in RU locale for Russian slugs
     const ruTours = await payload.find({
       collection: 'tours',
       where: { status: { equals: 'published' } },
@@ -98,7 +102,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       locale: 'ru',
     })
 
-    // Build a map of id → ruSlug
     const ruSlugMap = new Map<number, string>()
     for (const t of ruTours.docs) {
       ruSlugMap.set(t.id as number, t.slug)
@@ -120,6 +123,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         entries.push({
           url: `${BASE_URL}/en/tours/${enSlug}`,
           lastModified: lastMod,
+          changeFrequency: 'weekly',
+          priority: 0.8,
           alternates: { languages: alternates },
         })
       }
@@ -134,6 +139,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         entries.push({
           url: `${BASE_URL}/ru/ekskursii/${ruSlug}`,
           lastModified: lastMod,
+          changeFrequency: 'weekly',
+          priority: 0.8,
           alternates: { languages: alternates },
         })
       }
@@ -146,7 +153,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const payload = await getPayload({ config })
 
-    // Fetch ALL published blog posts (increase limit for large sites)
     const enPosts = await payload.find({
       collection: 'blog-posts',
       where: { status: { equals: 'published' } },
@@ -161,7 +167,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       locale: 'ru',
     })
 
-    // Build maps for cross-referencing slugs
     const ruPostSlugMap = new Map<number, string>()
     for (const p of ruPosts.docs) {
       ruPostSlugMap.set(p.id as number, p.slug as string)
@@ -171,10 +176,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       enPostSlugMap.set(p.id as number, p.slug as string)
     }
 
-    // Track which post IDs we've already added
     const addedPostIds = new Set<number>()
 
-    // Process EN posts (adds EN URLs + RU URLs for bilingual posts)
     for (const post of enPosts.docs) {
       const publishedLocales = (post as any).publishedLocales || []
       const enSlug = post.slug
@@ -191,6 +194,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         entries.push({
           url: `${BASE_URL}/en/blog/${enSlug}`,
           lastModified: lastMod,
+          changeFrequency: 'weekly',
+          priority: 0.6,
           alternates: { languages: alternates },
         })
       }
@@ -205,6 +210,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         entries.push({
           url: `${BASE_URL}/ru/blog/${ruSlug}`,
           lastModified: lastMod,
+          changeFrequency: 'weekly',
+          priority: 0.6,
           alternates: { languages: alternates },
         })
       }
@@ -212,7 +219,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       addedPostIds.add(post.id as number)
     }
 
-    // Process RU-only posts not already covered by EN loop
+    // RU-only posts
     for (const post of ruPosts.docs) {
       if (addedPostIds.has(post.id as number)) continue
       const publishedLocales = (post as any).publishedLocales || []
@@ -224,6 +231,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       entries.push({
         url: `${BASE_URL}/ru/blog/${ruSlug}`,
         lastModified: lastMod,
+        changeFrequency: 'weekly',
+        priority: 0.6,
         alternates: { languages: { ru: `${BASE_URL}/ru/blog/${ruSlug}` } },
       })
     }
