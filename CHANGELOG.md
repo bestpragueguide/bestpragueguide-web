@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.56.0] - 2026-04-14
+
+### Added
+- **3 commercial landing pages** (seo14):
+  - `/en/private-walking-tour-prague` — 4 walking tour cards, FAQ, TouristTrip schema
+  - `/en/licensed-guide-prague` — licensing info, team credentials, LocalBusiness schema
+  - `/en/prague-sightseeing-tour` — 4 sightseeing options comparison, TouristTrip schema
+- **LandingPage component** — reusable for CMS-editable landing pages with hero, trust signals, tour cards, testimonials, FAQ, CTA, schema
+- Pages collection extended with landing page fields (heroImage, subtitle, landingTourSlugs, faqItems)
+- Sitemap updated with 3 EN-only landing pages
+- `/api/seed-landing-pages`, `/api/fix-landing-schema`, `/api/debug-page` endpoints
+
+### Fixed
+- Pages collection `versions: { drafts: true }` disabled — version table schema was out of sync, causing creation failures
+
 ## [1.55.0] - 2026-04-14
 
 ### Added
