@@ -14,13 +14,13 @@ const staticPages = [
   { path: 'contact', en: 'contact', ru: 'kontakty', changeFrequency: 'monthly' as const, priority: 0.5 },
   { path: 'faq', en: 'faq', ru: 'voprosy', changeFrequency: 'monthly' as const, priority: 0.5 },
   { path: 'blog', en: 'blog', ru: 'blog', changeFrequency: 'daily' as const, priority: 0.8 },
-  { path: 'privacy', en: 'privacy', ru: 'privacy', changeFrequency: 'yearly' as const, priority: 0.2 },
-  { path: 'terms', en: 'terms', ru: 'terms', changeFrequency: 'yearly' as const, priority: 0.2 },
+  { path: 'privacy', en: 'privacy', ru: 'privacy', changeFrequency: 'monthly' as const, priority: 0.2 },
+  { path: 'terms', en: 'terms', ru: 'terms', changeFrequency: 'monthly' as const, priority: 0.2 },
   {
     path: 'cancellation-policy',
     en: 'cancellation-policy',
     ru: 'cancellation-policy',
-    changeFrequency: 'yearly' as const,
+    changeFrequency: 'monthly' as const,
     priority: 0.2,
   },
 ]
