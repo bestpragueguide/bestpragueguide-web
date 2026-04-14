@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.57.0] - 2026-04-14
+
+### Fixed
+- **279 EN title tags standardized** (seo15) — unified format `[Keyword] — [USP] | Best Prague Guide`, all ≤60 chars, no hacky, consistent separators. Updated: 5 core pages (i18n + CMS), 17 tour pages (CMS), 262 blog articles (CMS metaTitle).
+- `/api/fix-title-tags` endpoint for bulk title tag auditing and fixing
+
 ## [1.56.0] - 2026-04-14
 
 ### Added
