@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.54.0] - 2026-04-14
+
+### Added
+- **23 EN commercial SEO articles** (seo12) — #231-254, ~47K words. Tours/guides as service: "Is a guide worth it?", cost guide, private vs group, castle/Jewish Quarter guide decisions, walking/sightseeing comparisons, couples/seniors/families/VIP/custom demographic guides, airport pickup tour, repeat visitors, best 2026, underground alchemy. All imported (IDs 480-502) and published.
+- **15 cross-links** from existing articles to new commercial cluster (castle guide, Jewish Quarter, couples, seniors, families, tipping, walking tour, cost, scams)
+- **488 total blog posts**, 549 URLs submitted to IndexNow
+
 ## [1.53.0] - 2026-04-14
 
 ### Added
