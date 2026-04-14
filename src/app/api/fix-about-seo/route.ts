@@ -19,14 +19,14 @@ export async function POST(req: NextRequest) {
     const payload = await getPayload({ config })
     const results: string[] = []
 
-    // 1. Update about-page SEO fields (EN)
+    // 1. Update about-page SEO fields (EN) — 58 chars
     try {
       await payload.updateGlobal({
         slug: 'about-page',
         locale: 'en',
         data: {
           seo: {
-            metaTitle: 'Prague Tour Guide — Licensed Private Tours | Best Prague Guide',
+            metaTitle: 'Prague Tour Guide — Licensed & Private | Best Prague Guide',
             metaDescription: 'Hire a licensed private tour guide in Prague. Uliana Formina and her team offer private-only tours — just your group, no strangers →',
           },
         } as any,
@@ -34,6 +34,22 @@ export async function POST(req: NextRequest) {
       results.push('about-page SEO: updated')
     } catch (err: any) {
       results.push('about-page SEO: error - ' + err.message?.substring(0, 100))
+    }
+
+    // 1b. Update homepage SEO fields (EN) — 58 chars
+    try {
+      await payload.updateGlobal({
+        slug: 'homepage',
+        locale: 'en',
+        data: {
+          seo: {
+            metaTitle: 'Private Tours in Prague — Local Guides | Best Prague Guide',
+          },
+        } as any,
+      })
+      results.push('homepage SEO title: updated')
+    } catch (err: any) {
+      results.push('homepage SEO: error - ' + err.message?.substring(0, 100))
     }
 
     // 2. Update navigation — replace /about with /prague-guide in EN header links
