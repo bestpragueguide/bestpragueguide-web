@@ -140,40 +140,26 @@ Complete your sightseeing day with <a href="/en/tours/2000-medieval-dinner-pragu
 
     for (const pageData of pages) {
       try {
-        // Delete any existing pages with this slug first
-        const existing = await payload.find({
-          collection: 'pages',
-          where: { slug: { equals: pageData.slug } },
-          limit: 100,
-          locale: 'en',
-        })
-        for (const doc of existing.docs) {
-          try { await payload.delete({ collection: 'pages', id: doc.id }) } catch {}
-        }
-
         const contentLexical = markdownToLexical(pageData.content)
 
-        const data = {
-          title: pageData.title,
-          slug: pageData.slug,
-          template: 'landing',
-          subtitle: pageData.subtitle,
-          landingTourSlugs: pageData.tourSlugs,
-          content: contentLexical,
-          faqItems: pageData.faqItems,
-          seo: {
-            metaTitle: pageData.metaTitle,
-            metaDescription: pageData.metaDescription,
-          },
-          _status: 'published',
-        } as any
-
-        // Always create fresh
+        // Simple create — no draft, explicit _status
         const doc = await payload.create({
           collection: 'pages',
           locale: 'en',
-          data,
-          draft: false,
+          data: {
+            title: pageData.title,
+            slug: pageData.slug,
+            template: 'landing',
+            subtitle: pageData.subtitle,
+            landingTourSlugs: pageData.tourSlugs,
+            content: contentLexical as any,
+            faqItems: pageData.faqItems,
+            seo: {
+              metaTitle: pageData.metaTitle,
+              metaDescription: pageData.metaDescription,
+            },
+            _status: 'published',
+          } as any,
         })
         results.push(`${pageData.slug}: created (id=${doc.id})`)
       } catch (err: any) {
