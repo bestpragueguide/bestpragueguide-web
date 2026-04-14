@@ -13,6 +13,7 @@ import { BlogPostSchema } from '@/components/seo/BlogPostSchema'
 import { FAQSchema } from '@/components/seo/FAQSchema'
 import { extractFAQFromLexical } from '@/lib/extract-faq'
 import { categoryLabels, allCategories } from '@/lib/blog'
+import { RelatedTours } from '@/components/blog/RelatedTours'
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ''
 
@@ -243,6 +244,9 @@ export default async function BlogPostPage({
               </Link>
             </div>
           </article>
+
+          {/* Related Tours CTA */}
+          <RelatedTours category={post.category as string} locale={locale} />
 
           {/* Related posts */}
           {relatedPosts.length > 0 && (
