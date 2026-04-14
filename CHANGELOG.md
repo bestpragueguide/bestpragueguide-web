@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.55.0] - 2026-04-14
+
+### Added
+- **RelatedTours CTA component** on all blog posts — 2-3 tour cards (image, title, price) based on article category. Heading: "Explore Prague with a Private Guide". Bilingual EN/RU. Renders between article and related posts.
+- **241 internal links injected** via `/api/add-internal-links` — added `/en/prague-guide` links to 241 articles (phrase match + fallback sentences). Tour page links added where natural phrases existed. Zero errors.
+- `/api/add-internal-links` — endpoint for batch Lexical JSON link insertion with phrase matching, anchor text rotation, and fallback sentences
+
 ## [1.54.0] - 2026-04-14
 
 ### Added
