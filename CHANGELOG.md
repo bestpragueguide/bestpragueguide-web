@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.58.0] - 2026-04-15
+
+### Added
+- **Day Trips landing page** (seo16) — `/en/day-trips-from-prague` hub for all 10 day trip tours with comparison table, FAQ (7 Q&As), TouristTrip schema (10 Offers), trust signals, testimonials. CMS-editable.
+
 ## [1.57.0] - 2026-04-14
 
 ### Fixed
