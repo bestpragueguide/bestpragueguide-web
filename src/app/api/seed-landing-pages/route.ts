@@ -136,6 +136,74 @@ Complete your sightseeing day with <a href="/en/tours/2000-medieval-dinner-pragu
           { question: 'What\'s the best time of day for sightseeing?', answer: 'Morning is ideal for Prague Castle (fewer crowds, better light). Afternoon works well for Old Town and Charles Bridge. Our guides plan the route to avoid peak congestion at each landmark.' },
         ],
       },
+      {
+        slug: 'day-trips-from-prague',
+        title: 'Day Trips from Prague — Private Tours with a Licensed Guide',
+        subtitle: 'Private day trips with licensed guides — hotel pickup, comfortable car, your own itinerary.',
+        metaTitle: 'Day Trips from Prague — Private Tours | Best Prague Guide',
+        metaDescription: '10 private day trips from Prague with licensed guides. Castles, towns, breweries, memorials. Hotel pickup, comfortable car, flexible schedule →',
+        tourSlugs: 'cesky-krumlov,kutna-hora,karlsbad,terezin-memorial,karlstejn-castle,hluboka-castle,cesky-sternberk,kozel-brewery-tour,pilsner-urquell-brewery,skoda-factory',
+        content: `## Why Day Trips from Prague?
+
+Prague is a perfect base for exploring Bohemia. Within one to two hours by car you can reach medieval castles, UNESCO towns, world-famous breweries, and powerful memorial sites. A private day trip means hotel pickup, a comfortable car, <a href="/en/prague-guide" target="_blank" rel="noopener noreferrer">a licensed guide who speaks your language</a>, and a flexible schedule — no bus crowds, no fixed departure times, no waiting for 40 other people.
+
+Every day trip listed below is private — just your group. Prices are per group, not per person, so the more people you bring, the better value per head.
+
+## How to Choose Your Day Trip
+
+**History lovers** — Kutná Hora for medieval silver mining and the Bone Church, Terezín for WWII history, Karlštejn for the royal castle where Czech crown jewels were kept.
+
+**Architecture and photography** — Český Krumlov is a full UNESCO town frozen in time. Hluboká looks like it was lifted from the English countryside — a neo-Gothic castle 145 km south of Prague.
+
+**Beer and food** — Pilsner Urquell in Plzeň is where pilsner was invented in 1842. Kozel Brewery is a working brewery with tastings straight from the tank.
+
+**Unique experiences** — Škoda Factory for car enthusiasts (children under 10 not admitted). Český Šternberk is a privately owned castle — the same family has lived there for over 760 years.
+
+**First-time day trip?** — Český Krumlov is our #1 recommendation. **Short on time?** — Karlštejn Castle is just 30 km from Prague, perfect for a half day.
+
+## Why Private Beats Group Bus Tours
+
+Group bus day trips cost €30–60 per person — 40+ people on a bus, fixed schedule, limited stops, recorded commentary through headphones. A private day trip costs per group: €229–399 for 1–6 people. A family of four pays roughly €57–100 per person — comparable to a bus ticket, but with hotel pickup, a <a href="/en/prague-guide" target="_blank" rel="noopener noreferrer">licensed guide</a> who answers your questions, and the freedom to stop wherever you want.
+
+## What Every Day Trip Includes
+
+- **Hotel pickup and drop-off** in Prague (comfortable car or minivan)
+- **Licensed English-speaking guide** — Czech Ministry certified
+- **Flexible schedule** — adjust the route, add stops, take your time
+- **Restaurant and lunch recommendations** from your guide (food not included in price)
+- **Not included:** entrance tickets (purchased on site), meals and drinks
+
+## How It Works
+
+1. **Choose a day trip** from the list above
+2. **Tell us your date, group size, and hotel address**
+3. **We confirm availability** and suggest a pickup time
+4. **Driver picks you up** at your hotel lobby
+5. **Enjoy a full day exploring** — your guide adapts the itinerary to your interests
+
+## Combine Two Destinations
+
+Popular day trip combinations:
+- **Karlštejn + Mělník** — castle in the morning, wine tasting in the afternoon
+- **Český Krumlov + Hluboká** — full day, long drive but two stunning stops
+- **Kutná Hora + Český Šternberk** — both east of Prague, easy to combine
+- **Kozel Brewery + Karlštejn** — both southwest, a natural pairing
+
+Custom combinations available at standard per-group pricing. <a href="/en/contact" target="_blank" rel="noopener noreferrer">Contact us</a> to plan your perfect day outside Prague.
+
+End your day trip with <a href="/en/tours/2000-medieval-dinner-prague" target="_blank" rel="noopener noreferrer">a medieval dinner show</a> back in Prague — the perfect way to cap off a day of exploring.
+
+Or combine a day trip with <a href="/en/private-walking-tour-prague" target="_blank" rel="noopener noreferrer">a private walking tour of Prague</a> on another day for the complete Czech experience.`,
+        faqItems: [
+          { question: 'How long does a day trip take?', answer: 'Half-day trips (Karlštejn, Kutná Hora, Terezín) take 4-6 hours including travel. Full-day trips (Český Krumlov, Karlovy Vary) take 8-10 hours. Your guide adjusts the pace to your group.' },
+          { question: 'What time does the hotel pickup happen?', answer: 'Typically 8:00-9:00 AM for full-day trips, 9:00-10:00 AM for half-day trips. We confirm the exact time when you book.' },
+          { question: 'Can we stop for lunch on the way?', answer: 'Absolutely. Your guide knows the best local restaurants along each route — far better than the tourist spots where bus groups eat. Lunch is not included in the price but your guide will recommend options for every budget.' },
+          { question: 'Are entrance tickets included in the price?', answer: 'No. Entrance tickets to castles, museums, and other sites are purchased on arrival. Your guide handles the logistics — you just enjoy the visit. This keeps our prices transparent: you pay for the guide and transport, tickets are separate.' },
+          { question: 'Can we visit two places in one day?', answer: 'Yes, for destinations that are geographically close. Popular combinations include Karlštejn + Mělník, Kutná Hora + Český Šternberk, and Kozel + Karlštejn. Contact us and we\'ll suggest the best pairing for your interests.' },
+          { question: 'Is the day trip suitable for children?', answer: 'Most day trips work well for families. Český Krumlov has a bear moat that kids love. Karlštejn involves a steep uphill walk (not ideal for very young children). The Škoda Factory does not admit children under 10.' },
+          { question: 'What happens if the weather is bad?', answer: 'Day trips run in all weather. Castle interiors, breweries, and museums are indoors. Your guide adjusts the route if needed — for example, spending more time inside a castle on a rainy day rather than in the gardens.' },
+        ],
+      },
     ]
 
     for (const pageData of pages) {

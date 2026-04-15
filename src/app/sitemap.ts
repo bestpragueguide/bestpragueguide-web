@@ -89,6 +89,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'private-walking-tour-prague',
     'licensed-guide-prague',
     'prague-sightseeing-tour',
+    'day-trips-from-prague',
   ]
   for (const slug of enOnlyPages) {
     entries.push({
