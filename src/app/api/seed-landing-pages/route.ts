@@ -204,6 +204,16 @@ Or combine a day trip with <a href="/en/private-walking-tour-prague" target="_bl
           { question: 'What happens if the weather is bad?', answer: 'Day trips run in all weather. Castle interiors, breweries, and museums are indoors. Your guide adjusts the route if needed — for example, spending more time inside a castle on a rainy day rather than in the gardens.' },
         ],
       },
+      {
+        slug: 'prices',
+        title: 'Prague Private Tour Prices',
+        subtitle: 'Transparent pricing, per group, no hidden fees. Just your group, no strangers.',
+        metaTitle: 'Prague Private Tour Prices — Per Group | Best Prague Guide',
+        metaDescription: 'Prague private tours from €119 per group — not per person. Transparent pricing, licensed guide, no hidden fees. See all tour prices →',
+        tourSlugs: '',
+        content: '',
+        faqItems: [],
+      },
     ]
 
     for (const pageData of pages) {
