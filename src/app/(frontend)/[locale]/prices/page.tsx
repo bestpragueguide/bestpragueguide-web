@@ -278,14 +278,7 @@ export default async function PricingPage({
       </section>
 
       {/* Schema */}
-      <JsonLd data={{
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: `${BASE_URL}/en` },
-          { '@type': 'ListItem', position: 2, name: 'Prices', item: `${BASE_URL}/en/prices` },
-        ],
-      }} />
+      {/* BreadcrumbList schema injected by Breadcrumbs component */}
       <JsonLd data={{
         '@context': 'https://schema.org',
         '@type': 'FAQPage',
