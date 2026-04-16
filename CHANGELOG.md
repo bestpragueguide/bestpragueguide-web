@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.60.0] - 2026-04-16
+
+### Improved
+- **Full schema markup upgrade** (seo17):
+  - Organization: split into Organization + TravelAgency with `@id`, `memberOf` (3 orgs), `contactPoint`, `serviceType`, `currenciesAccepted`
+  - Person (Uliana): `@id` reference, `hasCredential`, 3 `memberOf`, 10 `knowsAbout` topics, `knowsLanguage`, `nationality`
+  - TouristTrip: multi-type `[TouristTrip, Product]`, `@id` pattern, `AggregateOffer` with pricing tiers, `touristType`
+  - BlogPosting: `author` and `publisher` use `@id` references to Person/Organization entities, `inLanguage`, `articleSection`
+  - All schemas render on both EN and RU (Person+LocalBusiness on /ru/o-nas, ContactPage on contact)
+
 ## [1.59.0] - 2026-04-16
 
 ### Fixed
