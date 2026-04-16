@@ -14,6 +14,23 @@ export async function POST(req: NextRequest) {
     const db = (payload.db as any).drizzle
     const results: string[] = []
 
+    // First, drop and recreate the faq tables with correct structure
+    const dropQueries = [
+      `DROP TABLE IF EXISTS _pages_v_version_faq_items_locales CASCADE`,
+      `DROP TABLE IF EXISTS _pages_v_version_faq_items CASCADE`,
+      `DROP TABLE IF EXISTS pages_faq_items_locales CASCADE`,
+      `DROP TABLE IF EXISTS pages_faq_items CASCADE`,
+    ]
+
+    for (const q of dropQueries) {
+      try {
+        await db.execute(sql.raw(q))
+        results.push(`OK: ${q.substring(0, 50)}...`)
+      } catch (err: any) {
+        results.push(`SKIP: ${q.substring(0, 40)}... — ${err.message?.substring(0, 60)}`)
+      }
+    }
+
     const queries = [
       // Main table
       `ALTER TABLE pages ADD COLUMN IF NOT EXISTS hero_image_id integer REFERENCES media(id) ON DELETE SET NULL`,
@@ -28,18 +45,19 @@ export async function POST(req: NextRequest) {
       `ALTER TABLE _pages_v_locales ADD COLUMN IF NOT EXISTS version_last_updated varchar`,
       `ALTER TABLE _pages_v_locales ADD COLUMN IF NOT EXISTS version_seo_meta_title varchar`,
       `ALTER TABLE _pages_v_locales ADD COLUMN IF NOT EXISTS version_seo_meta_description varchar`,
-      // FAQ items array table
+      // FAQ items array table — Payload format for localized array
       `CREATE TABLE IF NOT EXISTS pages_faq_items (
-        id varchar PRIMARY KEY,
+        id varchar NOT NULL PRIMARY KEY,
         _order integer NOT NULL,
         _parent_id integer NOT NULL REFERENCES pages(id) ON DELETE CASCADE
       )`,
-      `ALTER TABLE pages_faq_items ADD COLUMN IF NOT EXISTS _locale _locales`,
+      `CREATE INDEX IF NOT EXISTS pages_faq_items_order_idx ON pages_faq_items (_order)`,
+      `CREATE INDEX IF NOT EXISTS pages_faq_items_parent_id_idx ON pages_faq_items (_parent_id)`,
       `CREATE TABLE IF NOT EXISTS pages_faq_items_locales (
         id serial PRIMARY KEY,
         question varchar,
         answer varchar,
-        _parent_id varchar NOT NULL,
+        _parent_id varchar NOT NULL REFERENCES pages_faq_items(id) ON DELETE CASCADE,
         _locale _locales NOT NULL,
         UNIQUE(_parent_id, _locale)
       )`,
@@ -49,12 +67,12 @@ export async function POST(req: NextRequest) {
         _order integer NOT NULL,
         _parent_id integer NOT NULL REFERENCES _pages_v(id) ON DELETE CASCADE
       )`,
-      `ALTER TABLE _pages_v_version_faq_items ADD COLUMN IF NOT EXISTS _locale _locales`,
+      `CREATE INDEX IF NOT EXISTS _pages_v_version_faq_items_order_idx ON _pages_v_version_faq_items (_order)`,
       `CREATE TABLE IF NOT EXISTS _pages_v_version_faq_items_locales (
         id serial PRIMARY KEY,
         question varchar,
         answer varchar,
-        _parent_id integer NOT NULL,
+        _parent_id integer NOT NULL REFERENCES _pages_v_version_faq_items(id) ON DELETE CASCADE,
         _locale _locales NOT NULL,
         UNIQUE(_parent_id, _locale)
       )`,
