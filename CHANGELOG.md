@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.59.0] - 2026-04-16
+
+### Fixed
+- **Schema markup gaps** (seo17):
+  - RU about page (`/ru/o-nas`) now has Person + TravelAgency/LocalBusiness schemas (was only BreadcrumbList)
+  - Contact page now has ContactPage schema with TravelAgency mainEntity
+- Verified existing schemas: TouristTrip+TourProduct on all tour pages (EN+RU), BlogPosting+FAQPage on all blog posts, AggregateRating on reviews (real data), Person on about page, Organization sitewide
+
 ## [1.58.0] - 2026-04-15
 
 ### Added
