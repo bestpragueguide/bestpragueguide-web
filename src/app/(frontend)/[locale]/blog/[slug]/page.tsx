@@ -378,6 +378,7 @@ export default async function BlogPostPage({
         author={post.author as string || 'Uliana Formina'}
         locale={locale}
         slug={slug}
+        category={post.category as string}
       />
       <FAQSchema items={extractFAQFromLexical(post.content)} />
     </div>

@@ -534,13 +534,14 @@ export default async function TourDetailPage({
             ? tour.heroImage?.sizes?.hero?.url || tour.heroImage?.url || undefined
             : undefined
         }
-        price={displayPrice.fromPrice ?? undefined}
+        pricing={tour.pricing as any}
         duration={tour.duration}
         rating={tour.rating ?? undefined}
         reviewCount={tour.reviewCount ?? undefined}
         reviews={tourReviews}
         locale={locale}
         slug={slug}
+        category={tour.category as string}
       />
 
       {/* FAQ Schema.org JSON-LD */}

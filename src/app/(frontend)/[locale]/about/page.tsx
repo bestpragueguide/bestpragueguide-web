@@ -244,19 +244,26 @@ export default async function AboutPage({
       <JsonLd data={{
         '@context': 'https://schema.org',
         '@type': 'Person',
+        '@id': `${BASE_URL}/#person-uliana`,
         name: 'Uliana Formina',
-        jobTitle: 'Licensed Private Tour Guide',
+        jobTitle: 'Licensed Top-Category Tour Guide',
+        description: 'Licensed top-category Prague tour guide. Member of the Czech Guides Association, affiliated with the World Federation of Tourist Guide Associations.',
         image: fullFounderPhotoUrl,
-        worksFor: {
-          '@type': 'TravelAgency',
-          name: 'Best Prague Guide',
-          url: BASE_URL,
+        url: `${BASE_URL}/en/prague-guide`,
+        worksFor: { '@id': `${BASE_URL}/#organization` },
+        memberOf: [
+          { '@type': 'Organization', name: 'Czech Guides Association' },
+          { '@type': 'Organization', name: 'Union of Tourist Business' },
+          { '@type': 'Organization', name: 'World Federation of Tourist Guide Associations', alternateName: 'WFTGA' },
+        ],
+        knowsAbout: ['Prague history', 'Czech culture', 'Czech Republic tourism', 'Prague Castle', 'Charles Bridge', 'Medieval architecture', 'Bohemian history', 'Jewish heritage in Prague', 'Czech beer culture', 'Day trips from Prague'],
+        knowsLanguage: ['English', 'Russian', 'Czech'],
+        hasCredential: {
+          '@type': 'EducationalOccupationalCredential',
+          credentialCategory: 'Licensed Tour Guide — Top Category',
+          recognizedBy: { '@type': 'Organization', name: 'Czech Guides Association' },
         },
-        knowsAbout: ['Prague', 'Czech Republic', 'Private Tours', 'Prague Castle', 'Charles Bridge', 'Jewish Quarter'],
-        memberOf: {
-          '@type': 'Organization',
-          name: 'Prague and Czech Guides Association',
-        },
+        nationality: { '@type': 'Country', name: 'Czech Republic' },
       }} />
       <JsonLd data={{
         '@context': 'https://schema.org',
