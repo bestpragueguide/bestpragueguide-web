@@ -240,68 +240,67 @@ export default async function AboutPage({
         </div>
       </section>
 
-      {/* Schema.org JSON-LD — EN only */}
+      {/* Schema.org JSON-LD — Person + LocalBusiness on all locales */}
+      <JsonLd data={{
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: 'Uliana Formina',
+        jobTitle: 'Licensed Private Tour Guide',
+        image: fullFounderPhotoUrl,
+        worksFor: {
+          '@type': 'TravelAgency',
+          name: 'Best Prague Guide',
+          url: BASE_URL,
+        },
+        knowsAbout: ['Prague', 'Czech Republic', 'Private Tours', 'Prague Castle', 'Charles Bridge', 'Jewish Quarter'],
+        memberOf: {
+          '@type': 'Organization',
+          name: 'Prague and Czech Guides Association',
+        },
+      }} />
+      <JsonLd data={{
+        '@context': 'https://schema.org',
+        '@type': ['TravelAgency', 'LocalBusiness'],
+        name: 'Best Prague Guide',
+        url: BASE_URL,
+        description: 'Private tour guide service in Prague and the Czech Republic. Licensed guides, English and Russian tours.',
+        telephone: '+420776306858',
+        email: 'info@bestpragueguide.com',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Prague',
+          addressCountry: 'CZ',
+        },
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: 50.0755,
+          longitude: 14.4378,
+        },
+        priceRange: '€€-€€€',
+        openingHoursSpecification: {
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+          opens: '08:00',
+          closes: '20:00',
+        },
+        sameAs: [
+          'https://www.instagram.com/ulianaisme/',
+        ],
+      }} />
+      {/* FAQPage schema — EN only (English FAQ content) */}
       {isEN && (
-        <>
-          <JsonLd data={{
-            '@context': 'https://schema.org',
-            '@type': 'Person',
-            name: 'Uliana Formina',
-            jobTitle: 'Licensed Private Tour Guide',
-            image: fullFounderPhotoUrl,
-            worksFor: {
-              '@type': 'TravelAgency',
-              name: 'Best Prague Guide',
-              url: BASE_URL,
+        <JsonLd data={{
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: faqItems.map(item => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: item.answer,
             },
-            knowsAbout: ['Prague', 'Czech Republic', 'Private Tours', 'Prague Castle', 'Charles Bridge', 'Jewish Quarter'],
-            memberOf: {
-              '@type': 'Organization',
-              name: 'Prague and Czech Guides Association',
-            },
-          }} />
-          <JsonLd data={{
-            '@context': 'https://schema.org',
-            '@type': ['TravelAgency', 'LocalBusiness'],
-            name: 'Best Prague Guide',
-            url: BASE_URL,
-            description: 'Private tour guide service in Prague and the Czech Republic. Licensed guides, English and Russian tours.',
-            telephone: '+420776306858',
-            email: 'info@bestpragueguide.com',
-            address: {
-              '@type': 'PostalAddress',
-              addressLocality: 'Prague',
-              addressCountry: 'CZ',
-            },
-            geo: {
-              '@type': 'GeoCoordinates',
-              latitude: 50.0755,
-              longitude: 14.4378,
-            },
-            priceRange: '€€-€€€',
-            openingHoursSpecification: {
-              '@type': 'OpeningHoursSpecification',
-              dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-              opens: '08:00',
-              closes: '20:00',
-            },
-            sameAs: [
-              'https://www.instagram.com/ulianaisme/',
-            ],
-          }} />
-          <JsonLd data={{
-            '@context': 'https://schema.org',
-            '@type': 'FAQPage',
-            mainEntity: faqItems.map(item => ({
-              '@type': 'Question',
-              name: item.question,
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: item.answer,
-              },
-            })),
-          }} />
-        </>
+          })),
+        }} />
       )}
     </div>
   )

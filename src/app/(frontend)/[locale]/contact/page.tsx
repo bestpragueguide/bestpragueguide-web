@@ -4,6 +4,7 @@ import { buildPageMetadata } from '@/lib/metadata'
 import { getSiteSettings } from '@/lib/cms-data'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { ContactForm } from '@/components/shared/ContactForm'
+import { JsonLd } from '@/components/seo/JsonLd'
 
 export async function generateMetadata({
   params,
@@ -96,6 +97,20 @@ export default async function ContactPage({
           </p>
         </div>
       </div>
+
+      <JsonLd data={{
+        '@context': 'https://schema.org',
+        '@type': 'ContactPage',
+        name: 'Contact Best Prague Guide',
+        url: `${process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'}/${locale}/contact`,
+        mainEntity: {
+          '@type': 'TravelAgency',
+          name: 'Best Prague Guide',
+          telephone: '+420776306858',
+          email: 'info@bestpragueguide.com',
+          url: process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com',
+        },
+      }} />
     </div>
   )
 }
