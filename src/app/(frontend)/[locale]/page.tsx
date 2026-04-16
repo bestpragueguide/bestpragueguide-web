@@ -11,7 +11,7 @@ import { ProcessSteps } from '@/components/home/ProcessSteps'
 import { TestimonialSliderWrapper } from '@/components/home/TestimonialSliderWrapper'
 import { FAQSectionWrapper } from '@/components/home/FAQSectionWrapper'
 import { CTASection } from '@/components/home/CTASection'
-import { WebSiteSchema } from '@/components/seo/WebSiteSchema'
+// WebSiteSchema is injected via layout.tsx (sitewide)
 
 export const revalidate = 3600
 
@@ -67,7 +67,6 @@ export default async function HomePage({
       <TestimonialSliderWrapper heading={homepageData.testimonialsHeading} locale={locale} />
       <FAQSectionWrapper heading={homepageData.faqSectionHeading} items={faqItems} />
       <CTASection data={homepageData} siteSettings={siteSettings} locale={locale} />
-      <WebSiteSchema locale={locale} />
     </>
   )
 }
