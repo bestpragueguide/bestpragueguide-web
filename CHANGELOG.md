@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.61.0] - 2026-04-16
+
+### Added
+- **Pricing landing page** (seo18) — `/en/prices` with dynamic CMS prices, 4 tour category cards, comparison table, FAQ (6 Q&As), BreadcrumbList + FAQPage + OfferCatalog schemas. All prices use "from €X" format pulled from Tours collection.
+
 ## [1.60.0] - 2026-04-16
 
 ### Improved
