@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.62.0] - 2026-04-16
+
+### Added
+- **AI search visibility** (seo19):
+  - robots.txt: 28 AI bot directives (GPTBot, ClaudeBot, PerplexityBot, OAI-SearchBot, Google-Extended, Applebot, Meta, Amazon, etc.). Blocks aggressive SEO scrapers (AhrefsBot, SemrushBot).
+  - llms.txt: 32 curated URLs in Answer.AI spec format — core pages, 17 tours, 4 landing pages, 4 key blog articles. For AI model comprehension and citation.
+  - Removed conflicting static public/robots.txt (dynamic src/app/robots.ts is authoritative)
+
 ## [1.61.0] - 2026-04-16
 
 ### Added
