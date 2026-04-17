@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.64.0] - 2026-04-17
+
+### Changed
+- **Prices page AI rewrite** (seo22) — `/en/prices` restructured to Step 1 outline: H1 "Prague Private Tour Prices — Per Group, Not Per Person", `<time dateTime="2026-04">Updated April 2026</time>` stamp, 3-sentence direct-answer paragraph with inline link to `/en/licensed-guide-prague`, 4 H2 sections (Why Per Group / What Determines Price / Per-Group vs Per-Person math table / Direct Booking vs OTA comparison table / Payment & Cancellation), FAQ expanded 6 → 10 Q&As, final CTA with contact form + WhatsApp + tours. 7 internal tour-slug links added (previously 0). OfferCatalog + FAQPage schemas preserved. Meta: 54ch title / 146ch description ending with →.
+- **Walking-tour page AI rewrite** (seo22) — `/en/private-walking-tour-prague` rewritten via new `/api/update-walking-tour-page` endpoint: H1 "Private Walking Tour in Prague — Just Your Group, Licensed Guide", 6-section content (What Makes It Private / Walking Tours I Offer with inline links / Typical Itineraries by Duration / What to Expect — Pace, Terrain, Weather / What's Included / Pricing / How to Book), FAQ expanded 5 → 10 Q&As, 9 internal links (was 4). Page's `TouristTrip` schema now pulls Offer prices dynamically from the Tours collection instead of hardcoded €139/€289/€129.
+
+### Added
+- `/api/update-walking-tour-page` (secret-auth POST) — idempotent endpoint that rewrites the `private-walking-tour-prague` Pages row content, subtitle, FAQ, SEO, and featured tour slugs. Mirrors the `update-licensed-guide-page` pattern.
+
 ## [1.63.1] - 2026-04-17
 
 ### Fixed
