@@ -194,6 +194,7 @@ All site content is editable from Payload admin panel:
 - When rendering richText in listings/cards, always use `extractPlainText()` — never render richText objects directly as JSX children
 - `/api/migrate-richtext` endpoint converts existing plain text to Lexical format
 - `textToLexicalJson(text)` in `src/lib/lexical-helpers.ts` converts plain form text to Lexical JSON for `payload.create()` — required because richText fields reject plain strings
+- `markdownToLexical(md)` in `src/lib/markdown-to-lexical.ts` converts a markdown string (headings, bold, HTML `<a>` links, bulleted/numbered lists, horizontal rules, **GFM-style tables with `|---|` delimiter**) to Lexical JSON — used by `/api/seed-landing-pages` and `/api/update-licensed-guide-page`. Tables emit a custom `{ type: 'table', headers, rows }` node rendered by `SafeRichText` as semantic `<table><thead><tbody>`.
 
 ## Live Preview
 - Payload Live Preview configured in `payload.config.ts` with Mobile/Tablet/Desktop breakpoints
