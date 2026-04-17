@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.63.0] - 2026-04-17
+
+### Changed
+- **Licensed-guide page AI rewrite** (seo20) — `/en/licensed-guide-prague` rewritten as Uliana's authority pillar: first-person voice, direct-answer opening paragraph, 7-item credentials list (Class II Czech National Guide Card, Czech Ministry of Regional Development, Law 159/1999, WFTGA + Czech Guides Association + Union of Tourist Business of the Czech Republic memberships, 17+ years since 2009, 10,000+ guests), semantic comparison table (licensed private vs OTA group vs free walking tours), 10 Q&A FAQ, "Updated April 2026" date stamp. Meta: "Licensed Tour Guide in Prague — Uliana Formina" (46ch) / 148ch description ending with →.
+- **Canonical Person schema** updated on about page: now recognises credential via Czech Ministry of Regional Development (GovernmentOrganization) under Law 159/1999 as the Class II Czech National Guide Card; memberOf reordered WFTGA first. licensed-guide-prague references via sitewide @id — no duplicate Person block.
+- Organization schema: membership "Union of Tourist Business" → "Union of Tourist Business of the Czech Republic".
+
+### Added
+- `markdownToLexical`: emits proper `table` nodes (headers + rows) instead of flattening pipe-separated paragraphs.
+- `SafeRichText`: renders `table` nodes as semantic `<table><thead><tbody>` HTML.
+- `LandingPage`: personal-variant trust signals (17+ years / 10,000+ guests / Class II / WFTGA) for licensed-guide-prague slug; team variant preserved for other landing pages.
+- `/api/update-licensed-guide-page` (secret-auth POST) — idempotent endpoint that rewrites the Pages row content, subtitle, FAQ, SEO, and featured tour slugs.
+
+### Removed
+- Legacy `LocalBusiness` JSON-LD block on `/en/licensed-guide-prague` route that incorrectly named "Czech Ministry of Education" as the licensing authority (actual authority: Ministry of Regional Development). Sitewide Organization+TravelAgency+Person schemas now carry this data canonically.
+
 ## [1.62.0] - 2026-04-16
 
 ### Added

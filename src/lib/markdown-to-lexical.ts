@@ -175,16 +175,33 @@ export function markdownToLexical(markdown: string): object {
     }
 
     if (line.trim().startsWith('|')) {
-      const tableLines: string[] = []
+      const rawRows: string[] = []
+      let sawDelimiter = false
       while (i < lines.length && lines[i].trim().startsWith('|')) {
-        if (!lines[i].trim().match(/^\|[-\s|:]+\|$/)) {
-          tableLines.push(lines[i].trim())
+        const raw = lines[i].trim()
+        if (/^\|[-\s|:]+\|$/.test(raw)) {
+          sawDelimiter = true
+        } else {
+          rawRows.push(raw)
         }
         i++
       }
-      for (const tl of tableLines) {
-        const cells = tl.split('|').filter(c => c.trim()).map(c => c.trim())
-        children.push(paragraphNode(parseInline(cells.join(' | '))))
+      const parseRow = (tl: string): LexicalNode[][] =>
+        tl.replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => parseInline(c.trim()))
+      if (sawDelimiter && rawRows.length >= 1) {
+        const headers = parseRow(rawRows[0])
+        const rows = rawRows.slice(1).map(parseRow)
+        children.push({
+          type: 'table',
+          version: 1,
+          headers,
+          rows,
+        })
+      } else {
+        for (const tl of rawRows) {
+          const cells = tl.split('|').filter(c => c.trim()).map(c => c.trim())
+          children.push(paragraphNode(parseInline(cells.join(' | '))))
+        }
       }
       continue
     }

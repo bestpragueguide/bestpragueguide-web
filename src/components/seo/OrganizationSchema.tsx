@@ -27,9 +27,9 @@ export function OrganizationSchema() {
           areaServed: ['Worldwide'],
         }],
         memberOf: [
-          { '@type': 'Organization', name: 'Czech Guides Association' },
-          { '@type': 'Organization', name: 'Union of Tourist Business' },
           { '@type': 'Organization', name: 'World Federation of Tourist Guide Associations', alternateName: 'WFTGA' },
+          { '@type': 'Organization', name: 'Czech Guides Association' },
+          { '@type': 'Organization', name: 'Union of Tourist Business of the Czech Republic' },
         ],
         sameAs: [
           'https://www.instagram.com/ulianaisme/',

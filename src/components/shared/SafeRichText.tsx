@@ -82,6 +82,32 @@ function renderNode(node: any, idx: number): React.ReactNode {
       return <blockquote key={idx}>{children}</blockquote>
     case 'horizontalrule':
       return <hr key={idx} />
+    case 'table': {
+      const headers: any[][] = node.headers || []
+      const rows: any[][][] = node.rows || []
+      return (
+        <table key={idx}>
+          {headers.length > 0 && (
+            <thead>
+              <tr>
+                {headers.map((cell, hi) => (
+                  <th key={hi} scope="col">{(cell || []).map(renderNode)}</th>
+                ))}
+              </tr>
+            </thead>
+          )}
+          <tbody>
+            {rows.map((row, ri) => (
+              <tr key={ri}>
+                {row.map((cell, ci) => (
+                  <td key={ci}>{(cell || []).map(renderNode)}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )
+    }
     default:
       if (children.length > 0) return <div key={idx}>{children}</div>
       return null

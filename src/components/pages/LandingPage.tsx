@@ -97,20 +97,36 @@ export async function LandingPage({ page, locale, schemaData }: LandingPageProps
         )}
       </section>
 
-      {/* Trust Signals */}
-      <section className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
-        {[
-          { value: locale === 'ru' ? 'Многолетний' : 'Years of', label: locale === 'ru' ? 'опыт' : 'Experience' },
-          { value: '10,000+', label: locale === 'ru' ? 'довольных гостей' : 'Happy Guests' },
-          { value: locale === 'ru' ? 'Команда' : 'Team of', label: locale === 'ru' ? 'лицензированных гидов' : 'Licensed Guides' },
-          { value: locale === 'ru' ? 'Индивидуальные' : 'Custom', label: locale === 'ru' ? 'маршруты' : 'Routes Available' },
-        ].map((item, i) => (
-          <div key={i} className="text-center p-4 bg-white rounded-xl border border-gray-light/50">
-            <span className="text-xl font-heading font-bold text-gold block">{item.value}</span>
-            <span className="text-xs text-navy/60">{item.label}</span>
-          </div>
-        ))}
-      </section>
+      {/* Trust Signals — personal-page variant for Uliana's licensed-guide page, team variant elsewhere */}
+      {page.slug === 'licensed-guide-prague' ? (
+        <section className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
+          {[
+            { value: '17+', label: 'Years Guiding' },
+            { value: '10,000+', label: 'Guests Hosted' },
+            { value: 'Class II', label: 'Czech Guide Card' },
+            { value: 'WFTGA', label: 'Member' },
+          ].map((item, i) => (
+            <div key={i} className="text-center p-4 bg-white rounded-xl border border-gray-light/50">
+              <span className="text-xl font-heading font-bold text-gold block">{item.value}</span>
+              <span className="text-xs text-navy/60">{item.label}</span>
+            </div>
+          ))}
+        </section>
+      ) : (
+        <section className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
+          {[
+            { value: locale === 'ru' ? 'Многолетний' : 'Years of', label: locale === 'ru' ? 'опыт' : 'Experience' },
+            { value: '10,000+', label: locale === 'ru' ? 'довольных гостей' : 'Happy Guests' },
+            { value: locale === 'ru' ? 'Команда' : 'Team of', label: locale === 'ru' ? 'лицензированных гидов' : 'Licensed Guides' },
+            { value: locale === 'ru' ? 'Индивидуальные' : 'Custom', label: locale === 'ru' ? 'маршруты' : 'Routes Available' },
+          ].map((item, i) => (
+            <div key={i} className="text-center p-4 bg-white rounded-xl border border-gray-light/50">
+              <span className="text-xl font-heading font-bold text-gold block">{item.value}</span>
+              <span className="text-xs text-navy/60">{item.label}</span>
+            </div>
+          ))}
+        </section>
+      )}
 
       {/* Main Content (from CMS richText) */}
       {page.content && (
