@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.63.1] - 2026-04-17
+
+### Fixed
+- Removed duplicate `BreadcrumbList` JSON-LD block from `LandingPage` (already rendered by `<Breadcrumbs>` component) — affects all 5 landing pages (licensed-guide-prague, private-walking-tour-prague, prague-sightseeing-tour, day-trips-from-prague, prices). Matches fix previously applied in commit `644fac4`.
+
 ## [1.63.0] - 2026-04-17
 
 ### Changed

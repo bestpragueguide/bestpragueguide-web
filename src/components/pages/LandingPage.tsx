@@ -258,15 +258,7 @@ export async function LandingPage({ page, locale, schemaData }: LandingPageProps
         </div>
       </section>
 
-      {/* Schema */}
-      <JsonLd data={{
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: `${BASE_URL}/${locale}` },
-          { '@type': 'ListItem', position: 2, name: page.title },
-        ],
-      }} />
+      {/* Schema — BreadcrumbList is rendered by <Breadcrumbs> at the top of this component */}
       {faqItems.length > 0 && (
         <JsonLd data={{
           '@context': 'https://schema.org',
