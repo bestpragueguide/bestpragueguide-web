@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.65.1] - 2026-04-18
+
+### Fixed
+- Landing-page body links inside `**bold**` wrappers were rendering as literal escaped text (`&lt;a href=...`) instead of anchors. Root cause: `markdownToLexical`'s `parseInline` regex matches `**…**` before `<a>`, so `**<a>…</a>**` never parses the link. Unbolded the anchor wrappers in the `update-sightseeing-tour-page` and `update-walking-tour-page` endpoints. Content string now uses plain `<a href=...>Name</a>` (no `**` around it) for tour-slug mentions in bullet lists. Affected the following previously-silent escapes on `/en/prague-sightseeing-tour` and `/en/private-walking-tour-prague`. No underlying library change yet — the `parseInline` alternation still has the same limitation; callers must avoid the nested pattern.
+
 ## [1.65.0] - 2026-04-18
 
 ### Changed

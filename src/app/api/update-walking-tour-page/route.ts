@@ -40,11 +40,11 @@ By contrast, most "walking tours" advertised online are group tours — you join
 
 I offer the following private walking tours of Prague. Each can be booked standalone or combined with others into a longer day.
 
-- **<a href="/en/tours/charles-bridge-old-town" target="_blank" rel="noopener noreferrer">Charles Bridge &amp; Old Town</a>** — the classic route: Old Town Square, Astronomical Clock, Týn Church, Charles Bridge statues, approaches to Lesser Town. Typical duration: 2-3 hours.
-- **<a href="/en/tours/prague-castle-lesser-town" target="_blank" rel="noopener noreferrer">Prague Castle &amp; Lesser Town</a>** — St. Vitus Cathedral, Old Royal Palace, Golden Lane, castle gardens, and the descent through Nerudova street. Typical duration: 3-4 hours.
-- **<a href="/en/tours/hidden-prague-underground-alchemy" target="_blank" rel="noopener noreferrer">Hidden Prague — underground passages, alchemy, St. James's forearm</a>** — less-visited sites that most tours skip: medieval cellars, alchemy history, obscure Old Town corners. Typical duration: 2-3 hours.
-- **<a href="/en/tours/all-prague-in-one-day" target="_blank" rel="noopener noreferrer">All Prague in One Day</a>** — the full-day walking itinerary combining Old Town, Jewish Quarter, Charles Bridge, Lesser Town, and Prague Castle. Typical duration: 6-8 hours including lunch.
-- **<a href="/en/tours/best-of-prague-car-tour" target="_blank" rel="noopener noreferrer">Best of Prague (car + walking)</a>** — a mixed format using a private vehicle to cover longer distances between walking stops. Useful for groups with limited mobility or tight schedules. Typical duration: 4-6 hours.
+- <a href="/en/tours/charles-bridge-old-town" target="_blank" rel="noopener noreferrer">Charles Bridge &amp; Old Town</a> — the classic route: Old Town Square, Astronomical Clock, Týn Church, Charles Bridge statues, approaches to Lesser Town. Typical duration: 2-3 hours.
+- <a href="/en/tours/prague-castle-lesser-town" target="_blank" rel="noopener noreferrer">Prague Castle &amp; Lesser Town</a> — St. Vitus Cathedral, Old Royal Palace, Golden Lane, castle gardens, and the descent through Nerudova street. Typical duration: 3-4 hours.
+- <a href="/en/tours/hidden-prague-underground-alchemy" target="_blank" rel="noopener noreferrer">Hidden Prague — underground passages, alchemy, St. James's forearm</a> — less-visited sites that most tours skip: medieval cellars, alchemy history, obscure Old Town corners. Typical duration: 2-3 hours.
+- <a href="/en/tours/all-prague-in-one-day" target="_blank" rel="noopener noreferrer">All Prague in One Day</a> — the full-day walking itinerary combining Old Town, Jewish Quarter, Charles Bridge, Lesser Town, and Prague Castle. Typical duration: 6-8 hours including lunch.
+- <a href="/en/tours/best-of-prague-car-tour" target="_blank" rel="noopener noreferrer">Best of Prague (car + walking)</a> — a mixed format using a private vehicle to cover longer distances between walking stops. Useful for groups with limited mobility or tight schedules. Typical duration: 4-6 hours.
 
 The full list of tours — including day trips outside Prague and specialty experiences — is at <a href="/en/tours" target="_blank" rel="noopener noreferrer">View all tours</a>.
 

@@ -59,10 +59,10 @@ I offer tours in three categories. Every tour is private — just your group. Cl
 
 Private walking tours covering Prague's historic core. Typical duration 2-8 hours, per-group pricing, no interior tickets required unless specified.
 
-- **<a href="/en/tours/charles-bridge-old-town" target="_blank" rel="noopener noreferrer">Charles Bridge &amp; Old Town</a>** — Old Town Square, Astronomical Clock, Týn Church, Charles Bridge statues, approaches to Lesser Town. Typical duration 2-3 hours.
-- **<a href="/en/tours/prague-castle-lesser-town" target="_blank" rel="noopener noreferrer">Prague Castle &amp; Lesser Town</a>** — St. Vitus Cathedral, Old Royal Palace, Golden Lane, castle gardens, descent through Nerudova street. Typical duration 3-4 hours.
+- <a href="/en/tours/charles-bridge-old-town" target="_blank" rel="noopener noreferrer">Charles Bridge &amp; Old Town</a> — Old Town Square, Astronomical Clock, Týn Church, Charles Bridge statues, approaches to Lesser Town. Typical duration 2-3 hours.
+- <a href="/en/tours/prague-castle-lesser-town" target="_blank" rel="noopener noreferrer">Prague Castle &amp; Lesser Town</a> — St. Vitus Cathedral, Old Royal Palace, Golden Lane, castle gardens, descent through Nerudova street. Typical duration 3-4 hours.
 - **Hidden Prague — underground passages and alchemy** — less-visited sites: medieval cellars, alchemy history, obscure Old Town corners. Typical duration 2-3 hours.
-- **<a href="/en/tours/all-prague-in-one-day" target="_blank" rel="noopener noreferrer">All Prague in One Day</a>** — the full-day walking itinerary combining Old Town, Jewish Quarter, Charles Bridge, Lesser Town, and Prague Castle. Typical duration 6-8 hours including lunch.
+- <a href="/en/tours/all-prague-in-one-day" target="_blank" rel="noopener noreferrer">All Prague in One Day</a> — the full-day walking itinerary combining Old Town, Jewish Quarter, Charles Bridge, Lesser Town, and Prague Castle. Typical duration 6-8 hours including lunch.
 - **Best of Prague (car + walking)** — mixed format using a private vehicle between walking stops. Useful for groups with limited mobility or tight schedules. Typical duration 4-6 hours.
 
 See also: <a href="/en/private-walking-tour-prague" target="_blank" rel="noopener noreferrer">Private walking tour overview</a> — more detail on the walking tour format, including itineraries by duration.
@@ -71,9 +71,9 @@ See also: <a href="/en/private-walking-tour-prague" target="_blank" rel="noopene
 
 Private driving tours to sights outside Prague. Include a private vehicle and driver in the quote. Typical duration 6-12 hours.
 
-- **<a href="/en/tours/cesky-krumlov" target="_blank" rel="noopener noreferrer">Český Krumlov</a>** — UNESCO medieval town in South Bohemia. Full-day (2-2.5 hours each way).
-- **<a href="/en/tours/kutna-hora" target="_blank" rel="noopener noreferrer">Kutná Hora (Bone Church)</a>** — the Sedlec Ossuary plus the historic silver-mining town. Half-to-full day (~1 hour each way).
-- **<a href="/en/tours/karlstejn-castle" target="_blank" rel="noopener noreferrer">Karlštejn Castle</a>** — Gothic castle built by Charles IV. Half day (~45 minutes each way).
+- <a href="/en/tours/cesky-krumlov" target="_blank" rel="noopener noreferrer">Český Krumlov</a> — UNESCO medieval town in South Bohemia. Full-day (2-2.5 hours each way).
+- <a href="/en/tours/kutna-hora" target="_blank" rel="noopener noreferrer">Kutná Hora (Bone Church)</a> — the Sedlec Ossuary plus the historic silver-mining town. Half-to-full day (~1 hour each way).
+- <a href="/en/tours/karlstejn-castle" target="_blank" rel="noopener noreferrer">Karlštejn Castle</a> — Gothic castle built by Charles IV. Half day (~45 minutes each way).
 - **Karlovy Vary (Karlsbad)** — historic spa town in West Bohemia. Full day.
 - **Terezín Memorial** — WWII concentration camp memorial and former Jewish ghetto. Half-to-full day.
 
@@ -81,7 +81,7 @@ Private driving tours to sights outside Prague. Include a private vehicle and dr
 
 Less conventional tours focused on specific themes.
 
-- **<a href="/en/tours/2000-medieval-dinner-prague" target="_blank" rel="noopener noreferrer">Medieval Dinner Show at U Pavouka</a>** — historic tavern in Old Town with period entertainment (sword fights, fire show, fencing) and a multi-course meal. Typical duration 3-4 hours.
+- <a href="/en/tours/2000-medieval-dinner-prague" target="_blank" rel="noopener noreferrer">Medieval Dinner Show at U Pavouka</a> — historic tavern in Old Town with period entertainment (sword fights, fire show, fencing) and a multi-course meal. Typical duration 3-4 hours.
 
 The full list of all 17 tours is at <a href="/en/tours" target="_blank" rel="noopener noreferrer">View all tours</a>. For detailed pricing across all categories, see the <a href="/en/prices" target="_blank" rel="noopener noreferrer">prices page</a>.
 
