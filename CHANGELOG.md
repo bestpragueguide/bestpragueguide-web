@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.64.1] - 2026-04-18
+
+### Documentation
+- `CLAUDE.md` API Routes table — added rows for `/api/seed-landing-pages`, `/api/update-licensed-guide-page`, `/api/update-walking-tour-page` (the first two pre-existed but weren't documented; the third is new this release).
+- `markdownToLexical` mention now lists `/api/update-walking-tour-page` as a third caller.
+
 ## [1.64.0] - 2026-04-17
 
 ### Changed
