@@ -3,15 +3,16 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { getPageBySlug } from '@/lib/cms-data'
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { getDisplayPrice } from '@/lib/pricing'
 
 const BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'https://bestpragueguide.com'
 
-const FALLBACK_TITLE = 'Prague Private Tour Prices — Per Group, Not Per Person'
-const FALLBACK_DESCRIPTION =
+// Hand-coded page — metadata lives in code, not the Pages CMS row.
+// (A stale CMS seo override was previously taking precedence; intentional source of truth = this file.)
+const META_TITLE = 'Prague Private Tour Prices — Per Group, Not Per Person'
+const META_DESCRIPTION =
   'Prague private tour prices — charged per group, not per person. Licensed guide, 17+ years. No OTA commission, no hidden fees. Get a quote direct →'
 
 const UPDATED_DATE = 'April 2026'
@@ -24,14 +25,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   if (locale !== 'en') return { title: 'Not Found' }
-  const page = await getPageBySlug('prices', locale)
-  const title = page?.seo?.metaTitle || FALLBACK_TITLE
-  const description = page?.seo?.metaDescription || FALLBACK_DESCRIPTION
   return {
-    title,
-    description,
+    title: META_TITLE,
+    description: META_DESCRIPTION,
     alternates: { canonical: `${BASE_URL}/en/prices` },
-    openGraph: { title, description, url: `${BASE_URL}/en/prices`, type: 'website' },
+    openGraph: { title: META_TITLE, description: META_DESCRIPTION, url: `${BASE_URL}/en/prices`, type: 'website' },
   }
 }
 

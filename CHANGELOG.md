@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.64.2] - 2026-04-18
+
+### Fixed
+- `/en/prices` metadata regression — production page kept rendering the old "Prague Private Tour Prices — Per Group | Best Prague Guide" title and "from €119" description because the Pages CMS row's `seo.metaTitle`/`seo.metaDescription` (set by an earlier seed) overrode the new fallback constants. Page is hand-coded RSC, so canonical metadata now lives in `META_TITLE`/`META_DESCRIPTION` constants and the `getPageBySlug('prices')` lookup in `generateMetadata` is removed.
+
 ## [1.64.1] - 2026-04-18
 
 ### Documentation
