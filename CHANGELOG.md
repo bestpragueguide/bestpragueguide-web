@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.65.0] - 2026-04-18
+
+### Changed
+- **Sightseeing-tour page AI rewrite** (seo23) — `/en/prague-sightseeing-tour` rewritten via new `/api/update-sightseeing-tour-page` endpoint. H1 becomes "Prague Sightseeing Tour — Private, Licensed Guide, All Major Sights". Content now covers the full offering via the three-category structure the task requires (Prague walking / Day trips / Specialty experiences), with duration-based planning templates (1 day / 2 days / 3-5 days / week+) and a pace/language/logistics section. FAQ expanded 5 → 10 Q&As, all with `acceptedAnswer.text` populated. 12 internal links total (5 hub + 7 tour slugs) — at the upper bound of the task's 8-12 range. Page's `TouristTrip` schema now pulls Offer prices dynamically from the Tours collection (6 slugs spanning all categories) instead of hardcoded €139/€139/€289/€219. Fallback meta in `page.tsx`: "Prague Sightseeing Tour — Private Licensed Guide" (48ch) / 145ch description ending with →.
+
+### Added
+- `/api/update-sightseeing-tour-page` (secret-auth POST) — idempotent endpoint that rewrites the `prague-sightseeing-tour` Pages row content, subtitle, FAQ, SEO, and featured tour slugs. Mirrors the `update-licensed-guide-page` and `update-walking-tour-page` pattern.
+
 ## [1.64.2] - 2026-04-18
 
 ### Fixed

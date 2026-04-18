@@ -99,6 +99,7 @@ All site content is editable from Payload admin panel:
 | `/api/seed-landing-pages` | POST | Secret | Seed all 5 landing pages (Pages collection) — initial bulk seed |
 | `/api/update-licensed-guide-page` | POST | Secret | Idempotent rewrite of `licensed-guide-prague` Pages row (content, FAQ, SEO, tour slugs) |
 | `/api/update-walking-tour-page` | POST | Secret | Idempotent rewrite of `private-walking-tour-prague` Pages row (content, FAQ, SEO, tour slugs) |
+| `/api/update-sightseeing-tour-page` | POST | Secret | Idempotent rewrite of `prague-sightseeing-tour` Pages row (content, FAQ, SEO, tour slugs) |
 | `/api/fix-schema` | GET/POST | No | Fix schema issues (add missing columns) |
 | `/api/fix-tier-maxguests` | POST | Secret | Fix pricing tier maxGuests using SQL LEAD() window function |
 | `/api/fix-preferred-times` | GET/POST | Secret | GET: list tours table names + columns. POST: create `tours_preferred_times` + version table |
@@ -197,7 +198,7 @@ All site content is editable from Payload admin panel:
 - When rendering richText in listings/cards, always use `extractPlainText()` — never render richText objects directly as JSX children
 - `/api/migrate-richtext` endpoint converts existing plain text to Lexical format
 - `textToLexicalJson(text)` in `src/lib/lexical-helpers.ts` converts plain form text to Lexical JSON for `payload.create()` — required because richText fields reject plain strings
-- `markdownToLexical(md)` in `src/lib/markdown-to-lexical.ts` converts a markdown string (headings, bold, HTML `<a>` links, bulleted/numbered lists, horizontal rules, **GFM-style tables with `|---|` delimiter**) to Lexical JSON — used by `/api/seed-landing-pages`, `/api/update-licensed-guide-page`, and `/api/update-walking-tour-page`. Tables emit a custom `{ type: 'table', headers, rows }` node rendered by `SafeRichText` as semantic `<table><thead><tbody>`.
+- `markdownToLexical(md)` in `src/lib/markdown-to-lexical.ts` converts a markdown string (headings, bold, HTML `<a>` links, bulleted/numbered lists, horizontal rules, **GFM-style tables with `|---|` delimiter**) to Lexical JSON — used by `/api/seed-landing-pages`, `/api/update-licensed-guide-page`, `/api/update-walking-tour-page`, and `/api/update-sightseeing-tour-page`. Tables emit a custom `{ type: 'table', headers, rows }` node rendered by `SafeRichText` as semantic `<table><thead><tbody>`.
 
 ## Live Preview
 - Payload Live Preview configured in `payload.config.ts` with Mobile/Tablet/Desktop breakpoints
