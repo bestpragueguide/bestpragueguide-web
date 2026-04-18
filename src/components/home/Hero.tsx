@@ -48,6 +48,11 @@ export function Hero({ data, locale }: HeroProps) {
         <p className="mt-6 text-lg sm:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed">
           {data.heroSubtitle}
         </p>
+        {locale === 'en' && (
+          <p className="mt-4 text-base sm:text-lg text-white/90 max-w-2xl mx-auto">
+            Just your group. No strangers. No sharing.
+          </p>
+        )}
         <div className="mt-10">
           <Button href={ctaHref} size="lg">
             {data.heroCta}

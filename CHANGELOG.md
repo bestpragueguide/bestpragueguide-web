@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.66.0] - 2026-04-18
+
+### Changed
+- **Homepage conversion optimization — EN locale** (seo24). Three targeted changes to address the "139 clicks / 0 inquiries" Google Ads test. All edits are locale-gated — RU rendering is untouched.
+  - **Hero**: new differentiator line "Just your group. No strangers. No sharing." inserted between subtitle and CTA (`src/components/home/Hero.tsx`), rendered only when `locale === 'en'`. Hardcoded in JSX (not CMS-driven) per the seo24 spec's "exact text" requirement.
+  - **Trust bar**: 4th item swapped for EN from the generic "Custom Routes Available" (curated checkmark icon) to "Just Your Group, No Strangers" (new shield-with-checkmark icon). Implemented as a component-level override in `src/components/home/TrustBar.tsx` — the Payload Homepage global is unchanged so RU keeps its CMS-stored icon and text. Added `private` icon key to `src/lib/icon-map.tsx` (shield SVG matching the existing 32×32 / 1.5-stroke system). Homepage page.tsx now passes `locale` to TrustBar.
+  - **Tour cards (card variant)**: per-group price now renders as two lines when `locale === 'en'` and `!isPerPerson`. Line 1 "from €N" (unchanged styling), line 2 "total for your group (up to N travelers)" with N from `getDisplayPrice().maxGroupSize`, capped at 15, fallback 4, special-cased to "solo traveler" for N ≤ 1. Per-person tours keep the original compact one-line rendering on both locales. RU keeps the original single-line "от €N за группу" format. Affects `FeaturedTours`, `/en/tours` grid, landing-page featured grids, and related-tours on individual tour pages — all of which use `PriceDisplay` with `variant='card'`.
+
 ## [1.65.1] - 2026-04-18
 
 ### Fixed

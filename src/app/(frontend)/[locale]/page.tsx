@@ -60,7 +60,7 @@ export default async function HomePage({
   return (
     <>
       <Hero data={homepageData} locale={locale} />
-      <TrustBar items={homepageData.trustBarItems} />
+      <TrustBar items={homepageData.trustBarItems} locale={locale} />
       <GuideProfile data={homepageData} locale={locale} />
       <FeaturedTours data={homepageData} locale={locale} />
       <ProcessSteps data={homepageData} />

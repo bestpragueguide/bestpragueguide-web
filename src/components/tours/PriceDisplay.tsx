@@ -10,8 +10,16 @@ interface PriceDisplayProps {
   variant?: 'card' | 'detail' | 'sticky'
 }
 
+// seo24: format max-group-size into "(up to N travelers)" for EN card pricing.
+// Null/undefined → 4 (fallback), 1 → "solo traveler", 2-15 → up to N, 16+ → capped at 15.
+function formatGroupSizeSuffix(maxGroupSize: number | null): string {
+  const n = maxGroupSize ?? 4
+  if (n <= 1) return '(solo traveler)'
+  return `(up to ${Math.min(n, 15)} travelers)`
+}
+
 export function PriceDisplay({ pricing, locale, currency = 'EUR', variant = 'card' }: PriceDisplayProps) {
-  const { fromPrice, isPerPerson, isOnRequest } = getDisplayPrice(pricing)
+  const { fromPrice, isPerPerson, isOnRequest, maxGroupSize } = getDisplayPrice(pricing)
 
   if (isOnRequest) {
     return (
@@ -33,6 +41,21 @@ export function PriceDisplay({ pricing, locale, currency = 'EUR', variant = 'car
     : (locale === 'ru' ? 'за группу' : 'per group')
 
   if (variant === 'card') {
+    // EN, per-group card: two-line layout with explicit group-size context (seo24).
+    // Per-person tours and RU keep the original single-line compact layout.
+    if (locale === 'en' && !isPerPerson) {
+      return (
+        <div>
+          <span className="text-lg font-bold text-gold">
+            {pricing.model === 'GROUP_TIERS' && 'from '}
+            {formatPrice(fromPrice, currency)}
+          </span>
+          <div className="text-xs text-gray mt-0.5">
+            total for your group {formatGroupSizeSuffix(maxGroupSize)}
+          </div>
+        </div>
+      )
+    }
     return (
       <div>
         <span className="text-lg font-bold text-gold">
